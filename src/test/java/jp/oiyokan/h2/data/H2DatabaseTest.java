@@ -18,6 +18,7 @@ package jp.oiyokan.h2.data;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.sql.Connection;
+import java.sql.ResultSetMetaData;
 
 import org.junit.jupiter.api.Test;
 
@@ -29,21 +30,45 @@ import jp.oiyokan.basic.BasicDbUtil;
 class H2DatabaseTest {
     @Test
     void test01() throws Exception {
-        Connection conn = BasicDbUtil.getInternalConnection();
+        try (Connection conn = BasicDbUtil.getInternalConnection()) {
 
-        // テーブルをセットアップ.
-        TinyH2DbSample.createTable(conn);
+            // テーブルをセットアップ.
+            TinyH2DbSample.createTable(conn);
 
-        // テーブルデータをセットアップ.
-        TinyH2DbSample.setupTableData(conn);
+            // テーブルデータをセットアップ.
+            TinyH2DbSample.setupTableData(conn);
 
-        try (var stmt = conn.prepareStatement("SELECT ID, Name, Description FROM MyProducts ORDER BY ID LIMIT 3")) {
-            stmt.executeQuery();
-            var rset = stmt.getResultSet();
-            assertEquals(true, rset.next());
+            try (var stmt = conn.prepareStatement("SELECT ID, Name, Description FROM MyProducts ORDER BY ID LIMIT 3")) {
+                stmt.executeQuery();
+                var rset = stmt.getResultSet();
+                assertEquals(true, rset.next());
+            }
         }
-
-        conn.close();
     }
 
+    @Test
+    void testo2() throws Exception {
+// TODO このテストを、ODataRequestベースのものに書き換えた版を作成すること。
+
+        try (Connection conn = BasicDbUtil.getInternalConnection()) {
+            // テーブルをセットアップ.
+            TinyH2DbSample.createTable(conn);
+
+            // テーブルデータをセットアップ.
+            TinyH2DbSample.setupTableData(conn);
+
+            try (var stmt = conn.prepareStatement("SELECT ID, Name, Description" //
+                    + ",Sbyte1,Int16a,Int32a,Int64a,Decimal1,StringChar2,StringVar255,StringVar65535,Boolean1,Single1,Double1,DateTimeOffset1,TimeOfDay1" //
+                    + " FROM MyProducts ORDER BY ID LIMIT 1")) {
+                stmt.executeQuery();
+                var rset = stmt.getResultSet();
+                assertEquals(true, rset.next());
+                ResultSetMetaData rsmeta = rset.getMetaData();
+                for (int column = 1; column <= rsmeta.getColumnCount(); column++) {
+                    // System.err.println(rsmeta.getColumnName(column) + ", class=" +
+                    // rsmeta.getColumnClassName(column));
+                }
+            }
+        }
+    }
 }

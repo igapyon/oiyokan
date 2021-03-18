@@ -15,6 +15,7 @@
  */
 package jp.oiyokan.basic;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -22,6 +23,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.Calendar;
 
 import org.apache.olingo.commons.api.data.Property;
 import org.apache.olingo.commons.api.data.ValueType;
@@ -224,11 +226,36 @@ public class BasicDbUtil {
      * @throws SQLException SQL例外が発生した場合.
      */
     public static void bindPreparedParameter(PreparedStatement stmt, int column, Object value) throws SQLException {
-        if (value instanceof Integer) {
+        if (value instanceof Byte) {
+            stmt.setByte(column, (Byte) value);
+        } else if (value instanceof Short) {
+            stmt.setShort(column, (Short) value);
+        } else if (value instanceof Integer) {
             stmt.setInt(column, (Integer) value);
-        } else {
-            // TODO 他の型への対応を追加。
+        } else if (value instanceof Long) {
+            stmt.setLong(column, (Long) value);
+        } else if (value instanceof BigDecimal) {
+            stmt.setBigDecimal(column, (BigDecimal) value);
+        } else if (value instanceof Boolean) {
+            stmt.setBoolean(column, (Boolean) value);
+        } else if (value instanceof Float) {
+            stmt.setFloat(column, (Float) value);
+        } else if (value instanceof Double) {
+            stmt.setDouble(column, (Double) value);
+        } else if (value instanceof java.util.Date) {
+            java.util.Date udate = (java.util.Date) value;
+            java.sql.Date sdate = new java.sql.Date(udate.getTime());
+            stmt.setDate(column, sdate);
+        } else if (value instanceof Calendar) {
+            Calendar cal = (Calendar) value;
+            java.sql.Date sdate = new java.sql.Date(cal.getTimeInMillis());
+            stmt.setDate(column, sdate);
+        } else if (value instanceof String) {
             stmt.setString(column, (String) value);
+        } else {
+            // TODO ほかに未サポートの型があるはず。特に日時系.
+            System.err.println("Unsupported parameter type: " + value.getClass().getCanonicalName());
+            throw new IllegalArgumentException("Unsupported parameter type: " + value.getClass().getCanonicalName());
         }
     }
 }

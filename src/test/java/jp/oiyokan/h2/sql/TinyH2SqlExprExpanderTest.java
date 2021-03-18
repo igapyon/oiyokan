@@ -26,8 +26,8 @@ import org.apache.olingo.server.core.uri.parser.Parser;
 import org.junit.jupiter.api.Test;
 
 import jp.oiyokan.OiyokanEdmProvider;
-import jp.oiyokan.basic.sql.BasicSqlExprExpander;
 import jp.oiyokan.basic.sql.BasicSqlBuildInfo;
+import jp.oiyokan.basic.sql.BasicSqlExprExpander;
 
 /**
  * TinyH2SqlExprExpanderのテスト.
