@@ -23,9 +23,7 @@ import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.basic.BasicDbUtil;
 
 /**
- * 実際に返却するデータ本体を組み上げるクラス.
- * 
- * このクラスには、テスト用データを構築する処理も含む.
+ * Oiyokan (OData v4 server) が動作する際に必要になる内部データおよびサンプルデータを提供.
  */
 public class TinyH2DbSample {
     // 増殖カウント. 負荷確認したい場合は 5000程度に増やす.

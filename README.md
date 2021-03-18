@@ -45,7 +45,7 @@ http://localhost:8080/odata4.svc/
 ### internal version
 
 ```sh
-http://localhost:8080/odata4.svc/ODataAppInfos
+http://localhost:8080/odata4.svc/ODataAppInfos?$format=JSON
 ```
 
 # OData v4 server のサンプル(simple-odata4) を祖先

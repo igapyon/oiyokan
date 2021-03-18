@@ -42,9 +42,9 @@ import org.apache.olingo.server.core.uri.queryoption.CountOptionImpl;
 import jp.oiyokan.h2.data.TinyH2EntityCollectionBuilder;
 
 /**
- * OData 要素コレクションを処理するクラス.
+ * Oiyokan による EntityCollectionProcessor 実装.
  * 
- * コードの多くは olingo のための基礎的な記述に該当.
+ * 実際のデータ取得処理を担当.
  */
 public class OiyokanEntityCollectionProcessor implements EntityCollectionProcessor {
     /**

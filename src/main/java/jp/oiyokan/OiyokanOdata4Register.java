@@ -31,14 +31,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * OData v4 server を Spring Boot の Servlet として動作させるクラス.
- *
- * Oiyokan 関連処理を OData に結びつけてパスに登録.
+ * Oiyokan (OData v4 server) を Spring Boot の Servlet として登録.
+ * 
+ * 特定のパス '/odata4.svc/' に対するリクエストを OData 処理に連携.
  */
 @RestController
 public class OiyokanOdata4Register {
     /**
-     * OData v4 server を Spring Boot の Servlet として動作させるエントリポイント.
+     * Oiyokan (OData v4 server) を Spring Boot の Servlet として登録.
      * 
      * @param req  HTTPリクエスト.
      * @param resp HTTPレスポンス.

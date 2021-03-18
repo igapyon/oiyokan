@@ -1,4 +1,4 @@
 /**
- * Iyokan 関連処理の基本挙動のためのクラス群.
+ * Oiyokan (OData v4 server) のリソース種類によらない基本的な処理.
  */
 package jp.oiyokan.basic;

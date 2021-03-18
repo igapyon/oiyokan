@@ -20,7 +20,7 @@ import org.apache.olingo.commons.api.edm.provider.CsdlEntitySet;
 import org.apache.olingo.commons.api.edm.provider.CsdlEntityType;
 
 /**
- * CsdlEntitySet の Iyokan 拡張
+ * Oiyokan の CsdlEntitySet 実装.
  */
 public class OiyokanCsdlEntitySet extends CsdlEntitySet {
     /**

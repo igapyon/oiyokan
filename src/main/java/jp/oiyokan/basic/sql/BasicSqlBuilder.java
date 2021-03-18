@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jp.oiyokan.h2.sql;
+package jp.oiyokan.basic.sql;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,18 +33,18 @@ import jp.oiyokan.OiyokanCsdlEntitySet;
 /**
  * SQL文を構築するための簡易クラス.
  */
-public class TinyH2SqlBuilder {
+public class BasicSqlBuilder {
     /**
      * SQL構築のデータ構造.
      */
-    private final TinySqlBuildInfo sqlInfo = new TinySqlBuildInfo();
+    private final BasicSqlBuildInfo sqlInfo = new BasicSqlBuildInfo();
 
     /**
      * SQL構築のデータ構造を取得.
      * 
      * @return SQL構築のデータ構造.
      */
-    public TinySqlBuildInfo getSqlInfo() {
+    public BasicSqlBuildInfo getSqlInfo() {
         return sqlInfo;
     }
 
@@ -58,7 +58,7 @@ public class TinyH2SqlBuilder {
         if (uriInfo.getFilterOption() != null) {
             FilterOptionImpl filterOpt = (FilterOptionImpl) uriInfo.getFilterOption();
             sqlInfo.getSqlBuilder().append(" WHERE ");
-            new TinyH2SqlExprExpander(sqlInfo).expand(filterOpt.getExpression());
+            new BasicSqlExprExpander(sqlInfo).expand(filterOpt.getExpression());
         }
     }
 
@@ -118,7 +118,7 @@ public class TinyH2SqlBuilder {
             FilterOptionImpl filterOpt = (FilterOptionImpl) uriInfo.getFilterOption();
             // WHERE部分についてはパラメータクエリで処理するのを基本とする.
             sqlInfo.getSqlBuilder().append(" WHERE ");
-            new TinyH2SqlExprExpander(sqlInfo).expand(filterOpt.getExpression());
+            new BasicSqlExprExpander(sqlInfo).expand(filterOpt.getExpression());
         }
 
         if (uriInfo.getOrderByOption() != null) {
