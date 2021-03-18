@@ -34,7 +34,7 @@ import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanCsdlEntitySet;
 import jp.oiyokan.OiyokanEdmProvider;
 import jp.oiyokan.basic.BasicDbUtil;
-import jp.oiyokan.h2.sql.TinyH2SqlBuilder;
+import jp.oiyokan.basic.sql.BasicSqlBuilder;
 
 /**
  * 実際に返却するデータ本体を組み上げるクラス.
@@ -93,7 +93,7 @@ public class TinyH2EntityCollectionBuilder {
 
             {
                 // 件数をカウントして設定。
-                TinyH2SqlBuilder tinySql = new TinyH2SqlBuilder();
+                BasicSqlBuilder tinySql = new BasicSqlBuilder();
                 tinySql.getSqlInfo().setEntitySet((OiyokanCsdlEntitySet) eSetTarget);
                 tinySql.getSelectCountQuery(uriInfo);
                 final String sql = tinySql.getSqlInfo().getSqlBuilder().toString();
@@ -118,7 +118,7 @@ public class TinyH2EntityCollectionBuilder {
                 eCollection.setCount(countWithWhere);
             }
 
-            TinyH2SqlBuilder tinySql = new TinyH2SqlBuilder();
+            BasicSqlBuilder tinySql = new BasicSqlBuilder();
             tinySql.getSqlInfo().setEntitySet((OiyokanCsdlEntitySet) eSetTarget);
 
             tinySql.getSelectQuery(uriInfo);

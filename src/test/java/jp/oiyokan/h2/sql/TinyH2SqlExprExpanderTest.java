@@ -26,6 +26,8 @@ import org.apache.olingo.server.core.uri.parser.Parser;
 import org.junit.jupiter.api.Test;
 
 import jp.oiyokan.OiyokanEdmProvider;
+import jp.oiyokan.basic.sql.BasicSqlExprExpander;
+import jp.oiyokan.basic.sql.BasicSqlBuildInfo;
 
 /**
  * TinyH2SqlExprExpanderのテスト.
@@ -40,8 +42,8 @@ class TinyH2SqlExprExpanderTest {
         final Parser parser = new Parser(edm.getEdm(), odata);
         final UriInfo uriInfo = parser.parseUri("/MyProducts", "$filter=ID eq 1.0", "",
                 "https://localhost//simple.svc/");
-        TinySqlBuildInfo sqlInfo = new TinySqlBuildInfo();
-        new TinyH2SqlExprExpander(sqlInfo).expand(uriInfo.getFilterOption().getExpression());
+        BasicSqlBuildInfo sqlInfo = new BasicSqlBuildInfo();
+        new BasicSqlExprExpander(sqlInfo).expand(uriInfo.getFilterOption().getExpression());
         assertEquals("([ID] = 1.0)", sqlInfo.getSqlBuilder().toString());
     }
 
@@ -53,8 +55,8 @@ class TinyH2SqlExprExpanderTest {
         final Parser parser = new Parser(edm.getEdm(), odata);
         final UriInfo uriInfo = parser.parseUri("/MyProducts", "$filter=Description eq 'Mac' and ID eq 2.0", "",
                 "https://localhost//simple.svc/");
-        TinySqlBuildInfo sqlInfo = new TinySqlBuildInfo();
-        new TinyH2SqlExprExpander(sqlInfo).expand(uriInfo.getFilterOption().getExpression());
+        BasicSqlBuildInfo sqlInfo = new BasicSqlBuildInfo();
+        new BasicSqlExprExpander(sqlInfo).expand(uriInfo.getFilterOption().getExpression());
         assertEquals("(([Description] = ?) AND ([ID] = 2.0))", sqlInfo.getSqlBuilder().toString());
     }
 
@@ -67,8 +69,8 @@ class TinyH2SqlExprExpanderTest {
         final UriInfo uriInfo = parser.parseUri("/MyProducts",
                 "%24top=51&%24filter=%20indexof%28Description%2C%27%E5%A2%97%E6%AE%96%E3%82%BF%E3%83%96%E3%83%AC%E3%83%83%E3%83%887%27%29%20ne%20-1&%24orderby=ID&%24count=true&%24select=Description%2CID%2CName",
                 "", "https://localhost//simple.svc/");
-        TinySqlBuildInfo sqlInfo = new TinySqlBuildInfo();
-        new TinyH2SqlExprExpander(sqlInfo).expand(uriInfo.getFilterOption().getExpression());
+        BasicSqlBuildInfo sqlInfo = new BasicSqlBuildInfo();
+        new BasicSqlExprExpander(sqlInfo).expand(uriInfo.getFilterOption().getExpression());
         assertEquals("((POSITION(?,[Description]) - 1) <> -1)", sqlInfo.getSqlBuilder().toString());
     }
 }

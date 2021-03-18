@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jp.oiyokan.h2.sql;
+package jp.oiyokan.basic.sql;
 
 import org.apache.olingo.server.api.uri.queryoption.expression.BinaryOperatorKind;
 import org.apache.olingo.server.api.uri.queryoption.expression.Expression;
@@ -32,18 +32,18 @@ import org.apache.olingo.server.core.uri.queryoption.expression.UnaryImpl;
 /**
  * SQL文を構築するための簡易クラスの、Expression を SQLに変換する処理.
  */
-public class TinyH2SqlExprExpander {
+public class BasicSqlExprExpander {
     /**
      * SQL構築のデータ構造.
      */
-    private TinySqlBuildInfo sqlInfo = null;
+    private BasicSqlBuildInfo sqlInfo = null;
 
     /**
      * コンストラクタ.
      * 
      * @param sqlInfo SQL構築のデータ構造.
      */
-    public TinyH2SqlExprExpander(TinySqlBuildInfo sqlInfo) {
+    public BasicSqlExprExpander(BasicSqlBuildInfo sqlInfo) {
         this.sqlInfo = sqlInfo;
     }
 

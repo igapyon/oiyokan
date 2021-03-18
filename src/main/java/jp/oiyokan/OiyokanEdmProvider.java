@@ -27,9 +27,9 @@ import org.apache.olingo.commons.api.edm.provider.CsdlEntityType;
 import org.apache.olingo.commons.api.edm.provider.CsdlSchema;
 
 /**
- * OData Common Schema Definition Language (CSDL) を提供するクラス.
+ * Oiyokan による CSDL (Common Schema Definition Language) 実装.
  * 
- * コードの多くは olingo のための基礎的な記述に該当.
+ * Apache Olingo からのエントリポイント. ここに記載あるコードの多くは Apache Olingo のための基礎的な記述.
  */
 public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
     /**

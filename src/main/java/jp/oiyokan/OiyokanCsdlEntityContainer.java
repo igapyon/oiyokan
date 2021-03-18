@@ -27,7 +27,7 @@ import org.apache.olingo.commons.api.edm.provider.CsdlEntityType;
 import jp.oiyokan.basic.BasicJdbcEntityTypeBuilder;
 
 /**
- * CsdlEntityContainer の Iyokan 拡張
+ * Oiyokan の CsdlEntityContainer 実装.
  */
 public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
     /**
@@ -60,6 +60,8 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
             // EntitySet の初期セットを実施。
             getEntitySets().add(new OiyokanCsdlEntitySet(this, "ODataAppInfos", "ODataAppInfo",
                     OiyokanCsdlEntitySet.DatabaseType.H2, "ODataAppInfos", "ODataAppInfos"));
+
+            // サンプル EntitySet
             getEntitySets().add(new OiyokanCsdlEntitySet(this, "MyProducts", "MyProduct",
                     OiyokanCsdlEntitySet.DatabaseType.H2, "MyProducts", "MyProducts"));
         }
