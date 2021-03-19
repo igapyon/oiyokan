@@ -18,6 +18,9 @@ package jp.oiyokan.h2.data;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Locale;
+
+import org.apache.olingo.server.api.ODataApplicationException;
 
 import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.basic.BasicDbUtil;
@@ -115,7 +118,7 @@ public class TinyH2DbSample {
      * 
      * @param conn データベース接続。
      */
-    public static void setupTableData(final Connection conn) {
+    public static void setupTableData(final Connection conn) throws ODataApplicationException {
         try (var stmt = conn.prepareStatement("SELECT COUNT(*) FROM ODataAppInfos")) {
             stmt.executeQuery();
             var rset = stmt.getResultSet();
@@ -124,7 +127,7 @@ public class TinyH2DbSample {
                 return;
             }
         } catch (SQLException ex) {
-            throw new IllegalArgumentException("検索失敗:" + ex.toString(), ex);
+            throw new ODataApplicationException("Fail to SQL: " + ex.toString(), 500, Locale.ENGLISH, ex);
         }
 
         if (OiyokanConstants.IS_TRACE_ODATA_V4)

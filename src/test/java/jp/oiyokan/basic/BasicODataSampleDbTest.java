@@ -127,7 +127,7 @@ class BasicODataSampleDbTest {
     ////////////////////////////////////////////////////////
     // 以降は共通コード.
 
-    private ODataHttpHandler getHandler() throws Exception {
+    public static ODataHttpHandler getHandler() throws Exception {
         final OData odata = OData.newInstance();
 
         // EdmProvider を登録.
@@ -146,7 +146,7 @@ class BasicODataSampleDbTest {
      * @return 文字列.
      * @throws IOException 入出力例外が発生した場合.
      */
-    private static String stream2String(InputStream inStream) throws IOException {
+    public static String stream2String(InputStream inStream) throws IOException {
         StringBuilder builder = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(inStream, "UTF-8"))) {
             for (;;) {

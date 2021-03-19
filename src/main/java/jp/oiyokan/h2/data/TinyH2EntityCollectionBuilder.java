@@ -20,6 +20,7 @@ import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.Locale;
 
 import org.apache.olingo.commons.api.data.Entity;
 import org.apache.olingo.commons.api.data.EntityCollection;
@@ -28,6 +29,7 @@ import org.apache.olingo.commons.api.edm.EdmEntitySet;
 import org.apache.olingo.commons.api.edm.provider.CsdlEntitySet;
 import org.apache.olingo.commons.api.edm.provider.CsdlPropertyRef;
 import org.apache.olingo.commons.api.ex.ODataRuntimeException;
+import org.apache.olingo.server.api.ODataApplicationException;
 import org.apache.olingo.server.api.uri.UriInfo;
 
 import jp.oiyokan.OiyokanConstants;
@@ -52,7 +54,7 @@ public class TinyH2EntityCollectionBuilder {
      * @param uriInfo      SQL構築のデータ構造.
      * @return 要素コレクション.
      */
-    public static EntityCollection build(EdmEntitySet edmEntitySet, UriInfo uriInfo) {
+    public static EntityCollection build(EdmEntitySet edmEntitySet, UriInfo uriInfo) throws ODataApplicationException {
         final EntityCollection eCollection = new EntityCollection();
 
         OiyokanEdmProvider provider = new OiyokanEdmProvider();
@@ -113,7 +115,8 @@ public class TinyH2EntityCollectionBuilder {
                     rset.next();
                     countWithWhere = rset.getInt(1);
                 } catch (SQLException ex) {
-                    throw new IllegalArgumentException("検索失敗:" + ex.toString(), ex);
+                    ex.printStackTrace();
+                    throw new ODataApplicationException("Fail to SQL: " + ex.toString(), 500, Locale.ENGLISH, ex);
                 }
                 eCollection.setCount(countWithWhere);
             }
@@ -166,7 +169,7 @@ public class TinyH2EntityCollectionBuilder {
             return eCollection;
         } catch (SQLException ex) {
             ex.printStackTrace();
-            throw new IllegalArgumentException("検索失敗:" + ex.toString(), ex);
+            throw new ODataApplicationException("Fail to SQL: " + ex.toString(), 500, Locale.ENGLISH, ex);
         }
     }
 

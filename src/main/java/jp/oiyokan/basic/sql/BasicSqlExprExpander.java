@@ -15,6 +15,9 @@
  */
 package jp.oiyokan.basic.sql;
 
+import java.util.Locale;
+
+import org.apache.olingo.server.api.ODataApplicationException;
 import org.apache.olingo.server.api.uri.queryoption.expression.BinaryOperatorKind;
 import org.apache.olingo.server.api.uri.queryoption.expression.Expression;
 import org.apache.olingo.server.api.uri.queryoption.expression.MethodKind;
@@ -52,16 +55,16 @@ public class BasicSqlExprExpander {
      * 
      * @param filterExpression フィルタ表現.
      */
-    public void expand(Expression filterExpression) {
+    public void expand(Expression filterExpression) throws ODataApplicationException {
         if (filterExpression instanceof AliasImpl) {
-            throw new IllegalArgumentException("NOT SUPPORTED:Expression:AliasImpl");
+            throw new ODataApplicationException("NOT SUPPORTED:Expression:AliasImpl", 500, Locale.ENGLISH);
         } else if (filterExpression instanceof BinaryImpl) {
             expandBinary((BinaryImpl) filterExpression);
             return;
         } else if (filterExpression instanceof EnumerationImpl) {
-            throw new IllegalArgumentException("NOT SUPPORTED:Expression:EnumerationImpl");
+            throw new ODataApplicationException("NOT SUPPORTED:Expression:EnumerationImpl", 500, Locale.ENGLISH);
         } else if (filterExpression instanceof LambdaRefImpl) {
-            throw new IllegalArgumentException("NOT SUPPORTED:Expression:LambdaRefImpl");
+            throw new ODataApplicationException("NOT SUPPORTED:Expression:LambdaRefImpl", 500, Locale.ENGLISH);
         } else if (filterExpression instanceof LiteralImpl) {
             expandLiteral((LiteralImpl) filterExpression);
             return;
@@ -72,7 +75,7 @@ public class BasicSqlExprExpander {
             expandMethod((MethodImpl) filterExpression);
             return;
         } else if (filterExpression instanceof TypeLiteralImpl) {
-            throw new IllegalArgumentException("NOT SUPPORTED:Expression:TypeLiteralImpl");
+            throw new ODataApplicationException("NOT SUPPORTED:Expression:TypeLiteralImpl", 500, Locale.ENGLISH);
         } else if (filterExpression instanceof UnaryImpl) {
             UnaryImpl impl = (UnaryImpl) filterExpression;
             expandUnary(impl);
@@ -82,35 +85,35 @@ public class BasicSqlExprExpander {
         final String message = "Unexpected Case: Unsupported expression:" + filterExpression.getClass().getName() + ","
                 + filterExpression.toString() + "]";
         System.err.println(message);
-        throw new IllegalArgumentException(message);
+        throw new ODataApplicationException(message, 500, Locale.ENGLISH);
     }
 
     ///////////////////////////////////////////////////////////////
     // 内部の実際処理.
 
-    private void expandBinary(BinaryImpl impl) {
+    private void expandBinary(BinaryImpl impl) throws ODataApplicationException {
         BinaryOperatorKind opKind = impl.getOperator();
         if (opKind == BinaryOperatorKind.HAS) {
             // HAS
-            throw new IllegalArgumentException("NOT SUPPORTED:BinaryOperatorKind:" + opKind);
+            throw new ODataApplicationException("NOT SUPPORTED:BinaryOperatorKind:" + opKind, 500, Locale.ENGLISH);
         } else if (opKind == BinaryOperatorKind.IN) {
             // IN
-            throw new IllegalArgumentException("NOT SUPPORTED:BinaryOperatorKind:" + opKind);
+            throw new ODataApplicationException("NOT SUPPORTED:BinaryOperatorKind:" + opKind, 500, Locale.ENGLISH);
         } else if (opKind == BinaryOperatorKind.MUL) {
             // MUL
-            throw new IllegalArgumentException("NOT SUPPORTED:BinaryOperatorKind:" + opKind);
+            throw new ODataApplicationException("NOT SUPPORTED:BinaryOperatorKind:" + opKind, 500, Locale.ENGLISH);
         } else if (opKind == BinaryOperatorKind.DIV) {
             // DIV
-            throw new IllegalArgumentException("NOT SUPPORTED:BinaryOperatorKind:" + opKind);
+            throw new ODataApplicationException("NOT SUPPORTED:BinaryOperatorKind:" + opKind, 500, Locale.ENGLISH);
         } else if (opKind == BinaryOperatorKind.MOD) {
             // MOD
-            throw new IllegalArgumentException("NOT SUPPORTED:BinaryOperatorKind:" + opKind);
+            throw new ODataApplicationException("NOT SUPPORTED:BinaryOperatorKind:" + opKind, 500, Locale.ENGLISH);
         } else if (opKind == BinaryOperatorKind.ADD) {
             // ADD
-            throw new IllegalArgumentException("NOT SUPPORTED:BinaryOperatorKind:" + opKind);
+            throw new ODataApplicationException("NOT SUPPORTED:BinaryOperatorKind:" + opKind, 500, Locale.ENGLISH);
         } else if (opKind == BinaryOperatorKind.SUB) {
             // SUB
-            throw new IllegalArgumentException("NOT SUPPORTED:BinaryOperatorKind:" + opKind);
+            throw new ODataApplicationException("NOT SUPPORTED:BinaryOperatorKind:" + opKind, 500, Locale.ENGLISH);
         } else if (opKind == BinaryOperatorKind.GT) {
             // GT
             sqlInfo.getSqlBuilder().append("(");
@@ -179,7 +182,7 @@ public class BasicSqlExprExpander {
 
         final String message = "Unexpected Case: Unsupported binary operator:" + opKind + "," + impl.toString() + "]";
         System.err.println(message);
-        throw new IllegalArgumentException(message);
+        throw new ODataApplicationException(message, 500, Locale.ENGLISH);
     }
 
     private void expandLiteral(LiteralImpl impl) {
@@ -203,7 +206,7 @@ public class BasicSqlExprExpander {
         sqlInfo.getSqlBuilder().append(impl.toString());
     }
 
-    private void expandMethod(MethodImpl impl) {
+    private void expandMethod(MethodImpl impl) throws ODataApplicationException {
         // CONTAINS
         if (impl.getMethod() == MethodKind.CONTAINS) {
             // h2 database の POSITION は 1 オリジンで発見せずが0 なので 1 を減らしています。
@@ -227,7 +230,9 @@ public class BasicSqlExprExpander {
         }
 
         // ENDSWITH
-        // TODO 未実装
+        if (impl.getMethod() == MethodKind.ENDSWITH) {
+            throw new ODataApplicationException("Not Suporoted: MethodKind.ENDSWITH", 500, Locale.ENGLISH);
+        }
 
         // LENGTH
         if (impl.getMethod() == MethodKind.LENGTH) {
@@ -359,20 +364,44 @@ public class BasicSqlExprExpander {
         // TODO 未テスト.
 
         // FRACTIONALSECONDS
+        if (impl.getMethod() == MethodKind.FRACTIONALSECONDS) {
+            throw new ODataApplicationException("Not Suporoted: MethodKind.FRACTIONALSECONDS", 500, Locale.ENGLISH);
+        }
 
         // TOTALSECONDS
+        if (impl.getMethod() == MethodKind.TOTALSECONDS) {
+            throw new ODataApplicationException("Not Suporoted: MethodKind.TOTALSECONDS", 500, Locale.ENGLISH);
+        }
 
         // DATE
+        if (impl.getMethod() == MethodKind.DATE) {
+            throw new ODataApplicationException("Not Suporoted: MethodKind.DATE", 500, Locale.ENGLISH);
+        }
 
         // TIME
+        if (impl.getMethod() == MethodKind.TIME) {
+            throw new ODataApplicationException("Not Suporoted: MethodKind.TIME", 500, Locale.ENGLISH);
+        }
 
         // TOTALOFFSETMINUTES
+        if (impl.getMethod() == MethodKind.TOTALOFFSETMINUTES) {
+            throw new ODataApplicationException("Not Suporoted: MethodKind.TOTALOFFSETMINUTES", 500, Locale.ENGLISH);
+        }
 
         // MINDATETIME
+        if (impl.getMethod() == MethodKind.MINDATETIME) {
+            throw new ODataApplicationException("Not Suporoted: MethodKind.MINDATETIME", 500, Locale.ENGLISH);
+        }
 
         // MAXDATETIME
+        if (impl.getMethod() == MethodKind.MAXDATETIME) {
+            throw new ODataApplicationException("Not Suporoted: MethodKind.MAXDATETIME", 500, Locale.ENGLISH);
+        }
 
         // NOW
+        if (impl.getMethod() == MethodKind.NOW) {
+            throw new ODataApplicationException("Not Suporoted: MethodKind.NOW", 500, Locale.ENGLISH);
+        }
 
         // ROUND
         if (impl.getMethod() == MethodKind.ROUND) {
@@ -402,14 +431,29 @@ public class BasicSqlExprExpander {
         // TODO 未テスト.
 
         // GEODISTANCE
+        if (impl.getMethod() == MethodKind.GEODISTANCE) {
+            throw new ODataApplicationException("Not Suporoted: MethodKind.GEODISTANCE", 500, Locale.ENGLISH);
+        }
 
         // GEOLENGTH
+        if (impl.getMethod() == MethodKind.GEOLENGTH) {
+            throw new ODataApplicationException("Not Suporoted: MethodKind.GEOLENGTH", 500, Locale.ENGLISH);
+        }
 
         // GEOINTERSECTS
+        if (impl.getMethod() == MethodKind.GEOINTERSECTS) {
+            throw new ODataApplicationException("Not Suporoted: MethodKind.GEOINTERSECTS", 500, Locale.ENGLISH);
+        }
 
         // CAST
+        if (impl.getMethod() == MethodKind.CAST) {
+            throw new ODataApplicationException("Not Suporoted: MethodKind.CAST", 500, Locale.ENGLISH);
+        }
 
         // ISOF
+        if (impl.getMethod() == MethodKind.ISOF) {
+            throw new ODataApplicationException("Not Suporoted: MethodKind.ISOF", 500, Locale.ENGLISH);
+        }
 
         // SUBSTRINGOF
         if (impl.getMethod() == MethodKind.SUBSTRINGOF) {
@@ -424,10 +468,10 @@ public class BasicSqlExprExpander {
         final String message = "Unexpected Case: NOT SUPPORTED MethodKind:" + impl.getMethod() + "," + impl.toString()
                 + "]";
         System.err.println(message);
-        throw new IllegalArgumentException(message);
+        throw new ODataApplicationException(message, 500, Locale.ENGLISH);
     }
 
-    private void expandUnary(UnaryImpl impl) {
+    private void expandUnary(UnaryImpl impl) throws ODataApplicationException {
         if (impl.getOperator() == UnaryOperatorKind.NOT) {
             sqlInfo.getSqlBuilder().append("(NOT (");
             expand(impl.getOperand());
@@ -443,6 +487,6 @@ public class BasicSqlExprExpander {
         final String message = "Unexpected Case: Unsupported UnaryOperatorKind:" + impl.getOperator() + ","
                 + impl.toString() + "]";
         System.err.println(message);
-        throw new IllegalArgumentException(message);
+        throw new ODataApplicationException(message, 500, Locale.ENGLISH);
     }
 }

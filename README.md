@@ -74,7 +74,6 @@ oiyokan プロジェクトは、OData v4 server のシンプルなサンプル(h
 
 - PreparedStatementの入力の型対応に先立ち、引数の型バリエーションを追加。特に日付・日時絡みは調整が必要な見込み。
 - PreparedStatementの入力の型対応の追加.
-- 実行時エラーを調整すること。現在 IllegalArgumentExceptionでそのまま500になったうえにエラー内容が見えてしまう。ODataApplicationException に対応することが第一案.
 - 対応しない命令の場合、適切に例外で異常停止。ODataApplicationExceptionの利用を想定。
 - 認証の実験。
 - 実験的に全文検索である `$search` をサポートしたものの、もう少し詳しいところが調べられていない。また全文検索で有効なのはアルファベットのみ。h2 database でここを深掘りしても不毛か?
