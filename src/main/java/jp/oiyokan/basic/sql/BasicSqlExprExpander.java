@@ -230,7 +230,9 @@ public class BasicSqlExprExpander {
         }
 
         // ENDSWITH
-        // TODO 未実装
+        if (impl.getMethod() == MethodKind.ENDSWITH) {
+            throw new ODataApplicationException("Not Suporoted: MethodKind.ENDSWITH", 500, Locale.ENGLISH);
+        }
 
         // LENGTH
         if (impl.getMethod() == MethodKind.LENGTH) {
@@ -362,20 +364,44 @@ public class BasicSqlExprExpander {
         // TODO 未テスト.
 
         // FRACTIONALSECONDS
+        if (impl.getMethod() == MethodKind.FRACTIONALSECONDS) {
+            throw new ODataApplicationException("Not Suporoted: MethodKind.FRACTIONALSECONDS", 500, Locale.ENGLISH);
+        }
 
         // TOTALSECONDS
+        if (impl.getMethod() == MethodKind.TOTALSECONDS) {
+            throw new ODataApplicationException("Not Suporoted: MethodKind.TOTALSECONDS", 500, Locale.ENGLISH);
+        }
 
         // DATE
+        if (impl.getMethod() == MethodKind.DATE) {
+            throw new ODataApplicationException("Not Suporoted: MethodKind.DATE", 500, Locale.ENGLISH);
+        }
 
         // TIME
+        if (impl.getMethod() == MethodKind.TIME) {
+            throw new ODataApplicationException("Not Suporoted: MethodKind.TIME", 500, Locale.ENGLISH);
+        }
 
         // TOTALOFFSETMINUTES
+        if (impl.getMethod() == MethodKind.TOTALOFFSETMINUTES) {
+            throw new ODataApplicationException("Not Suporoted: MethodKind.TOTALOFFSETMINUTES", 500, Locale.ENGLISH);
+        }
 
         // MINDATETIME
+        if (impl.getMethod() == MethodKind.MINDATETIME) {
+            throw new ODataApplicationException("Not Suporoted: MethodKind.MINDATETIME", 500, Locale.ENGLISH);
+        }
 
         // MAXDATETIME
+        if (impl.getMethod() == MethodKind.MAXDATETIME) {
+            throw new ODataApplicationException("Not Suporoted: MethodKind.MAXDATETIME", 500, Locale.ENGLISH);
+        }
 
         // NOW
+        if (impl.getMethod() == MethodKind.NOW) {
+            throw new ODataApplicationException("Not Suporoted: MethodKind.NOW", 500, Locale.ENGLISH);
+        }
 
         // ROUND
         if (impl.getMethod() == MethodKind.ROUND) {
@@ -405,14 +431,29 @@ public class BasicSqlExprExpander {
         // TODO 未テスト.
 
         // GEODISTANCE
+        if (impl.getMethod() == MethodKind.GEODISTANCE) {
+            throw new ODataApplicationException("Not Suporoted: MethodKind.GEODISTANCE", 500, Locale.ENGLISH);
+        }
 
         // GEOLENGTH
+        if (impl.getMethod() == MethodKind.GEOLENGTH) {
+            throw new ODataApplicationException("Not Suporoted: MethodKind.GEOLENGTH", 500, Locale.ENGLISH);
+        }
 
         // GEOINTERSECTS
+        if (impl.getMethod() == MethodKind.GEOINTERSECTS) {
+            throw new ODataApplicationException("Not Suporoted: MethodKind.GEOINTERSECTS", 500, Locale.ENGLISH);
+        }
 
         // CAST
+        if (impl.getMethod() == MethodKind.CAST) {
+            throw new ODataApplicationException("Not Suporoted: MethodKind.CAST", 500, Locale.ENGLISH);
+        }
 
         // ISOF
+        if (impl.getMethod() == MethodKind.ISOF) {
+            throw new ODataApplicationException("Not Suporoted: MethodKind.ISOF", 500, Locale.ENGLISH);
+        }
 
         // SUBSTRINGOF
         if (impl.getMethod() == MethodKind.SUBSTRINGOF) {

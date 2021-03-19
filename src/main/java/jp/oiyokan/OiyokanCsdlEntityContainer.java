@@ -23,6 +23,7 @@ import org.apache.olingo.commons.api.edm.FullQualifiedName;
 import org.apache.olingo.commons.api.edm.provider.CsdlEntityContainer;
 import org.apache.olingo.commons.api.edm.provider.CsdlEntitySet;
 import org.apache.olingo.commons.api.edm.provider.CsdlEntityType;
+import org.apache.olingo.server.api.ODataApplicationException;
 
 import jp.oiyokan.basic.BasicJdbcEntityTypeBuilder;
 
@@ -134,7 +135,7 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
      * @param entityTypeName 型名.
      * @return 指定の型名の CsdlEntityType.
      */
-    public CsdlEntityType getEntityType(FullQualifiedName entityTypeName) {
+    public CsdlEntityType getEntityType(FullQualifiedName entityTypeName) throws ODataApplicationException {
         if (getEntitySetByEntityNameFqnIyo(entityTypeName) == null) {
             return null;
         }

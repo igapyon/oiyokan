@@ -23,10 +23,12 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.olingo.commons.api.edm.provider.CsdlEntityType;
 import org.apache.olingo.commons.api.edm.provider.CsdlProperty;
 import org.apache.olingo.commons.api.edm.provider.CsdlPropertyRef;
+import org.apache.olingo.server.api.ODataApplicationException;
 
 import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanCsdlEntitySet;
@@ -58,7 +60,7 @@ public class BasicJdbcEntityTypeBuilder {
      *
      * @return 取得された EntityType.
      */
-    public CsdlEntityType getEntityType() {
+    public CsdlEntityType getEntityType() throws ODataApplicationException {
         // インメモリ作業データベースに接続.
         try (Connection conn = BasicDbUtil.getInternalConnection()) {
             // テーブルをセットアップ.
@@ -103,7 +105,7 @@ public class BasicJdbcEntityTypeBuilder {
             return entityType;
         } catch (SQLException ex) {
             ex.printStackTrace();
-            throw new IllegalArgumentException("DB meta 取得失敗:" + ex.toString(), ex);
+            throw new ODataApplicationException("DB meta 取得失敗:" + ex.toString(), 500, Locale.ENGLISH);
         }
     }
 }

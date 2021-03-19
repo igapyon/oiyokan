@@ -24,11 +24,13 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.Calendar;
+import java.util.Locale;
 
 import org.apache.olingo.commons.api.data.Property;
 import org.apache.olingo.commons.api.data.ValueType;
 import org.apache.olingo.commons.api.edm.EdmPrimitiveTypeKind;
 import org.apache.olingo.commons.api.edm.provider.CsdlProperty;
+import org.apache.olingo.server.api.ODataApplicationException;
 
 /**
  * Oiyokan 関連のDBまわりユーティリティクラス.
@@ -42,13 +44,13 @@ public class BasicDbUtil {
      * 
      * @return データベース接続。
      */
-    public static Connection getInternalConnection() {
+    public static Connection getInternalConnection() throws ODataApplicationException {
         Connection conn;
         try {
             Class.forName("org.h2.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-            throw new IllegalArgumentException(e);
+        } catch (ClassNotFoundException ex) {
+            ex.printStackTrace();
+            throw new ODataApplicationException("Fail to load driver: " + ex.toString(), 500, Locale.ENGLISH);
         }
         // SQL Server 互換モードで動作させる.
         final var jdbcConnStr = "jdbc:h2:mem:oiyokan;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=FALSE;CASE_INSENSITIVE_IDENTIFIERS=TRUE;MODE=MSSQLServer";
@@ -58,7 +60,7 @@ public class BasicDbUtil {
                     jdbcConnStr, "sa", "");
         } catch (SQLException ex) {
             ex.printStackTrace();
-            throw new IllegalArgumentException(ex);
+            throw new ODataApplicationException("Fail to Connect: " + ex.toString(), 500, Locale.ENGLISH);
         }
 
         return conn;
@@ -225,7 +227,8 @@ public class BasicDbUtil {
      * @param value  セットしたい値.
      * @throws SQLException SQL例外が発生した場合.
      */
-    public static void bindPreparedParameter(PreparedStatement stmt, int column, Object value) throws SQLException {
+    public static void bindPreparedParameter(PreparedStatement stmt, int column, Object value)
+            throws ODataApplicationException, SQLException {
         if (value instanceof Byte) {
             stmt.setByte(column, (Byte) value);
         } else if (value instanceof Short) {
@@ -253,9 +256,8 @@ public class BasicDbUtil {
         } else if (value instanceof String) {
             stmt.setString(column, (String) value);
         } else {
-            // TODO ほかに未サポートの型があるはず。特に日時系.
-            System.err.println("Unsupported parameter type: " + value.getClass().getCanonicalName());
-            throw new IllegalArgumentException("Unsupported parameter type: " + value.getClass().getCanonicalName());
+            throw new ODataApplicationException("Not Suporoted: Parameter Type: " + value.getClass().getCanonicalName(),
+                    500, Locale.ENGLISH);
         }
     }
 }
