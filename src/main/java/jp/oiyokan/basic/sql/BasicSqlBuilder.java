@@ -21,6 +21,7 @@ import java.util.List;
 import org.apache.olingo.commons.api.edm.provider.CsdlEntityType;
 import org.apache.olingo.commons.api.edm.provider.CsdlProperty;
 import org.apache.olingo.commons.api.edm.provider.CsdlPropertyRef;
+import org.apache.olingo.server.api.ODataApplicationException;
 import org.apache.olingo.server.api.uri.UriInfo;
 import org.apache.olingo.server.api.uri.UriResource;
 import org.apache.olingo.server.api.uri.queryoption.OrderByItem;
@@ -53,7 +54,7 @@ public class BasicSqlBuilder {
      * 
      * @param uriInfo URI情報.
      */
-    public void getSelectCountQuery(UriInfo uriInfo) {
+    public void getSelectCountQuery(UriInfo uriInfo) throws ODataApplicationException {
         sqlInfo.getSqlBuilder().append("SELECT COUNT(*) FROM " + sqlInfo.getEntitySet().getDbTableNameTargetIyo());
         if (uriInfo.getFilterOption() != null) {
             FilterOptionImpl filterOpt = (FilterOptionImpl) uriInfo.getFilterOption();
@@ -67,7 +68,7 @@ public class BasicSqlBuilder {
      * 
      * @param uriInfo URI情報.
      */
-    public void getSelectQuery(UriInfo uriInfo) {
+    public void getSelectQuery(UriInfo uriInfo) throws ODataApplicationException {
         sqlInfo.getSqlBuilder().append("SELECT ");
 
         if (uriInfo.getSelectOption() == null) {
