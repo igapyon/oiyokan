@@ -93,7 +93,7 @@ public class BasicDbUtil {
      * @throws SQLException SQL例外が発生した場合.
      */
     public static CsdlProperty resultSetMetaData2CsdlProperty(ResultSetMetaData rsmeta, int column)
-            throws SQLException {
+            throws ODataApplicationException, SQLException {
         final CsdlProperty csdlProp = new CsdlProperty().setName(rsmeta.getColumnName(column));
         switch (rsmeta.getColumnType(column)) {
         case Types.TINYINT:
@@ -137,9 +137,8 @@ public class BasicDbUtil {
             csdlProp.setMaxLength(rsmeta.getColumnDisplaySize(column));
             break;
         default:
-            // TODO なにか手当が必要。あるいは、この場合はログ吐いたうえで処理対象から外すのが無難かも。
-            csdlProp.setType(EdmPrimitiveTypeKind.String.getFullQualifiedName());
-            break;
+            throw new ODataApplicationException("Unsupported: JDBC Type: " + rsmeta.getColumnType(column), 500,
+                    Locale.ENGLISH);
         }
 
         if (false) {
@@ -173,7 +172,7 @@ public class BasicDbUtil {
      * @throws SQLException SQL例外が発生した場合.
      */
     public static Property resultSet2Property(ResultSet rset, ResultSetMetaData rsmeta, int column)
-            throws SQLException {
+            throws ODataApplicationException, SQLException {
         Property prop = null;
         final String columnName = rsmeta.getColumnName(column);
         switch (rsmeta.getColumnType(column)) {
@@ -212,9 +211,11 @@ public class BasicDbUtil {
             break;
         case Types.CHAR:
         case Types.VARCHAR:
-        default:
             prop = new Property(null, columnName, ValueType.PRIMITIVE, rset.getString(column));
             break;
+        default:
+            throw new ODataApplicationException("Unsupported: JDBC Type: " + rsmeta.getColumnType(column), 500,
+                    Locale.ENGLISH);
         }
         return prop;
     }
