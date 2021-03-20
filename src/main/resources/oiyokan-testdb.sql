@@ -240,3 +240,204 @@ INSERT INTO MyProducts (ID, Name, Description) VALUES (
   102, 'PopTablet98', '増殖タブレット Laptop Intel Core98');
 INSERT INTO MyProducts (ID, Name, Description) VALUES (
   103, 'PopTablet99', '増殖タブレット Laptop Intel Core99');
+
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  104, 'DummyPC0', 'ダミーなPC0');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  105, 'DummyPC1', 'ダミーなPC1');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  106, 'DummyPC2', 'ダミーなPC2');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  107, 'DummyPC3', 'ダミーなPC3');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  108, 'DummyPC4', 'ダミーなPC4');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  109, 'DummyPC5', 'ダミーなPC5');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  110, 'DummyPC6', 'ダミーなPC6');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  111, 'DummyPC7', 'ダミーなPC7');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  112, 'DummyPC8', 'ダミーなPC8');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  113, 'DummyPC9', 'ダミーなPC9');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  114, 'DummyPC10', 'ダミーなPC10');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  115, 'DummyPC11', 'ダミーなPC11');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  116, 'DummyPC12', 'ダミーなPC12');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  117, 'DummyPC13', 'ダミーなPC13');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  118, 'DummyPC14', 'ダミーなPC14');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  119, 'DummyPC15', 'ダミーなPC15');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  120, 'DummyPC16', 'ダミーなPC16');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  121, 'DummyPC17', 'ダミーなPC17');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  122, 'DummyPC18', 'ダミーなPC18');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  123, 'DummyPC19', 'ダミーなPC19');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  124, 'DummyPC20', 'ダミーなPC20');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  125, 'DummyPC21', 'ダミーなPC21');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  126, 'DummyPC22', 'ダミーなPC22');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  127, 'DummyPC23', 'ダミーなPC23');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  128, 'DummyPC24', 'ダミーなPC24');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  129, 'DummyPC25', 'ダミーなPC25');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  130, 'DummyPC26', 'ダミーなPC26');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  131, 'DummyPC27', 'ダミーなPC27');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  132, 'DummyPC28', 'ダミーなPC28');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  133, 'DummyPC29', 'ダミーなPC29');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  134, 'DummyPC30', 'ダミーなPC30');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  135, 'DummyPC31', 'ダミーなPC31');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  136, 'DummyPC32', 'ダミーなPC32');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  137, 'DummyPC33', 'ダミーなPC33');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  138, 'DummyPC34', 'ダミーなPC34');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  139, 'DummyPC35', 'ダミーなPC35');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  140, 'DummyPC36', 'ダミーなPC36');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  141, 'DummyPC37', 'ダミーなPC37');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  142, 'DummyPC38', 'ダミーなPC38');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  143, 'DummyPC39', 'ダミーなPC39');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  144, 'DummyPC40', 'ダミーなPC40');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  145, 'DummyPC41', 'ダミーなPC41');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  146, 'DummyPC42', 'ダミーなPC42');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  147, 'DummyPC43', 'ダミーなPC43');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  148, 'DummyPC44', 'ダミーなPC44');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  149, 'DummyPC45', 'ダミーなPC45');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  150, 'DummyPC46', 'ダミーなPC46');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  151, 'DummyPC47', 'ダミーなPC47');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  152, 'DummyPC48', 'ダミーなPC48');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  153, 'DummyPC49', 'ダミーなPC49');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  154, 'DummyPC50', 'ダミーなPC50');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  155, 'DummyPC51', 'ダミーなPC51');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  156, 'DummyPC52', 'ダミーなPC52');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  157, 'DummyPC53', 'ダミーなPC53');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  158, 'DummyPC54', 'ダミーなPC54');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  159, 'DummyPC55', 'ダミーなPC55');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  160, 'DummyPC56', 'ダミーなPC56');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  161, 'DummyPC57', 'ダミーなPC57');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  162, 'DummyPC58', 'ダミーなPC58');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  163, 'DummyPC59', 'ダミーなPC59');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  164, 'DummyPC60', 'ダミーなPC60');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  165, 'DummyPC61', 'ダミーなPC61');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  166, 'DummyPC62', 'ダミーなPC62');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  167, 'DummyPC63', 'ダミーなPC63');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  168, 'DummyPC64', 'ダミーなPC64');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  169, 'DummyPC65', 'ダミーなPC65');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  170, 'DummyPC66', 'ダミーなPC66');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  171, 'DummyPC67', 'ダミーなPC67');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  172, 'DummyPC68', 'ダミーなPC68');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  173, 'DummyPC69', 'ダミーなPC69');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  174, 'DummyPC70', 'ダミーなPC70');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  175, 'DummyPC71', 'ダミーなPC71');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  176, 'DummyPC72', 'ダミーなPC72');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  177, 'DummyPC73', 'ダミーなPC73');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  178, 'DummyPC74', 'ダミーなPC74');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  179, 'DummyPC75', 'ダミーなPC75');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  180, 'DummyPC76', 'ダミーなPC76');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  181, 'DummyPC77', 'ダミーなPC77');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  182, 'DummyPC78', 'ダミーなPC78');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  183, 'DummyPC79', 'ダミーなPC79');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  184, 'DummyPC80', 'ダミーなPC80');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  185, 'DummyPC81', 'ダミーなPC81');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  186, 'DummyPC82', 'ダミーなPC82');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  187, 'DummyPC83', 'ダミーなPC83');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  188, 'DummyPC84', 'ダミーなPC84');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  189, 'DummyPC85', 'ダミーなPC85');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  190, 'DummyPC86', 'ダミーなPC86');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  191, 'DummyPC87', 'ダミーなPC87');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  192, 'DummyPC88', 'ダミーなPC88');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  193, 'DummyPC89', 'ダミーなPC89');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  194, 'DummyPC90', 'ダミーなPC90');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  195, 'DummyPC91', 'ダミーなPC91');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  196, 'DummyPC92', 'ダミーなPC92');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  197, 'DummyPC93', 'ダミーなPC93');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  198, 'DummyPC94', 'ダミーなPC94');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  199, 'DummyPC95', 'ダミーなPC95');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  200, 'DummyPC96', 'ダミーなPC96');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  201, 'DummyPC97', 'ダミーなPC97');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  202, 'DummyPC98', 'ダミーなPC98');
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  203, 'DummyPC99', 'ダミーなPC99');

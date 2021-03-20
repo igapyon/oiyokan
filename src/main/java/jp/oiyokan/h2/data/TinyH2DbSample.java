@@ -113,22 +113,6 @@ public class TinyH2DbSample {
 
         ///////////////////////
         // ダミーなデータの追加
-        try (var stmt = conn.prepareStatement("INSERT INTO MyProducts (ID, Name, Description) VALUES ("
-                + BasicDbUtil.getQueryPlaceholderString(3) + ")")) {
-            int idCounter = 104;
-
-
-            for (int index = 0; index < ZOUSYOKU; index++) {
-                stmt.clearParameters();
-                stmt.setInt(1, idCounter++);
-                stmt.setString(2, "DummyPC" + index);
-                stmt.setString(3, "ダミーなPC" + index);
-                stmt.executeUpdate();
-            }
-            conn.commit();
-        } catch (SQLException ex) {
-            throw new ODataApplicationException("テーブル作成に失敗: " + ex.toString(), 500, Locale.ENGLISH);
-        }
 
         try {
             try (PreparedStatement stmt = conn.prepareStatement("CALL FT_CREATE_INDEX('PUBLIC', 'MyProducts', NULL)")) {
