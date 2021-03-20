@@ -45,21 +45,11 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
     private static volatile OiyokanSettings oiyokanSettings = null;
 
     /**
-     * ネームスペース名. CsdlEntityContainer の上位の概念をここで記述。
-     */
-    private String namespace = "Oiyokan";
-
-    /**
-     * コンテナ名. CsdlEntityContainer の名前そのもの.
-     */
-    private String containerName = "Container";
-
-    /**
      * CsdlEntityTypeをすでに取得済みであればそれをキャッシュから返却する場合に利用.
      */
     private Map<String, CsdlEntityType> cachedCsdlEntityTypeMap = new HashMap<>();
 
-    public OiyokanSettings getOiyokanSettingsInstance() throws ODataApplicationException {
+    public static OiyokanSettings getOiyokanSettingsInstance() throws ODataApplicationException {
         if (oiyokanSettings == null) {
             loadoIyokanSettings();
         }
@@ -105,9 +95,10 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
      * 名前空間を取得します。これが存在すると便利なため、これを追加。
      * 
      * @return 名前空間名.
+     * @throws ODataApplicationException
      */
-    public String getNamespaceIyo() {
-        return namespace;
+    public String getNamespaceIyo() throws ODataApplicationException {
+        return getOiyokanSettingsInstance().getNamespace();
     }
 
     /**
@@ -115,8 +106,8 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
      * 
      * @return コンテナ名.
      */
-    public String getContainerNameIyo() {
-        return containerName;
+    public String getContainerNameIyo() throws ODataApplicationException {
+        return getOiyokanSettingsInstance().getContainerName();
     }
 
     /**
@@ -124,7 +115,7 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
      * 
      * @return EDMコンテナ名のFQN(完全修飾名).
      */
-    public FullQualifiedName getContainerFqnIyo() {
+    public FullQualifiedName getContainerFqnIyo() throws ODataApplicationException {
         return new FullQualifiedName(getNamespaceIyo(), getContainerNameIyo());
     }
 
@@ -151,7 +142,8 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
      * @param entityNameFQN エンティティ名FQN.
      * @return エンティティセット.
      */
-    public OiyokanCsdlEntitySet getEntitySetByEntityNameFqnIyo(FullQualifiedName entityNameFQN) {
+    public OiyokanCsdlEntitySet getEntitySetByEntityNameFqnIyo(FullQualifiedName entityNameFQN)
+            throws ODataApplicationException {
         for (CsdlEntitySet look : getEntitySets()) {
             OiyokanCsdlEntitySet look2 = (OiyokanCsdlEntitySet) look;
             if (look2.getEntityNameFqnIyo().equals(entityNameFQN)) {
@@ -191,7 +183,7 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
      * 
      * @throws ODataApplicationException
      */
-    private void loadoIyokanSettings() throws ODataApplicationException {
+    private static void loadoIyokanSettings() throws ODataApplicationException {
         if (OiyokanConstants.IS_TRACE_ODATA_V4)
             System.err.println("OData v4: resources: load oiyokan-settings.json");
 

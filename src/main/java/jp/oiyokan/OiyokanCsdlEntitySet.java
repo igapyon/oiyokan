@@ -18,6 +18,7 @@ package jp.oiyokan;
 import org.apache.olingo.commons.api.edm.FullQualifiedName;
 import org.apache.olingo.commons.api.edm.provider.CsdlEntitySet;
 import org.apache.olingo.commons.api.edm.provider.CsdlEntityType;
+import org.apache.olingo.server.api.ODataApplicationException;
 
 import jp.oiyokan.dto.OiyokanSettingsEntitySet;
 
@@ -81,7 +82,8 @@ public class OiyokanCsdlEntitySet extends CsdlEntitySet {
      * @param dbTableNameLocal  ローカルのデータベース上のテーブル名.
      * @param dbTableNameTarget ターゲットのデータベース上のテーブル名. 通常は dbTableNameLocalと一致.
      */
-    public OiyokanCsdlEntitySet(OiyokanCsdlEntityContainer containerInfo, OiyokanSettingsEntitySet entitySetConf) {
+    public OiyokanCsdlEntitySet(OiyokanCsdlEntityContainer containerInfo, OiyokanSettingsEntitySet entitySetConf)
+            throws ODataApplicationException {
         setName(entitySetConf.getEntitySetName());
         this.csdlEntityContainer = containerInfo;
         this.entitySetConf = entitySetConf;
@@ -104,7 +106,7 @@ public class OiyokanCsdlEntitySet extends CsdlEntitySet {
      * 
      * @return エンティティのFQN(完全修飾名).
      */
-    public FullQualifiedName getEntityNameFqnIyo() {
+    public FullQualifiedName getEntityNameFqnIyo() throws ODataApplicationException {
         return new FullQualifiedName(csdlEntityContainer.getNamespaceIyo(), getEntityNameIyo());
     }
 
