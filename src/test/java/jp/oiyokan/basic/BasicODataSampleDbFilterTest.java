@@ -52,8 +52,7 @@ class BasicODataSampleDbFilterTest {
         req.setMethod(HttpMethod.GET);
         req.setRawBaseUri("http://localhost:8080/odata4.svc");
         req.setRawODataPath("/MyProducts");
-        req.setRawQueryPath(
-                "$top=51&$filter=Date1 ge 2021-03-20 and Date1 lt 2020-12-31&$orderby=ID&$count=true&$select=ID");
+        req.setRawQueryPath("$top=51&$filter=Date1 lt 2021-01-01&$orderby=ID&$count=true&$select=ID");
         req.setRawRequestUri(req.getRawBaseUri() + req.getRawODataPath() + "?" + req.getRawQueryPath());
 
         final ODataResponse resp = handler.process(req);
