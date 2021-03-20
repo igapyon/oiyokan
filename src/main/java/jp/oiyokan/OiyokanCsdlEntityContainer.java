@@ -77,6 +77,14 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
                     System.err.println("OData v4: Check JDBC Driver: " + database.getJdbcDriver());
                 try {
                     Class.forName(database.getJdbcDriver());
+
+                    if ("h2".equals(database.getType()) || "pg".equals(database.getType())) {
+                        // OK
+                    } else {
+                        throw new ODataApplicationException(
+                                "UNEXPECTED: [" + database.getName() + "]の type 指定[" + database.getType() + "]が不正", 500,
+                                Locale.ENGLISH);
+                    }
                 } catch (ClassNotFoundException ex) {
                     ex.printStackTrace();
                     throw new ODataApplicationException(

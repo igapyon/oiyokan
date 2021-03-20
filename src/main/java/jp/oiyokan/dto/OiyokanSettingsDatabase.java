@@ -31,20 +31,29 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
  * http://www.jsonschema2pojo.org/ を利用して自動生成.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({ "name", "description", "jdbcDriver", "jdbcUrl", "jdbcUser", "jdbcPass" })
+@JsonPropertyOrder({ "name", "type", "description", "jdbcDriver", "jdbcUrl", "jdbcUser", "jdbcPass" })
 public class OiyokanSettingsDatabase {
     @JsonProperty("name")
     private String name;
+
+    @JsonProperty("type")
+    private String type;
+
     @JsonProperty("description")
     private String description;
+
     @JsonProperty("jdbcDriver")
     private String jdbcDriver;
+
     @JsonProperty("jdbcUrl")
     private String jdbcUrl;
+
     @JsonProperty("jdbcUser")
     private String jdbcUser;
+
     @JsonProperty("jdbcPass")
     private String jdbcPass;
+
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -56,6 +65,16 @@ public class OiyokanSettingsDatabase {
     @JsonProperty("name")
     public void setName(String name) {
         this.name = name;
+    }
+
+    @JsonProperty("type")
+    public String getType() {
+        return type;
+    }
+
+    @JsonProperty("type")
+    public void setType(String type) {
+        this.type = type;
     }
 
     @JsonProperty("description")

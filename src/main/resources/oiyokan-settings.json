@@ -4,6 +4,7 @@
 	"database": [
 		{
 			"name": "oiyokan-internal",
+			"type": "h2",
 			"description": "Oiyokanが内部的に利用するキャッシュDB。この設定は原則変更できない。",
 			"jdbcDriver": "org.h2.Driver",
 			"jdbcUrl": "jdbc:h2:mem:oiyokan;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=FALSE;CASE_INSENSITIVE_IDENTIFIERS=TRUE;MODE=MSSQLServer",
@@ -12,6 +13,7 @@
 		},
 		{
 			"name": "postgres1",
+			"type": "pg",
 			"description": "サンプルDB接続設定記述。ここを実際の設定値に変更して利用する。まだ対応エンティティセットの記述がない。",
 			"jdbcDriver": "org.postgresql.Driver",
 			"jdbcUrl": "jdbc:postgresql://localhost:5432/sample",
