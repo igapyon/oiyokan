@@ -69,6 +69,12 @@ public class OiyokanInterDb {
         }
 
         ///////////////////////////////////////////
+        // 内部データの作成に突入.
+        if (OiyokanConstants.IS_TRACE_ODATA_V4)
+            System.err.println( //
+                    "OData v4: setup internal data: " + " (Oiyokan: " + OiyokanConstants.VERSION + ")");
+
+        ///////////////////////////////////////////
         // ODataAppInfos にバージョン情報などデータの追加
         try (var stmt = conn.prepareStatement("INSERT INTO ODataAppInfos (KeyName, KeyValue) VALUES ("
                 + BasicDbUtil.getQueryPlaceholderString(2) + ")")) {

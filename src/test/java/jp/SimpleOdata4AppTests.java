@@ -21,17 +21,5 @@ import org.junit.jupiter.api.Test;
 class SimpleOdata4AppTests {
     @Test
     void contextLoads() {
-
-        if (true) {
-            final int ZOUSYOKU = 100;
-
-            int idCounter = 104;
-
-            for (int index = 0; index < ZOUSYOKU; index++) {
-                System.err.println("INSERT INTO MyProducts (ID, Name, Description) VALUES (");
-                System.err.println("  " + idCounter++ + ", 'DummyPC" + index + "', 'ダミーなPC" + index + "');");
-
-            }
-        }
     }
 }
