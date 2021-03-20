@@ -35,7 +35,7 @@ public class OiyokanResourceSqlUtil {
      * 
      * @throws ODataApplicationException
      */
-    public static String[] loadOiyokanSampleDb(final String resourceName) throws ODataApplicationException {
+    public static String[] loadOiyokanResourceSql(final String resourceName) throws ODataApplicationException {
         if (OiyokanConstants.IS_TRACE_ODATA_V4)
             System.err.println("OData v4: resources: load: " + resourceName);
 

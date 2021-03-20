@@ -89,7 +89,7 @@ public class TinyH2DbSample {
             throw new ODataApplicationException("テーブル作成に失敗: " + ex.toString(), 500, Locale.ENGLISH);
         }
 
-        final String[] sqls = OiyokanResourceSqlUtil.loadOiyokanSampleDb("oiyokan-sampledb.sql");
+        final String[] sqls = OiyokanResourceSqlUtil.loadOiyokanResourceSql("oiyokan-testdb.sql");
         for (String sql : sqls) {
             try (var stmt = conn.prepareStatement(sql.trim())) {
                 // System.err.println("SQL: " + sql);
@@ -109,22 +109,6 @@ public class TinyH2DbSample {
      * @param conn データベース接続。
      */
     public static void setupTableData(final Connection conn) throws ODataApplicationException {
-        if (OiyokanConstants.IS_TRACE_ODATA_V4)
-            System.err.println( //
-                    "OData v4: build sample data: " + " (Oiyokan: " + OiyokanConstants.VERSION + ")");
-
-        // 全文検索関連の準備.
-        try {
-            try (PreparedStatement stmt = conn
-                    .prepareStatement("CREATE ALIAS IF NOT EXISTS FT_INIT FOR \"org.h2.fulltext.FullText.init\"")) {
-                stmt.executeUpdate();
-            }
-            try (PreparedStatement stmt = conn.prepareStatement("CALL FT_INIT()")) {
-                stmt.executeUpdate();
-            }
-        } catch (SQLException ex) {
-            throw new ODataApplicationException("全文検索の初期設定に失敗: " + ex.toString(), 500, Locale.ENGLISH);
-        }
 
         ///////////////////////
         // ダミーなデータの追加
