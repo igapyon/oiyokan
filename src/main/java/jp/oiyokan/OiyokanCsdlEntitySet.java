@@ -48,6 +48,14 @@ public class OiyokanCsdlEntitySet extends CsdlEntitySet {
 
     private OiyokanSettingsDatabase settingsDatabase = null;
 
+    public OiyokanSettingsEntitySet getSettingsEntitySet() {
+        return settingsEntitySet;
+    }
+
+    public OiyokanSettingsDatabase getSettingsDatabase() {
+        return settingsDatabase;
+    }
+
     /**
      * データベース型を取得.
      * 

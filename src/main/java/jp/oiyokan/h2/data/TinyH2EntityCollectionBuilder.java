@@ -63,11 +63,11 @@ public class TinyH2EntityCollectionBuilder {
             return eCollection;
         }
 
-        CsdlEntitySet eSetTarget = null;
+        OiyokanCsdlEntitySet eSetTarget = null;
         String targetEntityName = null;
         for (CsdlEntitySet eSetProvided : provider.getEntityContainer().getEntitySets()) {
             if (edmEntitySet.getName().equals(eSetProvided.getName())) {
-                eSetTarget = eSetProvided;
+                eSetTarget = (OiyokanCsdlEntitySet) eSetProvided;
                 targetEntityName = eSetProvided.getName();
                 break;
             }
@@ -79,14 +79,7 @@ public class TinyH2EntityCollectionBuilder {
         }
 
         // インメモリ作業データベースに接続.
-        try (Connection conn = BasicDbUtil.getInternalConnection()) {
-            // テーブルをセットアップ.
-            TinyH2DbSample.createTable(conn);
-
-            // テーブルデータをセットアップ.
-            // サンプルデータを格納.
-            TinyH2DbSample.setupTableData(conn);
-
+        try (Connection conn = BasicDbUtil.getConnection(eSetTarget.getSettingsDatabase())) {
             if (uriInfo.getSearchOption() != null) {
                 // $search.
                 new TinyH2TrialFullTextSearch().process(conn, edmEntitySet, uriInfo, eCollection);
