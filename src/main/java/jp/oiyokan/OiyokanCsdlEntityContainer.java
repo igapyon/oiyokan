@@ -93,9 +93,9 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
                 OiyokanSettingsDatabase settingsDatabase = OiyokanSettingsUtil
                         .getOiyokanInternalDatabase(getOiyokanSettingsInstance());
 
-                try (Connection conn = BasicDbUtil.getConnection(settingsDatabase)) {
+                try (Connection connInterDb = BasicDbUtil.getConnection(settingsDatabase)) {
                     // テーブルをセットアップ.
-                    OiyokanInterDb.setupTable(conn);
+                    OiyokanInterDb.setupTable(connInterDb);
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                     new ODataApplicationException("UNEXPECTED Database error.", 500, Locale.ENGLISH);

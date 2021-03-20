@@ -35,16 +35,16 @@ public class OiyokanInterDb {
     /**
      * 情報を格納するためのテーブルをセットアップします。
      * 
-     * @param conn データベース接続。
+     * @param connInternalDb データベース接続。
      * @return true:新規作成, false:既に存在.
      */
-    public static boolean setupTable(final Connection conn) throws ODataApplicationException {
+    public static boolean setupTable(final Connection connInternalDb) throws ODataApplicationException {
         if (OiyokanConstants.IS_TRACE_ODATA_V4)
             System.err.println( //
                     "OData v4: setup internal table: " + " (Oiyokan: " + OiyokanConstants.VERSION + ")");
 
         // Oiyokan が動作する上で必要なテーブルのセットアップ.
-        try (var stmt = conn.prepareStatement("CREATE TABLE IF NOT EXISTS " //
+        try (var stmt = connInternalDb.prepareStatement("CREATE TABLE IF NOT EXISTS " //
                 + "ODataAppInfos (" //
                 + "KeyName VARCHAR(20) NOT NULL" //
                 + ",KeyValue VARCHAR(255)" //
@@ -56,7 +56,7 @@ public class OiyokanInterDb {
         }
 
         // ODataAppInfos が既に存在するかどうか確認. 存在する場合は処理中断.
-        try (var stmt = conn.prepareStatement("SELECT COUNT(*) FROM ODataAppInfos")) {
+        try (var stmt = connInternalDb.prepareStatement("SELECT COUNT(*) FROM ODataAppInfos")) {
             stmt.executeQuery();
             var rset = stmt.getResultSet();
             rset.next();
@@ -69,8 +69,14 @@ public class OiyokanInterDb {
         }
 
         ///////////////////////////////////////////
+        // 内部データの作成に突入.
+        if (OiyokanConstants.IS_TRACE_ODATA_V4)
+            System.err.println( //
+                    "OData v4: setup internal data: " + " (Oiyokan: " + OiyokanConstants.VERSION + ")");
+
+        ///////////////////////////////////////////
         // ODataAppInfos にバージョン情報などデータの追加
-        try (var stmt = conn.prepareStatement("INSERT INTO ODataAppInfos (KeyName, KeyValue) VALUES ("
+        try (var stmt = connInternalDb.prepareStatement("INSERT INTO ODataAppInfos (KeyName, KeyValue) VALUES ("
                 + BasicDbUtil.getQueryPlaceholderString(2) + ")")) {
             stmt.setString(1, "Version");
             stmt.setString(2, OiyokanConstants.VERSION);
@@ -81,17 +87,17 @@ public class OiyokanInterDb {
             stmt.setString(2, OiyokanConstants.NAME);
             stmt.executeUpdate();
 
-            conn.commit();
+            connInternalDb.commit();
         } catch (SQLException ex) {
             throw new ODataApplicationException("テーブル作成に失敗: " + ex.toString(), 500, Locale.ENGLISH);
         }
 
         final String[] sqls = OiyokanResourceSqlUtil.loadOiyokanResourceSql("oiyokan-testdb.sql");
         for (String sql : sqls) {
-            try (var stmt = conn.prepareStatement(sql.trim())) {
+            try (var stmt = connInternalDb.prepareStatement(sql.trim())) {
                 // System.err.println("SQL: " + sql);
                 stmt.executeUpdate();
-                conn.commit();
+                connInternalDb.commit();
             } catch (SQLException ex) {
                 throw new ODataApplicationException("SQL実行に失敗: " + ex.toString(), 500, Locale.ENGLISH);
             }
