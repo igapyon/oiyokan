@@ -36,6 +36,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jp.oiyokan.basic.BasicJdbcEntityTypeBuilder;
 import jp.oiyokan.dto.OiyokanSettings;
 import jp.oiyokan.dto.OiyokanSettingsDatabaseList;
+import jp.oiyokan.dto.OiyokanSettingsEntitySetList;
 
 /**
  * Oiyokan の CsdlEntityContainer 実装.
@@ -58,6 +59,14 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
      */
     private Map<String, CsdlEntityType> cachedCsdlEntityTypeMap = new HashMap<>();
 
+    public OiyokanSettings getOiyokanSettingsInstance() throws ODataApplicationException {
+        if (oiyokanSettings == null) {
+            loadoIyokanSettings();
+        }
+
+        return oiyokanSettings;
+    }
+
     /**
      * このコンテナをビルドし、紐づくエンティティセットをここで生成. このクラスの利用者は、機能呼び出し前にこのメソッドを呼ぶこと.
      * 
@@ -70,9 +79,7 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
 
         // テンプレートとそれから生成された複写物と2種類あるため、フラグではなくサイズで判定が必要だった.
         if (getEntitySets().size() == 0) {
-            loadoIyokanSettings();
-
-            for (OiyokanSettingsDatabaseList database : oiyokanSettings.getDatabaseList()) {
+            for (OiyokanSettingsDatabaseList database : getOiyokanSettingsInstance().getDatabaseList()) {
                 if (OiyokanConstants.IS_TRACE_ODATA_V4)
                     System.err.println("OData v4: Check JDBC Driver: " + database.getJdbcDriver());
                 try {
@@ -84,13 +91,12 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
                 }
             }
 
-            // EntitySet の初期セットを実施。
-            getEntitySets().add(new OiyokanCsdlEntitySet(this, "ODataAppInfos", "ODataAppInfo",
-                    OiyokanCsdlEntitySet.DatabaseType.H2, "ODataAppInfos", "ODataAppInfos"));
-
-            // サンプル EntitySet
-            getEntitySets().add(new OiyokanCsdlEntitySet(this, "MyProducts", "MyProduct",
-                    OiyokanCsdlEntitySet.DatabaseType.H2, "MyProducts", "MyProducts"));
+            for (OiyokanSettingsEntitySetList entitySetCnof : getOiyokanSettingsInstance().getEntitySetList()) {
+                // EntitySet の初期セットを実施。
+                getEntitySets().add(new OiyokanCsdlEntitySet(this, entitySetCnof.getEntitySetName(),
+                        entitySetCnof.getEntityName(), OiyokanCsdlEntitySet.DatabaseType.H2,
+                        entitySetCnof.getDbTableNameLocal(), entitySetCnof.getDbTableNameTarget()));
+            }
         }
     }
 
@@ -195,7 +201,6 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
 
             final ObjectMapper mapper = new ObjectMapper();
             oiyokanSettings = mapper.readValue(strOiyokanSettings, OiyokanSettings.class);
-            System.err.println("TRACE: " + "oiyokan-settings.json 読み込み成功.");
         } catch (IOException ex) {
             ex.printStackTrace();
             throw new ODataApplicationException("UNEXPECTED: Oiyokan 設定情報読み込み失敗", 500, Locale.ENGLISH);
