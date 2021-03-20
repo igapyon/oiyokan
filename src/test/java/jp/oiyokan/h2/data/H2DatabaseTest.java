@@ -22,7 +22,9 @@ import java.sql.ResultSetMetaData;
 
 import org.junit.jupiter.api.Test;
 
+import jp.oiyokan.OiyokanSettingsUtil;
 import jp.oiyokan.basic.BasicDbUtil;
+import jp.oiyokan.dto.OiyokanSettings;
 
 /**
  * そもそも内部 h2 database への接続性を確認
@@ -30,7 +32,9 @@ import jp.oiyokan.basic.BasicDbUtil;
 class H2DatabaseTest {
     @Test
     void test01() throws Exception {
-        try (Connection conn = BasicDbUtil.getInternalConnection()) {
+        final OiyokanSettings settingsOiyokan = OiyokanSettingsUtil.loadOiyokanSettings();
+        try (Connection conn = BasicDbUtil
+                .getConnection(OiyokanSettingsUtil.getOiyokanInternalDatabase(settingsOiyokan))) {
 
             // テーブルをセットアップ.
             TinyH2DbSample.createTable(conn);
@@ -48,9 +52,11 @@ class H2DatabaseTest {
 
     @Test
     void testo2() throws Exception {
-// TODO このテストを、ODataRequestベースのものに書き換えた版を作成すること。
+        // TODO このテストを、ODataRequestベースのものに書き換えた版を作成すること。
 
-        try (Connection conn = BasicDbUtil.getInternalConnection()) {
+        final OiyokanSettings settingsOiyokan = OiyokanSettingsUtil.loadOiyokanSettings();
+        try (Connection conn = BasicDbUtil
+                .getConnection(OiyokanSettingsUtil.getOiyokanInternalDatabase(settingsOiyokan))) {
             // テーブルをセットアップ.
             TinyH2DbSample.createTable(conn);
 

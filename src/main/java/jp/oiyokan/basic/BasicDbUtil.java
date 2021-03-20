@@ -31,6 +31,9 @@ import org.apache.olingo.commons.api.edm.EdmPrimitiveTypeKind;
 import org.apache.olingo.commons.api.edm.provider.CsdlProperty;
 import org.apache.olingo.server.api.ODataApplicationException;
 
+import jp.oiyokan.OiyokanConstants;
+import jp.oiyokan.dto.OiyokanSettingsDatabase;
+
 /**
  * Oiyokan 関連のDBまわりユーティリティクラス.
  */
@@ -43,23 +46,22 @@ public class BasicDbUtil {
      * 
      * @return データベース接続。
      */
-    public static Connection getInternalConnection() throws ODataApplicationException {
+    public static Connection getConnection(OiyokanSettingsDatabase settingsDatabase) throws ODataApplicationException {
         Connection conn;
+        // OData server 軌道シーケンスにて既に実施済み.
+        // Class.forName(settingsDatabase.getJdbcDriver());
+
         try {
-            Class.forName("org.h2.Driver");
-        } catch (ClassNotFoundException ex) {
-            ex.printStackTrace();
-            throw new ODataApplicationException("Fail to load driver: " + ex.toString(), 500, Locale.ENGLISH);
-        }
-        // SQL Server 互換モードで動作させる.
-        final var jdbcConnStr = "jdbc:h2:mem:oiyokan;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=FALSE;CASE_INSENSITIVE_IDENTIFIERS=TRUE;MODE=MSSQLServer";
-        // System.err.println("TRACE: DEMO: [connect jdbc] " + jdbcConnStr);
-        try {
-            conn = DriverManager.getConnection(//
-                    jdbcConnStr, "sa", "");
+            if (settingsDatabase.getJdbcUser() == null || settingsDatabase.getJdbcUser().trim().length() == 0) {
+                conn = DriverManager.getConnection(settingsDatabase.getJdbcUrl());
+            } else {
+                conn = DriverManager.getConnection(settingsDatabase.getJdbcUrl(), settingsDatabase.getJdbcUser(),
+                        settingsDatabase.getJdbcPass());
+            }
         } catch (SQLException ex) {
-            ex.printStackTrace();
-            throw new ODataApplicationException("Fail to Connect: " + ex.toString(), 500, Locale.ENGLISH);
+            if (OiyokanConstants.IS_TRACE_ODATA_V4)
+                System.err.println("OData v4: Fail to connect: " + settingsDatabase.getName());
+            throw new ODataApplicationException("Fail to Connect: " + settingsDatabase.getName(), 500, Locale.ENGLISH);
         }
 
         return conn;

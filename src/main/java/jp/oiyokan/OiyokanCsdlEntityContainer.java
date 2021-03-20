@@ -15,9 +15,8 @@
  */
 package jp.oiyokan;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.Charset;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
@@ -28,15 +27,13 @@ import org.apache.olingo.commons.api.edm.provider.CsdlEntityContainer;
 import org.apache.olingo.commons.api.edm.provider.CsdlEntitySet;
 import org.apache.olingo.commons.api.edm.provider.CsdlEntityType;
 import org.apache.olingo.server.api.ODataApplicationException;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.util.StreamUtils;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
+import jp.oiyokan.basic.BasicDbUtil;
 import jp.oiyokan.basic.BasicJdbcEntityTypeBuilder;
 import jp.oiyokan.dto.OiyokanSettings;
 import jp.oiyokan.dto.OiyokanSettingsDatabase;
 import jp.oiyokan.dto.OiyokanSettingsEntitySet;
+import jp.oiyokan.h2.data.TinyH2DbSample;
 
 /**
  * Oiyokan の CsdlEntityContainer 実装.
@@ -51,7 +48,7 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
 
     public static OiyokanSettings getOiyokanSettingsInstance() throws ODataApplicationException {
         if (settingsOiyokan == null) {
-            loadoIyokanSettings();
+            settingsOiyokan = OiyokanSettingsUtil.loadOiyokanSettings();
         }
 
         return settingsOiyokan;
@@ -89,6 +86,23 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
                     throw new ODataApplicationException(
                             "UNEXPECTED: JDBCドライバ[" + settingsDatabase.getJdbcDriver() + "]の読み込みに失敗", 500,
                             Locale.ENGLISH);
+                }
+            }
+
+            {
+                OiyokanSettingsDatabase settingsDatabase = OiyokanSettingsUtil
+                        .getOiyokanInternalDatabase(getOiyokanSettingsInstance());
+
+                try (Connection conn = BasicDbUtil.getConnection(settingsDatabase)) {
+                    // テーブルをセットアップ.
+                    TinyH2DbSample.createTable(conn);
+
+                    // テーブルデータをセットアップ.
+                    // サンプルデータを格納.
+                    TinyH2DbSample.setupTableData(conn);
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                    new ODataApplicationException("UNEXPECTED Database error.", 500, Locale.ENGLISH);
                 }
             }
 
@@ -184,27 +198,5 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
         CsdlEntityType newEntityType = entityTypeBuilder.getEntityType();
         cachedCsdlEntityTypeMap.put(entityTypeName.getFullQualifiedNameAsString(), newEntityType);
         return newEntityType;
-    }
-
-    /**
-     * resources フォルダから設定ファイルを読み込み.
-     * 
-     * @throws ODataApplicationException
-     */
-    private static void loadoIyokanSettings() throws ODataApplicationException {
-        if (OiyokanConstants.IS_TRACE_ODATA_V4)
-            System.err.println("OData v4: resources: load oiyokan-settings.json");
-
-        // resources から読み込み。
-        final ClassPathResource cpres = new ClassPathResource("oiyokan-settings.json");
-        try (InputStream inStream = cpres.getInputStream()) {
-            String strOiyokanSettings = StreamUtils.copyToString(inStream, Charset.forName("UTF-8"));
-
-            final ObjectMapper mapper = new ObjectMapper();
-            settingsOiyokan = mapper.readValue(strOiyokanSettings, OiyokanSettings.class);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            throw new ODataApplicationException("UNEXPECTED: Oiyokan 設定情報読み込み失敗", 500, Locale.ENGLISH);
-        }
     }
 }

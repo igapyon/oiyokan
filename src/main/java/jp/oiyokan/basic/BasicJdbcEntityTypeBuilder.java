@@ -62,7 +62,7 @@ public class BasicJdbcEntityTypeBuilder {
      */
     public CsdlEntityType getEntityType() throws ODataApplicationException {
         // インメモリ作業データベースに接続.
-        try (Connection conn = BasicDbUtil.getInternalConnection()) {
+        try (Connection conn = BasicDbUtil.getConnection(entitySet.getSettingsDatabase())) {
             // テーブルをセットアップ.
             TinyH2DbSample.createTable(conn);
 
