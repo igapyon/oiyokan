@@ -89,77 +89,14 @@ public class TinyH2DbSample {
             throw new ODataApplicationException("テーブル作成に失敗: " + ex.toString(), 500, Locale.ENGLISH);
         }
 
-        try (var stmt = conn.prepareStatement("CREATE TABLE IF NOT EXISTS " //
-                + "MyProducts (" //
-                + "ID INT NOT NULL" // primary key.
-                + ",Name VARCHAR(80) NOT NULL" //
-                + ",Description VARCHAR(250)" //
-
-                // テスト実験するためのフィールド.
-
-                // SByte, h2:TINYINT(?)
-                + ",Sbyte1 TINYINT DEFAULT 127" //
-
-                // Int16, h2:SMALLINT
-                + ",Int16a SMALLINT DEFAULT 32767" //
-
-                // Int32, h2:INT
-                + ",Int32a INT DEFAULT 2147483647" //
-
-                // Int64, h2:BIGINT
-                + ",Int64a BIGINT DEFAULT 2147483647" //
-
-                // 【諸事情によりINT MAX以上をサンプルから割愛】 + ",Int64b BIGINT DEFAULT 99999999999" //
-                // 【諸事情によりINT MAX以上をサンプルから割愛】 + ",Int64max BIGINT DEFAULT 9223372036854775807"
-
-                // Decimal, h2:DECIMAL
-                + ",Decimal1 DECIMAL(6,2) DEFAULT 1234.56" //
-
-                // String, h2:VARCHAR, h2:CHAR
-                + ",StringChar2 CHAR(2) DEFAULT 'C2'" //
-                + ",StringVar255 VARCHAR(255) DEFAULT 'VARCHAR255'" //
-                + ",StringVar65535 VARCHAR(65535) DEFAULT 'VARCHAR65535'" //
-
-                // H2の全文検索の対象外: Binary, h2:BINARY
-
-                // Boolean, h2:BOOLEAN
-                + ",Boolean1 BOOLEAN DEFAULT FALSE NOT NULL" //
-
-                // Single, h2:REAL
-                + ",Single1 REAL DEFAULT 123.456789" //
-
-                // Double, h2:DOUBLE
-                + ",Double1 DOUBLE DEFAULT 123.4567890123" //
-
-                // Date, h2:DATE
-                + ",Date1 DATE DEFAULT CURRENT_DATE() NOT NULL" //
-
-                // DateTimeOffset, h2:TIMESTAMP
-                + ",DateTimeOffset1 TIMESTAMP DEFAULT CURRENT_TIMESTAMP() NOT NULL" //
-
-                // TimeOfDay, h2:TIME
-                + ",TimeOfDay1 TIME DEFAULT CURRENT_TIME()" //
-
-                + ",PRIMARY KEY(ID)" //
-                + ")")) {
-            stmt.executeUpdate();
-        } catch (SQLException ex) {
-            throw new ODataApplicationException("テーブル作成に失敗: " + ex.toString(), 500, Locale.ENGLISH);
-        }
-
-        try (var stmt = conn.prepareStatement("CREATE TABLE IF NOT EXISTS " //
-                + "MyTests (" //
-                + "ID INT NOT NULL" // primary key.
-                + ",Name VARCHAR(80) NOT NULL" //
-
-                // Binary
-                + ",Binary1 Binary DEFAULT X'3031323334353637383930'" //
-
-                + ",PRIMARY KEY(ID)" //
-                + ")")) {
-            stmt.executeUpdate();
-        } catch (SQLException ex) {
-            throw new ODataApplicationException("テーブル作成に失敗: " + ex.toString(), 500, Locale.ENGLISH);
+        final String[] sqls = OiyokanResourceSqlUtil.loadOiyokanSampleDb("oiyokan-sampledb.sql");
+        for (String sql : sqls) {
+            try (var stmt = conn.prepareStatement(sql.trim())) {
+                // System.err.println("SQL: " + sql);
+                stmt.executeUpdate();
+            } catch (SQLException ex) {
+                throw new ODataApplicationException("SQL実行に失敗: " + ex.toString(), 500, Locale.ENGLISH);
+            }
         }
 
         // 新規作成.
