@@ -34,6 +34,8 @@ import jp.oiyokan.h2.data.OiyokanResourceSqlUtil;
  * Oiyokan (OData v4 server) が動作する際に必要になる内部データおよびサンプルデータをセットアップ.
  */
 public class OiyokanInterDb {
+    public static final String[] OIYOKAN_FILE_SQLS = new String[] { "oiyokan-testdb.sql" };
+
     private OiyokanInterDb() {
     }
 
@@ -97,14 +99,19 @@ public class OiyokanInterDb {
             throw new ODataApplicationException("テーブル作成に失敗: " + ex.toString(), 500, Locale.ENGLISH);
         }
 
-        final String[] sqls = OiyokanResourceSqlUtil.loadOiyokanResourceSql("oiyokan-testdb.sql");
-        for (String sql : sqls) {
-            try (var stmt = connInternalDb.prepareStatement(sql.trim())) {
-                // System.err.println("SQL: " + sql);
-                stmt.executeUpdate();
-                connInternalDb.commit();
-            } catch (SQLException ex) {
-                throw new ODataApplicationException("SQL実行に失敗: " + ex.toString(), 500, Locale.ENGLISH);
+        for (String sqlFile : OIYOKAN_FILE_SQLS) {
+            if (OiyokanConstants.IS_TRACE_ODATA_V4)
+                System.err.println("OData v4: load: sql: " + sqlFile);
+
+            final String[] sqls = OiyokanResourceSqlUtil.loadOiyokanResourceSql("oiyokan/sql/" + sqlFile);
+            for (String sql : sqls) {
+                try (var stmt = connInternalDb.prepareStatement(sql.trim())) {
+                    // System.err.println("SQL: " + sql);
+                    stmt.executeUpdate();
+                    connInternalDb.commit();
+                } catch (SQLException ex) {
+                    throw new ODataApplicationException("SQL実行に失敗: " + ex.toString(), 500, Locale.ENGLISH);
+                }
             }
         }
 

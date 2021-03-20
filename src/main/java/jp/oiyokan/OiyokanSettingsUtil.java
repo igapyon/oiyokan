@@ -40,10 +40,10 @@ public class OiyokanSettingsUtil {
      */
     public static OiyokanSettings loadOiyokanSettings() throws ODataApplicationException {
         if (OiyokanConstants.IS_TRACE_ODATA_V4)
-            System.err.println("OData v4: resources: load oiyokan-settings.json");
+            System.err.println("OData v4: resources: load: settings: oiyokan-settings.json");
 
         // resources から読み込み。
-        final ClassPathResource cpres = new ClassPathResource("oiyokan-settings.json");
+        final ClassPathResource cpres = new ClassPathResource("oiyokan/oiyokan-settings.json");
         try (InputStream inStream = cpres.getInputStream()) {
             String strOiyokanSettings = StreamUtils.copyToString(inStream, Charset.forName("UTF-8"));
 
