@@ -32,13 +32,22 @@
 			"dbTableNameTarget": "ODataAppInfos"
 		},
 		{
-			"name": "oiyokan-sample-database",
+			"name": "oiyokan-test-database",
 			"description": "Oiyokanの単体テスト用に利用するエンティティセット。この設定を不用意に変更するとビルドが失敗する。",
 			"entitySetName": "MyProducts",
 			"entityName": "MyProduct",
 			"databaseName": "oiyokan-internal",
 			"dbTableNameLocal": "OcsdlMyProducts",
 			"dbTableNameTarget": "MyProducts"
+		},
+		{
+			"name": "sample-pg-dvdrental",
+			"description": "Postgres dvdrental サンプルDB: actor",
+			"entitySetName": "PgActors",
+			"entityName": "PgActor",
+			"databaseName": "postgres1",
+			"dbTableNameLocal": "Ocsdlactor",
+			"dbTableNameTarget": "actor"
 		}
 	]
 }

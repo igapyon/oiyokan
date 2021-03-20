@@ -34,6 +34,11 @@ import jp.oiyokan.h2.data.OiyokanResourceSqlUtil;
  * Oiyokan (OData v4 server) が動作する際に必要になる内部データおよびサンプルデータをセットアップ.
  */
 public class OiyokanInterDb {
+    public static final String[] OIYOKAN_FILE_SQLS = new String[] { //
+            "oiyokan-testdb.sql", // Oiyokan の基本機能を確認およびビルド時の JUnit テストで利用.
+            "sample-ocsdl-pg-dvdrental.sql" // Postgres の dvdrental サンプルDB に接続するための内部情報.
+    };
+
     private OiyokanInterDb() {
     }
 
@@ -46,7 +51,7 @@ public class OiyokanInterDb {
     public static boolean setupTable(final Connection connInternalDb) throws ODataApplicationException {
         if (OiyokanConstants.IS_TRACE_ODATA_V4)
             System.err.println( //
-                    "OData v4: setup internal table: " + " (Oiyokan: " + OiyokanConstants.VERSION + ")");
+                    "OData v4: setup internal table" + " (Oiyokan: " + OiyokanConstants.VERSION + ")");
 
         // Oiyokan が動作する上で必要なテーブルのセットアップ.
         try (var stmt = connInternalDb.prepareStatement("CREATE TABLE IF NOT EXISTS " //
@@ -77,7 +82,7 @@ public class OiyokanInterDb {
         // 内部データの作成に突入.
         if (OiyokanConstants.IS_TRACE_ODATA_V4)
             System.err.println( //
-                    "OData v4: setup internal data: " + " (Oiyokan: " + OiyokanConstants.VERSION + ")");
+                    "OData v4: setup internal data " + " (Oiyokan: " + OiyokanConstants.VERSION + ")");
 
         ///////////////////////////////////////////
         // ODataAppInfos にバージョン情報などデータの追加
@@ -97,14 +102,19 @@ public class OiyokanInterDb {
             throw new ODataApplicationException("テーブル作成に失敗: " + ex.toString(), 500, Locale.ENGLISH);
         }
 
-        final String[] sqls = OiyokanResourceSqlUtil.loadOiyokanResourceSql("oiyokan-testdb.sql");
-        for (String sql : sqls) {
-            try (var stmt = connInternalDb.prepareStatement(sql.trim())) {
-                // System.err.println("SQL: " + sql);
-                stmt.executeUpdate();
-                connInternalDb.commit();
-            } catch (SQLException ex) {
-                throw new ODataApplicationException("SQL実行に失敗: " + ex.toString(), 500, Locale.ENGLISH);
+        for (String sqlFile : OIYOKAN_FILE_SQLS) {
+            if (OiyokanConstants.IS_TRACE_ODATA_V4)
+                System.err.println("OData v4: load: sql: " + sqlFile);
+
+            final String[] sqls = OiyokanResourceSqlUtil.loadOiyokanResourceSql("oiyokan/sql/" + sqlFile);
+            for (String sql : sqls) {
+                try (var stmt = connInternalDb.prepareStatement(sql.trim())) {
+                    // System.err.println("SQL: " + sql);
+                    stmt.executeUpdate();
+                    connInternalDb.commit();
+                } catch (SQLException ex) {
+                    throw new ODataApplicationException("SQL実行に失敗: " + ex.toString(), 500, Locale.ENGLISH);
+                }
             }
         }
 
@@ -136,7 +146,12 @@ public class OiyokanInterDb {
                 } else {
                     sqlBuilder.append(", ");
                 }
-                sqlBuilder.append(rsmeta.getColumnName(column) + " ");
+
+                String columnName = rsmeta.getColumnName(column);
+                if (columnName.indexOf(' ') > 0) {
+                    columnName = "[" + columnName + "]";
+                }
+                sqlBuilder.append(columnName + " ");
 
                 switch (rsmeta.getColumnType(column)) {
                 case Types.TINYINT:
@@ -153,9 +168,22 @@ public class OiyokanInterDb {
                     break;
                 case Types.DECIMAL:
                     sqlBuilder.append("DECIMAL(" //
-                            + rsmeta.getScale(column) + "," + rsmeta.getPrecision(column) + ")");
+                            + rsmeta.getPrecision(column) + "," + rsmeta.getScale(column) + ")");
+                    break;
+                case Types.NUMERIC:
+                    // postgres で発生.
+                    if (rsmeta.getPrecision(column) > 0) {
+                        sqlBuilder.append("DECIMAL(" //
+                                + rsmeta.getPrecision(column) + "," + rsmeta.getScale(column) + ")");
+                    } else {
+                        sqlBuilder.append("DECIMAL");
+                    }
                     break;
                 case Types.BOOLEAN:
+                    sqlBuilder.append("BOOLEAN");
+                    break;
+                case Types.BIT:
+                    // postgres で発生.
                     sqlBuilder.append("BOOLEAN");
                     break;
                 case Types.REAL:
@@ -179,9 +207,25 @@ public class OiyokanInterDb {
                 case Types.VARCHAR:
                     sqlBuilder.append("VARCHAR(" + rsmeta.getColumnDisplaySize(column) + ")");
                     break;
-                default:
-                    System.err.println("Type: ignore");
+                case Types.BINARY:
+                    // 現在サポートできてない.
+                    sqlBuilder.append("BINARY");
                     break;
+                case Types.ARRAY:
+                    // postgres で発生. 対応しない.
+                    sqlBuilder.append("NO_SUPPORT_ARRAY");
+                    break;
+                case Types.OTHER:
+                    // postgres で発生. 対応しない.
+                    sqlBuilder.append("NO_SUPPORT_OTHER");
+                    break;
+                default:
+                    new ODataApplicationException("NOT SUPPORTED: JDBC Type: " + rsmeta.getColumnType(column), 500,
+                            Locale.ENGLISH);
+                    break;
+                }
+                if (ResultSetMetaData.columnNoNulls == rsmeta.isNullable(column)) {
+                    sqlBuilder.append(" NOT NULL");
                 }
                 sqlBuilder.append("\n");
             }

@@ -48,8 +48,11 @@ public class BasicDbUtil {
      */
     public static Connection getConnection(OiyokanSettingsDatabase settingsDatabase) throws ODataApplicationException {
         Connection conn;
-        // OData server 軌道シーケンスにて既に実施済み.
+        // OData server 起動シーケンスにてドライバ存在チェックは既に実施済み.
         // Class.forName(settingsDatabase.getJdbcDriver());
+
+        System.err.println(
+                "TRACE: DEBUG: DB接続開始: " + settingsDatabase.getName() + " (" + settingsDatabase.getDescription() + ")");
 
         try {
             if (settingsDatabase.getJdbcUser() == null || settingsDatabase.getJdbcUser().trim().length() == 0) {

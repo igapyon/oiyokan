@@ -36,9 +36,6 @@ public class OiyokanResourceSqlUtil {
      * @throws ODataApplicationException
      */
     public static String[] loadOiyokanResourceSql(final String resourceName) throws ODataApplicationException {
-        if (OiyokanConstants.IS_TRACE_ODATA_V4)
-            System.err.println("OData v4: resources: load: " + resourceName);
-
         // resources から読み込み。
         final ClassPathResource cpres = new ClassPathResource(resourceName);
         try (InputStream inStream = cpres.getInputStream()) {
