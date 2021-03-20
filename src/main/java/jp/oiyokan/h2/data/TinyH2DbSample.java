@@ -40,7 +40,7 @@ public class TinyH2DbSample {
      * 
      * @param conn データベース接続。
      */
-    public static void createTable(final Connection conn) {
+    public static void createTable(final Connection conn) throws ODataApplicationException {
         // System.err.println("TRACE: 作業用データベーステーブルを作成");
 
         try (var stmt = conn.prepareStatement("CREATE TABLE IF NOT EXISTS " //
@@ -51,7 +51,7 @@ public class TinyH2DbSample {
                 + ")")) {
             stmt.executeUpdate();
         } catch (SQLException ex) {
-            throw new IllegalArgumentException("テーブル作成に失敗: " + ex.toString(), ex);
+            throw new ODataApplicationException("テーブル作成に失敗: " + ex.toString(), 500, Locale.ENGLISH);
         }
 
         try (var stmt = conn.prepareStatement("CREATE TABLE IF NOT EXISTS " //
@@ -109,7 +109,7 @@ public class TinyH2DbSample {
                 + ")")) {
             stmt.executeUpdate();
         } catch (SQLException ex) {
-            throw new IllegalArgumentException("テーブル作成に失敗: " + ex.toString(), ex);
+            throw new ODataApplicationException("テーブル作成に失敗: " + ex.toString(), 500, Locale.ENGLISH);
         }
     }
 
@@ -144,7 +144,7 @@ public class TinyH2DbSample {
                 stmt.executeUpdate();
             }
         } catch (SQLException ex) {
-            throw new IllegalArgumentException("全文検索の初期設定に失敗: " + ex.toString(), ex);
+            throw new ODataApplicationException("全文検索の初期設定に失敗: " + ex.toString(), 500, Locale.ENGLISH);
         }
 
         ///////////////////////////////////////////
@@ -162,7 +162,7 @@ public class TinyH2DbSample {
 
             conn.commit();
         } catch (SQLException ex) {
-            throw new IllegalArgumentException("テーブル作成に失敗: " + ex.toString(), ex);
+            throw new ODataApplicationException("テーブル作成に失敗: " + ex.toString(), 500, Locale.ENGLISH);
         }
 
         ///////////////////////
@@ -207,7 +207,7 @@ public class TinyH2DbSample {
             }
             conn.commit();
         } catch (SQLException ex) {
-            throw new IllegalArgumentException("テーブル作成に失敗: " + ex.toString(), ex);
+            throw new ODataApplicationException("テーブル作成に失敗: " + ex.toString(), 500, Locale.ENGLISH);
         }
 
         try {
@@ -218,7 +218,7 @@ public class TinyH2DbSample {
                 stmt.executeUpdate();
             }
         } catch (SQLException ex) {
-            throw new IllegalArgumentException("全文検索の初期設定に失敗: " + ex.toString(), ex);
+            throw new ODataApplicationException("全文検索の初期設定に失敗: " + ex.toString(), 500, Locale.ENGLISH);
         }
     }
 }

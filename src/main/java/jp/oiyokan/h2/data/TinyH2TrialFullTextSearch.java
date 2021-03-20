@@ -19,12 +19,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Locale;
 
 import org.apache.olingo.commons.api.data.Entity;
 import org.apache.olingo.commons.api.data.EntityCollection;
 import org.apache.olingo.commons.api.data.Property;
 import org.apache.olingo.commons.api.data.ValueType;
 import org.apache.olingo.commons.api.edm.EdmEntitySet;
+import org.apache.olingo.server.api.ODataApplicationException;
 import org.apache.olingo.server.api.uri.UriInfo;
 import org.apache.olingo.server.core.uri.queryoption.SearchOptionImpl;
 
@@ -42,7 +44,8 @@ public class TinyH2TrialFullTextSearch {
      * @param uriInfo      URI情報.
      * @param eCollection  検索結果の出力先.
      */
-    public void process(Connection conn, EdmEntitySet edmEntitySet, UriInfo uriInfo, EntityCollection eCollection) {
+    public void process(Connection conn, EdmEntitySet edmEntitySet, UriInfo uriInfo, EntityCollection eCollection)
+            throws ODataApplicationException {
         try {
             SearchOptionImpl searchOpt = (SearchOptionImpl) uriInfo.getSearchOption();
 
@@ -92,7 +95,7 @@ public class TinyH2TrialFullTextSearch {
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
-            throw new IllegalArgumentException("Unexpected: SQL Error:" + ex.toString(), ex);
+            throw new ODataApplicationException("Unexpected: SQL Error:" + ex.toString(), 500, Locale.ENGLISH);
         }
     }
 }

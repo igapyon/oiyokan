@@ -23,29 +23,78 @@ import org.apache.olingo.server.api.ODataRequest;
 import org.apache.olingo.server.api.ODataResponse;
 import org.junit.jupiter.api.Test;
 
-import jp.oiyokan.OiyokanConstants;
-
 /**
  * OData サーバについて、おおざっぱな通過によるデグレードを検知.
  */
 class BasicODataSampleDbFilterTest {
-  //  @Test
-    void testSimpleVersion() throws Exception {
+    @Test
+    void testTimestamp() throws Exception {
         final ODataHttpHandler handler = BasicODataSampleDbTest.getHandler();
         final ODataRequest req = new ODataRequest();
         req.setMethod(HttpMethod.GET);
         req.setRawBaseUri("http://localhost:8080/odata4.svc");
         req.setRawODataPath("/MyProducts");
-        req.setRawQueryPath("$top=51&$filter=DateTimeOffset1 lt 2020-12-31T21:53:00Z&$orderby=ID&$count=true&$select=ID");
+        req.setRawQueryPath(
+                "$top=51&$filter=DateTimeOffset1 lt 2020-12-31T21:53:00Z&$orderby=ID&$count=true&$select=ID");
         req.setRawRequestUri(req.getRawBaseUri() + req.getRawODataPath() + "?" + req.getRawQueryPath());
 
         final ODataResponse resp = handler.process(req);
-     //   assertEquals(200, resp.getStatusCode());
+        assertEquals(200, resp.getStatusCode());
         final String result = BasicODataSampleDbTest.stream2String(resp.getContent());
-        System.err.println("result: " + result);
+        // System.err.println("result: " + result);
+        assertEquals("{\"@odata.context\":\"$metadata#MyProducts\",\"@odata.count\":0,\"value\":[]}", result);
+    }
+
+    @Test
+    void testDate() throws Exception {
+        final ODataHttpHandler handler = BasicODataSampleDbTest.getHandler();
+        final ODataRequest req = new ODataRequest();
+        req.setMethod(HttpMethod.GET);
+        req.setRawBaseUri("http://localhost:8080/odata4.svc");
+        req.setRawODataPath("/MyProducts");
+        req.setRawQueryPath("$top=51&$filter=Date1 lt 2021-01-01&$orderby=ID&$count=true&$select=ID");
+        req.setRawRequestUri(req.getRawBaseUri() + req.getRawODataPath() + "?" + req.getRawQueryPath());
+
+        final ODataResponse resp = handler.process(req);
+        assertEquals(200, resp.getStatusCode());
+        final String result = BasicODataSampleDbTest.stream2String(resp.getContent());
+        // System.err.println("result: " + result);
+        assertEquals("{\"@odata.context\":\"$metadata#MyProducts\",\"@odata.count\":0,\"value\":[]}", result);
+    }
+
+    @Test
+    void testBoolean() throws Exception {
+        final ODataHttpHandler handler = BasicODataSampleDbTest.getHandler();
+        final ODataRequest req = new ODataRequest();
+        req.setMethod(HttpMethod.GET);
+        req.setRawBaseUri("http://localhost:8080/odata4.svc");
+        req.setRawODataPath("/MyProducts");
+        req.setRawQueryPath("$filter=Boolean1 eq false&$orderby=ID&$select=ID&$top=1");
+        req.setRawRequestUri(req.getRawBaseUri() + req.getRawODataPath() + "?" + req.getRawQueryPath());
+
+        final ODataResponse resp = handler.process(req);
+        assertEquals(200, resp.getStatusCode());
+        final String result = BasicODataSampleDbTest.stream2String(resp.getContent());
+        // System.err.println("result: " + result);
+        assertEquals("{\"@odata.context\":\"$metadata#MyProducts\",\"value\":[{\"ID\":1}]}", result);
+    }
+
+    @Test
+    void testString() throws Exception {
+        final ODataHttpHandler handler = BasicODataSampleDbTest.getHandler();
+        final ODataRequest req = new ODataRequest();
+        req.setMethod(HttpMethod.GET);
+        req.setRawBaseUri("http://localhost:8080/odata4.svc");
+        req.setRawODataPath("/ODataAppInfos");
+        req.setRawQueryPath("$filter=KeyName%20eq%20%27Provider%27");
+        req.setRawRequestUri(req.getRawBaseUri() + req.getRawODataPath() + "?" + req.getRawQueryPath());
+
+        final ODataResponse resp = handler.process(req);
+        assertEquals(200, resp.getStatusCode());
+        final String result = BasicODataSampleDbTest.stream2String(resp.getContent());
+        // System.err.println("result: " + result);
         assertEquals(
-                "{\"@odata.context\":\"$metadata#ODataAppInfos\",\"value\":[{\"KeyName\":\"Version\",\"KeyValue\":\""
-                        + OiyokanConstants.VERSION + "\"}]}",
+                "{\"@odata.context\":\"$metadata#ODataAppInfos\",\"value\":[{\"KeyName\":\"Provider\",\"KeyValue\":\"Oiyokan\"}]}",
                 result);
     }
 

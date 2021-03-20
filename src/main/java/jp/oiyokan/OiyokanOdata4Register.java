@@ -53,7 +53,7 @@ public class OiyokanOdata4Register {
                 // TODO URLDecoder より頑丈な URI デコードの実装を探して置き換えたい.
                 uri += "?" + URLDecoder.decode(req.getQueryString(), "UTF-8");
             } catch (UnsupportedEncodingException ex) {
-                throw new IllegalArgumentException("デコード失敗:" + ex.toString(), ex);
+                throw new ServletException("デコード失敗:" + ex.toString());
             }
         }
 

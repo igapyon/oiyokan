@@ -15,8 +15,22 @@
  */
 package jp.oiyokan.basic.sql;
 
+import java.sql.Timestamp;
+import java.time.ZonedDateTime;
 import java.util.Locale;
 
+import org.apache.olingo.commons.core.edm.primitivetype.EdmBoolean;
+import org.apache.olingo.commons.core.edm.primitivetype.EdmDate;
+import org.apache.olingo.commons.core.edm.primitivetype.EdmDateTimeOffset;
+import org.apache.olingo.commons.core.edm.primitivetype.EdmDecimal;
+import org.apache.olingo.commons.core.edm.primitivetype.EdmDouble;
+import org.apache.olingo.commons.core.edm.primitivetype.EdmInt16;
+import org.apache.olingo.commons.core.edm.primitivetype.EdmInt32;
+import org.apache.olingo.commons.core.edm.primitivetype.EdmInt64;
+import org.apache.olingo.commons.core.edm.primitivetype.EdmSByte;
+import org.apache.olingo.commons.core.edm.primitivetype.EdmSingle;
+import org.apache.olingo.commons.core.edm.primitivetype.EdmString;
+import org.apache.olingo.commons.core.edm.primitivetype.EdmTimeOfDay;
 import org.apache.olingo.server.api.ODataApplicationException;
 import org.apache.olingo.server.api.uri.queryoption.expression.BinaryOperatorKind;
 import org.apache.olingo.server.api.uri.queryoption.expression.Expression;
@@ -36,6 +50,8 @@ import org.apache.olingo.server.core.uri.queryoption.expression.UnaryImpl;
  * SQL文を構築するための簡易クラスの、Expression を SQLに変換する処理.
  */
 public class BasicSqlExprExpander {
+    private static final boolean IS_DEBUG_EXPAND_LITERAL = false;
+
     /**
      * SQL構築のデータ構造.
      */
@@ -57,14 +73,15 @@ public class BasicSqlExprExpander {
      */
     public void expand(Expression filterExpression) throws ODataApplicationException {
         if (filterExpression instanceof AliasImpl) {
-            throw new ODataApplicationException("NOT SUPPORTED:Expression:AliasImpl", 500, Locale.ENGLISH);
+            throw new ODataApplicationException("NOT SUPPORTED: Filter Expression: AliasImpl", 500, Locale.ENGLISH);
         } else if (filterExpression instanceof BinaryImpl) {
             expandBinary((BinaryImpl) filterExpression);
             return;
         } else if (filterExpression instanceof EnumerationImpl) {
-            throw new ODataApplicationException("NOT SUPPORTED:Expression:EnumerationImpl", 500, Locale.ENGLISH);
+            throw new ODataApplicationException("NOT SUPPORTED: Filter Expression: EnumerationImpl", 500,
+                    Locale.ENGLISH);
         } else if (filterExpression instanceof LambdaRefImpl) {
-            throw new ODataApplicationException("NOT SUPPORTED:Expression:LambdaRefImpl", 500, Locale.ENGLISH);
+            throw new ODataApplicationException("NOT SUPPORTED: Filter Expression: LambdaRefImpl", 500, Locale.ENGLISH);
         } else if (filterExpression instanceof LiteralImpl) {
             expandLiteral((LiteralImpl) filterExpression);
             return;
@@ -75,14 +92,15 @@ public class BasicSqlExprExpander {
             expandMethod((MethodImpl) filterExpression);
             return;
         } else if (filterExpression instanceof TypeLiteralImpl) {
-            throw new ODataApplicationException("NOT SUPPORTED:Expression:TypeLiteralImpl", 500, Locale.ENGLISH);
+            throw new ODataApplicationException("NOT SUPPORTED: Filter Expression: TypeLiteralImpl", 500,
+                    Locale.ENGLISH);
         } else if (filterExpression instanceof UnaryImpl) {
             UnaryImpl impl = (UnaryImpl) filterExpression;
             expandUnary(impl);
             return;
         }
 
-        final String message = "Unexpected Case: Unsupported expression:" + filterExpression.getClass().getName() + ","
+        final String message = "UNEXPECTED: Unsupported expression:" + filterExpression.getClass().getName() + ","
                 + filterExpression.toString() + "]";
         System.err.println(message);
         throw new ODataApplicationException(message, 500, Locale.ENGLISH);
@@ -95,25 +113,25 @@ public class BasicSqlExprExpander {
         BinaryOperatorKind opKind = impl.getOperator();
         if (opKind == BinaryOperatorKind.HAS) {
             // HAS
-            throw new ODataApplicationException("NOT SUPPORTED:BinaryOperatorKind:" + opKind, 500, Locale.ENGLISH);
+            throw new ODataApplicationException("NOT SUPPORTED: BinaryOperatorKind:" + opKind, 500, Locale.ENGLISH);
         } else if (opKind == BinaryOperatorKind.IN) {
             // IN
-            throw new ODataApplicationException("NOT SUPPORTED:BinaryOperatorKind:" + opKind, 500, Locale.ENGLISH);
+            throw new ODataApplicationException("NOT SUPPORTED: BinaryOperatorKind:" + opKind, 500, Locale.ENGLISH);
         } else if (opKind == BinaryOperatorKind.MUL) {
             // MUL
-            throw new ODataApplicationException("NOT SUPPORTED:BinaryOperatorKind:" + opKind, 500, Locale.ENGLISH);
+            throw new ODataApplicationException("NOT SUPPORTED: BinaryOperatorKind:" + opKind, 500, Locale.ENGLISH);
         } else if (opKind == BinaryOperatorKind.DIV) {
             // DIV
-            throw new ODataApplicationException("NOT SUPPORTED:BinaryOperatorKind:" + opKind, 500, Locale.ENGLISH);
+            throw new ODataApplicationException("NOT SUPPORTED: BinaryOperatorKind:" + opKind, 500, Locale.ENGLISH);
         } else if (opKind == BinaryOperatorKind.MOD) {
             // MOD
-            throw new ODataApplicationException("NOT SUPPORTED:BinaryOperatorKind:" + opKind, 500, Locale.ENGLISH);
+            throw new ODataApplicationException("NOT SUPPORTED: BinaryOperatorKind:" + opKind, 500, Locale.ENGLISH);
         } else if (opKind == BinaryOperatorKind.ADD) {
             // ADD
-            throw new ODataApplicationException("NOT SUPPORTED:BinaryOperatorKind:" + opKind, 500, Locale.ENGLISH);
+            throw new ODataApplicationException("NOT SUPPORTED: BinaryOperatorKind:" + opKind, 500, Locale.ENGLISH);
         } else if (opKind == BinaryOperatorKind.SUB) {
             // SUB
-            throw new ODataApplicationException("NOT SUPPORTED:BinaryOperatorKind:" + opKind, 500, Locale.ENGLISH);
+            throw new ODataApplicationException("NOT SUPPORTED: BinaryOperatorKind:" + opKind, 500, Locale.ENGLISH);
         } else if (opKind == BinaryOperatorKind.GT) {
             // GT
             sqlInfo.getSqlBuilder().append("(");
@@ -180,30 +198,125 @@ public class BasicSqlExprExpander {
             return;
         }
 
-        final String message = "Unexpected Case: Unsupported binary operator:" + opKind + "," + impl.toString() + "]";
+        final String message = "UNEXPECTED: Unsupported binary operator:" + opKind + "," + impl.toString() + "]";
         System.err.println(message);
         throw new ODataApplicationException(message, 500, Locale.ENGLISH);
     }
 
-    private void expandLiteral(LiteralImpl impl) {
-        String value = impl.toString();
-        if (value.startsWith("'") && value.endsWith("'")) {
-            // 文字列リテラルについては前後のクオートを除去して記憶.
-            value = value.substring(1, value.length() - 1);
+    /**
+     * リテラルを展開。必要に応じてパラメータ化。
+     * 
+     * @param impl リテラル
+     * @throws ODataApplicationException Odataアプリ例外が発生した場合.
+     */
+    private void expandLiteral(LiteralImpl impl) throws ODataApplicationException {
+        if (EdmSByte.getInstance() == impl.getType()) {
+            if (IS_DEBUG_EXPAND_LITERAL)
+                System.err.println("TRACE: EdmSByte: " + impl.getText());
+            Byte look = Byte.valueOf(impl.getText());
+            sqlInfo.getSqlBuilder().append("?");
+            sqlInfo.getSqlParamList().add(look);
+            return;
+        }
+        if (EdmInt16.getInstance() == impl.getType()) {
+            if (IS_DEBUG_EXPAND_LITERAL)
+                System.err.println("TRACE: EdmInt16: " + impl.getText());
+            Short look = Short.valueOf(impl.getText());
+            sqlInfo.getSqlBuilder().append("?");
+            sqlInfo.getSqlParamList().add(look);
+            return;
+        }
+        if (EdmInt32.getInstance() == impl.getType()) {
+            if (IS_DEBUG_EXPAND_LITERAL)
+                System.err.println("TRACE: EdmInt32: " + impl.getText());
+            Integer look = Integer.valueOf(impl.getText());
+            sqlInfo.getSqlBuilder().append("?");
+            sqlInfo.getSqlParamList().add(look);
+            return;
+        }
+        if (EdmInt64.getInstance() == impl.getType()) {
+            if (IS_DEBUG_EXPAND_LITERAL)
+                System.err.println("TRACE: EdmInt64: " + impl.getText());
+            Long look = Long.valueOf(impl.getText());
+            sqlInfo.getSqlBuilder().append("?");
+            sqlInfo.getSqlParamList().add(look);
+            return;
+        }
+        if (EdmDecimal.getInstance() == impl.getType()) {
+            if (IS_DEBUG_EXPAND_LITERAL)
+                System.err.println("TRACE: EdmDecimal: " + impl.getText());
+            // そのまま連結.
+            // 2.0などをDecimalにするデメリットが読みきれず。そのまま連結でDB処理に判断をO委ねる。
+            sqlInfo.getSqlBuilder().append(impl.getText());
+            return;
+        }
+        if (EdmBoolean.getInstance() == impl.getType()) {
+            if (IS_DEBUG_EXPAND_LITERAL)
+                System.err.println("TRACE: EdmBoolean: " + impl.getText());
+            sqlInfo.getSqlBuilder().append("?");
+            sqlInfo.getSqlParamList().add(Boolean.valueOf("true".equalsIgnoreCase(impl.getText())));
+            return;
+        }
+        if (EdmSingle.getInstance() == impl.getType()) {
+            if (IS_DEBUG_EXPAND_LITERAL)
+                System.err.println("TRACE: EdmSingle: " + impl.getText());
+            // そのまま連結.
+            sqlInfo.getSqlBuilder().append(impl.getText());
+            return;
+        }
+        if (EdmDouble.getInstance() == impl.getType()) {
+            if (IS_DEBUG_EXPAND_LITERAL)
+                System.err.println("TRACE: EdmDouble: " + impl.getText());
+            // そのまま連結.
+            sqlInfo.getSqlBuilder().append(impl.getText());
+            return;
+        }
+        if (EdmDate.getInstance() == impl.getType()) {
+            if (IS_DEBUG_EXPAND_LITERAL)
+                System.err.println("TRACE: EdmDate: " + impl.getText());
+            ZonedDateTime zdt = FromOlingoUtil.parseDateString(impl.getText());
+            sqlInfo.getSqlBuilder().append("?");
+            Timestamp tstamp = Timestamp.from(zdt.toInstant());
+            sqlInfo.getSqlParamList().add(tstamp);
+            return;
+        }
+        if (EdmDateTimeOffset.getInstance() == impl.getType()) {
+            if (IS_DEBUG_EXPAND_LITERAL)
+                System.err.println("TRACE: EdmDateTimeOffset: " + impl.getText());
+            ZonedDateTime zdt = FromOlingoUtil.parseZonedDateTime(impl.getText());
+            sqlInfo.getSqlBuilder().append("?");
+            Timestamp tstamp = Timestamp.from(zdt.toInstant());
+            sqlInfo.getSqlParamList().add(tstamp);
+            return;
+        }
+        if (EdmTimeOfDay.getInstance() == impl.getType()) {
+            if (IS_DEBUG_EXPAND_LITERAL)
+                System.err.println("TRACE: EdmTimeOfDay: " + impl.getText());
+        }
+        if (EdmString.getInstance() == impl.getType()) {
+            if (IS_DEBUG_EXPAND_LITERAL)
+                System.err.println("TRACE: EdmString: " + impl.getText());
+            String value = impl.getText();
+            if (value.startsWith("'") && value.endsWith("'")) {
+                // 文字列リテラルについては前後のクオートを除去して記憶.
+                value = value.substring(1, value.length() - 1);
+            }
             // 文字列リテラルとしてパラメータ化クエリで扱う.
             sqlInfo.getSqlBuilder().append("?");
             sqlInfo.getSqlParamList().add(value);
             return;
         }
 
-        // パラメータクエリ化は断念.
-        // 単に value をそのままSQL文に追加。
-        sqlInfo.getSqlBuilder().append(value);
+        System.err.println("edmtype:" + impl.getType().getName());
+        System.err.println("edmtype:" + impl.getType().getClass().getCanonicalName());
+
+        throw new ODataApplicationException("NOT SUPPORTED: LiteralImpl: " + impl.getClass().getTypeName(), 500,
+                Locale.ENGLISH);
     }
 
     private void expandMember(MemberImpl impl) {
-        // そのままSQLのメンバーとする。
-        sqlInfo.getSqlBuilder().append(impl.toString());
+        // そのままSQLのメンバーとせず、項目名エスケープを除去.
+        sqlInfo.getSqlBuilder().append(BasicSqlBuilder.unescapeKakkoFieldName(impl.toString()));
     }
 
     private void expandMethod(MethodImpl impl) throws ODataApplicationException {
@@ -231,7 +344,7 @@ public class BasicSqlExprExpander {
 
         // ENDSWITH
         if (impl.getMethod() == MethodKind.ENDSWITH) {
-            throw new ODataApplicationException("Not Suporoted: MethodKind.ENDSWITH", 500, Locale.ENGLISH);
+            throw new ODataApplicationException("NOT SUPPORTED: MethodKind.ENDSWITH", 500, Locale.ENGLISH);
         }
 
         // LENGTH
@@ -365,42 +478,42 @@ public class BasicSqlExprExpander {
 
         // FRACTIONALSECONDS
         if (impl.getMethod() == MethodKind.FRACTIONALSECONDS) {
-            throw new ODataApplicationException("Not Suporoted: MethodKind.FRACTIONALSECONDS", 500, Locale.ENGLISH);
+            throw new ODataApplicationException("NOT SUPPORTED: MethodKind.FRACTIONALSECONDS", 500, Locale.ENGLISH);
         }
 
         // TOTALSECONDS
         if (impl.getMethod() == MethodKind.TOTALSECONDS) {
-            throw new ODataApplicationException("Not Suporoted: MethodKind.TOTALSECONDS", 500, Locale.ENGLISH);
+            throw new ODataApplicationException("NOT SUPPORTED: MethodKind.TOTALSECONDS", 500, Locale.ENGLISH);
         }
 
         // DATE
         if (impl.getMethod() == MethodKind.DATE) {
-            throw new ODataApplicationException("Not Suporoted: MethodKind.DATE", 500, Locale.ENGLISH);
+            throw new ODataApplicationException("NOT SUPPORTED: MethodKind.DATE", 500, Locale.ENGLISH);
         }
 
         // TIME
         if (impl.getMethod() == MethodKind.TIME) {
-            throw new ODataApplicationException("Not Suporoted: MethodKind.TIME", 500, Locale.ENGLISH);
+            throw new ODataApplicationException("NOT SUPPORTED: MethodKind.TIME", 500, Locale.ENGLISH);
         }
 
         // TOTALOFFSETMINUTES
         if (impl.getMethod() == MethodKind.TOTALOFFSETMINUTES) {
-            throw new ODataApplicationException("Not Suporoted: MethodKind.TOTALOFFSETMINUTES", 500, Locale.ENGLISH);
+            throw new ODataApplicationException("NOT SUPPORTED: MethodKind.TOTALOFFSETMINUTES", 500, Locale.ENGLISH);
         }
 
         // MINDATETIME
         if (impl.getMethod() == MethodKind.MINDATETIME) {
-            throw new ODataApplicationException("Not Suporoted: MethodKind.MINDATETIME", 500, Locale.ENGLISH);
+            throw new ODataApplicationException("NOT SUPPORTED: MethodKind.MINDATETIME", 500, Locale.ENGLISH);
         }
 
         // MAXDATETIME
         if (impl.getMethod() == MethodKind.MAXDATETIME) {
-            throw new ODataApplicationException("Not Suporoted: MethodKind.MAXDATETIME", 500, Locale.ENGLISH);
+            throw new ODataApplicationException("NOT SUPPORTED: MethodKind.MAXDATETIME", 500, Locale.ENGLISH);
         }
 
         // NOW
         if (impl.getMethod() == MethodKind.NOW) {
-            throw new ODataApplicationException("Not Suporoted: MethodKind.NOW", 500, Locale.ENGLISH);
+            throw new ODataApplicationException("NOT SUPPORTED: MethodKind.NOW", 500, Locale.ENGLISH);
         }
 
         // ROUND
@@ -432,27 +545,27 @@ public class BasicSqlExprExpander {
 
         // GEODISTANCE
         if (impl.getMethod() == MethodKind.GEODISTANCE) {
-            throw new ODataApplicationException("Not Suporoted: MethodKind.GEODISTANCE", 500, Locale.ENGLISH);
+            throw new ODataApplicationException("NOT SUPPORTED: MethodKind.GEODISTANCE", 500, Locale.ENGLISH);
         }
 
         // GEOLENGTH
         if (impl.getMethod() == MethodKind.GEOLENGTH) {
-            throw new ODataApplicationException("Not Suporoted: MethodKind.GEOLENGTH", 500, Locale.ENGLISH);
+            throw new ODataApplicationException("NOT SUPPORTED: MethodKind.GEOLENGTH", 500, Locale.ENGLISH);
         }
 
         // GEOINTERSECTS
         if (impl.getMethod() == MethodKind.GEOINTERSECTS) {
-            throw new ODataApplicationException("Not Suporoted: MethodKind.GEOINTERSECTS", 500, Locale.ENGLISH);
+            throw new ODataApplicationException("NOT SUPPORTED: MethodKind.GEOINTERSECTS", 500, Locale.ENGLISH);
         }
 
         // CAST
         if (impl.getMethod() == MethodKind.CAST) {
-            throw new ODataApplicationException("Not Suporoted: MethodKind.CAST", 500, Locale.ENGLISH);
+            throw new ODataApplicationException("NOT SUPPORTED: MethodKind.CAST", 500, Locale.ENGLISH);
         }
 
         // ISOF
         if (impl.getMethod() == MethodKind.ISOF) {
-            throw new ODataApplicationException("Not Suporoted: MethodKind.ISOF", 500, Locale.ENGLISH);
+            throw new ODataApplicationException("NOT SUPPORTED: MethodKind.ISOF", 500, Locale.ENGLISH);
         }
 
         // SUBSTRINGOF
@@ -465,7 +578,7 @@ public class BasicSqlExprExpander {
             return;
         }
 
-        final String message = "Unexpected Case: NOT SUPPORTED MethodKind:" + impl.getMethod() + "," + impl.toString()
+        final String message = "UNEXPECTED : NOT SUPPORTED MethodKind:" + impl.getMethod() + "," + impl.toString()
                 + "]";
         System.err.println(message);
         throw new ODataApplicationException(message, 500, Locale.ENGLISH);
@@ -484,8 +597,8 @@ public class BasicSqlExprExpander {
             return;
         }
 
-        final String message = "Unexpected Case: Unsupported UnaryOperatorKind:" + impl.getOperator() + ","
-                + impl.toString() + "]";
+        final String message = "UNEXPECTED: Unsupported UnaryOperatorKind:" + impl.getOperator() + "," + impl.toString()
+                + "]";
         System.err.println(message);
         throw new ODataApplicationException(message, 500, Locale.ENGLISH);
     }
