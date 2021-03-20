@@ -34,7 +34,10 @@ import jp.oiyokan.h2.data.OiyokanResourceSqlUtil;
  * Oiyokan (OData v4 server) が動作する際に必要になる内部データおよびサンプルデータをセットアップ.
  */
 public class OiyokanInterDb {
-    public static final String[] OIYOKAN_FILE_SQLS = new String[] { "oiyokan-testdb.sql" };
+    public static final String[] OIYOKAN_FILE_SQLS = new String[] { //
+            "oiyokan-testdb.sql", // Oiyokan の基本機能を確認およびビルド時の JUnit テストで利用.
+            "sample-ocsdl-pg-dvdrental.sql" // Postgres の dvdrental サンプルDB に接続するための内部情報.
+    };
 
     private OiyokanInterDb() {
     }
@@ -162,7 +165,16 @@ public class OiyokanInterDb {
                     sqlBuilder.append("DECIMAL(" //
                             + rsmeta.getScale(column) + "," + rsmeta.getPrecision(column) + ")");
                     break;
+                case Types.NUMERIC:
+                    // postgres で発生.
+                    sqlBuilder.append("DECIMAL(" //
+                            + rsmeta.getScale(column) + "," + rsmeta.getPrecision(column) + ")");
+                    break;
                 case Types.BOOLEAN:
+                    sqlBuilder.append("BOOLEAN");
+                    break;
+                case Types.BIT:
+                    // postgres で発生.
                     sqlBuilder.append("BOOLEAN");
                     break;
                 case Types.REAL:
@@ -186,8 +198,21 @@ public class OiyokanInterDb {
                 case Types.VARCHAR:
                     sqlBuilder.append("VARCHAR(" + rsmeta.getColumnDisplaySize(column) + ")");
                     break;
+                case Types.BINARY:
+                    // 現在サポートできてない.
+                    sqlBuilder.append("BINARY");
+                    break;
+                case Types.ARRAY:
+                    // postgres で発生. 対応しない.
+                    sqlBuilder.append("NO_SUPPORT_ARRAY");
+                    break;
+                case Types.OTHER:
+                    // postgres で発生. 対応しない.
+                    sqlBuilder.append("NO_SUPPORT_OTHER");
+                    break;
                 default:
-                    System.err.println("Type: ignore");
+                    new ODataApplicationException("NOT SUPPORTED: JDBC Type: " + rsmeta.getColumnType(column), 500,
+                            Locale.ENGLISH);
                     break;
                 }
                 sqlBuilder.append("\n");
