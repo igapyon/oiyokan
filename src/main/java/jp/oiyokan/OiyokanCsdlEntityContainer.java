@@ -95,11 +95,11 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
 
                 try (Connection conn = BasicDbUtil.getConnection(settingsDatabase)) {
                     // テーブルをセットアップ.
-                    TinyH2DbSample.createTable(conn);
-
-                    // テーブルデータをセットアップ.
-                    // サンプルデータを格納.
-                    TinyH2DbSample.setupTableData(conn);
+                    if (TinyH2DbSample.createTable(conn)) {
+                        // テーブルデータをセットアップ.
+                        // サンプルデータを格納.
+                        TinyH2DbSample.setupTableData(conn);
+                    }
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                     new ODataApplicationException("UNEXPECTED Database error.", 500, Locale.ENGLISH);

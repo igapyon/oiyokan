@@ -37,10 +37,10 @@ class H2DatabaseTest {
                 .getConnection(OiyokanSettingsUtil.getOiyokanInternalDatabase(settingsOiyokan))) {
 
             // テーブルをセットアップ.
-            TinyH2DbSample.createTable(conn);
-
-            // テーブルデータをセットアップ.
-            TinyH2DbSample.setupTableData(conn);
+            if (TinyH2DbSample.createTable(conn)) {
+                // テーブルデータをセットアップ.
+                TinyH2DbSample.setupTableData(conn);
+            }
 
             try (var stmt = conn.prepareStatement("SELECT ID, Name, Description FROM MyProducts ORDER BY ID LIMIT 3")) {
                 stmt.executeQuery();
@@ -58,10 +58,10 @@ class H2DatabaseTest {
         try (Connection conn = BasicDbUtil
                 .getConnection(OiyokanSettingsUtil.getOiyokanInternalDatabase(settingsOiyokan))) {
             // テーブルをセットアップ.
-            TinyH2DbSample.createTable(conn);
-
-            // テーブルデータをセットアップ.
-            TinyH2DbSample.setupTableData(conn);
+            if (TinyH2DbSample.createTable(conn)) {
+                // テーブルデータをセットアップ.
+                TinyH2DbSample.setupTableData(conn);
+            }
 
             try (var stmt = conn.prepareStatement("SELECT ID, Name, Description" //
                     + ",Sbyte1,Int16a,Int32a,Int64a,Decimal1,StringChar2,StringVar255,StringVar65535,Boolean1,Single1,Double1,DateTimeOffset1,TimeOfDay1" //

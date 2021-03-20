@@ -39,17 +39,52 @@ public class TinyH2DbSample {
      * 情報を格納するためのテーブルをセットアップします。
      * 
      * @param conn データベース接続。
+     * @return true:新規作成, false:既に存在.
      */
-    public static void createTable(final Connection conn) throws ODataApplicationException {
-        // System.err.println("TRACE: 作業用データベーステーブルを作成");
+    public static boolean createTable(final Connection conn) throws ODataApplicationException {
+        if (OiyokanConstants.IS_TRACE_ODATA_V4)
+            System.err.println( //
+                    "OData v4: setup internal table: " + " (Oiyokan: " + OiyokanConstants.VERSION + ")");
 
+        // Oiyokan が動作する上で必要なテーブルのセットアップ.
         try (var stmt = conn.prepareStatement("CREATE TABLE IF NOT EXISTS " //
                 + "ODataAppInfos (" //
-                + "KeyName VARCHAR(20) NOT NULL" // primary key. これほんとは Key とかにして Key = version とかで分岐したい.
+                + "KeyName VARCHAR(20) NOT NULL" //
                 + ",KeyValue VARCHAR(255)" //
                 + ",PRIMARY KEY(KeyName)" //
                 + ")")) {
             stmt.executeUpdate();
+        } catch (SQLException ex) {
+            throw new ODataApplicationException("テーブル作成に失敗: " + ex.toString(), 500, Locale.ENGLISH);
+        }
+
+        // ODataAppInfos が既に存在するかどうか確認. 存在する場合は処理中断.
+        try (var stmt = conn.prepareStatement("SELECT COUNT(*) FROM ODataAppInfos")) {
+            stmt.executeQuery();
+            var rset = stmt.getResultSet();
+            rset.next();
+            if (rset.getInt(1) > 0) {
+                // すでにテーブルがセットアップ済み。処理中断します。
+                return false;
+            }
+        } catch (SQLException ex) {
+            throw new ODataApplicationException("Fail to SQL: " + ex.toString(), 500, Locale.ENGLISH, ex);
+        }
+
+        ///////////////////////////////////////////
+        // ODataAppInfos にバージョン情報などデータの追加
+        try (var stmt = conn.prepareStatement("INSERT INTO ODataAppInfos (KeyName, KeyValue) VALUES ("
+                + BasicDbUtil.getQueryPlaceholderString(2) + ")")) {
+            stmt.setString(1, "Version");
+            stmt.setString(2, OiyokanConstants.VERSION);
+            stmt.executeUpdate();
+
+            stmt.clearParameters();
+            stmt.setString(1, "Provider");
+            stmt.setString(2, OiyokanConstants.NAME);
+            stmt.executeUpdate();
+
+            conn.commit();
         } catch (SQLException ex) {
             throw new ODataApplicationException("テーブル作成に失敗: " + ex.toString(), 500, Locale.ENGLISH);
         }
@@ -126,6 +161,9 @@ public class TinyH2DbSample {
         } catch (SQLException ex) {
             throw new ODataApplicationException("テーブル作成に失敗: " + ex.toString(), 500, Locale.ENGLISH);
         }
+
+        // 新規作成.
+        return true;
     }
 
     /**
@@ -134,17 +172,6 @@ public class TinyH2DbSample {
      * @param conn データベース接続。
      */
     public static void setupTableData(final Connection conn) throws ODataApplicationException {
-        try (var stmt = conn.prepareStatement("SELECT COUNT(*) FROM ODataAppInfos")) {
-            stmt.executeQuery();
-            var rset = stmt.getResultSet();
-            rset.next();
-            if (rset.getInt(1) > 0) {
-                return;
-            }
-        } catch (SQLException ex) {
-            throw new ODataApplicationException("Fail to SQL: " + ex.toString(), 500, Locale.ENGLISH, ex);
-        }
-
         if (OiyokanConstants.IS_TRACE_ODATA_V4)
             System.err.println( //
                     "OData v4: build sample data: " + " (Oiyokan: " + OiyokanConstants.VERSION + ")");
@@ -160,24 +187,6 @@ public class TinyH2DbSample {
             }
         } catch (SQLException ex) {
             throw new ODataApplicationException("全文検索の初期設定に失敗: " + ex.toString(), 500, Locale.ENGLISH);
-        }
-
-        ///////////////////////////////////////////
-        // バージョン情報に関するデータの追加
-        try (var stmt = conn.prepareStatement("INSERT INTO ODataAppInfos (KeyName, KeyValue) VALUES ("
-                + BasicDbUtil.getQueryPlaceholderString(2) + ")")) {
-            stmt.setString(1, "Version");
-            stmt.setString(2, OiyokanConstants.VERSION);
-            stmt.executeUpdate();
-
-            stmt.clearParameters();
-            stmt.setString(1, "Provider");
-            stmt.setString(2, OiyokanConstants.NAME);
-            stmt.executeUpdate();
-
-            conn.commit();
-        } catch (SQLException ex) {
-            throw new ODataApplicationException("テーブル作成に失敗: " + ex.toString(), 500, Locale.ENGLISH);
         }
 
         ///////////////////////
