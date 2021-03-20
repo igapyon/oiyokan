@@ -31,20 +31,25 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
  * http://www.jsonschema2pojo.org/ を利用して自動生成.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({ "name", "description", "jdbcDriver", "jdbcUrl", "jdbcUser", "jdbcPass" })
-public class OiyokanSettingsDatabaseList {
+@JsonPropertyOrder({ "name", "description", "entitySetName", "entityName", "databaseName", "databaseType",
+        "dbTableNameLocal", "dbTableNameTarget" })
+public class OiyokanSettingsEntitySet {
     @JsonProperty("name")
     private String name;
     @JsonProperty("description")
     private String description;
-    @JsonProperty("jdbcDriver")
-    private String jdbcDriver;
-    @JsonProperty("jdbcUrl")
-    private String jdbcUrl;
-    @JsonProperty("jdbcUser")
-    private String jdbcUser;
-    @JsonProperty("jdbcPass")
-    private String jdbcPass;
+    @JsonProperty("entitySetName")
+    private String entitySetName;
+    @JsonProperty("entityName")
+    private String entityName;
+    @JsonProperty("databaseName")
+    private String databaseName;
+    @JsonProperty("databaseType")
+    private String databaseType;
+    @JsonProperty("dbTableNameLocal")
+    private String dbTableNameLocal;
+    @JsonProperty("dbTableNameTarget")
+    private String dbTableNameTarget;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -68,44 +73,64 @@ public class OiyokanSettingsDatabaseList {
         this.description = description;
     }
 
-    @JsonProperty("jdbcDriver")
-    public String getJdbcDriver() {
-        return jdbcDriver;
+    @JsonProperty("entitySetName")
+    public String getEntitySetName() {
+        return entitySetName;
     }
 
-    @JsonProperty("jdbcDriver")
-    public void setJdbcDriver(String jdbcDriver) {
-        this.jdbcDriver = jdbcDriver;
+    @JsonProperty("entitySetName")
+    public void setEntitySetName(String entitySetName) {
+        this.entitySetName = entitySetName;
     }
 
-    @JsonProperty("jdbcUrl")
-    public String getJdbcUrl() {
-        return jdbcUrl;
+    @JsonProperty("entityName")
+    public String getEntityName() {
+        return entityName;
     }
 
-    @JsonProperty("jdbcUrl")
-    public void setJdbcUrl(String jdbcUrl) {
-        this.jdbcUrl = jdbcUrl;
+    @JsonProperty("entityName")
+    public void setEntityName(String entityName) {
+        this.entityName = entityName;
     }
 
-    @JsonProperty("jdbcUser")
-    public String getJdbcUser() {
-        return jdbcUser;
+    @JsonProperty("databaseName")
+    public String getDatabaseName() {
+        return databaseName;
     }
 
-    @JsonProperty("jdbcUser")
-    public void setJdbcUser(String jdbcUser) {
-        this.jdbcUser = jdbcUser;
+    @JsonProperty("databaseName")
+    public void setDatabaseName(String databaseName) {
+        this.databaseName = databaseName;
     }
 
-    @JsonProperty("jdbcPass")
-    public String getJdbcPass() {
-        return jdbcPass;
+    @JsonProperty("databaseType")
+    public String getDatabaseType() {
+        return databaseType;
     }
 
-    @JsonProperty("jdbcPass")
-    public void setJdbcPass(String jdbcPass) {
-        this.jdbcPass = jdbcPass;
+    @JsonProperty("databaseType")
+    public void setDatabaseType(String databaseType) {
+        this.databaseType = databaseType;
+    }
+
+    @JsonProperty("dbTableNameLocal")
+    public String getDbTableNameLocal() {
+        return dbTableNameLocal;
+    }
+
+    @JsonProperty("dbTableNameLocal")
+    public void setDbTableNameLocal(String dbTableNameLocal) {
+        this.dbTableNameLocal = dbTableNameLocal;
+    }
+
+    @JsonProperty("dbTableNameTarget")
+    public String getDbTableNameTarget() {
+        return dbTableNameTarget;
+    }
+
+    @JsonProperty("dbTableNameTarget")
+    public void setDbTableNameTarget(String dbTableNameTarget) {
+        this.dbTableNameTarget = dbTableNameTarget;
     }
 
     @JsonAnyGetter

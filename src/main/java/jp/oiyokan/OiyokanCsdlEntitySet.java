@@ -19,6 +19,8 @@ import org.apache.olingo.commons.api.edm.FullQualifiedName;
 import org.apache.olingo.commons.api.edm.provider.CsdlEntitySet;
 import org.apache.olingo.commons.api.edm.provider.CsdlEntityType;
 
+import jp.oiyokan.dto.OiyokanSettingsEntitySet;
+
 /**
  * Oiyokan の CsdlEntitySet 実装.
  */
@@ -37,6 +39,8 @@ public class OiyokanCsdlEntitySet extends CsdlEntitySet {
     private OiyokanCsdlEntityContainer csdlEntityContainer = null;
 
     private DatabaseType dbType = DatabaseType.H2;
+
+    private OiyokanSettingsEntitySet entitySetConf = null;
 
     /**
      * データベース型を取得.
@@ -68,23 +72,6 @@ public class OiyokanCsdlEntitySet extends CsdlEntitySet {
     }
 
     /**
-     * 要素型名. さしあたりはリレーショナルデータベースのテーブル名に相当するものと考えて差し支えない.
-     * 
-     * MyProduct 相当.
-     */
-    private String entityName = null;
-
-    /**
-     * データベース上のテーブル名.
-     */
-    private String dbTableNameLocal = null;
-
-    /**
-     * データベース上のテーブル名.
-     */
-    private String dbTableNameTarget = null;
-
-    /**
      * エンティティ情報.
      * 
      * @param containerInfo     コンテナ情報.
@@ -94,16 +81,13 @@ public class OiyokanCsdlEntitySet extends CsdlEntitySet {
      * @param dbTableNameLocal  ローカルのデータベース上のテーブル名.
      * @param dbTableNameTarget ターゲットのデータベース上のテーブル名. 通常は dbTableNameLocalと一致.
      */
-    public OiyokanCsdlEntitySet(OiyokanCsdlEntityContainer containerInfo, String entitySetName, String entityName,
-            DatabaseType dbType, String dbTableNameLocal, String dbTableNameTarget) {
+    public OiyokanCsdlEntitySet(OiyokanCsdlEntityContainer containerInfo, OiyokanSettingsEntitySet entitySetConf) {
+        setName(entitySetConf.getEntitySetName());
         this.csdlEntityContainer = containerInfo;
-        this.entityName = entityName;
-        this.dbType = dbType;
-        this.dbTableNameLocal = dbTableNameLocal;
-        this.dbTableNameTarget = dbTableNameTarget;
+        this.entitySetConf = entitySetConf;
+        this.dbType = DatabaseType.H2;
 
-        this.setName(entitySetName);
-        this.setType(new FullQualifiedName(containerInfo.getNamespaceIyo(), entityName));
+        this.setType(new FullQualifiedName(containerInfo.getNamespaceIyo(), entitySetConf.getEntityName()));
     }
 
     /**
@@ -112,7 +96,7 @@ public class OiyokanCsdlEntitySet extends CsdlEntitySet {
      * @return エンティティ名. MyProduct 相当.
      */
     public String getEntityNameIyo() {
-        return entityName;
+        return entitySetConf.getEntityName();
     }
 
     /**
@@ -130,7 +114,7 @@ public class OiyokanCsdlEntitySet extends CsdlEntitySet {
      * @return ローカルのDBテーブル名.
      */
     public String getDbTableNameLocalIyo() {
-        return dbTableNameLocal;
+        return entitySetConf.getDbTableNameLocal();
     }
 
     /**
@@ -139,6 +123,6 @@ public class OiyokanCsdlEntitySet extends CsdlEntitySet {
      * @return ターゲットのDBテーブル名.
      */
     public String getDbTableNameTargetIyo() {
-        return dbTableNameTarget;
+        return entitySetConf.getDbTableNameTarget();
     }
 }
