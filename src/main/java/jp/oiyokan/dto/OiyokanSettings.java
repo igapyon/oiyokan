@@ -35,29 +35,29 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @JsonPropertyOrder({ "databaseList", "entitySetList" })
 public class OiyokanSettings {
     @JsonProperty("databaseList")
-    private List<OiyokanSettingsDatabaseList> databaseList = null;
+    private List<OiyokanSettingsDatabase> databaseList = null;
     @JsonProperty("entitySetList")
-    private List<OiyokanSettingsEntitySetList> entitySetList = null;
+    private List<OiyokanSettingsEntitySet> entitySetList = null;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     @JsonProperty("databaseList")
-    public List<OiyokanSettingsDatabaseList> getDatabaseList() {
+    public List<OiyokanSettingsDatabase> getDatabaseList() {
         return databaseList;
     }
 
     @JsonProperty("databaseList")
-    public void setDatabaseList(List<OiyokanSettingsDatabaseList> databaseList) {
+    public void setDatabaseList(List<OiyokanSettingsDatabase> databaseList) {
         this.databaseList = databaseList;
     }
 
     @JsonProperty("entitySetList")
-    public List<OiyokanSettingsEntitySetList> getEntitySetList() {
+    public List<OiyokanSettingsEntitySet> getEntitySetList() {
         return entitySetList;
     }
 
     @JsonProperty("entitySetList")
-    public void setEntitySetList(List<OiyokanSettingsEntitySetList> entitySetList) {
+    public void setEntitySetList(List<OiyokanSettingsEntitySet> entitySetList) {
         this.entitySetList = entitySetList;
     }
 

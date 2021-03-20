@@ -35,8 +35,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jp.oiyokan.basic.BasicJdbcEntityTypeBuilder;
 import jp.oiyokan.dto.OiyokanSettings;
-import jp.oiyokan.dto.OiyokanSettingsDatabaseList;
-import jp.oiyokan.dto.OiyokanSettingsEntitySetList;
+import jp.oiyokan.dto.OiyokanSettingsDatabase;
+import jp.oiyokan.dto.OiyokanSettingsEntitySet;
 
 /**
  * Oiyokan の CsdlEntityContainer 実装.
@@ -77,9 +77,12 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
             setEntitySets(new ArrayList<CsdlEntitySet>());
         }
 
+        // 念押しロード.
+        getOiyokanSettingsInstance();
+
         // テンプレートとそれから生成された複写物と2種類あるため、フラグではなくサイズで判定が必要だった.
         if (getEntitySets().size() == 0) {
-            for (OiyokanSettingsDatabaseList database : getOiyokanSettingsInstance().getDatabaseList()) {
+            for (OiyokanSettingsDatabase database : getOiyokanSettingsInstance().getDatabaseList()) {
                 if (OiyokanConstants.IS_TRACE_ODATA_V4)
                     System.err.println("OData v4: Check JDBC Driver: " + database.getJdbcDriver());
                 try {
@@ -91,11 +94,9 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
                 }
             }
 
-            for (OiyokanSettingsEntitySetList entitySetCnof : getOiyokanSettingsInstance().getEntitySetList()) {
+            for (OiyokanSettingsEntitySet entitySetCnof : getOiyokanSettingsInstance().getEntitySetList()) {
                 // EntitySet の初期セットを実施。
-                getEntitySets().add(new OiyokanCsdlEntitySet(this, entitySetCnof.getEntitySetName(),
-                        entitySetCnof.getEntityName(), OiyokanCsdlEntitySet.DatabaseType.H2,
-                        entitySetCnof.getDbTableNameLocal(), entitySetCnof.getDbTableNameTarget()));
+                getEntitySets().add(new OiyokanCsdlEntitySet(this, entitySetCnof));
             }
         }
     }
