@@ -5,7 +5,7 @@
 		{
 			"name": "oiyokan-internal",
 			"type": "h2",
-			"description": "Oiyokanが内部的に利用するキャッシュDB。この設定は原則変更できない。",
+			"description": "Oiyokanの内部DB。この設定は変更できない。",
 			"jdbcDriver": "org.h2.Driver",
 			"jdbcUrl": "jdbc:h2:mem:oiyokan;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=FALSE;CASE_INSENSITIVE_IDENTIFIERS=TRUE;MODE=MSSQLServer",
 			"jdbcUser": "sa",
@@ -14,7 +14,7 @@
 		{
 			"name": "postgres1",
 			"type": "pg",
-			"description": "サンプルDB接続設定記述。ここを実際の設定値に変更して利用する。まだ対応エンティティセットの記述がない。",
+			"description": "サンプル の Postgres DB設定記述。環境情報にあわせて更新して利用。",
 			"jdbcDriver": "org.postgresql.Driver",
 			"jdbcUrl": "jdbc:postgresql://localhost:5432/dvdrental",
 			"jdbcUser": "",
@@ -41,13 +41,67 @@
 			"dbTableNameTarget": "MyProducts"
 		},
 		{
-			"name": "sample-pg-dvdrental",
+			"name": "sample-pg-dvdrental-actor",
 			"description": "Postgres dvdrental サンプルDB: actor",
 			"entitySetName": "PgActors",
 			"entityName": "PgActor",
 			"databaseName": "postgres1",
 			"dbTableNameLocal": "Ocsdlactor",
 			"dbTableNameTarget": "actor"
+		},
+		{
+			"name": "sample-pg-dvdrental-actor_info",
+			"description": "Postgres dvdrental サンプルDB: actor_info",
+			"entitySetName": "PgActorInfos",
+			"entityName": "PgActoInfor",
+			"databaseName": "postgres1",
+			"dbTableNameLocal": "Ocsdlactor_info",
+			"dbTableNameTarget": "actor_info"
+		},
+		{
+			"name": "sample-pg-dvdrental-address",
+			"description": "Postgres dvdrental サンプルDB: address",
+			"entitySetName": "PgAddresss",
+			"entityName": "PgAddress",
+			"databaseName": "postgres1",
+			"dbTableNameLocal": "Ocsdladdress",
+			"dbTableNameTarget": "address"
+		},
+		{
+			"name": "sample-pg-dvdrental-category",
+			"description": "Postgres dvdrental サンプルDB: category",
+			"entitySetName": "PgCategorys",
+			"entityName": "PgCategory",
+			"databaseName": "postgres1",
+			"dbTableNameLocal": "Ocsdlcategory",
+			"dbTableNameTarget": "category"
+		},
+		{
+			"name": "sample-pg-dvdrental-city",
+			"description": "Postgres dvdrental サンプルDB: city",
+			"entitySetName": "PgCitys",
+			"entityName": "PgCity",
+			"databaseName": "postgres1",
+			"dbTableNameLocal": "Ocsdlcity",
+			"dbTableNameTarget": "city"
+		},
+		{
+			"name": "sample-pg-dvdrental-country",
+			"description": "Postgres dvdrental サンプルDB: country",
+			"entitySetName": "PgCountrys",
+			"entityName": "PgCountry",
+			"databaseName": "postgres1",
+			"dbTableNameLocal": "Ocsdlcountry",
+			"dbTableNameTarget": "country"
+		},
+		{
+			"name": "sample-pg-dvdrental-customer",
+			"description": "Postgres dvdrental サンプルDB: customer",
+			"entitySetName": "PgCustomers",
+			"entityName": "PgCustomer",
+			"databaseName": "postgres1",
+			"dbTableNameLocal": "Ocsdlcustomer",
+			"dbTableNameTarget": "customer"
 		}
 	]
 }

@@ -117,7 +117,17 @@ public class BasicDbUtil {
             csdlProp.setScale(rsmeta.getScale(column));
             csdlProp.setPrecision(rsmeta.getPrecision(column));
             break;
+        case Types.NUMERIC:
+            // postgres で発生.
+            csdlProp.setType(EdmPrimitiveTypeKind.Decimal.getFullQualifiedName());
+            csdlProp.setScale(rsmeta.getScale(column));
+            csdlProp.setPrecision(rsmeta.getPrecision(column));
+            break;
         case Types.BOOLEAN:
+            csdlProp.setType(EdmPrimitiveTypeKind.Boolean.getFullQualifiedName());
+            break;
+        case Types.BIT:
+            // postgres で発生.
             csdlProp.setType(EdmPrimitiveTypeKind.Boolean.getFullQualifiedName());
             break;
         case Types.REAL:
@@ -140,8 +150,11 @@ public class BasicDbUtil {
             csdlProp.setType(EdmPrimitiveTypeKind.String.getFullQualifiedName());
             csdlProp.setMaxLength(rsmeta.getColumnDisplaySize(column));
             break;
+        case Types.BINARY:
+            csdlProp.setType(EdmPrimitiveTypeKind.Binary.getFullQualifiedName());
+            break;
         default:
-            throw new ODataApplicationException("NOT SUPPORTED: JDBC Type: " + rsmeta.getColumnType(column), 500,
+            throw new ODataApplicationException("NOT SUPPORTED: CSDL: JDBC Type: " + rsmeta.getColumnType(column), 500,
                     Locale.ENGLISH);
         }
 
@@ -195,7 +208,15 @@ public class BasicDbUtil {
         case Types.DECIMAL:
             prop = new Property(null, columnName, ValueType.PRIMITIVE, rset.getBigDecimal(column));
             break;
+        case Types.NUMERIC:
+            // postgres で発生.
+            prop = new Property(null, columnName, ValueType.PRIMITIVE, rset.getBigDecimal(column));
+            break;
         case Types.BOOLEAN:
+            prop = new Property(null, columnName, ValueType.PRIMITIVE, rset.getBoolean(column));
+            break;
+        case Types.BIT:
+            // postgres で発生.
             prop = new Property(null, columnName, ValueType.PRIMITIVE, rset.getBoolean(column));
             break;
         case Types.REAL:
@@ -217,8 +238,13 @@ public class BasicDbUtil {
         case Types.VARCHAR:
             prop = new Property(null, columnName, ValueType.PRIMITIVE, rset.getString(column));
             break;
+        // TODO FIXME 未実装
+        // case Types.BINARY:
+        // prop = new Property(null, columnName, ValueType.PRIMITIVE,
+        // rset.getbin.getString(column));
+        // break;
         default:
-            throw new ODataApplicationException("NOT SUPPORTED: JDBC Type: " + rsmeta.getColumnType(column), 500,
+            throw new ODataApplicationException("NOT SUPPORTED: Prop: JDBC Type: " + rsmeta.getColumnType(column), 500,
                     Locale.ENGLISH);
         }
         return prop;
