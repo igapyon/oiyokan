@@ -15,10 +15,14 @@
  */
 package jp.oiyokan;
 
+import java.util.Locale;
+
 import org.apache.olingo.commons.api.edm.FullQualifiedName;
 import org.apache.olingo.commons.api.edm.provider.CsdlEntitySet;
 import org.apache.olingo.commons.api.edm.provider.CsdlEntityType;
+import org.apache.olingo.server.api.ODataApplicationException;
 
+import jp.oiyokan.dto.OiyokanSettingsDatabase;
 import jp.oiyokan.dto.OiyokanSettingsEntitySet;
 
 /**
@@ -30,7 +34,7 @@ public class OiyokanCsdlEntitySet extends CsdlEntitySet {
      */
     public enum DatabaseType {
         /** h2 database */
-        H2
+        H2, PG
     };
 
     /**
@@ -40,7 +44,9 @@ public class OiyokanCsdlEntitySet extends CsdlEntitySet {
 
     private DatabaseType dbType = DatabaseType.H2;
 
-    private OiyokanSettingsEntitySet entitySetConf = null;
+    private OiyokanSettingsEntitySet settingsEntitySet = null;
+
+    private OiyokanSettingsDatabase settingsDatabase = null;
 
     /**
      * データベース型を取得.
@@ -81,13 +87,33 @@ public class OiyokanCsdlEntitySet extends CsdlEntitySet {
      * @param dbTableNameLocal  ローカルのデータベース上のテーブル名.
      * @param dbTableNameTarget ターゲットのデータベース上のテーブル名. 通常は dbTableNameLocalと一致.
      */
-    public OiyokanCsdlEntitySet(OiyokanCsdlEntityContainer containerInfo, OiyokanSettingsEntitySet entitySetConf) {
-        setName(entitySetConf.getEntitySetName());
+    public OiyokanCsdlEntitySet(OiyokanCsdlEntityContainer containerInfo, OiyokanSettingsEntitySet settingsEntitySet)
+            throws ODataApplicationException {
+        setName(settingsEntitySet.getEntitySetName());
         this.csdlEntityContainer = containerInfo;
-        this.entitySetConf = entitySetConf;
-        this.dbType = DatabaseType.H2;
+        this.settingsEntitySet = settingsEntitySet;
 
-        this.setType(new FullQualifiedName(containerInfo.getNamespaceIyo(), entitySetConf.getEntityName()));
+        for (OiyokanSettingsDatabase look : OiyokanCsdlEntityContainer.getOiyokanSettingsInstance().getDatabaseList()) {
+            if (look.getName().equals(settingsEntitySet.getDatabaseName())) {
+                settingsDatabase = look;
+            }
+        }
+        if (settingsDatabase == null) {
+            throw new ODataApplicationException(
+                    "UNEXPECTED: No database settings found: " + settingsEntitySet.getDatabaseName(), 500,
+                    Locale.ENGLISH);
+        }
+
+        if ("h2".equals(settingsDatabase.getType())) {
+            this.dbType = DatabaseType.H2;
+        } else if ("h2".equals(settingsDatabase.getType())) {
+            this.dbType = DatabaseType.PG;
+        } else {
+            throw new ODataApplicationException("UNEXPECTED: Unknown database type: " + settingsDatabase.getType(), 500,
+                    Locale.ENGLISH);
+        }
+
+        this.setType(new FullQualifiedName(containerInfo.getNamespaceIyo(), settingsEntitySet.getEntityName()));
     }
 
     /**
@@ -96,7 +122,7 @@ public class OiyokanCsdlEntitySet extends CsdlEntitySet {
      * @return エンティティ名. MyProduct 相当.
      */
     public String getEntityNameIyo() {
-        return entitySetConf.getEntityName();
+        return settingsEntitySet.getEntityName();
     }
 
     /**
@@ -104,7 +130,7 @@ public class OiyokanCsdlEntitySet extends CsdlEntitySet {
      * 
      * @return エンティティのFQN(完全修飾名).
      */
-    public FullQualifiedName getEntityNameFqnIyo() {
+    public FullQualifiedName getEntityNameFqnIyo() throws ODataApplicationException {
         return new FullQualifiedName(csdlEntityContainer.getNamespaceIyo(), getEntityNameIyo());
     }
 
@@ -114,7 +140,7 @@ public class OiyokanCsdlEntitySet extends CsdlEntitySet {
      * @return ローカルのDBテーブル名.
      */
     public String getDbTableNameLocalIyo() {
-        return entitySetConf.getDbTableNameLocal();
+        return settingsEntitySet.getDbTableNameLocal();
     }
 
     /**
@@ -123,6 +149,6 @@ public class OiyokanCsdlEntitySet extends CsdlEntitySet {
      * @return ターゲットのDBテーブル名.
      */
     public String getDbTableNameTargetIyo() {
-        return entitySetConf.getDbTableNameTarget();
+        return settingsEntitySet.getDbTableNameTarget();
     }
 }
