@@ -219,8 +219,8 @@ public class BasicSqlExprExpander {
     }
 
     private void expandMember(MemberImpl impl) {
-        // そのままSQLのメンバーとする。
-        sqlInfo.getSqlBuilder().append(impl.toString());
+        // そのままSQLのメンバーとせず、項目名エスケープを除去.
+        sqlInfo.getSqlBuilder().append(BasicSqlBuilder.unescapeKakkoFieldName(impl.toString()));
     }
 
     private void expandMethod(MethodImpl impl) throws ODataApplicationException {

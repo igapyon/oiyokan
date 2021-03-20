@@ -44,7 +44,7 @@ class TinyH2SqlExprExpanderTest {
                 "https://localhost//simple.svc/");
         BasicSqlBuildInfo sqlInfo = new BasicSqlBuildInfo();
         new BasicSqlExprExpander(sqlInfo).expand(uriInfo.getFilterOption().getExpression());
-        assertEquals("([ID] = 1.0)", sqlInfo.getSqlBuilder().toString());
+        assertEquals("(ID = 1.0)", sqlInfo.getSqlBuilder().toString());
     }
 
     @Test
@@ -57,7 +57,7 @@ class TinyH2SqlExprExpanderTest {
                 "https://localhost//simple.svc/");
         BasicSqlBuildInfo sqlInfo = new BasicSqlBuildInfo();
         new BasicSqlExprExpander(sqlInfo).expand(uriInfo.getFilterOption().getExpression());
-        assertEquals("(([Description] = ?) AND ([ID] = 2.0))", sqlInfo.getSqlBuilder().toString());
+        assertEquals("((Description = ?) AND (ID = 2.0))", sqlInfo.getSqlBuilder().toString());
     }
 
     @Test
@@ -71,6 +71,6 @@ class TinyH2SqlExprExpanderTest {
                 "", "https://localhost//simple.svc/");
         BasicSqlBuildInfo sqlInfo = new BasicSqlBuildInfo();
         new BasicSqlExprExpander(sqlInfo).expand(uriInfo.getFilterOption().getExpression());
-        assertEquals("((POSITION(?,[Description]) - 1) <> -1)", sqlInfo.getSqlBuilder().toString());
+        assertEquals("((POSITION(?,Description) - 1) <> -1)", sqlInfo.getSqlBuilder().toString());
     }
 }
