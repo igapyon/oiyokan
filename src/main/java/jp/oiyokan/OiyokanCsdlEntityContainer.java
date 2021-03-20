@@ -42,7 +42,7 @@ import jp.oiyokan.dto.OiyokanSettingsEntitySet;
  * Oiyokan の CsdlEntityContainer 実装.
  */
 public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
-    private static volatile OiyokanSettings oiyokanSettings = null;
+    private static volatile OiyokanSettings settingsOiyokan = null;
 
     /**
      * CsdlEntityTypeをすでに取得済みであればそれをキャッシュから返却する場合に利用.
@@ -50,11 +50,11 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
     private Map<String, CsdlEntityType> cachedCsdlEntityTypeMap = new HashMap<>();
 
     public static OiyokanSettings getOiyokanSettingsInstance() throws ODataApplicationException {
-        if (oiyokanSettings == null) {
+        if (settingsOiyokan == null) {
             loadoIyokanSettings();
         }
 
-        return oiyokanSettings;
+        return settingsOiyokan;
     }
 
     /**
@@ -72,23 +72,23 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
 
         // テンプレートとそれから生成された複写物と2種類あるため、フラグではなくサイズで判定が必要だった.
         if (getEntitySets().size() == 0) {
-            for (OiyokanSettingsDatabase database : getOiyokanSettingsInstance().getDatabaseList()) {
+            for (OiyokanSettingsDatabase settingsDatabase : getOiyokanSettingsInstance().getDatabaseList()) {
                 if (OiyokanConstants.IS_TRACE_ODATA_V4)
-                    System.err.println("OData v4: Check JDBC Driver: " + database.getJdbcDriver());
+                    System.err.println("OData v4: Check JDBC Driver: " + settingsDatabase.getJdbcDriver());
                 try {
-                    Class.forName(database.getJdbcDriver());
+                    Class.forName(settingsDatabase.getJdbcDriver());
 
-                    if ("h2".equals(database.getType()) || "pg".equals(database.getType())) {
+                    if ("h2".equals(settingsDatabase.getType()) || "pg".equals(settingsDatabase.getType())) {
                         // OK
                     } else {
-                        throw new ODataApplicationException(
-                                "UNEXPECTED: [" + database.getName() + "]の type 指定[" + database.getType() + "]が不正", 500,
-                                Locale.ENGLISH);
+                        throw new ODataApplicationException("UNEXPECTED: [" + settingsDatabase.getName() + "]の type 指定["
+                                + settingsDatabase.getType() + "]が不正", 500, Locale.ENGLISH);
                     }
                 } catch (ClassNotFoundException ex) {
                     ex.printStackTrace();
                     throw new ODataApplicationException(
-                            "UNEXPECTED: JDBCドライバ[" + database.getJdbcDriver() + "]の読み込みに失敗", 500, Locale.ENGLISH);
+                            "UNEXPECTED: JDBCドライバ[" + settingsDatabase.getJdbcDriver() + "]の読み込みに失敗", 500,
+                            Locale.ENGLISH);
                 }
             }
 
@@ -201,7 +201,7 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
             String strOiyokanSettings = StreamUtils.copyToString(inStream, Charset.forName("UTF-8"));
 
             final ObjectMapper mapper = new ObjectMapper();
-            oiyokanSettings = mapper.readValue(strOiyokanSettings, OiyokanSettings.class);
+            settingsOiyokan = mapper.readValue(strOiyokanSettings, OiyokanSettings.class);
         } catch (IOException ex) {
             ex.printStackTrace();
             throw new ODataApplicationException("UNEXPECTED: Oiyokan 設定情報読み込み失敗", 500, Locale.ENGLISH);

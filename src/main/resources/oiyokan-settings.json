@@ -28,7 +28,6 @@
 			"entitySetName": "ODataAppInfos",
 			"entityName": "ODataAppInfo",
 			"databaseName": "oiyokan-internal",
-			"databaseType": "h2",
 			"dbTableNameLocal": "ODataAppInfos",
 			"dbTableNameTarget": "ODataAppInfos"
 		},
@@ -38,7 +37,6 @@
 			"entitySetName": "MyProducts",
 			"entityName": "MyProduct",
 			"databaseName": "oiyokan-internal",
-			"databaseType": "h2",
 			"dbTableNameLocal": "MyProducts",
 			"dbTableNameTarget": "MyProducts"
 		}

@@ -31,25 +31,30 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
  * http://www.jsonschema2pojo.org/ を利用して自動生成.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({ "name", "description", "entitySetName", "entityName", "databaseName", "databaseType",
-        "dbTableNameLocal", "dbTableNameTarget" })
+@JsonPropertyOrder({ "name", "description", "entitySetName", "entityName", "databaseName", "dbTableNameLocal",
+        "dbTableNameTarget" })
 public class OiyokanSettingsEntitySet {
     @JsonProperty("name")
     private String name;
+
     @JsonProperty("description")
     private String description;
+
     @JsonProperty("entitySetName")
     private String entitySetName;
+
     @JsonProperty("entityName")
     private String entityName;
+
     @JsonProperty("databaseName")
     private String databaseName;
-    @JsonProperty("databaseType")
-    private String databaseType;
+
     @JsonProperty("dbTableNameLocal")
     private String dbTableNameLocal;
+
     @JsonProperty("dbTableNameTarget")
     private String dbTableNameTarget;
+
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -101,16 +106,6 @@ public class OiyokanSettingsEntitySet {
     @JsonProperty("databaseName")
     public void setDatabaseName(String databaseName) {
         this.databaseName = databaseName;
-    }
-
-    @JsonProperty("databaseType")
-    public String getDatabaseType() {
-        return databaseType;
-    }
-
-    @JsonProperty("databaseType")
-    public void setDatabaseType(String databaseType) {
-        this.databaseType = databaseType;
     }
 
     @JsonProperty("dbTableNameLocal")
