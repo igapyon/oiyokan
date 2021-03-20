@@ -62,10 +62,11 @@ public class BasicJdbcEntityTypeBuilder {
      */
     public CsdlEntityType getEntityType() throws ODataApplicationException {
         // インメモリ作業データベースに接続.
-        try (Connection conn = BasicDbUtil.getConnection(entitySet.getSettingsDatabase())) {
+        // EntityTypeはインメモリ内部データベースの情報をもとに構築.
+        try (Connection connInterDb = BasicDbUtil.getConnection(entitySet.getSettingsDatabase())) {
             // テーブルをセットアップ.
             // 特殊例. createDataをスキップ.
-            OiyokanInterDb.setupTable(conn);
+            OiyokanInterDb.setupTable(connInterDb);
 
             // CSDL要素型として情報を組み上げ.
             CsdlEntityType entityType = new CsdlEntityType();
@@ -77,8 +78,10 @@ public class BasicJdbcEntityTypeBuilder {
 
             // SELECT * について、この箇所のみ記述を許容。
             // DatabaseMetaData では取りづらい情報があるためこちらを採用。
-            try (PreparedStatement stmt = conn
-                    .prepareStatement("SELECT * FROM " + entitySet.getDbTableNameLocalIyo() + " LIMIT 1")) {
+            final String sql = "SELECT * FROM " + entitySet.getDbTableNameLocalIyo() + " LIMIT 1";
+            if (OiyokanConstants.IS_TRACE_ODATA_V4)
+                System.err.println("OData v4: TRACE: Entity: SQL: " + sql);
+            try (PreparedStatement stmt = connInterDb.prepareStatement(sql)) {
                 ResultSetMetaData rsmeta = stmt.getMetaData();
                 final int columnCount = rsmeta.getColumnCount();
                 for (int column = 1; column <= columnCount; column++) {
@@ -87,7 +90,7 @@ public class BasicJdbcEntityTypeBuilder {
 
                 // テーブルのキー情報
                 final List<CsdlPropertyRef> keyRefList = new ArrayList<>();
-                final DatabaseMetaData dbmeta = conn.getMetaData();
+                final DatabaseMetaData dbmeta = connInterDb.getMetaData();
                 final ResultSet rsKey = dbmeta.getPrimaryKeys(null, null, entitySet.getDbTableNameLocalIyo());
                 for (; rsKey.next();) {
                     // キー名は利用しない: rsKey.getString("PK_NAME");

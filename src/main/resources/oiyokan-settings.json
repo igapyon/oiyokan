@@ -37,7 +37,7 @@
 			"entitySetName": "MyProducts",
 			"entityName": "MyProduct",
 			"databaseName": "oiyokan-internal",
-			"dbTableNameLocal": "MyProducts",
+			"dbTableNameLocal": "OcsdlMyProducts",
 			"dbTableNameTarget": "MyProducts"
 		}
 	]

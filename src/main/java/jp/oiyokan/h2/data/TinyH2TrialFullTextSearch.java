@@ -39,13 +39,13 @@ public class TinyH2TrialFullTextSearch {
     /**
      * 全文検索を処理.
      * 
-     * @param conn         データベース接続.
+     * @param connTargetDb データベース接続.
      * @param edmEntitySet EdmEntitySet情報.
      * @param uriInfo      URI情報.
      * @param eCollection  検索結果の出力先.
      */
-    public void process(Connection conn, EdmEntitySet edmEntitySet, UriInfo uriInfo, EntityCollection eCollection)
-            throws ODataApplicationException {
+    public void process(Connection connTargetDb, EdmEntitySet edmEntitySet, UriInfo uriInfo,
+            EntityCollection eCollection) throws ODataApplicationException {
         try {
             SearchOptionImpl searchOpt = (SearchOptionImpl) uriInfo.getSearchOption();
 
@@ -63,7 +63,7 @@ public class TinyH2TrialFullTextSearch {
             }
 
             String sql = "SELECT QUERY,SCORE FROM FT_SEARCH(?, " + topValue + ", " + offsetValue + ")";
-            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            try (PreparedStatement stmt = connTargetDb.prepareStatement(sql)) {
                 if (OiyokanConstants.IS_TRACE_ODATA_V4)
                     System.err.println("OData v4: TRACE: $search: SQL: " + sql);
 
@@ -81,7 +81,7 @@ public class TinyH2TrialFullTextSearch {
 
                     // TODO たぶんこれだとだめ。検索結果のIDから、select から与えられた指定の項目を取る必要あり。
                     // ただし、h2としての故記述は正しい。
-                    try (PreparedStatement stmt2 = conn.prepareStatement("SELECT ID FROM " + valQuery)) {
+                    try (PreparedStatement stmt2 = connTargetDb.prepareStatement("SELECT ID FROM " + valQuery)) {
                         ResultSet rset2 = stmt2.executeQuery();
                         // TODO 戻り値チェック.
                         rset2.next();

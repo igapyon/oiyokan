@@ -79,10 +79,10 @@ public class TinyH2EntityCollectionBuilder {
         }
 
         // インメモリ作業データベースに接続.
-        try (Connection conn = BasicDbUtil.getConnection(eSetTarget.getSettingsDatabase())) {
+        try (Connection connTargetDb = BasicDbUtil.getConnection(eSetTarget.getSettingsDatabase())) {
             if (uriInfo.getSearchOption() != null) {
                 // $search.
-                new TinyH2TrialFullTextSearch().process(conn, edmEntitySet, uriInfo, eCollection);
+                new TinyH2TrialFullTextSearch().process(connTargetDb, edmEntitySet, uriInfo, eCollection);
                 return eCollection;
             }
 
@@ -97,7 +97,7 @@ public class TinyH2EntityCollectionBuilder {
                     System.err.println("OData v4: TRACE: SQL: " + sql);
 
                 int countWithWhere = 0;
-                try (var stmt = conn.prepareStatement(sql)) {
+                try (var stmt = connTargetDb.prepareStatement(sql)) {
                     int column = 1;
                     for (Object look : tinySql.getSqlInfo().getSqlParamList()) {
                         BasicDbUtil.bindPreparedParameter(stmt, column++, look);
@@ -123,7 +123,7 @@ public class TinyH2EntityCollectionBuilder {
             if (OiyokanConstants.IS_TRACE_ODATA_V4)
                 System.err.println("OData v4: TRACE: SQL: " + sql);
 
-            try (var stmt = conn.prepareStatement(sql)) {
+            try (var stmt = connTargetDb.prepareStatement(sql)) {
                 int idxColumn = 1;
                 for (Object look : tinySql.getSqlInfo().getSqlParamList()) {
                     BasicDbUtil.bindPreparedParameter(stmt, idxColumn++, look);
