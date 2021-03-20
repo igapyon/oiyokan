@@ -64,6 +64,7 @@ public class BasicJdbcEntityTypeBuilder {
         // インメモリ作業データベースに接続.
         try (Connection conn = BasicDbUtil.getConnection(entitySet.getSettingsDatabase())) {
             // テーブルをセットアップ.
+            // 特殊例. createDataをスキップ.
             TinyH2DbSample.createTable(conn);
 
             // CSDL要素型として情報を組み上げ.

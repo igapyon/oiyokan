@@ -72,6 +72,7 @@ oiyokan プロジェクトは、OData v4 server のシンプルなサンプル(h
 
 ## TODO
 
+- 内部データベースのセットアップを外部スクリプト化
 - OData 4.0 の Binary と Guid 対応の検討.
 - 対応しない命令の場合、適切に例外で異常停止。ODataApplicationExceptionの利用を想定。
 - 認証の実験。
