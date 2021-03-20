@@ -98,4 +98,96 @@ class BasicODataSampleDbFilterTest {
                 result);
     }
 
+    @Test
+    void testInt16a() throws Exception {
+        final ODataHttpHandler handler = BasicODataSampleDbTest.getHandler();
+        final ODataRequest req = new ODataRequest();
+        req.setMethod(HttpMethod.GET);
+        req.setRawBaseUri("http://localhost:8080/odata4.svc");
+        req.setRawODataPath("/MyProducts");
+        req.setRawQueryPath("$top=1&$filter=Int16a eq 32767&$orderby=ID&$select=ID");
+        req.setRawRequestUri(req.getRawBaseUri() + req.getRawODataPath() + "?" + req.getRawQueryPath());
+
+        final ODataResponse resp = handler.process(req);
+        assertEquals(200, resp.getStatusCode());
+        final String result = BasicODataSampleDbTest.stream2String(resp.getContent());
+        // System.err.println("result: " + result);
+        assertEquals("{\"@odata.context\":\"$metadata#MyProducts\",\"value\":[{\"ID\":1}]}", result);
+    }
+
+    @Test
+    void testInt32a() throws Exception {
+        final ODataHttpHandler handler = BasicODataSampleDbTest.getHandler();
+        final ODataRequest req = new ODataRequest();
+        req.setMethod(HttpMethod.GET);
+        req.setRawBaseUri("http://localhost:8080/odata4.svc");
+        req.setRawODataPath("/MyProducts");
+        req.setRawQueryPath("$top=2&$filter=Int32a eq 2147483647&$orderby=ID&$count=true&$select=ID");
+        req.setRawRequestUri(req.getRawBaseUri() + req.getRawODataPath() + "?" + req.getRawQueryPath());
+
+        final ODataResponse resp = handler.process(req);
+        assertEquals(200, resp.getStatusCode());
+        final String result = BasicODataSampleDbTest.stream2String(resp.getContent());
+        // System.err.println("result: " + result);
+        assertEquals(
+                "{\"@odata.context\":\"$metadata#MyProducts\",\"@odata.count\":203,\"value\":[{\"ID\":1},{\"ID\":2}]}",
+                result);
+    }
+
+    // Int64はスキップ.
+
+    @Test
+    void testSbyte1() throws Exception {
+        final ODataHttpHandler handler = BasicODataSampleDbTest.getHandler();
+        final ODataRequest req = new ODataRequest();
+        req.setMethod(HttpMethod.GET);
+        req.setRawBaseUri("http://localhost:8080/odata4.svc");
+        req.setRawODataPath("/MyProducts");
+        req.setRawQueryPath("$top=1&$filter=Sbyte1 eq 127&$orderby=ID&$count=true&$select=ID");
+        req.setRawRequestUri(req.getRawBaseUri() + req.getRawODataPath() + "?" + req.getRawQueryPath());
+
+        final ODataResponse resp = handler.process(req);
+        assertEquals(200, resp.getStatusCode());
+        final String result = BasicODataSampleDbTest.stream2String(resp.getContent());
+        // System.err.println("result: " + result);
+        assertEquals("{\"@odata.context\":\"$metadata#MyProducts\",\"@odata.count\":203,\"value\":[{\"ID\":1}]}",
+                result);
+    }
+
+    @Test
+    void testSingle1() throws Exception {
+        final ODataHttpHandler handler = BasicODataSampleDbTest.getHandler();
+        final ODataRequest req = new ODataRequest();
+        req.setMethod(HttpMethod.GET);
+        req.setRawBaseUri("http://localhost:8080/odata4.svc");
+        req.setRawODataPath("/MyProducts");
+        req.setRawQueryPath("$top=1&$filter=Single1 eq 123.45678711&$orderby=ID&$count=true&$select=ID");
+        req.setRawRequestUri(req.getRawBaseUri() + req.getRawODataPath() + "?" + req.getRawQueryPath());
+
+        final ODataResponse resp = handler.process(req);
+        assertEquals(200, resp.getStatusCode());
+        final String result = BasicODataSampleDbTest.stream2String(resp.getContent());
+        // System.err.println("result: " + result);
+        assertEquals("{\"@odata.context\":\"$metadata#MyProducts\",\"@odata.count\":203,\"value\":[{\"ID\":1}]}",
+                result);
+    }
+
+    @Test
+    void testDouble1() throws Exception {
+        final ODataHttpHandler handler = BasicODataSampleDbTest.getHandler();
+        final ODataRequest req = new ODataRequest();
+        req.setMethod(HttpMethod.GET);
+        req.setRawBaseUri("http://localhost:8080/odata4.svc");
+        req.setRawODataPath("/MyProducts");
+        req.setRawQueryPath("$top=51&$filter=Double1 lt 123.456789&$orderby=ID&$count=true&$select=ID");
+        req.setRawRequestUri(req.getRawBaseUri() + req.getRawODataPath() + "?" + req.getRawQueryPath());
+
+        // TODO Doubleの処理について追加テストが必要。
+
+        final ODataResponse resp = handler.process(req);
+        assertEquals(200, resp.getStatusCode());
+        final String result = BasicODataSampleDbTest.stream2String(resp.getContent());
+        // System.err.println("result: " + result);
+        assertEquals("{\"@odata.context\":\"$metadata#MyProducts\",\"@odata.count\":0,\"value\":[]}", result);
+    }
 }
