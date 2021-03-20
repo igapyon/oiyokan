@@ -24,6 +24,7 @@ import org.junit.jupiter.api.Test;
 
 import jp.oiyokan.OiyokanSettingsUtil;
 import jp.oiyokan.basic.BasicDbUtil;
+import jp.oiyokan.data.OiyokanInterDb;
 import jp.oiyokan.dto.OiyokanSettings;
 
 /**
@@ -36,11 +37,8 @@ class H2DatabaseTest {
         try (Connection conn = BasicDbUtil
                 .getConnection(OiyokanSettingsUtil.getOiyokanInternalDatabase(settingsOiyokan))) {
 
-            // テーブルをセットアップ.
-            if (TinyH2DbSample.createTable(conn)) {
-                // テーブルデータをセットアップ.
-                TinyH2DbSample.setupTableData(conn);
-            }
+            // 内部データベースのテーブルをセットアップ.
+            OiyokanInterDb.setupTable(conn);
 
             try (var stmt = conn.prepareStatement("SELECT ID, Name, Description FROM MyProducts ORDER BY ID LIMIT 3")) {
                 stmt.executeQuery();
@@ -57,11 +55,8 @@ class H2DatabaseTest {
         final OiyokanSettings settingsOiyokan = OiyokanSettingsUtil.loadOiyokanSettings();
         try (Connection conn = BasicDbUtil
                 .getConnection(OiyokanSettingsUtil.getOiyokanInternalDatabase(settingsOiyokan))) {
-            // テーブルをセットアップ.
-            if (TinyH2DbSample.createTable(conn)) {
-                // テーブルデータをセットアップ.
-                TinyH2DbSample.setupTableData(conn);
-            }
+            // 内部データベースのテーブルをセットアップ.
+            OiyokanInterDb.setupTable(conn);
 
             try (var stmt = conn.prepareStatement("SELECT ID, Name, Description" //
                     + ",Sbyte1,Int16a,Int32a,Int64a,Decimal1,StringChar2,StringVar255,StringVar65535,Boolean1,Single1,Double1,DateTimeOffset1,TimeOfDay1" //
