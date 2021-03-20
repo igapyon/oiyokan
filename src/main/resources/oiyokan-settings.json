@@ -16,7 +16,7 @@
 			"type": "pg",
 			"description": "サンプルDB接続設定記述。ここを実際の設定値に変更して利用する。まだ対応エンティティセットの記述がない。",
 			"jdbcDriver": "org.postgresql.Driver",
-			"jdbcUrl": "jdbc:postgresql://localhost:5432/sample",
+			"jdbcUrl": "jdbc:postgresql://localhost:5432/dvdrental",
 			"jdbcUser": "",
 			"jdbcPass": ""
 		}
