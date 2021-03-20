@@ -21,14 +21,13 @@ import org.apache.olingo.commons.api.http.HttpMethod;
 import org.apache.olingo.server.api.ODataHttpHandler;
 import org.apache.olingo.server.api.ODataRequest;
 import org.apache.olingo.server.api.ODataResponse;
-
-import jp.oiyokan.OiyokanConstants;
+import org.junit.jupiter.api.Test;
 
 /**
  * OData サーバについて、おおざっぱな通過によるデグレードを検知.
  */
 class BasicODataSampleDbFilterTest {
-    // @Test
+    @Test
     void testSimpleVersion() throws Exception {
         final ODataHttpHandler handler = BasicODataSampleDbTest.getHandler();
         final ODataRequest req = new ODataRequest();
@@ -40,13 +39,10 @@ class BasicODataSampleDbFilterTest {
         req.setRawRequestUri(req.getRawBaseUri() + req.getRawODataPath() + "?" + req.getRawQueryPath());
 
         final ODataResponse resp = handler.process(req);
-        // assertEquals(200, resp.getStatusCode());
+        assertEquals(200, resp.getStatusCode());
         final String result = BasicODataSampleDbTest.stream2String(resp.getContent());
-        System.err.println("result: " + result);
-        assertEquals(
-                "{\"@odata.context\":\"$metadata#ODataAppInfos\",\"value\":[{\"KeyName\":\"Version\",\"KeyValue\":\""
-                        + OiyokanConstants.VERSION + "\"}]}",
-                result);
+        // System.err.println("result: " + result);
+        assertEquals("{\"@odata.context\":\"$metadata#MyProducts\",\"@odata.count\":0,\"value\":[]}", result);
     }
 
 }

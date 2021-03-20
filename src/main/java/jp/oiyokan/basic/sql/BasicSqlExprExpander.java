@@ -15,8 +15,11 @@
  */
 package jp.oiyokan.basic.sql;
 
+import java.sql.Timestamp;
+import java.time.ZonedDateTime;
 import java.util.Locale;
 
+import org.apache.olingo.commons.core.edm.primitivetype.EdmDateTimeOffset;
 import org.apache.olingo.server.api.ODataApplicationException;
 import org.apache.olingo.server.api.uri.queryoption.expression.BinaryOperatorKind;
 import org.apache.olingo.server.api.uri.queryoption.expression.Expression;
@@ -62,7 +65,8 @@ public class BasicSqlExprExpander {
             expandBinary((BinaryImpl) filterExpression);
             return;
         } else if (filterExpression instanceof EnumerationImpl) {
-            throw new ODataApplicationException("NOT SUPPORTED: Filter Expression: EnumerationImpl", 500, Locale.ENGLISH);
+            throw new ODataApplicationException("NOT SUPPORTED: Filter Expression: EnumerationImpl", 500,
+                    Locale.ENGLISH);
         } else if (filterExpression instanceof LambdaRefImpl) {
             throw new ODataApplicationException("NOT SUPPORTED: Filter Expression: LambdaRefImpl", 500, Locale.ENGLISH);
         } else if (filterExpression instanceof LiteralImpl) {
@@ -75,7 +79,8 @@ public class BasicSqlExprExpander {
             expandMethod((MethodImpl) filterExpression);
             return;
         } else if (filterExpression instanceof TypeLiteralImpl) {
-            throw new ODataApplicationException("NOT SUPPORTED: Filter Expression: TypeLiteralImpl", 500, Locale.ENGLISH);
+            throw new ODataApplicationException("NOT SUPPORTED: Filter Expression: TypeLiteralImpl", 500,
+                    Locale.ENGLISH);
         } else if (filterExpression instanceof UnaryImpl) {
             UnaryImpl impl = (UnaryImpl) filterExpression;
             expandUnary(impl);
@@ -186,6 +191,14 @@ public class BasicSqlExprExpander {
     }
 
     private void expandLiteral(LiteralImpl impl) {
+        if (EdmDateTimeOffset.getInstance() == impl.getType()) {
+            ZonedDateTime zdt = FromOlingoUtil.parseZonedDateTime(impl.getText());
+            sqlInfo.getSqlBuilder().append("?");
+            Timestamp tstamp = Timestamp.from(zdt.toInstant());
+            sqlInfo.getSqlParamList().add(tstamp);
+            return;
+        }
+
         String value = impl.toString();
         if (value.startsWith("'") && value.endsWith("'")) {
             // 文字列リテラルについては前後のクオートを除去して記憶.
@@ -195,6 +208,10 @@ public class BasicSqlExprExpander {
             sqlInfo.getSqlParamList().add(value);
             return;
         }
+
+        System.err.println("edmtype:" + impl.getType().getName());
+        System.err.println("edmtype:" + impl.getType().getClass().getCanonicalName());
+//        if(value.endsWith(value))
 
         // パラメータクエリ化は断念.
         // 単に value をそのままSQL文に追加。
@@ -484,8 +501,8 @@ public class BasicSqlExprExpander {
             return;
         }
 
-        final String message = "UNEXPECTED: Unsupported UnaryOperatorKind:" + impl.getOperator() + ","
-                + impl.toString() + "]";
+        final String message = "UNEXPECTED: Unsupported UnaryOperatorKind:" + impl.getOperator() + "," + impl.toString()
+                + "]";
         System.err.println(message);
         throw new ODataApplicationException(message, 500, Locale.ENGLISH);
     }
