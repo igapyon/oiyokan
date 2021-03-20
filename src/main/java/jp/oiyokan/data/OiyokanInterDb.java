@@ -16,7 +16,12 @@
 package jp.oiyokan.data;
 
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.Locale;
 
 import org.apache.olingo.server.api.ODataApplicationException;
@@ -105,5 +110,103 @@ public class OiyokanInterDb {
 
         // 新規作成.
         return true;
+    }
+
+    /**
+     * Ocsdl 用の DDL 文字列を取得.
+     * 
+     * @param connTargetDb
+     * @param tableName
+     * @return
+     * @throws SQLException
+     */
+    public static String generateCreateOcsdlDdl(Connection connTargetDb, String tableName) throws SQLException {
+        final String sql = "SELECT * FROM " + tableName + " LIMIT 1";
+        final StringBuilder sqlBuilder = new StringBuilder();
+        sqlBuilder.append("CREATE TABLE IF NOT EXISTS\n");
+        sqlBuilder.append("  Ocsdl" + tableName + " (\n");
+        try (PreparedStatement stmt = connTargetDb.prepareStatement(sql)) {
+            ResultSetMetaData rsmeta = stmt.getMetaData();
+            final int columnCount = rsmeta.getColumnCount();
+            boolean isFirstColumn = true;
+            for (int column = 1; column <= columnCount; column++) {
+                sqlBuilder.append("    ");
+                if (isFirstColumn) {
+                    isFirstColumn = false;
+                } else {
+                    sqlBuilder.append(", ");
+                }
+                sqlBuilder.append(rsmeta.getColumnName(column) + " ");
+
+                switch (rsmeta.getColumnType(column)) {
+                case Types.TINYINT:
+                    sqlBuilder.append("TINYINT");
+                    break;
+                case Types.SMALLINT:
+                    sqlBuilder.append("SMALLINT");
+                    break;
+                case Types.INTEGER: /* INT */
+                    sqlBuilder.append("INT");
+                    break;
+                case Types.BIGINT:
+                    sqlBuilder.append("BIGINT");
+                    break;
+                case Types.DECIMAL:
+                    sqlBuilder.append("DECIMAL(" //
+                            + rsmeta.getScale(column) + "," + rsmeta.getPrecision(column) + ")");
+                    break;
+                case Types.BOOLEAN:
+                    sqlBuilder.append("BOOLEAN");
+                    break;
+                case Types.REAL:
+                    sqlBuilder.append("REAL");
+                    break;
+                case Types.DOUBLE:
+                    sqlBuilder.append("DOUBLE");
+                    break;
+                case Types.DATE:
+                    sqlBuilder.append("DATE");
+                    break;
+                case Types.TIMESTAMP:
+                    sqlBuilder.append("TIMESTAMP");
+                    break;
+                case Types.TIME:
+                    sqlBuilder.append("TIME");
+                    break;
+                case Types.CHAR:
+                    sqlBuilder.append("CHAR(" + rsmeta.getColumnDisplaySize(column) + ")");
+                    break;
+                case Types.VARCHAR:
+                    sqlBuilder.append("VARCHAR(" + rsmeta.getColumnDisplaySize(column) + ")");
+                    break;
+                default:
+                    System.err.println("Type: ignore");
+                    break;
+                }
+                sqlBuilder.append("\n");
+            }
+
+            // テーブルのキー情報
+            final DatabaseMetaData dbmeta = connTargetDb.getMetaData();
+            final ResultSet rsKey = dbmeta.getPrimaryKeys(null, null, tableName);
+            boolean isFirstPkey = true;
+            for (; rsKey.next();) {
+                String colName = rsKey.getString("COLUMN_NAME");
+                if (isFirstPkey) {
+                    isFirstPkey = false;
+                    sqlBuilder.append("    , PRIMARY KEY(");
+                } else {
+                    sqlBuilder.append(",");
+                }
+                sqlBuilder.append(colName);
+            }
+            if (isFirstPkey == false) {
+                sqlBuilder.append(")\n");
+            }
+        }
+
+        sqlBuilder.append("  );\n");
+
+        return sqlBuilder.toString();
     }
 }
