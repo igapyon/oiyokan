@@ -94,6 +94,7 @@ public class TinyH2DbSample {
             try (var stmt = conn.prepareStatement(sql.trim())) {
                 // System.err.println("SQL: " + sql);
                 stmt.executeUpdate();
+                conn.commit();
             } catch (SQLException ex) {
                 throw new ODataApplicationException("SQL実行に失敗: " + ex.toString(), 500, Locale.ENGLISH);
             }
@@ -114,25 +115,7 @@ public class TinyH2DbSample {
         // ダミーなデータの追加
         try (var stmt = conn.prepareStatement("INSERT INTO MyProducts (ID, Name, Description) VALUES ("
                 + BasicDbUtil.getQueryPlaceholderString(3) + ")")) {
-            int idCounter = 1;
-            stmt.setInt(1, idCounter++);
-            stmt.setString(2, "MacBookPro16,2");
-            stmt.setString(3, "MacBook Pro (13-inch, 2020, Thunderbolt 3ポートx 4)");
-            stmt.executeUpdate();
-
-            stmt.clearParameters();
-            stmt.setInt(1, idCounter++);
-            stmt.setString(2, "MacBookPro E2015");
-            stmt.setString(3, "MacBook Pro (Retina, 13-inch, Early 2015)");
-            stmt.executeUpdate();
-
-            stmt.clearParameters();
-            stmt.setInt(1, idCounter++);
-            stmt.setString(2, "Surface Laptop 2");
-            stmt.setString(3, "Surface Laptop 2, 画面:13.5 インチ PixelSense ディスプレイ, インテル Core");
-            stmt.executeUpdate();
-
-            conn.commit();
+            int idCounter = 4;
 
             for (int index = 0; index < ZOUSYOKU; index++) {
                 stmt.clearParameters();

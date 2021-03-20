@@ -31,3 +31,11 @@ CREATE TABLE IF NOT EXISTS
 CREATE ALIAS IF NOT EXISTS FT_INIT FOR "org.h2.fulltext.FullText.init";
 CALL FT_INIT();
 
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  1, 'MacBookPro16,2', 'MacBook Pro (13-inch, 2020, Thunderbolt 3ポートx 4)');
+
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  2, 'MacBookPro E2015', 'MacBook Pro (Retina, 13-inch, Early 2015');
+
+INSERT INTO MyProducts (ID, Name, Description) VALUES (
+  3, 'Surface Laptop 2', 'Surface Laptop 2, 画面:13.5 インチ PixelSense ディスプレイ, インテル Core');
