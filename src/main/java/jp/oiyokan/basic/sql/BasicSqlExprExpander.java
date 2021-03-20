@@ -57,14 +57,14 @@ public class BasicSqlExprExpander {
      */
     public void expand(Expression filterExpression) throws ODataApplicationException {
         if (filterExpression instanceof AliasImpl) {
-            throw new ODataApplicationException("NOT SUPPORTED:Expression:AliasImpl", 500, Locale.ENGLISH);
+            throw new ODataApplicationException("NOT SUPPORTED: Filter Expression: AliasImpl", 500, Locale.ENGLISH);
         } else if (filterExpression instanceof BinaryImpl) {
             expandBinary((BinaryImpl) filterExpression);
             return;
         } else if (filterExpression instanceof EnumerationImpl) {
-            throw new ODataApplicationException("NOT SUPPORTED:Expression:EnumerationImpl", 500, Locale.ENGLISH);
+            throw new ODataApplicationException("NOT SUPPORTED: Filter Expression: EnumerationImpl", 500, Locale.ENGLISH);
         } else if (filterExpression instanceof LambdaRefImpl) {
-            throw new ODataApplicationException("NOT SUPPORTED:Expression:LambdaRefImpl", 500, Locale.ENGLISH);
+            throw new ODataApplicationException("NOT SUPPORTED: Filter Expression: LambdaRefImpl", 500, Locale.ENGLISH);
         } else if (filterExpression instanceof LiteralImpl) {
             expandLiteral((LiteralImpl) filterExpression);
             return;
@@ -75,14 +75,14 @@ public class BasicSqlExprExpander {
             expandMethod((MethodImpl) filterExpression);
             return;
         } else if (filterExpression instanceof TypeLiteralImpl) {
-            throw new ODataApplicationException("NOT SUPPORTED:Expression:TypeLiteralImpl", 500, Locale.ENGLISH);
+            throw new ODataApplicationException("NOT SUPPORTED: Filter Expression: TypeLiteralImpl", 500, Locale.ENGLISH);
         } else if (filterExpression instanceof UnaryImpl) {
             UnaryImpl impl = (UnaryImpl) filterExpression;
             expandUnary(impl);
             return;
         }
 
-        final String message = "Unexpected Case: Unsupported expression:" + filterExpression.getClass().getName() + ","
+        final String message = "UNEXPECTED: Unsupported expression:" + filterExpression.getClass().getName() + ","
                 + filterExpression.toString() + "]";
         System.err.println(message);
         throw new ODataApplicationException(message, 500, Locale.ENGLISH);
@@ -95,25 +95,25 @@ public class BasicSqlExprExpander {
         BinaryOperatorKind opKind = impl.getOperator();
         if (opKind == BinaryOperatorKind.HAS) {
             // HAS
-            throw new ODataApplicationException("NOT SUPPORTED:BinaryOperatorKind:" + opKind, 500, Locale.ENGLISH);
+            throw new ODataApplicationException("NOT SUPPORTED: BinaryOperatorKind:" + opKind, 500, Locale.ENGLISH);
         } else if (opKind == BinaryOperatorKind.IN) {
             // IN
-            throw new ODataApplicationException("NOT SUPPORTED:BinaryOperatorKind:" + opKind, 500, Locale.ENGLISH);
+            throw new ODataApplicationException("NOT SUPPORTED: BinaryOperatorKind:" + opKind, 500, Locale.ENGLISH);
         } else if (opKind == BinaryOperatorKind.MUL) {
             // MUL
-            throw new ODataApplicationException("NOT SUPPORTED:BinaryOperatorKind:" + opKind, 500, Locale.ENGLISH);
+            throw new ODataApplicationException("NOT SUPPORTED: BinaryOperatorKind:" + opKind, 500, Locale.ENGLISH);
         } else if (opKind == BinaryOperatorKind.DIV) {
             // DIV
-            throw new ODataApplicationException("NOT SUPPORTED:BinaryOperatorKind:" + opKind, 500, Locale.ENGLISH);
+            throw new ODataApplicationException("NOT SUPPORTED: BinaryOperatorKind:" + opKind, 500, Locale.ENGLISH);
         } else if (opKind == BinaryOperatorKind.MOD) {
             // MOD
-            throw new ODataApplicationException("NOT SUPPORTED:BinaryOperatorKind:" + opKind, 500, Locale.ENGLISH);
+            throw new ODataApplicationException("NOT SUPPORTED: BinaryOperatorKind:" + opKind, 500, Locale.ENGLISH);
         } else if (opKind == BinaryOperatorKind.ADD) {
             // ADD
-            throw new ODataApplicationException("NOT SUPPORTED:BinaryOperatorKind:" + opKind, 500, Locale.ENGLISH);
+            throw new ODataApplicationException("NOT SUPPORTED: BinaryOperatorKind:" + opKind, 500, Locale.ENGLISH);
         } else if (opKind == BinaryOperatorKind.SUB) {
             // SUB
-            throw new ODataApplicationException("NOT SUPPORTED:BinaryOperatorKind:" + opKind, 500, Locale.ENGLISH);
+            throw new ODataApplicationException("NOT SUPPORTED: BinaryOperatorKind:" + opKind, 500, Locale.ENGLISH);
         } else if (opKind == BinaryOperatorKind.GT) {
             // GT
             sqlInfo.getSqlBuilder().append("(");
@@ -180,7 +180,7 @@ public class BasicSqlExprExpander {
             return;
         }
 
-        final String message = "Unexpected Case: Unsupported binary operator:" + opKind + "," + impl.toString() + "]";
+        final String message = "UNEXPECTED: Unsupported binary operator:" + opKind + "," + impl.toString() + "]";
         System.err.println(message);
         throw new ODataApplicationException(message, 500, Locale.ENGLISH);
     }
@@ -231,7 +231,7 @@ public class BasicSqlExprExpander {
 
         // ENDSWITH
         if (impl.getMethod() == MethodKind.ENDSWITH) {
-            throw new ODataApplicationException("Not Suporoted: MethodKind.ENDSWITH", 500, Locale.ENGLISH);
+            throw new ODataApplicationException("NOT SUPPORTED: MethodKind.ENDSWITH", 500, Locale.ENGLISH);
         }
 
         // LENGTH
@@ -365,42 +365,42 @@ public class BasicSqlExprExpander {
 
         // FRACTIONALSECONDS
         if (impl.getMethod() == MethodKind.FRACTIONALSECONDS) {
-            throw new ODataApplicationException("Not Suporoted: MethodKind.FRACTIONALSECONDS", 500, Locale.ENGLISH);
+            throw new ODataApplicationException("NOT SUPPORTED: MethodKind.FRACTIONALSECONDS", 500, Locale.ENGLISH);
         }
 
         // TOTALSECONDS
         if (impl.getMethod() == MethodKind.TOTALSECONDS) {
-            throw new ODataApplicationException("Not Suporoted: MethodKind.TOTALSECONDS", 500, Locale.ENGLISH);
+            throw new ODataApplicationException("NOT SUPPORTED: MethodKind.TOTALSECONDS", 500, Locale.ENGLISH);
         }
 
         // DATE
         if (impl.getMethod() == MethodKind.DATE) {
-            throw new ODataApplicationException("Not Suporoted: MethodKind.DATE", 500, Locale.ENGLISH);
+            throw new ODataApplicationException("NOT SUPPORTED: MethodKind.DATE", 500, Locale.ENGLISH);
         }
 
         // TIME
         if (impl.getMethod() == MethodKind.TIME) {
-            throw new ODataApplicationException("Not Suporoted: MethodKind.TIME", 500, Locale.ENGLISH);
+            throw new ODataApplicationException("NOT SUPPORTED: MethodKind.TIME", 500, Locale.ENGLISH);
         }
 
         // TOTALOFFSETMINUTES
         if (impl.getMethod() == MethodKind.TOTALOFFSETMINUTES) {
-            throw new ODataApplicationException("Not Suporoted: MethodKind.TOTALOFFSETMINUTES", 500, Locale.ENGLISH);
+            throw new ODataApplicationException("NOT SUPPORTED: MethodKind.TOTALOFFSETMINUTES", 500, Locale.ENGLISH);
         }
 
         // MINDATETIME
         if (impl.getMethod() == MethodKind.MINDATETIME) {
-            throw new ODataApplicationException("Not Suporoted: MethodKind.MINDATETIME", 500, Locale.ENGLISH);
+            throw new ODataApplicationException("NOT SUPPORTED: MethodKind.MINDATETIME", 500, Locale.ENGLISH);
         }
 
         // MAXDATETIME
         if (impl.getMethod() == MethodKind.MAXDATETIME) {
-            throw new ODataApplicationException("Not Suporoted: MethodKind.MAXDATETIME", 500, Locale.ENGLISH);
+            throw new ODataApplicationException("NOT SUPPORTED: MethodKind.MAXDATETIME", 500, Locale.ENGLISH);
         }
 
         // NOW
         if (impl.getMethod() == MethodKind.NOW) {
-            throw new ODataApplicationException("Not Suporoted: MethodKind.NOW", 500, Locale.ENGLISH);
+            throw new ODataApplicationException("NOT SUPPORTED: MethodKind.NOW", 500, Locale.ENGLISH);
         }
 
         // ROUND
@@ -432,27 +432,27 @@ public class BasicSqlExprExpander {
 
         // GEODISTANCE
         if (impl.getMethod() == MethodKind.GEODISTANCE) {
-            throw new ODataApplicationException("Not Suporoted: MethodKind.GEODISTANCE", 500, Locale.ENGLISH);
+            throw new ODataApplicationException("NOT SUPPORTED: MethodKind.GEODISTANCE", 500, Locale.ENGLISH);
         }
 
         // GEOLENGTH
         if (impl.getMethod() == MethodKind.GEOLENGTH) {
-            throw new ODataApplicationException("Not Suporoted: MethodKind.GEOLENGTH", 500, Locale.ENGLISH);
+            throw new ODataApplicationException("NOT SUPPORTED: MethodKind.GEOLENGTH", 500, Locale.ENGLISH);
         }
 
         // GEOINTERSECTS
         if (impl.getMethod() == MethodKind.GEOINTERSECTS) {
-            throw new ODataApplicationException("Not Suporoted: MethodKind.GEOINTERSECTS", 500, Locale.ENGLISH);
+            throw new ODataApplicationException("NOT SUPPORTED: MethodKind.GEOINTERSECTS", 500, Locale.ENGLISH);
         }
 
         // CAST
         if (impl.getMethod() == MethodKind.CAST) {
-            throw new ODataApplicationException("Not Suporoted: MethodKind.CAST", 500, Locale.ENGLISH);
+            throw new ODataApplicationException("NOT SUPPORTED: MethodKind.CAST", 500, Locale.ENGLISH);
         }
 
         // ISOF
         if (impl.getMethod() == MethodKind.ISOF) {
-            throw new ODataApplicationException("Not Suporoted: MethodKind.ISOF", 500, Locale.ENGLISH);
+            throw new ODataApplicationException("NOT SUPPORTED: MethodKind.ISOF", 500, Locale.ENGLISH);
         }
 
         // SUBSTRINGOF
@@ -465,7 +465,7 @@ public class BasicSqlExprExpander {
             return;
         }
 
-        final String message = "Unexpected Case: NOT SUPPORTED MethodKind:" + impl.getMethod() + "," + impl.toString()
+        final String message = "UNEXPECTED : NOT SUPPORTED MethodKind:" + impl.getMethod() + "," + impl.toString()
                 + "]";
         System.err.println(message);
         throw new ODataApplicationException(message, 500, Locale.ENGLISH);
@@ -484,7 +484,7 @@ public class BasicSqlExprExpander {
             return;
         }
 
-        final String message = "Unexpected Case: Unsupported UnaryOperatorKind:" + impl.getOperator() + ","
+        final String message = "UNEXPECTED: Unsupported UnaryOperatorKind:" + impl.getOperator() + ","
                 + impl.toString() + "]";
         System.err.println(message);
         throw new ODataApplicationException(message, 500, Locale.ENGLISH);

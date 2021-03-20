@@ -137,7 +137,7 @@ public class BasicDbUtil {
             csdlProp.setMaxLength(rsmeta.getColumnDisplaySize(column));
             break;
         default:
-            throw new ODataApplicationException("Unsupported: JDBC Type: " + rsmeta.getColumnType(column), 500,
+            throw new ODataApplicationException("NOT SUPPORTED: JDBC Type: " + rsmeta.getColumnType(column), 500,
                     Locale.ENGLISH);
         }
 
@@ -214,7 +214,7 @@ public class BasicDbUtil {
             prop = new Property(null, columnName, ValueType.PRIMITIVE, rset.getString(column));
             break;
         default:
-            throw new ODataApplicationException("Unsupported: JDBC Type: " + rsmeta.getColumnType(column), 500,
+            throw new ODataApplicationException("NOT SUPPORTED: JDBC Type: " + rsmeta.getColumnType(column), 500,
                     Locale.ENGLISH);
         }
         return prop;
@@ -257,7 +257,7 @@ public class BasicDbUtil {
         } else if (value instanceof String) {
             stmt.setString(column, (String) value);
         } else {
-            throw new ODataApplicationException("Not Suporoted: Parameter Type: " + value.getClass().getCanonicalName(),
+            throw new ODataApplicationException("NOT SUPPORTED: Parameter Type: " + value.getClass().getCanonicalName(),
                     500, Locale.ENGLISH);
         }
     }
