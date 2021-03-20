@@ -30,10 +30,10 @@ import org.apache.olingo.server.api.ODataApplicationException;
 
 import jp.oiyokan.basic.BasicDbUtil;
 import jp.oiyokan.basic.BasicJdbcEntityTypeBuilder;
+import jp.oiyokan.data.OiyokanInterDb;
 import jp.oiyokan.dto.OiyokanSettings;
 import jp.oiyokan.dto.OiyokanSettingsDatabase;
 import jp.oiyokan.dto.OiyokanSettingsEntitySet;
-import jp.oiyokan.h2.data.TinyH2DbSample;
 
 /**
  * Oiyokan の CsdlEntityContainer 実装.
@@ -95,11 +95,7 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
 
                 try (Connection conn = BasicDbUtil.getConnection(settingsDatabase)) {
                     // テーブルをセットアップ.
-                    if (TinyH2DbSample.createTable(conn)) {
-                        // テーブルデータをセットアップ.
-                        // サンプルデータを格納.
-                        TinyH2DbSample.setupTableData(conn);
-                    }
+                    OiyokanInterDb.setupTable(conn);
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                     new ODataApplicationException("UNEXPECTED Database error.", 500, Locale.ENGLISH);

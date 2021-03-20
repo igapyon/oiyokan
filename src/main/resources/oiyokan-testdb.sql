@@ -441,3 +441,6 @@ INSERT INTO MyProducts (ID, Name, Description) VALUES (
   202, 'DummyPC98', 'ダミーなPC98');
 INSERT INTO MyProducts (ID, Name, Description) VALUES (
   203, 'DummyPC99', 'ダミーなPC99');
+
+CALL FT_CREATE_INDEX('PUBLIC', 'MyProducts', NULL);
+CALL FT_REINDEX();

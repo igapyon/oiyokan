@@ -32,7 +32,7 @@ import org.apache.olingo.server.api.ODataApplicationException;
 
 import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanCsdlEntitySet;
-import jp.oiyokan.h2.data.TinyH2DbSample;
+import jp.oiyokan.data.OiyokanInterDb;
 
 /**
  * 典型的で基本的な JDBC処理を利用した EntityType を構築します。
@@ -65,7 +65,7 @@ public class BasicJdbcEntityTypeBuilder {
         try (Connection conn = BasicDbUtil.getConnection(entitySet.getSettingsDatabase())) {
             // テーブルをセットアップ.
             // 特殊例. createDataをスキップ.
-            TinyH2DbSample.createTable(conn);
+            OiyokanInterDb.setupTable(conn);
 
             // CSDL要素型として情報を組み上げ.
             CsdlEntityType entityType = new CsdlEntityType();
