@@ -15,7 +15,6 @@
  */
 package jp.oiyokan.basic.sql;
 
-import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
 import java.util.Locale;
@@ -51,7 +50,7 @@ import org.apache.olingo.server.core.uri.queryoption.expression.UnaryImpl;
  * SQL文を構築するための簡易クラスの、Expression を SQLに変換する処理.
  */
 public class BasicSqlExprExpander {
-    private static final boolean IS_DEBUG_EXPAND_LITERAL = true;
+    private static final boolean IS_DEBUG_EXPAND_LITERAL = false;
 
     /**
      * SQL構築のデータ構造.
@@ -246,9 +245,9 @@ public class BasicSqlExprExpander {
         if (EdmDecimal.getInstance() == impl.getType()) {
             if (IS_DEBUG_EXPAND_LITERAL)
                 System.err.println("TRACE: EdmDecimal: " + impl.getText());
-            BigDecimal look = new BigDecimal(impl.getText());
-            sqlInfo.getSqlBuilder().append("?");
-            sqlInfo.getSqlParamList().add(look);
+            // そのまま連結.
+            // 2.0などをDecimalにするデメリットが読みきれず。そのまま連結でDB処理に判断をO委ねる。
+            sqlInfo.getSqlBuilder().append(impl.getText());
             return;
         }
         if (EdmBoolean.getInstance() == impl.getType()) {
@@ -297,7 +296,7 @@ public class BasicSqlExprExpander {
         if (EdmString.getInstance() == impl.getType()) {
             if (IS_DEBUG_EXPAND_LITERAL)
                 System.err.println("TRACE: EdmString: " + impl.getText());
-            String value = impl.toString();
+            String value = impl.getText();
             if (value.startsWith("'") && value.endsWith("'")) {
                 // 文字列リテラルについては前後のクオートを除去して記憶.
                 value = value.substring(1, value.length() - 1);

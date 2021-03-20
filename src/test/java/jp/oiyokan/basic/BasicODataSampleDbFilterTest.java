@@ -58,7 +58,7 @@ class BasicODataSampleDbFilterTest {
         final ODataResponse resp = handler.process(req);
         assertEquals(200, resp.getStatusCode());
         final String result = BasicODataSampleDbTest.stream2String(resp.getContent());
-        System.err.println("result: " + result);
+        // System.err.println("result: " + result);
         assertEquals("{\"@odata.context\":\"$metadata#MyProducts\",\"@odata.count\":0,\"value\":[]}", result);
     }
 
@@ -75,8 +75,27 @@ class BasicODataSampleDbFilterTest {
         final ODataResponse resp = handler.process(req);
         assertEquals(200, resp.getStatusCode());
         final String result = BasicODataSampleDbTest.stream2String(resp.getContent());
-        System.err.println("result: " + result);
+        // System.err.println("result: " + result);
         assertEquals("{\"@odata.context\":\"$metadata#MyProducts\",\"value\":[{\"ID\":1}]}", result);
+    }
+
+    @Test
+    void testString() throws Exception {
+        final ODataHttpHandler handler = BasicODataSampleDbTest.getHandler();
+        final ODataRequest req = new ODataRequest();
+        req.setMethod(HttpMethod.GET);
+        req.setRawBaseUri("http://localhost:8080/odata4.svc");
+        req.setRawODataPath("/ODataAppInfos");
+        req.setRawQueryPath("$filter=KeyName%20eq%20%27Provider%27");
+        req.setRawRequestUri(req.getRawBaseUri() + req.getRawODataPath() + "?" + req.getRawQueryPath());
+
+        final ODataResponse resp = handler.process(req);
+        assertEquals(200, resp.getStatusCode());
+        final String result = BasicODataSampleDbTest.stream2String(resp.getContent());
+        // System.err.println("result: " + result);
+        assertEquals(
+                "{\"@odata.context\":\"$metadata#ODataAppInfos\",\"value\":[{\"KeyName\":\"Provider\",\"KeyValue\":\"Oiyokan\"}]}",
+                result);
     }
 
 }
