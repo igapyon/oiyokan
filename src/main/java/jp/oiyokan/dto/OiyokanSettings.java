@@ -32,31 +32,31 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
  * http://www.jsonschema2pojo.org/ を利用して自動生成.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({ "databaseList", "entitySetList" })
+@JsonPropertyOrder({ "database", "entitySet" })
 public class OiyokanSettings {
-    @JsonProperty("databaseList")
+    @JsonProperty("database")
     private List<OiyokanSettingsDatabase> databaseList = null;
-    @JsonProperty("entitySetList")
+    @JsonProperty("entitySet")
     private List<OiyokanSettingsEntitySet> entitySetList = null;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
-    @JsonProperty("databaseList")
+    @JsonProperty("database")
     public List<OiyokanSettingsDatabase> getDatabaseList() {
         return databaseList;
     }
 
-    @JsonProperty("databaseList")
+    @JsonProperty("database")
     public void setDatabaseList(List<OiyokanSettingsDatabase> databaseList) {
         this.databaseList = databaseList;
     }
 
-    @JsonProperty("entitySetList")
+    @JsonProperty("entitySet")
     public List<OiyokanSettingsEntitySet> getEntitySetList() {
         return entitySetList;
     }
 
-    @JsonProperty("entitySetList")
+    @JsonProperty("entitySet")
     public void setEntitySetList(List<OiyokanSettingsEntitySet> entitySetList) {
         this.entitySetList = entitySetList;
     }
