@@ -15,8 +15,6 @@
  */
 package jp.oiyokan.pg.data;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
@@ -31,7 +29,6 @@ import org.junit.jupiter.api.Test;
 
 import jp.oiyokan.OiyokanSettingsUtil;
 import jp.oiyokan.basic.BasicDbUtil;
-import jp.oiyokan.data.OiyokanInterDb;
 import jp.oiyokan.dto.OiyokanSettings;
 import jp.oiyokan.dto.OiyokanSettingsDatabase;
 
@@ -49,97 +46,86 @@ class PgDatabaseTest {
             }
         }
         try (Connection connTargetDb = BasicDbUtil.getConnection(settingsDatabase)) {
-            final String sql = "SELECT * FROM " + "actor" + " LIMIT 1";
+            final String tableName = "actor";
+            final String sql = "SELECT * FROM " + tableName + " LIMIT 1";
+            final StringBuilder sqlBuilder = new StringBuilder();
+            sqlBuilder.append("CREATE TABLE IF NOT EXISTS\n");
+            sqlBuilder.append("  Ocsdl" + tableName + " (\n");
             try (PreparedStatement stmt = connTargetDb.prepareStatement(sql)) {
                 ResultSetMetaData rsmeta = stmt.getMetaData();
                 final int columnCount = rsmeta.getColumnCount();
+                boolean isFirstColumn = true;
                 for (int column = 1; column <= columnCount; column++) {
-                    System.err.println("Name: " + rsmeta.getColumnName(column));
+                    sqlBuilder.append("    ");
+                    if (isFirstColumn) {
+                        isFirstColumn = false;
+                    } else {
+                        sqlBuilder.append(", ");
+                    }
+                    sqlBuilder.append(rsmeta.getColumnName(column) + " ");
 
                     switch (rsmeta.getColumnType(column)) {
                     case Types.TINYINT:
-                        System.err.println("Type: TINYINT");
+                        sqlBuilder.append("TINYINT");
                         break;
                     case Types.SMALLINT:
-                        System.err.println("Type: SMALLINT");
+                        sqlBuilder.append("SMALLINT");
                         break;
                     case Types.INTEGER: /* INT */
-                        System.err.println("Type: INTEGER");
+                        sqlBuilder.append("INT");
                         break;
                     case Types.BIGINT:
-                        System.err.println("Type: BIGINT");
+                        sqlBuilder.append("BIGINT");
                         break;
                     case Types.DECIMAL:
-                        System.err.println("Type: DECIMAL");
-                        System.err.println("  scale: " + rsmeta.getScale(column));
-                        System.err.println("  precision: " + rsmeta.getPrecision(column));
+                        sqlBuilder.append("DECIMAL(" //
+                                + rsmeta.getScale(column) + "," + rsmeta.getPrecision(column) + ")");
                         break;
                     case Types.BOOLEAN:
-                        System.err.println("Type: BOOLEAN");
+                        sqlBuilder.append("BOOLEAN");
                         break;
                     case Types.REAL:
-                        System.err.println("Type: REAL");
+                        sqlBuilder.append("REAL");
                         break;
                     case Types.DOUBLE:
-                        System.err.println("Type: DOUBLE");
+                        sqlBuilder.append("DOUBLE");
                         break;
                     case Types.DATE:
-                        System.err.println("Type: DATE");
+                        sqlBuilder.append("DATE");
                         break;
                     case Types.TIMESTAMP:
-                        System.err.println("Type: TIMESTAMP");
+                        sqlBuilder.append("TIMESTAMP");
                         break;
                     case Types.TIME:
-                        System.err.println("Type: TIME");
+                        sqlBuilder.append("TIME");
                         break;
                     case Types.CHAR:
-                        System.err.println("Type: CHAR");
-                        System.err.println("    Size: " + rsmeta.getColumnDisplaySize(column));
+                        sqlBuilder.append("CHAR(" + rsmeta.getColumnDisplaySize(column) + ")");
                         break;
                     case Types.VARCHAR:
-                        System.err.println("Type: VARCHAR");
-                        System.err.println("    Size: " + rsmeta.getColumnDisplaySize(column));
+                        sqlBuilder.append("VARCHAR(" + rsmeta.getColumnDisplaySize(column) + ")");
                         break;
                     default:
                         System.err.println("Type: ignore");
                         break;
                     }
+                    sqlBuilder.append("\n");
                 }
 
                 // テーブルのキー情報
                 final List<CsdlPropertyRef> keyRefList = new ArrayList<>();
                 final DatabaseMetaData dbmeta = connTargetDb.getMetaData();
-                final ResultSet rsKey = dbmeta.getPrimaryKeys(null, null, "actor");
+                final ResultSet rsKey = dbmeta.getPrimaryKeys(null, null, tableName);
                 for (; rsKey.next();) {
                     String pkName = rsKey.getString("PK_NAME");
                     String colName = rsKey.getString("COLUMN_NAME");
                 }
             }
-        }
-    }
 
-    @Test
-    void testo2() throws Exception {
-        // TODO このテストを、ODataRequestベースのものに書き換えた版を作成すること。
+            sqlBuilder.append("  );\n");
 
-        final OiyokanSettings settingsOiyokan = OiyokanSettingsUtil.loadOiyokanSettings();
-        try (Connection conn = BasicDbUtil
-                .getConnection(OiyokanSettingsUtil.getOiyokanInternalDatabase(settingsOiyokan))) {
-            // 内部データベースのテーブルをセットアップ.
-            OiyokanInterDb.setupTable(conn);
-
-            try (var stmt = conn.prepareStatement("SELECT ID, Name, Description" //
-                    + ",Sbyte1,Int16a,Int32a,Int64a,Decimal1,StringChar2,StringVar255,StringVar65535,Boolean1,Single1,Double1,DateTimeOffset1,TimeOfDay1" //
-                    + " FROM MyProducts ORDER BY ID LIMIT 1")) {
-                stmt.executeQuery();
-                var rset = stmt.getResultSet();
-                assertEquals(true, rset.next());
-                ResultSetMetaData rsmeta = rset.getMetaData();
-                for (int column = 1; column <= rsmeta.getColumnCount(); column++) {
-                    // System.err.println(rsmeta.getColumnName(column) + ", class=" +
-                    // rsmeta.getColumnClassName(column));
-                }
-            }
+            System.err.println("SQL: ");
+            System.err.println(sqlBuilder.toString());
         }
     }
 }
