@@ -25,7 +25,7 @@ import jp.oiyokan.dto.OiyokanSettings;
 import jp.oiyokan.dto.OiyokanSettingsDatabase;
 
 /**
- * そもそも内部 h2 database への接続性を確認
+ * 内部データベース用のCSDL用内部テーブルのDDLを生成: postgres 版.
  */
 class SampleGenOcsdlPgTest {
     /**

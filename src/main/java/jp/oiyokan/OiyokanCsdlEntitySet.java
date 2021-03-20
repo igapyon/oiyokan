@@ -114,7 +114,7 @@ public class OiyokanCsdlEntitySet extends CsdlEntitySet {
 
         if ("h2".equals(settingsDatabase.getType())) {
             this.dbType = DatabaseType.H2;
-        } else if ("h2".equals(settingsDatabase.getType())) {
+        } else if ("pg".equals(settingsDatabase.getType())) {
             this.dbType = DatabaseType.PG;
         } else {
             throw new ODataApplicationException("UNEXPECTED: Unknown database type: " + settingsDatabase.getType(), 500,

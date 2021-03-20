@@ -1,9 +1,9 @@
 CREATE TABLE IF NOT EXISTS
   Ocsdlactor (
-    actor_id INT
-    , first_name VARCHAR(45)
-    , last_name VARCHAR(45)
-    , last_update TIMESTAMP
+    actor_id INT NOT NULL
+    , first_name VARCHAR(45) NOT NULL
+    , last_name VARCHAR(45) NOT NULL
+    , last_update TIMESTAMP NOT NULL
     , PRIMARY KEY(actor_id)
   );
 
@@ -17,52 +17,52 @@ CREATE TABLE IF NOT EXISTS
 
 CREATE TABLE IF NOT EXISTS
   Ocsdladdress (
-    address_id INT
-    , address VARCHAR(50)
+    address_id INT NOT NULL
+    , address VARCHAR(50) NOT NULL
     , address2 VARCHAR(50)
-    , district VARCHAR(20)
-    , city_id SMALLINT
+    , district VARCHAR(20) NOT NULL
+    , city_id SMALLINT NOT NULL
     , postal_code VARCHAR(10)
-    , phone VARCHAR(20)
-    , last_update TIMESTAMP
+    , phone VARCHAR(20) NOT NULL
+    , last_update TIMESTAMP NOT NULL
     , PRIMARY KEY(address_id)
   );
 
 CREATE TABLE IF NOT EXISTS
   Ocsdlcategory (
-    category_id INT
-    , name VARCHAR(25)
-    , last_update TIMESTAMP
+    category_id INT NOT NULL
+    , name VARCHAR(25) NOT NULL
+    , last_update TIMESTAMP NOT NULL
     , PRIMARY KEY(category_id)
   );
 
 CREATE TABLE IF NOT EXISTS
   Ocsdlcity (
-    city_id INT
-    , city VARCHAR(50)
-    , country_id SMALLINT
-    , last_update TIMESTAMP
+    city_id INT NOT NULL
+    , city VARCHAR(50) NOT NULL
+    , country_id SMALLINT NOT NULL
+    , last_update TIMESTAMP NOT NULL
     , PRIMARY KEY(city_id)
   );
 
 CREATE TABLE IF NOT EXISTS
   Ocsdlcountry (
-    country_id INT
-    , country VARCHAR(50)
-    , last_update TIMESTAMP
+    country_id INT NOT NULL
+    , country VARCHAR(50) NOT NULL
+    , last_update TIMESTAMP NOT NULL
     , PRIMARY KEY(country_id)
   );
 
 CREATE TABLE IF NOT EXISTS
   Ocsdlcustomer (
-    customer_id INT
-    , store_id SMALLINT
-    , first_name VARCHAR(45)
-    , last_name VARCHAR(45)
+    customer_id INT NOT NULL
+    , store_id SMALLINT NOT NULL
+    , first_name VARCHAR(45) NOT NULL
+    , last_name VARCHAR(45) NOT NULL
     , email VARCHAR(50)
-    , address_id SMALLINT
-    , activebool BOOLEAN
-    , create_date DATE
+    , address_id SMALLINT NOT NULL
+    , activebool BOOLEAN NOT NULL
+    , create_date DATE NOT NULL
     , last_update TIMESTAMP
     , active INT
     , PRIMARY KEY(customer_id)
@@ -83,35 +83,33 @@ CREATE TABLE IF NOT EXISTS
 
 CREATE TABLE IF NOT EXISTS
   Ocsdlfilm (
-    film_id INT
-    , title VARCHAR(255)
+    film_id INT NOT NULL
+    , title VARCHAR(255) NOT NULL
     , description VARCHAR(2147483647)
     , release_year INT
-    , language_id SMALLINT
-    , rental_duration SMALLINT
-    , rental_rate DECIMAL(2,4)
+    , language_id SMALLINT NOT NULL
+    , rental_duration SMALLINT NOT NULL
+    , rental_rate DECIMAL(4,2) NOT NULL
     , length SMALLINT
-    , replacement_cost DECIMAL(2,5)
+    , replacement_cost DECIMAL(5,2) NOT NULL
     , rating VARCHAR(2147483647)
-    , last_update TIMESTAMP
-    , special_features NO_SUPPORT_ARRAY
-    , fulltext NO_SUPPORT_OTHER
+    , last_update TIMESTAMP NOT NULL
     , PRIMARY KEY(film_id)
   );
 
 CREATE TABLE IF NOT EXISTS
   Ocsdlfilm_actor (
-    actor_id SMALLINT
-    , film_id SMALLINT
-    , last_update TIMESTAMP
+    actor_id SMALLINT NOT NULL
+    , film_id SMALLINT NOT NULL
+    , last_update TIMESTAMP NOT NULL
     , PRIMARY KEY(actor_id,film_id)
   );
 
 CREATE TABLE IF NOT EXISTS
   Ocsdlfilm_category (
-    film_id SMALLINT
-    , category_id SMALLINT
-    , last_update TIMESTAMP
+    film_id SMALLINT NOT NULL
+    , category_id SMALLINT NOT NULL
+    , last_update TIMESTAMP NOT NULL
     , PRIMARY KEY(film_id,category_id)
   );
 
@@ -121,7 +119,7 @@ CREATE TABLE IF NOT EXISTS
     , title VARCHAR(255)
     , description VARCHAR(2147483647)
     , category VARCHAR(25)
-    , price DECIMAL(2,4)
+    , price DECIMAL(4,2)
     , length SMALLINT
     , rating VARCHAR(2147483647)
     , actors VARCHAR(2147483647)
@@ -129,18 +127,18 @@ CREATE TABLE IF NOT EXISTS
 
 CREATE TABLE IF NOT EXISTS
   Ocsdlinventory (
-    inventory_id INT
-    , film_id SMALLINT
-    , store_id SMALLINT
-    , last_update TIMESTAMP
+    inventory_id INT NOT NULL
+    , film_id SMALLINT NOT NULL
+    , store_id SMALLINT NOT NULL
+    , last_update TIMESTAMP NOT NULL
     , PRIMARY KEY(inventory_id)
   );
 
 CREATE TABLE IF NOT EXISTS
   Ocsdllanguage (
-    language_id INT
-    , name CHAR(20)
-    , last_update TIMESTAMP
+    language_id INT NOT NULL
+    , name CHAR(20) NOT NULL
+    , last_update TIMESTAMP NOT NULL
     , PRIMARY KEY(language_id)
   );
 
@@ -150,7 +148,7 @@ CREATE TABLE IF NOT EXISTS
     , title VARCHAR(255)
     , description VARCHAR(2147483647)
     , category VARCHAR(25)
-    , price DECIMAL(2,4)
+    , price DECIMAL(4,2)
     , length SMALLINT
     , rating VARCHAR(2147483647)
     , actors VARCHAR(2147483647)
@@ -158,52 +156,52 @@ CREATE TABLE IF NOT EXISTS
 
 CREATE TABLE IF NOT EXISTS
   Ocsdlpayment (
-    payment_id INT
-    , customer_id SMALLINT
-    , staff_id SMALLINT
-    , rental_id INT
-    , amount DECIMAL(2,5)
-    , payment_date TIMESTAMP
+    payment_id INT NOT NULL
+    , customer_id SMALLINT NOT NULL
+    , staff_id SMALLINT NOT NULL
+    , rental_id INT NOT NULL
+    , amount DECIMAL(5,2) NOT NULL
+    , payment_date TIMESTAMP NOT NULL
     , PRIMARY KEY(payment_id)
   );
 
 CREATE TABLE IF NOT EXISTS
   Ocsdlrental (
-    rental_id INT
-    , rental_date TIMESTAMP
-    , inventory_id INT
-    , customer_id SMALLINT
+    rental_id INT NOT NULL
+    , rental_date TIMESTAMP NOT NULL
+    , inventory_id INT NOT NULL
+    , customer_id SMALLINT NOT NULL
     , return_date TIMESTAMP
-    , staff_id SMALLINT
-    , last_update TIMESTAMP
+    , staff_id SMALLINT NOT NULL
+    , last_update TIMESTAMP NOT NULL
     , PRIMARY KEY(rental_id)
   );
 
 CREATE TABLE IF NOT EXISTS
   Ocsdlsales_by_film_category (
     category VARCHAR(25)
-    , total_sales DECIMAL(0,0)
+    , total_sales DECIMAL
   );
 
 CREATE TABLE IF NOT EXISTS
   Ocsdlsales_by_store (
     store VARCHAR(2147483647)
     , manager VARCHAR(2147483647)
-    , total_sales DECIMAL(0,0)
+    , total_sales DECIMAL
   );
 
 CREATE TABLE IF NOT EXISTS
   Ocsdlstaff (
-    staff_id INT
-    , first_name VARCHAR(45)
-    , last_name VARCHAR(45)
-    , address_id SMALLINT
+    staff_id INT NOT NULL
+    , first_name VARCHAR(45) NOT NULL
+    , last_name VARCHAR(45) NOT NULL
+    , address_id SMALLINT NOT NULL
     , email VARCHAR(50)
-    , store_id SMALLINT
-    , active BOOLEAN
-    , username VARCHAR(16)
+    , store_id SMALLINT NOT NULL
+    , active BOOLEAN NOT NULL
+    , username VARCHAR(16) NOT NULL
     , password VARCHAR(40)
-    , last_update TIMESTAMP
+    , last_update TIMESTAMP NOT NULL
     , picture BINARY
     , PRIMARY KEY(staff_id)
   );
@@ -213,7 +211,7 @@ CREATE TABLE IF NOT EXISTS
     id INT
     , name VARCHAR(2147483647)
     , address VARCHAR(50)
-    , zip code VARCHAR(10)
+    , [zip code] VARCHAR(10)
     , phone VARCHAR(20)
     , city VARCHAR(50)
     , country VARCHAR(50)
@@ -222,10 +220,10 @@ CREATE TABLE IF NOT EXISTS
 
 CREATE TABLE IF NOT EXISTS
   Ocsdlstore (
-    store_id INT
-    , manager_staff_id SMALLINT
-    , address_id SMALLINT
-    , last_update TIMESTAMP
+    store_id INT NOT NULL
+    , manager_staff_id SMALLINT NOT NULL
+    , address_id SMALLINT NOT NULL
+    , last_update TIMESTAMP NOT NULL
     , PRIMARY KEY(store_id)
   );
 

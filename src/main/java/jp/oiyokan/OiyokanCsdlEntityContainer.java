@@ -90,10 +90,10 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
             }
 
             {
-                OiyokanSettingsDatabase settingsDatabase = OiyokanSettingsUtil
+                OiyokanSettingsDatabase settingsInternalDatabase = OiyokanSettingsUtil
                         .getOiyokanInternalDatabase(getOiyokanSettingsInstance());
 
-                try (Connection connInterDb = BasicDbUtil.getConnection(settingsDatabase)) {
+                try (Connection connInterDb = BasicDbUtil.getConnection(settingsInternalDatabase)) {
                     // テーブルをセットアップ.
                     OiyokanInterDb.setupTable(connInterDb);
                 } catch (SQLException ex) {

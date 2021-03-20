@@ -25,13 +25,13 @@ import jp.oiyokan.dto.OiyokanSettings;
 import jp.oiyokan.dto.OiyokanSettingsDatabase;
 
 /**
- * そもそも内部 h2 database への接続性を確認
+ * 内部データベース用のCSDL用内部テーブルのDDLを生成: h2 版.
  */
 class SampleGenOcsdlh2Test {
     /**
      * postgres 接続環境が適切に存在する場合にのみ JUnit を実行。
      */
-    @Test
+    // @Test
     void test01() throws Exception {
         final OiyokanSettings settingsOiyokan = OiyokanSettingsUtil.loadOiyokanSettings();
         OiyokanSettingsDatabase settingsDatabase = null;

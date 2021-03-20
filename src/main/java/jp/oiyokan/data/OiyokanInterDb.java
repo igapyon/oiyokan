@@ -51,7 +51,7 @@ public class OiyokanInterDb {
     public static boolean setupTable(final Connection connInternalDb) throws ODataApplicationException {
         if (OiyokanConstants.IS_TRACE_ODATA_V4)
             System.err.println( //
-                    "OData v4: setup internal table: " + " (Oiyokan: " + OiyokanConstants.VERSION + ")");
+                    "OData v4: setup internal table" + " (Oiyokan: " + OiyokanConstants.VERSION + ")");
 
         // Oiyokan が動作する上で必要なテーブルのセットアップ.
         try (var stmt = connInternalDb.prepareStatement("CREATE TABLE IF NOT EXISTS " //
@@ -82,7 +82,7 @@ public class OiyokanInterDb {
         // 内部データの作成に突入.
         if (OiyokanConstants.IS_TRACE_ODATA_V4)
             System.err.println( //
-                    "OData v4: setup internal data: " + " (Oiyokan: " + OiyokanConstants.VERSION + ")");
+                    "OData v4: setup internal data " + " (Oiyokan: " + OiyokanConstants.VERSION + ")");
 
         ///////////////////////////////////////////
         // ODataAppInfos にバージョン情報などデータの追加
@@ -146,7 +146,12 @@ public class OiyokanInterDb {
                 } else {
                     sqlBuilder.append(", ");
                 }
-                sqlBuilder.append(rsmeta.getColumnName(column) + " ");
+
+                String columnName = rsmeta.getColumnName(column);
+                if (columnName.indexOf(' ') > 0) {
+                    columnName = "[" + columnName + "]";
+                }
+                sqlBuilder.append(columnName + " ");
 
                 switch (rsmeta.getColumnType(column)) {
                 case Types.TINYINT:
@@ -163,12 +168,16 @@ public class OiyokanInterDb {
                     break;
                 case Types.DECIMAL:
                     sqlBuilder.append("DECIMAL(" //
-                            + rsmeta.getScale(column) + "," + rsmeta.getPrecision(column) + ")");
+                            + rsmeta.getPrecision(column) + "," + rsmeta.getScale(column) + ")");
                     break;
                 case Types.NUMERIC:
                     // postgres で発生.
-                    sqlBuilder.append("DECIMAL(" //
-                            + rsmeta.getScale(column) + "," + rsmeta.getPrecision(column) + ")");
+                    if (rsmeta.getPrecision(column) > 0) {
+                        sqlBuilder.append("DECIMAL(" //
+                                + rsmeta.getPrecision(column) + "," + rsmeta.getScale(column) + ")");
+                    } else {
+                        sqlBuilder.append("DECIMAL");
+                    }
                     break;
                 case Types.BOOLEAN:
                     sqlBuilder.append("BOOLEAN");
@@ -214,6 +223,9 @@ public class OiyokanInterDb {
                     new ODataApplicationException("NOT SUPPORTED: JDBC Type: " + rsmeta.getColumnType(column), 500,
                             Locale.ENGLISH);
                     break;
+                }
+                if (ResultSetMetaData.columnNoNulls == rsmeta.isNullable(column)) {
+                    sqlBuilder.append(" NOT NULL");
                 }
                 sqlBuilder.append("\n");
             }
