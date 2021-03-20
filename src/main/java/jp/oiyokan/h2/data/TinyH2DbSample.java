@@ -115,16 +115,8 @@ public class TinyH2DbSample {
         // ダミーなデータの追加
         try (var stmt = conn.prepareStatement("INSERT INTO MyProducts (ID, Name, Description) VALUES ("
                 + BasicDbUtil.getQueryPlaceholderString(3) + ")")) {
-            int idCounter = 4;
+            int idCounter = 104;
 
-            for (int index = 0; index < ZOUSYOKU; index++) {
-                stmt.clearParameters();
-                stmt.setInt(1, idCounter++);
-                stmt.setString(2, "PopTablet" + index);
-                stmt.setString(3, "増殖タブレット Laptop Intel Core" + index);
-                stmt.executeUpdate();
-            }
-            conn.commit();
 
             for (int index = 0; index < ZOUSYOKU; index++) {
                 stmt.clearParameters();
