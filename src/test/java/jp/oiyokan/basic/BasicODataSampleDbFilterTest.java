@@ -21,7 +21,6 @@ import org.apache.olingo.commons.api.http.HttpMethod;
 import org.apache.olingo.server.api.ODataHttpHandler;
 import org.apache.olingo.server.api.ODataRequest;
 import org.apache.olingo.server.api.ODataResponse;
-import org.junit.jupiter.api.Test;
 
 import jp.oiyokan.OiyokanConstants;
 
@@ -29,18 +28,19 @@ import jp.oiyokan.OiyokanConstants;
  * OData サーバについて、おおざっぱな通過によるデグレードを検知.
  */
 class BasicODataSampleDbFilterTest {
-  //  @Test
+    // @Test
     void testSimpleVersion() throws Exception {
         final ODataHttpHandler handler = BasicODataSampleDbTest.getHandler();
         final ODataRequest req = new ODataRequest();
         req.setMethod(HttpMethod.GET);
         req.setRawBaseUri("http://localhost:8080/odata4.svc");
         req.setRawODataPath("/MyProducts");
-        req.setRawQueryPath("$top=51&$filter=DateTimeOffset1 lt 2020-12-31T21:53:00Z&$orderby=ID&$count=true&$select=ID");
+        req.setRawQueryPath(
+                "$top=51&$filter=DateTimeOffset1 lt 2020-12-31T21:53:00Z&$orderby=ID&$count=true&$select=ID");
         req.setRawRequestUri(req.getRawBaseUri() + req.getRawODataPath() + "?" + req.getRawQueryPath());
 
         final ODataResponse resp = handler.process(req);
-     //   assertEquals(200, resp.getStatusCode());
+        // assertEquals(200, resp.getStatusCode());
         final String result = BasicODataSampleDbTest.stream2String(resp.getContent());
         System.err.println("result: " + result);
         assertEquals(
