@@ -111,6 +111,21 @@ public class TinyH2DbSample {
         } catch (SQLException ex) {
             throw new ODataApplicationException("テーブル作成に失敗: " + ex.toString(), 500, Locale.ENGLISH);
         }
+
+        try (var stmt = conn.prepareStatement("CREATE TABLE IF NOT EXISTS " //
+                + "MyTests (" //
+                + "ID INT NOT NULL" // primary key.
+                + ",Name VARCHAR(80) NOT NULL" //
+
+                // Binary
+                + ",Binary1 Binary DEFAULT X'3031323334353637383930'" //
+
+                + ",PRIMARY KEY(ID)" //
+                + ")")) {
+            stmt.executeUpdate();
+        } catch (SQLException ex) {
+            throw new ODataApplicationException("テーブル作成に失敗: " + ex.toString(), 500, Locale.ENGLISH);
+        }
     }
 
     /**
