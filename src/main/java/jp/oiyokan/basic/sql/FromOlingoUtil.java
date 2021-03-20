@@ -18,10 +18,17 @@
  */
 package jp.oiyokan.basic.sql;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeParseException;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.apache.olingo.server.api.ODataApplicationException;
 
 /**
  * Olingoからコピーペーストしたコード。
@@ -49,4 +56,15 @@ public class FromOlingoUtil {
         return zdt;
     }
 
+    protected static ZonedDateTime parseDateString(final String value) throws ODataApplicationException {
+        LocalDate date;
+        try {
+            date = LocalDate.parse(value);
+        } catch (DateTimeParseException ex) {
+            throw new ODataApplicationException("The literal '" + value + "' has illegal content." + ex.toString(), 500,
+                    Locale.ENGLISH);
+        }
+        // inappropriate types, which need to be supported for backward compatibility
+        return LocalDateTime.of(date, LocalTime.MIDNIGHT).atZone(ZoneId.systemDefault());
+    }
 }

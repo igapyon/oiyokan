@@ -23,7 +23,6 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
-import java.util.Calendar;
 import java.util.Locale;
 
 import org.apache.olingo.commons.api.data.Property;
@@ -247,12 +246,9 @@ public class BasicDbUtil {
         } else if (value instanceof Double) {
             stmt.setDouble(column, (Double) value);
         } else if (value instanceof java.util.Date) {
+            // java.sql.Timestampはここを通過.
             java.util.Date udate = (java.util.Date) value;
             java.sql.Date sdate = new java.sql.Date(udate.getTime());
-            stmt.setDate(column, sdate);
-        } else if (value instanceof Calendar) {
-            Calendar cal = (Calendar) value;
-            java.sql.Date sdate = new java.sql.Date(cal.getTimeInMillis());
             stmt.setDate(column, sdate);
         } else if (value instanceof String) {
             stmt.setString(column, (String) value);

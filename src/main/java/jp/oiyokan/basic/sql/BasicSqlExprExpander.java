@@ -19,6 +19,7 @@ import java.sql.Timestamp;
 import java.time.ZonedDateTime;
 import java.util.Locale;
 
+import org.apache.olingo.commons.core.edm.primitivetype.EdmDate;
 import org.apache.olingo.commons.core.edm.primitivetype.EdmDateTimeOffset;
 import org.apache.olingo.server.api.ODataApplicationException;
 import org.apache.olingo.server.api.uri.queryoption.expression.BinaryOperatorKind;
@@ -190,9 +191,16 @@ public class BasicSqlExprExpander {
         throw new ODataApplicationException(message, 500, Locale.ENGLISH);
     }
 
-    private void expandLiteral(LiteralImpl impl) {
+    private void expandLiteral(LiteralImpl impl) throws ODataApplicationException {
         if (EdmDateTimeOffset.getInstance() == impl.getType()) {
             ZonedDateTime zdt = FromOlingoUtil.parseZonedDateTime(impl.getText());
+            sqlInfo.getSqlBuilder().append("?");
+            Timestamp tstamp = Timestamp.from(zdt.toInstant());
+            sqlInfo.getSqlParamList().add(tstamp);
+            return;
+        }
+        if (EdmDate.getInstance() == impl.getType()) {
+            ZonedDateTime zdt = FromOlingoUtil.parseDateString(impl.getText());
             sqlInfo.getSqlBuilder().append("?");
             Timestamp tstamp = Timestamp.from(zdt.toInstant());
             sqlInfo.getSqlParamList().add(tstamp);
