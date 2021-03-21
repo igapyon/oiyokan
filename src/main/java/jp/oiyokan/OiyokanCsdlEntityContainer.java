@@ -46,6 +46,12 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
      */
     private Map<String, CsdlEntityType> cachedCsdlEntityTypeMap = new HashMap<>();
 
+    /**
+     * OiyokanSettings 設定情報をシングルトンに取得.
+     * 
+     * @return OiyokanSettings インスタンス。
+     * @throws ODataApplicationException ODataアプリ例外が発生した場合.
+     */
     public static OiyokanSettings getOiyokanSettingsInstance() throws ODataApplicationException {
         if (settingsOiyokan == null) {
             settingsOiyokan = OiyokanSettingsUtil.loadOiyokanSettings();
@@ -58,6 +64,8 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
      * このコンテナをビルドし、紐づくエンティティセットをここで生成. このクラスの利用者は、機能呼び出し前にこのメソッドを呼ぶこと.
      * 
      * 確実なビルドのため何度も呼び出し可。この機能がこのクラスの主要目的。
+     * 
+     * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
     public void ensureBuild() throws ODataApplicationException {
         if (getEntitySets() == null) {
@@ -78,13 +86,16 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
                     if ("h2".equals(settingsDatabase.getType()) || "pg".equals(settingsDatabase.getType())) {
                         // OK
                     } else {
+                        System.err.println("UNEXPECTED: [" + settingsDatabase.getName() + "]の type 指定["
+                                + settingsDatabase.getType() + "]が不正");
                         throw new ODataApplicationException("UNEXPECTED: [" + settingsDatabase.getName() + "]の type 指定["
                                 + settingsDatabase.getType() + "]が不正", 500, Locale.ENGLISH);
                     }
                 } catch (ClassNotFoundException ex) {
-                    ex.printStackTrace();
+                    System.err.println("UNEXPECTED: Fail to load JDBC driver: " + settingsDatabase.getJdbcDriver()
+                            + ": " + ex.toString());
                     throw new ODataApplicationException(
-                            "UNEXPECTED: JDBCドライバ[" + settingsDatabase.getJdbcDriver() + "]の読み込みに失敗", 500,
+                            "UNEXPECTED: Fail to load JDBC driver: " + settingsDatabase.getJdbcDriver(), 500,
                             Locale.ENGLISH);
                 }
             }
@@ -97,7 +108,7 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
                     // テーブルをセットアップ.
                     OiyokanInterDb.setupTable(connInterDb);
                 } catch (SQLException ex) {
-                    ex.printStackTrace();
+                    System.err.println("UNEXPECTED Database error: " + ex.toString());
                     new ODataApplicationException("UNEXPECTED Database error.", 500, Locale.ENGLISH);
                 }
             }
@@ -113,7 +124,7 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
      * 名前空間を取得します。これが存在すると便利なため、これを追加。
      * 
      * @return 名前空間名.
-     * @throws ODataApplicationException
+     * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
     public String getNamespaceIyo() throws ODataApplicationException {
         return getOiyokanSettingsInstance().getNamespace();
@@ -123,6 +134,7 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
      * コンテナ名を取得。これが存在すると便利なため、これを追加。
      * 
      * @return コンテナ名.
+     * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
     public String getContainerNameIyo() throws ODataApplicationException {
         return getOiyokanSettingsInstance().getContainerName();
@@ -132,6 +144,7 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
      * EDMコンテナ名のFQN(完全修飾名).
      * 
      * @return EDMコンテナ名のFQN(完全修飾名).
+     * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
     public FullQualifiedName getContainerFqnIyo() throws ODataApplicationException {
         return new FullQualifiedName(getNamespaceIyo(), getContainerNameIyo());
@@ -159,6 +172,7 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
      * 
      * @param entityNameFQN エンティティ名FQN.
      * @return エンティティセット.
+     * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
     public OiyokanCsdlEntitySet getEntitySetByEntityNameFqnIyo(FullQualifiedName entityNameFQN)
             throws ODataApplicationException {
@@ -177,6 +191,7 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
      * 
      * @param entityTypeName 型名.
      * @return 指定の型名の CsdlEntityType.
+     * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
     public CsdlEntityType getEntityType(FullQualifiedName entityTypeName) throws ODataApplicationException {
         if (getEntitySetByEntityNameFqnIyo(entityTypeName) == null) {

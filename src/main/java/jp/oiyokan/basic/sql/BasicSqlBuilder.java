@@ -55,6 +55,7 @@ public class BasicSqlBuilder {
      * 件数カウント用のSQLを生成.
      * 
      * @param uriInfo URI情報.
+     * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
     public void getSelectCountQuery(UriInfo uriInfo) throws ODataApplicationException {
         sqlInfo.getSqlBuilder().append("SELECT COUNT(*) FROM " + sqlInfo.getEntitySet().getDbTableNameTargetIyo());
@@ -69,6 +70,7 @@ public class BasicSqlBuilder {
      * 検索用のSQLを生成.
      * 
      * @param uriInfo URI情報.
+     * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
     public void getSelectQuery(UriInfo uriInfo, OiyokanSettingsDatabase settingsDatabase)
             throws ODataApplicationException {
@@ -170,6 +172,14 @@ public class BasicSqlBuilder {
         return normalName;
     }
 
+    /**
+     * 項目名のカッコをエスケープ付与.
+     * 
+     * @param settingsDatabase
+     * @param fieldName
+     * @return
+     * @throws ODataApplicationException ODataアプリ例外が発生した場合.
+     */
     public static String escapeKakkoFieldName(OiyokanSettingsDatabase settingsDatabase, String fieldName)
             throws ODataApplicationException {
         if (fieldName.contains(" ") == false) {
@@ -180,9 +190,11 @@ public class BasicSqlBuilder {
         } else if ("pg".equals(settingsDatabase.getType())) {
             fieldName = "\"" + fieldName + "\"";
         } else {
+            System.err.println("NOT SUPPORTED: Database type: " + settingsDatabase.getType());
             throw new ODataApplicationException("NOT SUPPORTED: Database type: " + settingsDatabase.getType(), 500,
                     Locale.ENGLISH);
         }
+
         return fieldName;
     }
 }

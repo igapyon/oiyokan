@@ -35,7 +35,6 @@ import org.apache.olingo.commons.api.edm.provider.CsdlProperty;
 import org.apache.olingo.server.api.ODataApplicationException;
 import org.springframework.util.StreamUtils;
 
-import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanCsdlEntitySet;
 import jp.oiyokan.dto.OiyokanSettingsDatabase;
 
@@ -67,9 +66,8 @@ public class BasicDbUtil {
                         settingsDatabase.getJdbcPass());
             }
         } catch (SQLException ex) {
-            if (OiyokanConstants.IS_TRACE_ODATA_V4)
-                System.err.println("OData v4: UNEXPECTED: Fail to connect database: " + settingsDatabase.getName()
-                        + ", " + ex.toString());
+            System.err.println("OData v4: UNEXPECTED: Fail to connect database: " + settingsDatabase.getName() + ", "
+                    + ex.toString());
             throw new ODataApplicationException("UNEXPECTED: Fail to connect database: " + settingsDatabase.getName(),
                     500, Locale.ENGLISH);
         }
@@ -180,6 +178,7 @@ public class BasicDbUtil {
             }
             break;
         default:
+            System.err.println("NOT SUPPORTED: CSDL: JDBC Type: " + rsmeta.getColumnType(column));
             throw new ODataApplicationException("NOT SUPPORTED: CSDL: JDBC Type: " + rsmeta.getColumnType(column), 500,
                     Locale.ENGLISH);
         }
@@ -247,6 +246,8 @@ public class BasicDbUtil {
                     return new Property(null, columnName, ValueType.PRIMITIVE,
                             StreamUtils.copyToString(rset.getAsciiStream(column), Charset.forName("UTF-8")));
                 } catch (IOException ex) {
+                    System.err.println("UNEXPECTED: fail to read from CLOB: " + rsmeta.getColumnName(column) + ": "
+                            + ex.toString());
                     throw new ODataApplicationException(
                             "UNEXPECTED: fail to read from CLOB: " + rsmeta.getColumnName(column), 500, Locale.ENGLISH);
                 }
@@ -258,6 +259,8 @@ public class BasicDbUtil {
                 return new Property(null, columnName, ValueType.PRIMITIVE,
                         StreamUtils.copyToByteArray(rset.getBinaryStream(column)));
             } catch (IOException ex) {
+                System.err.println(
+                        "UNEXPECTED: fail to read from binary: " + rsmeta.getColumnName(column) + ": " + ex.toString());
                 throw new ODataApplicationException(
                         "UNEXPECTED: fail to read from binary: " + rsmeta.getColumnName(column), 500, Locale.ENGLISH);
             }
@@ -267,6 +270,8 @@ public class BasicDbUtil {
             return new Property(null, columnName, ValueType.PRIMITIVE, look);
         } else {
             // ARRAY と OTHER には対応しない。そもそもここ通過しないのじゃないの?
+            System.err.println(
+                    "UNEXPECTED: missing impl: type[" + csdlProp.getType() + "], " + rsmeta.getColumnName(column));
             throw new ODataApplicationException(
                     "UNEXPECTED: missing impl: type[" + csdlProp.getType() + "], " + rsmeta.getColumnName(column), 500,
                     Locale.ENGLISH);
@@ -307,6 +312,7 @@ public class BasicDbUtil {
         } else if (value instanceof String) {
             stmt.setString(column, (String) value);
         } else {
+            System.err.println("NOT SUPPORTED: Parameter Type: " + value.getClass().getCanonicalName());
             throw new ODataApplicationException("NOT SUPPORTED: Parameter Type: " + value.getClass().getCanonicalName(),
                     500, Locale.ENGLISH);
         }

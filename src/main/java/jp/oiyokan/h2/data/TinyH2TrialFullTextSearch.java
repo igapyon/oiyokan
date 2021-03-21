@@ -94,8 +94,8 @@ public class TinyH2TrialFullTextSearch {
                 }
             }
         } catch (SQLException ex) {
-            ex.printStackTrace();
-            throw new ODataApplicationException("Unexpected: SQL Error:" + ex.toString(), 500, Locale.ENGLISH);
+            System.err.println("UNEXPECTED: SQL related Error: " + ex.toString());
+            throw new ODataApplicationException("UNEXPECTED: SQL related Error", 500, Locale.ENGLISH);
         }
     }
 }

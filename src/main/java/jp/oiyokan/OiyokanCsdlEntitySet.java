@@ -107,6 +107,7 @@ public class OiyokanCsdlEntitySet extends CsdlEntitySet {
             }
         }
         if (settingsDatabase == null) {
+            System.err.println("UNEXPECTED: No database settings found: " + settingsEntitySet.getDatabaseName());
             throw new ODataApplicationException(
                     "UNEXPECTED: No database settings found: " + settingsEntitySet.getDatabaseName(), 500,
                     Locale.ENGLISH);
@@ -117,6 +118,7 @@ public class OiyokanCsdlEntitySet extends CsdlEntitySet {
         } else if ("pg".equals(settingsDatabase.getType())) {
             this.dbType = DatabaseType.PG;
         } else {
+            System.err.println("UNEXPECTED: Unknown database type: " + settingsDatabase.getType());
             throw new ODataApplicationException("UNEXPECTED: Unknown database type: " + settingsDatabase.getType(), 500,
                     Locale.ENGLISH);
         }
