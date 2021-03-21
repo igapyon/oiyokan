@@ -78,7 +78,7 @@ public class OiyokanOdata4Register {
             }, resp);
         } catch (RuntimeException ex) {
             if (OiyokanConstants.IS_TRACE_ODATA_V4)
-                System.err.println("OData v4: Unexpected Server Error: " + ex.toString());
+                System.err.println("OData v4: OiyokanOdata4Register#serv(): Unexpected Server Error: " + ex.toString());
             ex.printStackTrace();
             throw new ServletException(ex);
         }
