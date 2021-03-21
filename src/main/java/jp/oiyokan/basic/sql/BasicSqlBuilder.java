@@ -31,6 +31,7 @@ import org.apache.olingo.server.core.uri.queryoption.FilterOptionImpl;
 import org.apache.olingo.server.core.uri.queryoption.expression.MemberImpl;
 
 import jp.oiyokan.OiyokanCsdlEntitySet;
+import jp.oiyokan.OiyokanNamingUtil;
 import jp.oiyokan.dto.OiyokanSettingsDatabase;
 
 /**
@@ -88,20 +89,21 @@ public class BasicSqlBuilder {
                 }
 
                 // もし空白を含む場合はエスケープ。
-                strColumns += BasicSqlBuilder.escapeKakkoFieldName(settingsDatabase, prop.getName());
+                strColumns += BasicSqlBuilder.escapeKakkoFieldName(settingsDatabase,
+                        OiyokanNamingUtil.entity2Db(prop.getName()));
             }
             sqlInfo.getSqlBuilder().append(strColumns);
         } else {
             final OiyokanCsdlEntitySet iyoEntitySet = (OiyokanCsdlEntitySet) sqlInfo.getEntitySet();
             final List<String> keyTarget = new ArrayList<>();
             for (CsdlPropertyRef propRef : iyoEntitySet.getEntityType().getKey()) {
-                keyTarget.add(propRef.getName());
+                keyTarget.add(OiyokanNamingUtil.entity2Db(propRef.getName()));
             }
             int itemCount = 0;
             for (SelectItem item : uriInfo.getSelectOption().getSelectItems()) {
                 for (UriResource res : item.getResourcePath().getUriResourceParts()) {
                     sqlInfo.getSqlBuilder().append(itemCount++ == 0 ? "" : ",");
-                    sqlInfo.getSqlBuilder().append(unescapeKakkoFieldName(res.toString()));
+                    sqlInfo.getSqlBuilder().append(OiyokanNamingUtil.entity2Db(unescapeKakkoFieldName(res.toString())));
                     for (int index = 0; index < keyTarget.size(); index++) {
                         if (keyTarget.get(index).equals(res.toString())) {
                             keyTarget.remove(index);
@@ -140,8 +142,8 @@ public class BasicSqlBuilder {
                     sqlInfo.getSqlBuilder().append(",");
                 }
 
-                sqlInfo.getSqlBuilder()
-                        .append(unescapeKakkoFieldName(((MemberImpl) orderByItem.getExpression()).toString()));
+                sqlInfo.getSqlBuilder().append(OiyokanNamingUtil
+                        .entity2Db(unescapeKakkoFieldName(((MemberImpl) orderByItem.getExpression()).toString())));
 
                 if (orderByItem.isDescending()) {
                     sqlInfo.getSqlBuilder().append(" DESC");

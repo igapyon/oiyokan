@@ -36,6 +36,7 @@ import org.apache.olingo.server.api.ODataApplicationException;
 import org.springframework.util.StreamUtils;
 
 import jp.oiyokan.OiyokanCsdlEntitySet;
+import jp.oiyokan.OiyokanNamingUtil;
 import jp.oiyokan.dto.OiyokanSettingsDatabase;
 
 /**
@@ -109,7 +110,9 @@ public class BasicDbUtil {
      */
     public static CsdlProperty resultSetMetaData2CsdlProperty(ResultSetMetaData rsmeta, int column)
             throws ODataApplicationException, SQLException {
-        final CsdlProperty csdlProp = new CsdlProperty().setName(rsmeta.getColumnName(column));
+        // DB上の名称直接ではなく命名ユーティリティを通過させてから処理.
+        final CsdlProperty csdlProp = new CsdlProperty()
+                .setName(OiyokanNamingUtil.db2Entity(rsmeta.getColumnName(column)));
         switch (rsmeta.getColumnType(column)) {
         case Types.TINYINT:
             csdlProp.setType(EdmPrimitiveTypeKind.SByte.getFullQualifiedName());
@@ -218,37 +221,37 @@ public class BasicDbUtil {
     public static Property resultSet2Property(ResultSet rset, ResultSetMetaData rsmeta, int column,
             OiyokanCsdlEntitySet iyoEntitySet) throws ODataApplicationException, SQLException {
         // 基本的に CSDL で処理するが、やむを得ない場所のみ ResultSetMetaData を利用する
-        final String columnName = rsmeta.getColumnName(column);
+        final String propName = OiyokanNamingUtil.db2Entity(rsmeta.getColumnName(column));
 
-        final CsdlProperty csdlProp = iyoEntitySet.getEntityType().getProperty(columnName);
+        final CsdlProperty csdlProp = iyoEntitySet.getEntityType().getProperty(propName);
         if ("Edm.SByte".equals(csdlProp.getType())) {
-            return new Property(null, columnName, ValueType.PRIMITIVE, rset.getByte(column));
+            return new Property(null, propName, ValueType.PRIMITIVE, rset.getByte(column));
         } else if ("Edm.Int16".equals(csdlProp.getType())) {
-            return new Property(null, columnName, ValueType.PRIMITIVE, rset.getShort(column));
+            return new Property(null, propName, ValueType.PRIMITIVE, rset.getShort(column));
         } else if ("Edm.Int32".equals(csdlProp.getType())) {
-            return new Property(null, columnName, ValueType.PRIMITIVE, rset.getInt(column));
+            return new Property(null, propName, ValueType.PRIMITIVE, rset.getInt(column));
         } else if ("Edm.Int64".equals(csdlProp.getType())) {
-            return new Property(null, columnName, ValueType.PRIMITIVE, rset.getLong(column));
+            return new Property(null, propName, ValueType.PRIMITIVE, rset.getLong(column));
         } else if ("Edm.Decimal".equals(csdlProp.getType())) {
-            return new Property(null, columnName, ValueType.PRIMITIVE, rset.getBigDecimal(column));
+            return new Property(null, propName, ValueType.PRIMITIVE, rset.getBigDecimal(column));
         } else if ("Edm.Boolean".equals(csdlProp.getType())) {
-            return new Property(null, columnName, ValueType.PRIMITIVE, rset.getBoolean(column));
+            return new Property(null, propName, ValueType.PRIMITIVE, rset.getBoolean(column));
         } else if ("Edm.Single".equals(csdlProp.getType())) {
-            return new Property(null, columnName, ValueType.PRIMITIVE, rset.getFloat(column));
+            return new Property(null, propName, ValueType.PRIMITIVE, rset.getFloat(column));
         } else if ("Edm.Double".equals(csdlProp.getType())) {
-            return new Property(null, columnName, ValueType.PRIMITIVE, rset.getDouble(column));
+            return new Property(null, propName, ValueType.PRIMITIVE, rset.getDouble(column));
         } else if ("Edm.Date".equals(csdlProp.getType())) {
-            return new Property(null, columnName, ValueType.PRIMITIVE, rset.getDate(column));
+            return new Property(null, propName, ValueType.PRIMITIVE, rset.getDate(column));
         } else if ("Edm.DateTimeOffset".equals(csdlProp.getType())) {
-            return new Property(null, columnName, ValueType.PRIMITIVE, rset.getTimestamp(column));
+            return new Property(null, propName, ValueType.PRIMITIVE, rset.getTimestamp(column));
         } else if ("Edm.TimeOfDay".equals(csdlProp.getType())) {
-            return new Property(null, columnName, ValueType.PRIMITIVE, rset.getTime(column));
+            return new Property(null, propName, ValueType.PRIMITIVE, rset.getTime(column));
         } else if ("Edm.String".equals(csdlProp.getType())) {
             // 基本的に CSDL で処理するが、やむを得ない場所のみ ResultSetMetaData を利用する
             // TODO FIXME ただしこれは事前に CSDL に記憶可能。
             if (Types.CLOB == rsmeta.getColumnType(column)) {
                 try {
-                    return new Property(null, columnName, ValueType.PRIMITIVE,
+                    return new Property(null, propName, ValueType.PRIMITIVE,
                             StreamUtils.copyToString(rset.getAsciiStream(column), Charset.forName("UTF-8")));
                 } catch (IOException ex) {
                     System.err.println("UNEXPECTED: fail to read from CLOB: " + rsmeta.getColumnName(column) + ": "
@@ -257,11 +260,11 @@ public class BasicDbUtil {
                             "UNEXPECTED: fail to read from CLOB: " + rsmeta.getColumnName(column), 500, Locale.ENGLISH);
                 }
             } else {
-                return new Property(null, columnName, ValueType.PRIMITIVE, rset.getString(column));
+                return new Property(null, propName, ValueType.PRIMITIVE, rset.getString(column));
             }
         } else if ("Edm.Binary".equals(csdlProp.getType())) {
             try {
-                return new Property(null, columnName, ValueType.PRIMITIVE,
+                return new Property(null, propName, ValueType.PRIMITIVE,
                         StreamUtils.copyToByteArray(rset.getBinaryStream(column)));
             } catch (IOException ex) {
                 System.err.println(
@@ -272,7 +275,7 @@ public class BasicDbUtil {
         } else if ("Edm.Guid".equals(csdlProp.getType())) {
             // Guid については UUID として読み込む。
             java.util.UUID look = (UUID) rset.getObject(column);
-            return new Property(null, columnName, ValueType.PRIMITIVE, look);
+            return new Property(null, propName, ValueType.PRIMITIVE, look);
         } else {
             // ARRAY と OTHER には対応しない。そもそもここ通過しないのじゃないの?
             System.err.println(
