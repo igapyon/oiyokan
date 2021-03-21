@@ -46,6 +46,8 @@ import org.apache.olingo.server.core.uri.queryoption.expression.MethodImpl;
 import org.apache.olingo.server.core.uri.queryoption.expression.TypeLiteralImpl;
 import org.apache.olingo.server.core.uri.queryoption.expression.UnaryImpl;
 
+import jp.oiyokan.OiyokanNamingUtil;
+
 /**
  * SQL文を構築するための簡易クラスの、Expression を SQLに変換する処理.
  */
@@ -316,7 +318,8 @@ public class BasicSqlExprExpander {
 
     private void expandMember(MemberImpl impl) {
         // そのままSQLのメンバーとせず、項目名エスケープを除去.
-        sqlInfo.getSqlBuilder().append(BasicSqlBuilder.unescapeKakkoFieldName(impl.toString()));
+        sqlInfo.getSqlBuilder()
+                .append(OiyokanNamingUtil.entity2Db(BasicSqlBuilder.unescapeKakkoFieldName(impl.toString())));
     }
 
     private void expandMethod(MethodImpl impl) throws ODataApplicationException {
