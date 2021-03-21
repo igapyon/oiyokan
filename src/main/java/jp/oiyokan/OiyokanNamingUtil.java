@@ -16,7 +16,7 @@
 package jp.oiyokan;
 
 /**
- * 命名ユーティリティ.
+ * DBとEntityとの間の命名を調整するユーティリティ.
  */
 public class OiyokanNamingUtil {
     private static final String[][] DB2ENTITYMAP = new String[][] { { "zip code", "zip_code" } };
