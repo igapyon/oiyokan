@@ -1,0 +1,9 @@
+{
+	"db2entity": [
+		{
+			"db": "zip code",
+			"entity": "zip_code",
+			"description": "pg dvdrental"
+		}
+	]
+}

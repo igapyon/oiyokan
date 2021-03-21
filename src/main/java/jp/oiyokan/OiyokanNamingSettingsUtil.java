@@ -32,7 +32,7 @@ import jp.oiyokan.dto.OiyokanSettingsDatabase;
 /**
  * oiyokan-settings.json ファイルに関する処理。
  */
-public class OiyokanSettingsUtil {
+public class OiyokanNamingSettingsUtil {
     /**
      * resources フォルダから設定ファイルを読み込み.
      * 

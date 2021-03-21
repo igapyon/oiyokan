@@ -31,8 +31,8 @@ import org.apache.olingo.server.core.uri.queryoption.FilterOptionImpl;
 import org.apache.olingo.server.core.uri.queryoption.expression.MemberImpl;
 
 import jp.oiyokan.OiyokanCsdlEntitySet;
-import jp.oiyokan.OiyokanNamingUtil;
 import jp.oiyokan.dto.OiyokanSettingsDatabase;
+import jp.oiyokan.settings.OiyokanNamingUtil;
 
 /**
  * SQL文を構築するための簡易クラス.
@@ -103,7 +103,8 @@ public class BasicSqlBuilder {
             for (SelectItem item : uriInfo.getSelectOption().getSelectItems()) {
                 for (UriResource res : item.getResourcePath().getUriResourceParts()) {
                     sqlInfo.getSqlBuilder().append(itemCount++ == 0 ? "" : ",");
-                    sqlInfo.getSqlBuilder().append(OiyokanNamingUtil.entity2Db(unescapeKakkoFieldName(res.toString())));
+                    sqlInfo.getSqlBuilder()
+                            .append(OiyokanNamingUtil.entity2Db(unescapeKakkoFieldName(res.toString())));
                     for (int index = 0; index < keyTarget.size(); index++) {
                         if (keyTarget.get(index).equals(res.toString())) {
                             keyTarget.remove(index);
