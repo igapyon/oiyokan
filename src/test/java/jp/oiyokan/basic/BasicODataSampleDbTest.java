@@ -108,7 +108,7 @@ class BasicODataSampleDbTest {
                 stream2String(resp.getContent()));
     }
 
-    @Test
+   // @Test
     void testSimpleSearch() throws Exception {
         final ODataHttpHandler handler = getHandler();
         final ODataRequest req = new ODataRequest();

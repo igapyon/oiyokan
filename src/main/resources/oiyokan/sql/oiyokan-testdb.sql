@@ -45,6 +45,28 @@ CREATE TABLE IF NOT EXISTS
   );
 
 CREATE TABLE IF NOT EXISTS
+  MyProductFulls (
+    ID INT NOT NULL
+    , Name VARCHAR(80) NOT NULL
+    , Description VARCHAR(250)
+    , Sbyte1 TINYINT DEFAULT 127
+    , Int16a SMALLINT DEFAULT 32767
+    , Int32a INT DEFAULT 2147483647
+    , Int64a BIGINT DEFAULT 2147483647
+    , Decimal1 DECIMAL(6,2) DEFAULT 1234.56
+    , StringChar2 CHAR(2) DEFAULT 'C2'
+    , StringVar255 VARCHAR(255) DEFAULT 'VARCHAR255'
+    , StringVar65535 VARCHAR(65535) DEFAULT 'VARCHAR65535'
+    , Boolean1 BOOLEAN DEFAULT FALSE NOT NULL
+    , Single1 REAL DEFAULT 123.456789
+    , Double1 DOUBLE DEFAULT 123.4567890123
+    , Date1 DATE DEFAULT CURRENT_DATE() NOT NULL
+    , DateTimeOffset1 TIMESTAMP DEFAULT CURRENT_TIMESTAMP() NOT NULL
+    , TimeOfDay1 TIME DEFAULT CURRENT_TIME()
+    , PRIMARY KEY(ID)
+  );
+
+CREATE TABLE IF NOT EXISTS
   MyTests (
     ID INT NOT NULL
     , Name VARCHAR(80) NOT NULL
@@ -264,7 +286,6 @@ INSERT INTO MyProducts (ID, Name, Description) VALUES (
   102, 'PopTablet98', '増殖タブレット Laptop Intel Core98');
 INSERT INTO MyProducts (ID, Name, Description) VALUES (
   103, 'PopTablet99', '増殖タブレット Laptop Intel Core99');
-
 INSERT INTO MyProducts (ID, Name, Description) VALUES (
   104, 'DummyPC0', 'ダミーなPC0');
 INSERT INTO MyProducts (ID, Name, Description) VALUES (
@@ -466,5 +487,14 @@ INSERT INTO MyProducts (ID, Name, Description) VALUES (
 INSERT INTO MyProducts (ID, Name, Description) VALUES (
   203, 'DummyPC99', 'ダミーなPC99');
 
-CALL FT_CREATE_INDEX('PUBLIC', 'MyProducts', NULL);
+INSERT INTO MyProductFulls (ID, Name, Description) VALUES (
+  1, 'MacBookPro16,2', 'MacBook Pro (13-inch, 2020, Thunderbolt 3ポートx 4)');
+INSERT INTO MyProductFulls (ID, Name, Description) VALUES (
+  2, 'MacBookPro E2015', 'MacBook Pro (Retina, 13-inch, Early 2015');
+INSERT INTO MyProductFulls (ID, Name, Description) VALUES (
+  3, 'Surface Laptop 2', 'Surface Laptop 2, 画面:13.5 インチ PixelSense ディスプレイ, インテル Core');
+INSERT INTO MyProductFulls (ID, Name, Description) VALUES (
+  4, 'PopTablet0', '増殖タブレット Laptop Intel Core0');
+
+CALL FT_CREATE_INDEX('PUBLIC', 'MyProductFulls', NULL);
 CALL FT_REINDEX();

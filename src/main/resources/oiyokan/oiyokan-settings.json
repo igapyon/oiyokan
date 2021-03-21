@@ -23,7 +23,7 @@
 	],
 	"entitySet": [
 		{
-			"name": "oiyokan-internal-info",
+			"name": "oiyokan-app-info",
 			"description": "Oiyokanが内部的に利用するエンティティセット。この設定は基本的に変更できない。",
 			"entitySetName": "ODataAppInfos",
 			"entityName": "ODataAppInfo",
