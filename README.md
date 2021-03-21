@@ -74,6 +74,7 @@ oiyokan プロジェクトは、OData v4 server のシンプルなサンプル(h
 
 - OData 4.0 の BINARY対応
 - OData 4.0 の UUID対応
+- TODO FIXME ResultSetMetaData ではなくって、別の方法で CSDL でとった方が安全そうだぞ!!!
 - LONGVARCHAR, CLOB, BINARY, VARBINARY, LONGVARBINARY, BLOB
 - Postgres dvdrental を利用したテスト。
 - SQL Server Northwind を利用したテスト。

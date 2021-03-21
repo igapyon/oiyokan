@@ -210,19 +210,52 @@ public class OiyokanInterDb {
                     sqlBuilder.append("CHAR(" + rsmeta.getColumnDisplaySize(column) + ")");
                     break;
                 case Types.VARCHAR:
-                    sqlBuilder.append("VARCHAR(" + rsmeta.getColumnDisplaySize(column) + ")");
+                    if (rsmeta.getColumnDisplaySize(column) > 0) {
+                        sqlBuilder.append("VARCHAR(" + rsmeta.getColumnDisplaySize(column) + ")");
+                    } else {
+                        sqlBuilder.append("VARCHAR");
+                    }
+                    break;
+                case Types.LONGVARCHAR:
+                    if (rsmeta.getColumnDisplaySize(column) > 0) {
+                        sqlBuilder.append("LONGVARCHAR(" + rsmeta.getColumnDisplaySize(column) + ")");
+                    } else {
+                        sqlBuilder.append("VARCHAR");
+                    }
+                    break;
+                case Types.LONGNVARCHAR:
+                    if (rsmeta.getColumnDisplaySize(column) > 0) {
+                        sqlBuilder.append("LONGVARCHAR(" + rsmeta.getColumnDisplaySize(column) + ")");
+                    } else {
+                        sqlBuilder.append("LONGVARCHAR");
+                    }
+                    break;
+                case Types.CLOB:
+                    if (rsmeta.getColumnDisplaySize(column) > 0) {
+                        sqlBuilder.append("CLOB(" + rsmeta.getColumnDisplaySize(column) + ")");
+                    } else {
+                        sqlBuilder.append("CLOB");
+                    }
                     break;
                 case Types.BINARY:
-                    // 現在サポートできてない.
                     sqlBuilder.append("BINARY");
+                    break;
+                case Types.VARBINARY:
+                    sqlBuilder.append("VARBINARY");
+                    break;
+                case Types.LONGVARBINARY:
+                    sqlBuilder.append("LONGVARBINARY");
+                    break;
+                case Types.BLOB:
+                    sqlBuilder.append("BLOB");
                     break;
                 case Types.ARRAY:
                     // postgres で発生. 対応しない.
-                    sqlBuilder.append("NO_SUPPORT_ARRAY");
+                    sqlBuilder.append("NOT_SUPPORT_ARRAY");
                     break;
                 case Types.OTHER:
                     // postgres で発生. 対応しない.
-                    sqlBuilder.append("NO_SUPPORT_OTHER");
+                    sqlBuilder.append("NOT_SUPPORT_OTHER");
                     break;
                 default:
                     new ODataApplicationException("NOT SUPPORTED: JDBC Type: " + rsmeta.getColumnType(column), 500,

@@ -155,6 +155,8 @@ public class BasicDbUtil {
             break;
         case Types.CHAR:
         case Types.VARCHAR:
+        case Types.LONGVARCHAR:
+        case Types.LONGNVARCHAR:
         case Types.CLOB:
             csdlProp.setType(EdmPrimitiveTypeKind.String.getFullQualifiedName());
             csdlProp.setMaxLength(rsmeta.getColumnDisplaySize(column));
@@ -202,6 +204,7 @@ public class BasicDbUtil {
      */
     public static Property resultSet2Property(ResultSet rset, ResultSetMetaData rsmeta, int column)
             throws ODataApplicationException, SQLException {
+        // TODO FIXME これ ResultSetMetaData ではなくって、別の方法で CSDL でとった方が安全そうだぞ!!!
         Property prop = null;
         final String columnName = rsmeta.getColumnName(column);
         switch (rsmeta.getColumnType(column)) {
@@ -248,6 +251,8 @@ public class BasicDbUtil {
             break;
         case Types.CHAR:
         case Types.VARCHAR:
+        case Types.LONGVARCHAR:
+        case Types.LONGNVARCHAR:
             prop = new Property(null, columnName, ValueType.PRIMITIVE, rset.getString(column));
             break;
         case Types.CLOB:
@@ -271,6 +276,12 @@ public class BasicDbUtil {
                         "UNEXPECTED: fail to read from binary: " + rsmeta.getColumnName(column), 500, Locale.ENGLISH);
             }
             break;
+        case Types.ARRAY:
+            throw new ODataApplicationException("NOT SUPPORTED: fail to read ARRAY: " + rsmeta.getColumnName(column),
+                    500, Locale.ENGLISH);
+        case Types.OTHER:
+            throw new ODataApplicationException("NOT SUPPORTED: fail to read OTHER: " + rsmeta.getColumnName(column),
+                    500, Locale.ENGLISH);
         default:
             throw new ODataApplicationException("NOT SUPPORTED: Prop: JDBC Type: " + rsmeta.getColumnType(column), 500,
                     Locale.ENGLISH);
