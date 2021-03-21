@@ -72,12 +72,13 @@ oiyokan プロジェクトは、OData v4 server のシンプルなサンプル(h
 
 ## TODO
 
-- TODO or FIXME タグを確認
-- TODO メモ: BasicSqlExprExpander の通過していない箇所のテスト.
-- Javadoc のエラーを解消
+- TODO 項目名の半角空白は XSDスキーマで拒絶される。アンダーバーに置き換え。
+- TODO 日本語項目名の通過有無を確認。(おそらくXSDスキーマが許容しない)。その場合、データベースとODataとの間の名称マッピング表の導入が必要。
+- ODataにAPI名とは別に日本語名を入れる豊作を調べたい。
 - Postgres dvdrental を利用したテスト (もうひとおし)。
+- TODO メモ: BasicSqlExprExpander の通過していない箇所のテスト.
 - SQL Server Northwind 的なものを利用したテスト。該当するDBの有無は不明。
-- 認証の実験。
+- 認証の各種実験。
 - TimeOfDay がテスト不十分.
 - 実験的に全文検索である `$search` をサポートしたものの、もう少し詳しいところが調べられていない。また全文検索で有効なのはアルファベットのみ。h2 database でここを深掘りしても不毛か?
 - ($search対応の後続となるため、しばらく対応できない) TODO Null (nullable) の対応。現在はコメントアウト.
