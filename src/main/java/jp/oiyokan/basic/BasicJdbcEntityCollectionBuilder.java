@@ -78,6 +78,19 @@ public class BasicJdbcEntityCollectionBuilder {
             return eCollection;
         }
 
+        if (uriInfo.getApplyOption() != null) {
+            throw new ODataApplicationException("NOT SUPPORTED: URI: $apply", 500, Locale.ENGLISH);
+        }
+        if (uriInfo.getCustomQueryOptions() != null && uriInfo.getCustomQueryOptions().size() > 0) {
+            throw new ODataApplicationException("NOT SUPPORTED: URI: customQuery", 500, Locale.ENGLISH);
+        }
+        if (uriInfo.getDeltaTokenOption() != null) {
+            throw new ODataApplicationException("NOT SUPPORTED: URI: deltaToken", 500, Locale.ENGLISH);
+        }
+        if (uriInfo.getExpandOption() != null && uriInfo.getExpandOption().getExpandItems().size() > 0) {
+            throw new ODataApplicationException("NOT SUPPORTED: URI: $expand", 500, Locale.ENGLISH);
+        }
+
         // インメモリ作業データベースに接続.
         try (Connection connTargetDb = BasicDbUtil.getConnection(eSetTarget.getSettingsDatabase())) {
             if (uriInfo.getSearchOption() != null) {
