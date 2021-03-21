@@ -34,6 +34,7 @@ import jp.oiyokan.data.OiyokanInterDb;
 import jp.oiyokan.dto.OiyokanSettings;
 import jp.oiyokan.dto.OiyokanSettingsDatabase;
 import jp.oiyokan.dto.OiyokanSettingsEntitySet;
+import jp.oiyokan.settings.OiyokanSettingsUtil;
 
 /**
  * Oiyokan の CsdlEntityContainer 実装.

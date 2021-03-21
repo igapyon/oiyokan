@@ -22,10 +22,10 @@ import java.sql.ResultSetMetaData;
 
 import org.junit.jupiter.api.Test;
 
-import jp.oiyokan.OiyokanSettingsUtil;
 import jp.oiyokan.basic.BasicDbUtil;
 import jp.oiyokan.data.OiyokanInterDb;
 import jp.oiyokan.dto.OiyokanSettings;
+import jp.oiyokan.settings.OiyokanSettingsUtil;
 
 /**
  * そもそも内部 h2 database への接続性を確認

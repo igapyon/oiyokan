@@ -19,10 +19,10 @@ import java.sql.Connection;
 
 import org.junit.jupiter.api.Test;
 
-import jp.oiyokan.OiyokanSettingsUtil;
 import jp.oiyokan.basic.BasicDbUtil;
 import jp.oiyokan.dto.OiyokanSettings;
 import jp.oiyokan.dto.OiyokanSettingsDatabase;
+import jp.oiyokan.settings.OiyokanSettingsUtil;
 
 /**
  * 内部データベース用のCSDL用内部テーブルのDDLを生成: h2 版.

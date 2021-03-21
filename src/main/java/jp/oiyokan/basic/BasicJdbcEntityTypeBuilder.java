@@ -33,9 +33,9 @@ import org.apache.olingo.server.api.ODataApplicationException;
 import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanCsdlEntityContainer;
 import jp.oiyokan.OiyokanCsdlEntitySet;
-import jp.oiyokan.OiyokanSettingsUtil;
 import jp.oiyokan.data.OiyokanInterDb;
 import jp.oiyokan.dto.OiyokanSettingsDatabase;
+import jp.oiyokan.settings.OiyokanSettingsUtil;
 
 /**
  * 典型的で基本的な JDBC処理を利用した EntityType を構築します。
