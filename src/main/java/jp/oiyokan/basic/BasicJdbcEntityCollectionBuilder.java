@@ -180,8 +180,11 @@ public class BasicJdbcEntityCollectionBuilder {
                     ent.addProperty(prop);
                 }
 
-                // キーが存在する場合は、IDとして設定。
-                if (eSetTarget.getEntityType().getKey().size() > 0) {
+                if (eSetTarget.getEntityType().getKey().size() == 0) {
+                    // キーが存在しないのは OData としてはまずい。
+                    // 別の箇所にて標準エラー出力にて報告済み。O
+                } else {
+                    // キーが存在する場合は、IDとして設定。
                     OiyokanCsdlEntitySet iyoEntitySet = (OiyokanCsdlEntitySet) eSetTarget;
                     String keyValue = "";
                     for (CsdlPropertyRef look : iyoEntitySet.getEntityType().getKey()) {

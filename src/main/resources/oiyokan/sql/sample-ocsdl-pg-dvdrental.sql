@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS
     , first_name VARCHAR(45)
     , last_name VARCHAR(45)
     , film_info VARCHAR
+    , PRIMARY KEY(actor_id)
   );
 
 CREATE TABLE IF NOT EXISTS
@@ -79,6 +80,7 @@ CREATE TABLE IF NOT EXISTS
     , country VARCHAR(50)
     , notes VARCHAR
     , sid SMALLINT
+    , PRIMARY KEY(id)
   );
 
 CREATE TABLE IF NOT EXISTS
@@ -125,6 +127,7 @@ CREATE TABLE IF NOT EXISTS
     , length SMALLINT
     , rating VARCHAR
     , actors VARCHAR
+    , PRIMARY KEY(fid)
   );
 
 CREATE TABLE IF NOT EXISTS
@@ -154,6 +157,7 @@ CREATE TABLE IF NOT EXISTS
     , length SMALLINT
     , rating VARCHAR
     , actors VARCHAR
+    , PRIMARY KEY(fid)
   );
 
 CREATE TABLE IF NOT EXISTS
@@ -183,6 +187,7 @@ CREATE TABLE IF NOT EXISTS
   Ocsdlsales_by_film_category (
     category VARCHAR(25)
     , total_sales NUMERIC
+    , PRIMARY KEY(category)
   );
 
 CREATE TABLE IF NOT EXISTS
@@ -190,6 +195,7 @@ CREATE TABLE IF NOT EXISTS
     store VARCHAR
     , manager VARCHAR
     , total_sales NUMERIC
+    , PRIMARY KEY(store)
   );
 
 CREATE TABLE IF NOT EXISTS
@@ -218,6 +224,7 @@ CREATE TABLE IF NOT EXISTS
     , city VARCHAR(50)
     , country VARCHAR(50)
     , sid SMALLINT
+    , PRIMARY KEY(id)
   );
 
 CREATE TABLE IF NOT EXISTS
