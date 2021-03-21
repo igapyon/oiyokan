@@ -142,15 +142,19 @@ public class TinyH2EntityCollectionBuilder {
                         ent.addProperty(prop);
                     }
 
-                    // IDを設定。
-                    {
+                    // キーが存在する場合は、IDとして設定。
+                    if (eSetTarget.getEntityType().getKey().size() > 0) {
                         OiyokanCsdlEntitySet iyoEntitySet = (OiyokanCsdlEntitySet) eSetTarget;
                         String keyValue = "";
                         for (CsdlPropertyRef look : iyoEntitySet.getEntityType().getKey()) {
                             if (keyValue.length() > 0) {
                                 keyValue += "-";
                             }
-                            keyValue += rset.getString(look.getName());
+
+                            String idVal = rset.getString(look.getName());
+                            // TODO FIXME ためしにエスケープしてみた
+                            idVal = idVal.replaceAll("[' '|':']", "-");
+                            keyValue += idVal;
                         }
                         ent.setId(createId(eSetTarget.getName(), keyValue));
                     }
@@ -175,10 +179,7 @@ public class TinyH2EntityCollectionBuilder {
      */
     public static URI createId(String entitySetName, Object id) {
         try {
-            String strId = String.valueOf(id);
-            // TODO FIXME ためしにエスケープしてみたが。。。
-            strId = strId.replaceAll("[' '|':']", "-");
-            return new URI(entitySetName + "(" + strId + ")");
+            return new URI(entitySetName + "(" + id + ")");
         } catch (URISyntaxException ex) {
             throw new ODataRuntimeException("Fail to create ID EntitySet name: " + entitySetName, ex);
         }
