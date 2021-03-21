@@ -168,16 +168,20 @@ public class OiyokanInterDb {
                     sqlBuilder.append("BIGINT");
                     break;
                 case Types.DECIMAL:
-                    sqlBuilder.append("DECIMAL(" //
-                            + rsmeta.getPrecision(column) + "," + rsmeta.getScale(column) + ")");
-                    break;
-                case Types.NUMERIC:
-                    // postgres で発生.
                     if (rsmeta.getPrecision(column) > 0) {
                         sqlBuilder.append("DECIMAL(" //
                                 + rsmeta.getPrecision(column) + "," + rsmeta.getScale(column) + ")");
                     } else {
                         sqlBuilder.append("DECIMAL");
+                    }
+                    break;
+                case Types.NUMERIC:
+                    // postgres で発生.
+                    if (rsmeta.getPrecision(column) > 0) {
+                        sqlBuilder.append("NUMERIC(" //
+                                + rsmeta.getPrecision(column) + "," + rsmeta.getScale(column) + ")");
+                    } else {
+                        sqlBuilder.append("NUMERIC");
                     }
                     break;
                 case Types.BOOLEAN:
