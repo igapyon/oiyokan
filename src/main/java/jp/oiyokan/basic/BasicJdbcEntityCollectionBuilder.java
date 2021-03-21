@@ -165,8 +165,9 @@ public class BasicJdbcEntityCollectionBuilder {
                             }
 
                             String idVal = rset.getString(look.getName());
-                            // TODO FIXME ためしにエスケープしてみた
-                            idVal = idVal.replaceAll("[' '|':']", "-");
+                            // 未整理の事項。キーの値をエスケープすべきかどうか.
+                            // 現状、スペースとコロンはアンダースコアに置き換え.
+                            idVal = idVal.replaceAll("[' '|':']", "_");
                             keyValue += idVal;
                         }
                         ent.setId(createId(eSetTarget.getName(), keyValue));

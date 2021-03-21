@@ -216,7 +216,7 @@ public class BasicDbUtil {
      */
     public static Property resultSet2Property(ResultSet rset, ResultSetMetaData rsmeta, int column,
             OiyokanCsdlEntitySet iyoEntitySet) throws ODataApplicationException, SQLException {
-        // TODO FIXME これ ResultSetMetaData ではなくって、別の方法で CSDL でとった方が安全そうだぞ!!!
+        // 基本的に CSDL で処理するが、やむを得ない場所のみ ResultSetMetaData を利用する
         final String columnName = rsmeta.getColumnName(column);
 
         final CsdlProperty csdlProp = iyoEntitySet.getEntityType().getProperty(columnName);
@@ -243,7 +243,8 @@ public class BasicDbUtil {
         } else if ("Edm.TimeOfDay".equals(csdlProp.getType())) {
             return new Property(null, columnName, ValueType.PRIMITIVE, rset.getTime(column));
         } else if ("Edm.String".equals(csdlProp.getType())) {
-            // CLOB だとまずいので、やむを得ず rsmeta の情報を利用
+            // 基本的に CSDL で処理するが、やむを得ない場所のみ ResultSetMetaData を利用する
+            // TODO FIXME ただしこれは事前に CSDL に記憶可能。
             if (Types.CLOB == rsmeta.getColumnType(column)) {
                 try {
                     return new Property(null, columnName, ValueType.PRIMITIVE,

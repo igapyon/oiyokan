@@ -72,9 +72,12 @@ oiyokan プロジェクトは、OData v4 server のシンプルなサンプル(h
 
 ## TODO
 
-- Postgres dvdrental を利用したテスト。
+- TODO or FIXME タグを確認
+- TODO メモ: BasicSqlExprExpander の通過していない箇所のテスト.
+- Javadoc のエラーを解消
+- Postgres dvdrental を利用したテスト (もうひとおし)。
 - SQL Server Northwind 的なものを利用したテスト。該当するDBの有無は不明。
 - 認証の実験。
-- TimeOfDay が未テスト.
+- TimeOfDay がテスト不十分.
 - 実験的に全文検索である `$search` をサポートしたものの、もう少し詳しいところが調べられていない。また全文検索で有効なのはアルファベットのみ。h2 database でここを深掘りしても不毛か?
 - ($search対応の後続となるため、しばらく対応できない) TODO Null (nullable) の対応。現在はコメントアウト.

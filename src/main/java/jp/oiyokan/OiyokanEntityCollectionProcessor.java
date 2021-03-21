@@ -86,7 +86,7 @@ public class OiyokanEntityCollectionProcessor implements EntityCollectionProcess
         // URI情報からURIリソースの指定を取得.
         List<UriResource> resourcePaths = uriInfo.getUriResourceParts();
         // URIリソースの最初のものを要素セット指定とみなす.
-        // TODO FIXME いまは1番目の項目のみ処理.
+        // Note: パスのうち1番目の項目のみ処理.
         UriResourceEntitySet uriResourceEntitySet = (UriResourceEntitySet) resourcePaths.get(0);
         // 要素セットの指定からEDM要素セットを取得.
         EdmEntitySet edmEntitySet = uriResourceEntitySet.getEntitySet();
