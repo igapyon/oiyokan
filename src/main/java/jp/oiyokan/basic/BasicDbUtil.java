@@ -63,8 +63,10 @@ public class BasicDbUtil {
             }
         } catch (SQLException ex) {
             if (OiyokanConstants.IS_TRACE_ODATA_V4)
-                System.err.println("OData v4: Fail to connect: " + settingsDatabase.getName());
-            throw new ODataApplicationException("Fail to Connect: " + settingsDatabase.getName(), 500, Locale.ENGLISH);
+                System.err.println("OData v4: UNEXPECTED: Fail to connect database: " + settingsDatabase.getName()
+                        + ", " + ex.toString());
+            throw new ODataApplicationException("UNEXPECTED: Fail to connect database: " + settingsDatabase.getName(),
+                    500, Locale.ENGLISH);
         }
 
         return conn;
