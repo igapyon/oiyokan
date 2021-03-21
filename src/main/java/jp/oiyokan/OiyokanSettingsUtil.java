@@ -50,8 +50,8 @@ public class OiyokanSettingsUtil {
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(strOiyokanSettings, OiyokanSettings.class);
         } catch (IOException ex) {
-            ex.printStackTrace();
-            throw new ODataApplicationException("UNEXPECTED: Oiyokan 設定情報読み込み失敗", 500, Locale.ENGLISH);
+            System.err.println("UNEXPECTED: Fail to load Oiyokan settings: " + ex.toString());
+            throw new ODataApplicationException("UNEXPECTED: Fail to load Oiyokan settings", 500, Locale.ENGLISH);
         }
     }
 
@@ -62,6 +62,8 @@ public class OiyokanSettingsUtil {
                 return look;
             }
         }
+
+        System.err.println("UNEXPECTED: Database settings [oiyokan-internal] が見つかりません");
         throw new ODataApplicationException("UNEXPECTED: Database settings [oiyokan-internal] が見つかりません", 500,
                 Locale.ENGLISH);
     }

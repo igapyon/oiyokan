@@ -100,10 +100,10 @@ public class BasicSqlExprExpander {
             return;
         }
 
-        final String message = "UNEXPECTED: Unsupported expression:" + filterExpression.getClass().getName() + ","
-                + filterExpression.toString() + "]";
-        System.err.println(message);
-        throw new ODataApplicationException(message, 500, Locale.ENGLISH);
+        System.err.println("UNEXPECTED: Expression が処理できない:" + filterExpression.toString() + ": "
+                + filterExpression.getClass().getName() + "," + filterExpression.toString() + "]");
+        throw new ODataApplicationException("UNEXPECTED: 処理できない Expression: " + filterExpression.toString(), 500,
+                Locale.ENGLISH);
     }
 
     ///////////////////////////////////////////////////////////////
@@ -198,9 +198,9 @@ public class BasicSqlExprExpander {
             return;
         }
 
-        final String message = "UNEXPECTED: Unsupported binary operator:" + opKind + "," + impl.toString() + "]";
-        System.err.println(message);
-        throw new ODataApplicationException(message, 500, Locale.ENGLISH);
+        System.err.println("UNEXPECTED: Unsupported binary operator:" + opKind + "," + impl.toString());
+        throw new ODataApplicationException("UNEXPECTED: Unsupported binary operator:" + opKind + "," + impl.toString(),
+                500, Locale.ENGLISH);
     }
 
     /**
@@ -307,9 +307,8 @@ public class BasicSqlExprExpander {
             return;
         }
 
-        System.err.println("edmtype:" + impl.getType().getName());
-        System.err.println("edmtype:" + impl.getType().getClass().getCanonicalName());
-
+        System.err.println("NOT SUPPORTED: LiteralImpl: " + impl.getClass().getTypeName());
+        System.err.println("NOT SUPPORTED: LiteralImpl: Type:" + impl.getType().getName());
         throw new ODataApplicationException("NOT SUPPORTED: LiteralImpl: " + impl.getClass().getTypeName(), 500,
                 Locale.ENGLISH);
     }
@@ -578,10 +577,10 @@ public class BasicSqlExprExpander {
             return;
         }
 
-        final String message = "UNEXPECTED : NOT SUPPORTED MethodKind:" + impl.getMethod() + "," + impl.toString()
-                + "]";
-        System.err.println(message);
-        throw new ODataApplicationException(message, 500, Locale.ENGLISH);
+        System.err.println("UNEXPECTED : NOT SUPPORTED MethodKind:" + impl.getMethod() + "," + impl.toString());
+        throw new ODataApplicationException(
+                "UNEXPECTED : NOT SUPPORTED MethodKind:" + impl.getMethod() + "," + impl.toString(), 500,
+                Locale.ENGLISH);
     }
 
     private void expandUnary(UnaryImpl impl) throws ODataApplicationException {
@@ -597,9 +596,9 @@ public class BasicSqlExprExpander {
             return;
         }
 
-        final String message = "UNEXPECTED: Unsupported UnaryOperatorKind:" + impl.getOperator() + "," + impl.toString()
-                + "]";
-        System.err.println(message);
-        throw new ODataApplicationException(message, 500, Locale.ENGLISH);
+        System.err.println("UNEXPECTED: Unsupported UnaryOperatorKind:" + impl.getOperator() + "," + impl.toString());
+        throw new ODataApplicationException(
+                "UNEXPECTED: Unsupported UnaryOperatorKind:" + impl.getOperator() + "," + impl.toString(), 500,
+                Locale.ENGLISH);
     }
 }

@@ -60,7 +60,7 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
 
             return localTemplateEntityContainer.getEntityType(entityTypeName);
         } catch (RuntimeException ex) {
-            ex.printStackTrace();
+            System.err.println("OiyokanEdmProvider#getEntityType: exception: " + ex.toString());
             throw ex;
         }
     }
@@ -92,7 +92,7 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
             // ヒットしない場合は対象外。その場合は null返却.
             return localTemplateEntityContainer.getEntitySet(entitySetName);
         } catch (RuntimeException ex) {
-            ex.printStackTrace();
+            System.err.println("OiyokanEdmProvider#getEntitySet: exception: " + ex.toString());
             throw ex;
         }
     }
@@ -127,7 +127,7 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
 
             return newEntityContainer;
         } catch (RuntimeException ex) {
-            ex.printStackTrace();
+            System.err.println("OiyokanEdmProvider#getEntityContainer: exception: " + ex.toString());
             throw ex;
         }
     }
@@ -168,7 +168,7 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
 
             return newSchemaList;
         } catch (RuntimeException ex) {
-            ex.printStackTrace();
+            System.err.println("OiyokanEdmProvider#getSchemas: exception: " + ex.toString());
             throw ex;
         }
     }
@@ -200,7 +200,7 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
 
             return null;
         } catch (RuntimeException ex) {
-            ex.printStackTrace();
+            System.err.println("OiyokanEdmProvider#getEntityContainerInfo: exception: " + ex.toString());
             throw ex;
         }
     }

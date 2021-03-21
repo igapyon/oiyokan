@@ -72,7 +72,7 @@ public class TinyH2TrialFullTextSearch {
                 for (; rset.next();) {
                     String valQuery = rset.getString(1);
                     // System.err.println("QUERY:" + valQuery);
-                    // TODO , FIXME ハードコード
+                    // TODO , FIXME ハードコード。なぜなら現状このテーブルにしか全文検索が対応しない。
                     if (valQuery.contains("MyProductFulls") == false) {
                         continue;
                     }
@@ -83,7 +83,7 @@ public class TinyH2TrialFullTextSearch {
                     // ただし、h2としての故記述は正しい。
                     try (PreparedStatement stmt2 = connTargetDb.prepareStatement("SELECT ID FROM " + valQuery)) {
                         ResultSet rset2 = stmt2.executeQuery();
-                        // TODO 戻り値チェック.
+                        // TODO 戻り値チェックが実装されていない.
                         rset2.next();
 
                         ent.addProperty( //
@@ -94,8 +94,8 @@ public class TinyH2TrialFullTextSearch {
                 }
             }
         } catch (SQLException ex) {
-            ex.printStackTrace();
-            throw new ODataApplicationException("Unexpected: SQL Error:" + ex.toString(), 500, Locale.ENGLISH);
+            System.err.println("UNEXPECTED: SQL related Error: " + ex.toString());
+            throw new ODataApplicationException("UNEXPECTED: SQL related Error", 500, Locale.ENGLISH);
         }
     }
 }

@@ -31,7 +31,7 @@ import java.util.regex.Pattern;
 import org.apache.olingo.server.api.ODataApplicationException;
 
 /**
- * Olingoからコピーペーストしたコード。
+ * Apache Olingo から複写したソースコード。
  */
 public class FromOlingoUtil {
     private static final Pattern PATTERN_EdmDateTimeOffset = Pattern
@@ -39,6 +39,12 @@ public class FromOlingoUtil {
                     + "T(\\p{Digit}{2}):(\\p{Digit}{2})(?::(\\p{Digit}{2})(\\.(\\p{Digit}{0,12}?)0*)?)?"
                     + "(Z|([-+]\\p{Digit}{2}:\\p{Digit}{2}))?");
 
+    /**
+     * 与えられた日時をもとに日時に変換。
+     * 
+     * @param value 日時を表す文字列.
+     * @return 日時.
+     */
     public static ZonedDateTime parseZonedDateTime(final String value) {
         ZonedDateTime zdt;
         try {
@@ -56,12 +62,20 @@ public class FromOlingoUtil {
         return zdt;
     }
 
+    /**
+     * 与えられた日付文字列を共に日時を取得。
+     * 
+     * @param value 日付文字列。
+     * @return 日時。
+     * @throws ODataApplicationException ODataアプリ例外が発生した場合.
+     */
     protected static ZonedDateTime parseDateString(final String value) throws ODataApplicationException {
         LocalDate date;
         try {
             date = LocalDate.parse(value);
         } catch (DateTimeParseException ex) {
-            throw new ODataApplicationException("The literal '" + value + "' has illegal content." + ex.toString(), 500,
+            System.err.println("UNEXPECTED: The literal '" + value + "' has illegal content.: " + ex.toString());
+            throw new ODataApplicationException("UNEXPECTED: The literal '" + value + "' has illegal content.", 500,
                     Locale.ENGLISH);
         }
         // inappropriate types, which need to be supported for backward compatibility

@@ -15,8 +15,6 @@
  */
 package jp.oiyokan;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 
 import javax.servlet.ServletException;
@@ -24,6 +22,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.codec.DecoderException;
+import org.apache.commons.codec.net.URLCodec;
 import org.apache.olingo.server.api.OData;
 import org.apache.olingo.server.api.ODataHttpHandler;
 import org.apache.olingo.server.api.ServiceMetadata;
@@ -50,10 +50,9 @@ public class OiyokanOdata4Register {
         if (req.getQueryString() != null) {
             try {
                 // Query String を uri に追加.
-                // TODO URLDecoder より頑丈な URI デコードの実装を探して置き換えたい.
-                uri += "?" + URLDecoder.decode(req.getQueryString(), "UTF-8");
-            } catch (UnsupportedEncodingException ex) {
-                throw new ServletException("デコード失敗:" + ex.toString());
+                uri += "?" + new URLCodec().decode(req.getQueryString());
+            } catch (DecoderException ex) {
+                throw new ServletException("Can't decode specified decodec url[1]:" + ex.toString());
             }
         }
 
@@ -79,7 +78,7 @@ public class OiyokanOdata4Register {
             }, resp);
         } catch (RuntimeException ex) {
             if (OiyokanConstants.IS_TRACE_ODATA_V4)
-                System.err.println("OData v4: Unexpected Server Error: " + ex.toString());
+                System.err.println("OData v4: OiyokanOdata4Register#serv(): Unexpected Server Error: " + ex.toString());
             ex.printStackTrace();
             throw new ServletException(ex);
         }

@@ -114,8 +114,8 @@ public class BasicJdbcEntityTypeBuilder {
             entitySet.setEntityType(entityType);
             return entityType;
         } catch (SQLException ex) {
-            ex.printStackTrace();
-            throw new ODataApplicationException("DB meta 取得失敗:" + ex.toString(), 500, Locale.ENGLISH);
+            System.err.println("UNEXPECTED: Fail to get database meta: " + ex.toString());
+            throw new ODataApplicationException("UNEXPECTED: Fail to get database meta", 500, Locale.ENGLISH);
         }
     }
 }

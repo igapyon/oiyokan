@@ -63,7 +63,8 @@ public class OiyokanInterDb {
                 + ")")) {
             stmt.executeUpdate();
         } catch (SQLException ex) {
-            throw new ODataApplicationException("テーブル作成に失敗: " + ex.toString(), 500, Locale.ENGLISH);
+            System.err.println("UNEXPECTED: Fail to create local internal table: " + ex.toString());
+            throw new ODataApplicationException("UNEXPECTED: Fail to create local internal table", 500, Locale.ENGLISH);
         }
 
         // ODataAppInfos が既に存在するかどうか確認. 存在する場合は処理中断.
@@ -76,7 +77,9 @@ public class OiyokanInterDb {
                 return false;
             }
         } catch (SQLException ex) {
-            throw new ODataApplicationException("Fail to SQL: " + ex.toString(), 500, Locale.ENGLISH, ex);
+            System.err.println("UNEXPECTED: Fail to execute SQL for local internal table: " + ex.toString());
+            throw new ODataApplicationException("UNEXPECTED: Fail to execute SQL for local internal table", 500,
+                    Locale.ENGLISH, ex);
         }
 
         ///////////////////////////////////////////
@@ -100,7 +103,9 @@ public class OiyokanInterDb {
 
             connInternalDb.commit();
         } catch (SQLException ex) {
-            throw new ODataApplicationException("テーブル作成に失敗: " + ex.toString(), 500, Locale.ENGLISH);
+            System.err.println("UNEXPECTED: Fail to execute SQL for local internal table: " + ex.toString());
+            throw new ODataApplicationException("UNEXPECTED: Fail to execute SQL for local internal table", 500,
+                    Locale.ENGLISH);
         }
 
         for (String sqlFile : OIYOKAN_FILE_SQLS) {
@@ -114,7 +119,9 @@ public class OiyokanInterDb {
                     stmt.executeUpdate();
                     connInternalDb.commit();
                 } catch (SQLException ex) {
-                    throw new ODataApplicationException("SQL実行に失敗: " + ex.toString(), 500, Locale.ENGLISH);
+                    System.err.println("UNEXPECTED: Fail to execute SQL for local internal table: " + ex.toString());
+                    throw new ODataApplicationException("UNEXPECTED: Fail to execute SQL for local internal table", 500,
+                            Locale.ENGLISH);
                 }
             }
         }
@@ -126,10 +133,10 @@ public class OiyokanInterDb {
     /**
      * Ocsdl 用の DDL 文字列を取得.
      * 
-     * @param connTargetDb
-     * @param tableName
-     * @return
-     * @throws SQLException
+     * @param connTargetDb ターゲットDBへのDB接続.
+     * @param tableName    テーブル名.
+     * @return 作表のためのDDL.
+     * @throws SQLException SQL例外が発生した場合.
      */
     public static String generateCreateOcsdlDdl(Connection connTargetDb, String tableName) throws SQLException {
         final Map<String, String> defaultValueMap = new HashMap<>();
@@ -297,6 +304,7 @@ public class OiyokanInterDb {
                     sqlBuilder.append("NOT_SUPPORT_OTHER");
                     break;
                 default:
+                    System.err.println("NOT SUPPORTED: JDBC Type: " + rsmeta.getColumnType(column));
                     new ODataApplicationException("NOT SUPPORTED: JDBC Type: " + rsmeta.getColumnType(column), 500,
                             Locale.ENGLISH);
                     break;

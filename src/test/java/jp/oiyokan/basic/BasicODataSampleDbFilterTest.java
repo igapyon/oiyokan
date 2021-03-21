@@ -182,8 +182,6 @@ class BasicODataSampleDbFilterTest {
         req.setRawQueryPath("$top=51&$filter=Double1 lt 123.456789&$orderby=ID&$count=true&$select=ID");
         req.setRawRequestUri(req.getRawBaseUri() + req.getRawODataPath() + "?" + req.getRawQueryPath());
 
-        // TODO Doubleの処理について追加テストが必要。
-
         final ODataResponse resp = handler.process(req);
         assertEquals(200, resp.getStatusCode());
         final String result = BasicODataSampleDbTest.stream2String(resp.getContent());

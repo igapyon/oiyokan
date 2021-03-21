@@ -24,8 +24,6 @@ import org.apache.olingo.server.api.ODataApplicationException;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.StreamUtils;
 
-import jp.oiyokan.OiyokanConstants;
-
 /**
  * oiyokan-sampledb.sql ファイルに関する処理。
  */
@@ -43,7 +41,7 @@ public class OiyokanResourceSqlUtil {
             final String[] sqls = sqlresources.split(";");
             return sqls;
         } catch (IOException ex) {
-            ex.printStackTrace();
+            System.err.println("UNEXPECTED: Oiyokan 設定情報読み込み失敗: " + ex.toString());
             throw new ODataApplicationException("UNEXPECTED: Oiyokan 設定情報読み込み失敗", 500, Locale.ENGLISH);
         }
     }

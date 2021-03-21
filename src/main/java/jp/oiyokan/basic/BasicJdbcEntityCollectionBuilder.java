@@ -79,15 +79,19 @@ public class BasicJdbcEntityCollectionBuilder {
         }
 
         if (uriInfo.getApplyOption() != null) {
+            System.err.println("NOT SUPPORTED: URI: $apply");
             throw new ODataApplicationException("NOT SUPPORTED: URI: $apply", 500, Locale.ENGLISH);
         }
         if (uriInfo.getCustomQueryOptions() != null && uriInfo.getCustomQueryOptions().size() > 0) {
+            System.err.println("NOT SUPPORTED: URI: customQuery");
             throw new ODataApplicationException("NOT SUPPORTED: URI: customQuery", 500, Locale.ENGLISH);
         }
         if (uriInfo.getDeltaTokenOption() != null) {
+            System.err.println("NOT SUPPORTED: URI: deltaToken");
             throw new ODataApplicationException("NOT SUPPORTED: URI: deltaToken", 500, Locale.ENGLISH);
         }
         if (uriInfo.getExpandOption() != null && uriInfo.getExpandOption().getExpandItems().size() > 0) {
+            System.err.println("NOT SUPPORTED: URI: $expand");
             throw new ODataApplicationException("NOT SUPPORTED: URI: $expand", 500, Locale.ENGLISH);
         }
 
@@ -121,8 +125,8 @@ public class BasicJdbcEntityCollectionBuilder {
                     rset.next();
                     countWithWhere = rset.getInt(1);
                 } catch (SQLException ex) {
-                    ex.printStackTrace();
-                    throw new ODataApplicationException("Fail to SQL: " + ex.toString(), 500, Locale.ENGLISH, ex);
+                    System.err.println("Fail to execute count SQL: " + sql + ", " + ex.toString());
+                    throw new ODataApplicationException("Fail to execute count SQL: " + sql, 500, Locale.ENGLISH, ex);
                 }
                 eCollection.setCount(countWithWhere);
             }
@@ -165,8 +169,9 @@ public class BasicJdbcEntityCollectionBuilder {
                             }
 
                             String idVal = rset.getString(look.getName());
-                            // TODO FIXME ためしにエスケープしてみた
-                            idVal = idVal.replaceAll("[' '|':']", "-");
+                            // 未整理の事項。キーの値をエスケープすべきかどうか.
+                            // 現状、スペースとコロンはアンダースコアに置き換え.
+                            idVal = idVal.replaceAll("[' '|':']", "_");
                             keyValue += idVal;
                         }
                         ent.setId(createId(eSetTarget.getName(), keyValue));
@@ -174,12 +179,15 @@ public class BasicJdbcEntityCollectionBuilder {
 
                     eCollection.getEntities().add(ent);
                 }
+            } catch (SQLException ex) {
+                System.err.println("Fail to execute SQL: " + sql + ", " + ex.toString());
+                throw new ODataApplicationException("Fail to execute SQL: " + sql, 500, Locale.ENGLISH, ex);
             }
 
             return eCollection;
         } catch (SQLException ex) {
-            ex.printStackTrace();
-            throw new ODataApplicationException("Fail to SQL: " + ex.toString(), 500, Locale.ENGLISH, ex);
+            System.err.println("Fail on database connection SQL: " + ex.toString());
+            throw new ODataApplicationException("UNEXPECTED: Fail on database connection ", 500, Locale.ENGLISH, ex);
         }
     }
 
@@ -194,7 +202,8 @@ public class BasicJdbcEntityCollectionBuilder {
         try {
             return new URI(entitySetName + "(" + id + ")");
         } catch (URISyntaxException ex) {
-            throw new ODataRuntimeException("Fail to create ID EntitySet name: " + entitySetName, ex);
+            System.err.println("UNEXPECTED: Fail to create ID EntitySet name: " + entitySetName + ": " + ex.toString());
+            throw new ODataRuntimeException("UNEXPECTED: Fail to create ID EntitySet name: " + entitySetName, ex);
         }
     }
 }
