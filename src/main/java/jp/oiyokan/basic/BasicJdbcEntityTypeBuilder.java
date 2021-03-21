@@ -108,6 +108,15 @@ public class BasicJdbcEntityTypeBuilder {
                     keyRefList.add(propertyRef);
                 }
 
+                if (keyRefList.size() == 0) {
+                    // キーがないのは警告。
+                    if (OiyokanConstants.IS_TRACE_ODATA_V4) {
+                        System.err.println("OData v4: WARNING: No ID: " + entitySet.getName());
+                        System.err.println("OData v4: WARNING: Set primary key on Ocsdl table: "
+                                + entitySet.getDbTableNameLocalIyo());
+                    }
+                }
+
                 entityType.setKey(keyRefList);
             }
 
