@@ -50,8 +50,6 @@ class H2DatabaseTest {
 
     @Test
     void testo2() throws Exception {
-        // TODO このテストを、ODataRequestベースのものに書き換えた版を作成すること。
-
         final OiyokanSettings settingsOiyokan = OiyokanSettingsUtil.loadOiyokanSettings();
         try (Connection conn = BasicDbUtil
                 .getConnection(OiyokanSettingsUtil.getOiyokanInternalDatabase(settingsOiyokan))) {
