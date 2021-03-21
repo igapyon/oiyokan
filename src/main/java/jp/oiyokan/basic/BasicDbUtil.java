@@ -161,7 +161,9 @@ public class BasicDbUtil {
         case Types.LONGNVARCHAR:
         case Types.CLOB:
             csdlProp.setType(EdmPrimitiveTypeKind.String.getFullQualifiedName());
-            csdlProp.setMaxLength(rsmeta.getColumnDisplaySize(column));
+            if (rsmeta.getColumnDisplaySize(column) > 0 && rsmeta.getColumnDisplaySize(column) != Integer.MAX_VALUE) {
+                csdlProp.setMaxLength(rsmeta.getColumnDisplaySize(column));
+            }
             break;
         case Types.BINARY:
         case Types.VARBINARY:
@@ -171,6 +173,10 @@ public class BasicDbUtil {
                 csdlProp.setType(EdmPrimitiveTypeKind.Guid.getFullQualifiedName());
             } else {
                 csdlProp.setType(EdmPrimitiveTypeKind.Binary.getFullQualifiedName());
+                if (rsmeta.getColumnDisplaySize(column) > 0
+                        && rsmeta.getColumnDisplaySize(column) != Integer.MAX_VALUE) {
+                    csdlProp.setMaxLength(rsmeta.getColumnDisplaySize(column));
+                }
             }
             break;
         default:

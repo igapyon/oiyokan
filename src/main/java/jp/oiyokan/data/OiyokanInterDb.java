@@ -221,28 +221,32 @@ public class OiyokanInterDb {
                     sqlBuilder.append("CHAR(" + rsmeta.getColumnDisplaySize(column) + ")");
                     break;
                 case Types.VARCHAR:
-                    if (rsmeta.getColumnDisplaySize(column) > 0) {
+                    if (rsmeta.getColumnDisplaySize(column) > 0
+                            && rsmeta.getColumnDisplaySize(column) != Integer.MAX_VALUE) {
                         sqlBuilder.append("VARCHAR(" + rsmeta.getColumnDisplaySize(column) + ")");
                     } else {
                         sqlBuilder.append("VARCHAR");
                     }
                     break;
                 case Types.LONGVARCHAR:
-                    if (rsmeta.getColumnDisplaySize(column) > 0) {
+                    if (rsmeta.getColumnDisplaySize(column) > 0
+                            && rsmeta.getColumnDisplaySize(column) != Integer.MAX_VALUE) {
                         sqlBuilder.append("LONGVARCHAR(" + rsmeta.getColumnDisplaySize(column) + ")");
                     } else {
-                        sqlBuilder.append("VARCHAR");
+                        sqlBuilder.append("LONGVARCHAR");
                     }
                     break;
                 case Types.LONGNVARCHAR:
-                    if (rsmeta.getColumnDisplaySize(column) > 0) {
+                    if (rsmeta.getColumnDisplaySize(column) > 0
+                            && rsmeta.getColumnDisplaySize(column) != Integer.MAX_VALUE) {
                         sqlBuilder.append("LONGVARCHAR(" + rsmeta.getColumnDisplaySize(column) + ")");
                     } else {
                         sqlBuilder.append("LONGVARCHAR");
                     }
                     break;
                 case Types.CLOB:
-                    if (rsmeta.getColumnDisplaySize(column) > 0) {
+                    if (rsmeta.getColumnDisplaySize(column) > 0
+                            && rsmeta.getColumnDisplaySize(column) != Integer.MAX_VALUE) {
                         sqlBuilder.append("CLOB(" + rsmeta.getColumnDisplaySize(column) + ")");
                     } else {
                         sqlBuilder.append("CLOB");
@@ -252,17 +256,37 @@ public class OiyokanInterDb {
                     if ("UUID".equalsIgnoreCase(rsmeta.getColumnTypeName(column))) {
                         sqlBuilder.append("UUID");
                     } else {
-                        sqlBuilder.append("BINARY");
+                        if (rsmeta.getColumnDisplaySize(column) > 0
+                                && rsmeta.getColumnDisplaySize(column) != Integer.MAX_VALUE) {
+                            sqlBuilder.append("BINARY(" + rsmeta.getColumnDisplaySize(column) + ")");
+                        } else {
+                            sqlBuilder.append("BINARY");
+                        }
                     }
                     break;
                 case Types.VARBINARY:
-                    sqlBuilder.append("VARBINARY");
+                    if (rsmeta.getColumnDisplaySize(column) > 0
+                            && rsmeta.getColumnDisplaySize(column) != Integer.MAX_VALUE) {
+                        sqlBuilder.append("VARBINARY(" + rsmeta.getColumnDisplaySize(column) + ")");
+                    } else {
+                        sqlBuilder.append("VARBINARY");
+                    }
                     break;
                 case Types.LONGVARBINARY:
-                    sqlBuilder.append("LONGVARBINARY");
+                    if (rsmeta.getColumnDisplaySize(column) > 0
+                            && rsmeta.getColumnDisplaySize(column) != Integer.MAX_VALUE) {
+                        sqlBuilder.append("LONGVARBINARY(" + rsmeta.getColumnDisplaySize(column) + ")");
+                    } else {
+                        sqlBuilder.append("LONGVARBINARY");
+                    }
                     break;
                 case Types.BLOB:
-                    sqlBuilder.append("BLOB");
+                    if (rsmeta.getColumnDisplaySize(column) > 0
+                            && rsmeta.getColumnDisplaySize(column) != Integer.MAX_VALUE) {
+                        sqlBuilder.append("BLOB(" + rsmeta.getColumnDisplaySize(column) + ")");
+                    } else {
+                        sqlBuilder.append("BLOB");
+                    }
                     break;
                 case Types.ARRAY:
                     // postgres で発生. 対応しない.
