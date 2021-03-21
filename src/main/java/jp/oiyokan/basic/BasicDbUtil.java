@@ -151,6 +151,7 @@ public class BasicDbUtil {
             csdlProp.setMaxLength(rsmeta.getColumnDisplaySize(column));
             break;
         case Types.BINARY:
+        case Types.VARBINARY:
             csdlProp.setType(EdmPrimitiveTypeKind.Binary.getFullQualifiedName());
             break;
         default:
@@ -240,6 +241,7 @@ public class BasicDbUtil {
             break;
         // TODO FIXME 未実装
         // case Types.BINARY:
+        // case Types.VARBINARY:
         // prop = new Property(null, columnName, ValueType.PRIMITIVE,
         // rset.getbin.getString(column));
         // break;

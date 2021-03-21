@@ -17,6 +17,7 @@ package jp.oiyokan.basic.sql;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.olingo.commons.api.edm.provider.CsdlEntityType;
 import org.apache.olingo.commons.api.edm.provider.CsdlProperty;
@@ -30,6 +31,7 @@ import org.apache.olingo.server.core.uri.queryoption.FilterOptionImpl;
 import org.apache.olingo.server.core.uri.queryoption.expression.MemberImpl;
 
 import jp.oiyokan.OiyokanCsdlEntitySet;
+import jp.oiyokan.dto.OiyokanSettingsDatabase;
 
 /**
  * SQL文を構築するための簡易クラス.
@@ -68,7 +70,8 @@ public class BasicSqlBuilder {
      * 
      * @param uriInfo URI情報.
      */
-    public void getSelectQuery(UriInfo uriInfo) throws ODataApplicationException {
+    public void getSelectQuery(UriInfo uriInfo, OiyokanSettingsDatabase settingsDatabase)
+            throws ODataApplicationException {
         sqlInfo.getSqlBuilder().append("SELECT ");
 
         if (uriInfo.getSelectOption() == null) {
@@ -80,7 +83,9 @@ public class BasicSqlBuilder {
                 if (strColumns.length() > 0) {
                     strColumns += ",";
                 }
-                strColumns += prop.getName();
+
+                // もし空白を含む場合はエスケープ。
+                strColumns += BasicSqlBuilder.escapeKakkoFieldName(settingsDatabase, prop.getName());
             }
             sqlInfo.getSqlBuilder().append(strColumns);
         } else {
@@ -163,5 +168,21 @@ public class BasicSqlBuilder {
         normalName = normalName.replaceAll("^\\[", "");
         normalName = normalName.replaceAll("\\]$", "");
         return normalName;
+    }
+
+    public static String escapeKakkoFieldName(OiyokanSettingsDatabase settingsDatabase, String fieldName)
+            throws ODataApplicationException {
+        if (fieldName.contains(" ") == false) {
+            return fieldName;
+        }
+        if ("h2".equals(settingsDatabase.getType())) {
+            fieldName = "[" + fieldName + "]";
+        } else if ("pg".equals(settingsDatabase.getType())) {
+            fieldName = "\"" + fieldName + "\"";
+        } else {
+            throw new ODataApplicationException("NOT SUPPORTED: Database type: " + settingsDatabase.getType(), 500,
+                    Locale.ENGLISH);
+        }
+        return fieldName;
     }
 }
