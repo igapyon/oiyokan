@@ -117,7 +117,7 @@ public class TinyH2EntityCollectionBuilder {
             BasicSqlBuilder tinySql = new BasicSqlBuilder();
             tinySql.getSqlInfo().setEntitySet((OiyokanCsdlEntitySet) eSetTarget);
 
-            tinySql.getSelectQuery(uriInfo);
+            tinySql.getSelectQuery(uriInfo, eSetTarget.getSettingsDatabase());
             final String sql = tinySql.getSqlInfo().getSqlBuilder().toString();
 
             if (OiyokanConstants.IS_TRACE_ODATA_V4)
