@@ -48,6 +48,30 @@ http://localhost:8080/odata4.svc/
 http://localhost:8080/odata4.svc/ODataAppInfos?$format=JSON
 ```
 
+# How to setup OData v4 setting
+
+## oiyokan-settings.json の設定を更新
+
+Oiyokan の設定ファイルを変更して、接続したいデータベース情報を記述します。
+
+```sh
+src/main/resources/oiyokan/oiyokan-settings.json
+```
+
+## oiyokan-targetdb.sql を設定
+
+oiyokan-targetdb.sql ファイルに ターゲットDBの Ocsdl情報をあらわす SQL/DDL文を記述.
+
+```sh
+src/main/resources/oiyokan/sql/oiyokan-targetdb.sql
+```
+
+記述内容については sample-ocsdl-pg-dvdrental.sql を参考にする。
+
+## 設定変更後は Spring Boot を再起動
+
+Spring Boot を再起動することにより設定情報の更新を反映。
+
 # OData v4 server のサンプル(simple-odata4) を祖先
 
 oiyokan プロジェクトは、OData v4 server のシンプルなサンプル(https://github.com/igapyon/simple-odata4) を祖先に作成されたものです。
