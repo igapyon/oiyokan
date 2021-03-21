@@ -149,6 +149,7 @@ public class OiyokanInterDb {
 
                 String columnName = rsmeta.getColumnName(column);
                 if (columnName.indexOf(' ') > 0) {
+                    // 内部DB向け設定であるので、接続先DBの種類によらず h2 database 前提のエスケープを実施。
                     columnName = "[" + columnName + "]";
                 }
                 sqlBuilder.append(columnName + " ");

@@ -5,7 +5,7 @@
 		{
 			"name": "oiyokan-internal",
 			"type": "h2",
-			"description": "Oiyokanの内部DB。この設定は変更できない。",
+			"description": "Oiyokanの内部DB。この設定は変更不可。",
 			"jdbcDriver": "org.h2.Driver",
 			"jdbcUrl": "jdbc:h2:mem:oiyokan;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=FALSE;CASE_INSENSITIVE_IDENTIFIERS=TRUE;MODE=MSSQLServer",
 			"jdbcUser": "sa",
@@ -14,7 +14,7 @@
 		{
 			"name": "postgres1",
 			"type": "pg",
-			"description": "サンプル の Postgres DB設定記述。環境情報にあわせて更新して利用。",
+			"description": "サンプル の Postgres DB設定記述。環境情報にあわせて変更利用。",
 			"jdbcDriver": "org.postgresql.Driver",
 			"jdbcUrl": "jdbc:postgresql://localhost:5432/dvdrental",
 			"jdbcUser": "",
