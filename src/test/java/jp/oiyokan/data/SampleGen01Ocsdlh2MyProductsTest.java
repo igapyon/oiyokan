@@ -17,8 +17,6 @@ package jp.oiyokan.data;
 
 import java.sql.Connection;
 
-import org.junit.jupiter.api.Test;
-
 import jp.oiyokan.OiyokanSettingsUtil;
 import jp.oiyokan.basic.BasicDbUtil;
 import jp.oiyokan.dto.OiyokanSettings;

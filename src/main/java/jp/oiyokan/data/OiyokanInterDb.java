@@ -22,7 +22,9 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import org.apache.olingo.server.api.ODataApplicationException;
 
@@ -130,6 +132,16 @@ public class OiyokanInterDb {
      * @throws SQLException
      */
     public static String generateCreateOcsdlDdl(Connection connTargetDb, String tableName) throws SQLException {
+        final Map<String, String> defaultValueMap = new HashMap<>();
+        {
+            final ResultSet rsdbmetacolumns = connTargetDb.getMetaData().getColumns(null, null, tableName, "%");
+            for (; rsdbmetacolumns.next();) {
+                String colName = rsdbmetacolumns.getString("COLUMN_NAME");
+                String defValue = rsdbmetacolumns.getString("COLUMN_DEF");
+                defaultValueMap.put(colName, defValue);
+            }
+        }
+
         final String sql = "SELECT * FROM " + tableName + " LIMIT 1";
         final StringBuilder sqlBuilder = new StringBuilder();
         sqlBuilder.append("CREATE TABLE IF NOT EXISTS\n");
@@ -209,28 +221,32 @@ public class OiyokanInterDb {
                     sqlBuilder.append("CHAR(" + rsmeta.getColumnDisplaySize(column) + ")");
                     break;
                 case Types.VARCHAR:
-                    if (rsmeta.getColumnDisplaySize(column) > 0) {
+                    if (rsmeta.getColumnDisplaySize(column) > 0
+                            && rsmeta.getColumnDisplaySize(column) != Integer.MAX_VALUE) {
                         sqlBuilder.append("VARCHAR(" + rsmeta.getColumnDisplaySize(column) + ")");
                     } else {
                         sqlBuilder.append("VARCHAR");
                     }
                     break;
                 case Types.LONGVARCHAR:
-                    if (rsmeta.getColumnDisplaySize(column) > 0) {
+                    if (rsmeta.getColumnDisplaySize(column) > 0
+                            && rsmeta.getColumnDisplaySize(column) != Integer.MAX_VALUE) {
                         sqlBuilder.append("LONGVARCHAR(" + rsmeta.getColumnDisplaySize(column) + ")");
                     } else {
-                        sqlBuilder.append("VARCHAR");
+                        sqlBuilder.append("LONGVARCHAR");
                     }
                     break;
                 case Types.LONGNVARCHAR:
-                    if (rsmeta.getColumnDisplaySize(column) > 0) {
+                    if (rsmeta.getColumnDisplaySize(column) > 0
+                            && rsmeta.getColumnDisplaySize(column) != Integer.MAX_VALUE) {
                         sqlBuilder.append("LONGVARCHAR(" + rsmeta.getColumnDisplaySize(column) + ")");
                     } else {
                         sqlBuilder.append("LONGVARCHAR");
                     }
                     break;
                 case Types.CLOB:
-                    if (rsmeta.getColumnDisplaySize(column) > 0) {
+                    if (rsmeta.getColumnDisplaySize(column) > 0
+                            && rsmeta.getColumnDisplaySize(column) != Integer.MAX_VALUE) {
                         sqlBuilder.append("CLOB(" + rsmeta.getColumnDisplaySize(column) + ")");
                     } else {
                         sqlBuilder.append("CLOB");
@@ -240,17 +256,37 @@ public class OiyokanInterDb {
                     if ("UUID".equalsIgnoreCase(rsmeta.getColumnTypeName(column))) {
                         sqlBuilder.append("UUID");
                     } else {
-                        sqlBuilder.append("BINARY");
+                        if (rsmeta.getColumnDisplaySize(column) > 0
+                                && rsmeta.getColumnDisplaySize(column) != Integer.MAX_VALUE) {
+                            sqlBuilder.append("BINARY(" + rsmeta.getColumnDisplaySize(column) + ")");
+                        } else {
+                            sqlBuilder.append("BINARY");
+                        }
                     }
                     break;
                 case Types.VARBINARY:
-                    sqlBuilder.append("VARBINARY");
+                    if (rsmeta.getColumnDisplaySize(column) > 0
+                            && rsmeta.getColumnDisplaySize(column) != Integer.MAX_VALUE) {
+                        sqlBuilder.append("VARBINARY(" + rsmeta.getColumnDisplaySize(column) + ")");
+                    } else {
+                        sqlBuilder.append("VARBINARY");
+                    }
                     break;
                 case Types.LONGVARBINARY:
-                    sqlBuilder.append("LONGVARBINARY");
+                    if (rsmeta.getColumnDisplaySize(column) > 0
+                            && rsmeta.getColumnDisplaySize(column) != Integer.MAX_VALUE) {
+                        sqlBuilder.append("LONGVARBINARY(" + rsmeta.getColumnDisplaySize(column) + ")");
+                    } else {
+                        sqlBuilder.append("LONGVARBINARY");
+                    }
                     break;
                 case Types.BLOB:
-                    sqlBuilder.append("BLOB");
+                    if (rsmeta.getColumnDisplaySize(column) > 0
+                            && rsmeta.getColumnDisplaySize(column) != Integer.MAX_VALUE) {
+                        sqlBuilder.append("BLOB(" + rsmeta.getColumnDisplaySize(column) + ")");
+                    } else {
+                        sqlBuilder.append("BLOB");
+                    }
                     break;
                 case Types.ARRAY:
                     // postgres で発生. 対応しない.
@@ -265,6 +301,11 @@ public class OiyokanInterDb {
                             Locale.ENGLISH);
                     break;
                 }
+
+                if (defaultValueMap.get(columnName) != null) {
+                    sqlBuilder.append(" DEFAULT " + defaultValueMap.get(columnName));
+                }
+
                 if (ResultSetMetaData.columnNoNulls == rsmeta.isNullable(column)) {
                     sqlBuilder.append(" NOT NULL");
                 }
