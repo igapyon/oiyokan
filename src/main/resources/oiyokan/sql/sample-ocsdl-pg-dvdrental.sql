@@ -89,9 +89,9 @@ CREATE TABLE IF NOT EXISTS
     , release_year INT
     , language_id SMALLINT NOT NULL
     , rental_duration SMALLINT NOT NULL
-    , rental_rate DECIMAL(4,2) NOT NULL
+    , rental_rate NUMERIC(4,2) NOT NULL
     , length SMALLINT
-    , replacement_cost DECIMAL(5,2) NOT NULL
+    , replacement_cost NUMERIC(5,2) NOT NULL
     , rating VARCHAR(2147483647)
     , last_update TIMESTAMP NOT NULL
     , PRIMARY KEY(film_id)
@@ -119,7 +119,7 @@ CREATE TABLE IF NOT EXISTS
     , title VARCHAR(255)
     , description VARCHAR(2147483647)
     , category VARCHAR(25)
-    , price DECIMAL(4,2)
+    , price NUMERIC(4,2)
     , length SMALLINT
     , rating VARCHAR(2147483647)
     , actors VARCHAR(2147483647)
@@ -148,7 +148,7 @@ CREATE TABLE IF NOT EXISTS
     , title VARCHAR(255)
     , description VARCHAR(2147483647)
     , category VARCHAR(25)
-    , price DECIMAL(4,2)
+    , price NUMERIC(4,2)
     , length SMALLINT
     , rating VARCHAR(2147483647)
     , actors VARCHAR(2147483647)
@@ -160,7 +160,7 @@ CREATE TABLE IF NOT EXISTS
     , customer_id SMALLINT NOT NULL
     , staff_id SMALLINT NOT NULL
     , rental_id INT NOT NULL
-    , amount DECIMAL(5,2) NOT NULL
+    , amount NUMERIC(5,2) NOT NULL
     , payment_date TIMESTAMP NOT NULL
     , PRIMARY KEY(payment_id)
   );
@@ -180,14 +180,14 @@ CREATE TABLE IF NOT EXISTS
 CREATE TABLE IF NOT EXISTS
   Ocsdlsales_by_film_category (
     category VARCHAR(25)
-    , total_sales DECIMAL
+    , total_sales NUMERIC
   );
 
 CREATE TABLE IF NOT EXISTS
   Ocsdlsales_by_store (
     store VARCHAR(2147483647)
     , manager VARCHAR(2147483647)
-    , total_sales DECIMAL
+    , total_sales NUMERIC
   );
 
 CREATE TABLE IF NOT EXISTS
