@@ -15,7 +15,9 @@
  */
 package jp.oiyokan.basic;
 
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.charset.Charset;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -30,6 +32,7 @@ import org.apache.olingo.commons.api.data.ValueType;
 import org.apache.olingo.commons.api.edm.EdmPrimitiveTypeKind;
 import org.apache.olingo.commons.api.edm.provider.CsdlProperty;
 import org.apache.olingo.server.api.ODataApplicationException;
+import org.springframework.util.StreamUtils;
 
 import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.dto.OiyokanSettingsDatabase;
@@ -93,6 +96,9 @@ public class BasicDbUtil {
     /**
      * CsdlEntityType 生成時にテーブル情報からプロパティを生成.
      * 
+     * see:
+     * https://olingo.apache.org/javadoc/odata4/org/apache/olingo/commons/api/edm/EdmPrimitiveType.html
+     * 
      * @param rsmeta ResultSetMetaDataインスタンス.
      * @param column 項目番号.
      * @return CsdlProperty 情報.
@@ -149,11 +155,14 @@ public class BasicDbUtil {
             break;
         case Types.CHAR:
         case Types.VARCHAR:
+        case Types.CLOB:
             csdlProp.setType(EdmPrimitiveTypeKind.String.getFullQualifiedName());
             csdlProp.setMaxLength(rsmeta.getColumnDisplaySize(column));
             break;
         case Types.BINARY:
         case Types.VARBINARY:
+        case Types.LONGVARBINARY:
+        case Types.BLOB:
             csdlProp.setType(EdmPrimitiveTypeKind.Binary.getFullQualifiedName());
             break;
         default:
@@ -241,12 +250,27 @@ public class BasicDbUtil {
         case Types.VARCHAR:
             prop = new Property(null, columnName, ValueType.PRIMITIVE, rset.getString(column));
             break;
-        // TODO FIXME 未実装
-        // case Types.BINARY:
-        // case Types.VARBINARY:
-        // prop = new Property(null, columnName, ValueType.PRIMITIVE,
-        // rset.getbin.getString(column));
-        // break;
+        case Types.CLOB:
+            try {
+                prop = new Property(null, columnName, ValueType.PRIMITIVE,
+                        StreamUtils.copyToString(rset.getAsciiStream(column), Charset.forName("UTF-8")));
+            } catch (IOException ex) {
+                throw new ODataApplicationException(
+                        "UNEXPECTED: fail to read from CLOB: " + rsmeta.getColumnName(column), 500, Locale.ENGLISH);
+            }
+            break;
+        case Types.BINARY:
+        case Types.VARBINARY:
+        case Types.LONGVARBINARY:
+        case Types.BLOB:
+            try {
+                prop = new Property(null, columnName, ValueType.PRIMITIVE,
+                        StreamUtils.copyToByteArray(rset.getBinaryStream(column)));
+            } catch (IOException ex) {
+                throw new ODataApplicationException(
+                        "UNEXPECTED: fail to read from binary: " + rsmeta.getColumnName(column), 500, Locale.ENGLISH);
+            }
+            break;
         default:
             throw new ODataApplicationException("NOT SUPPORTED: Prop: JDBC Type: " + rsmeta.getColumnType(column), 500,
                     Locale.ENGLISH);

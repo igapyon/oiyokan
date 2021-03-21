@@ -73,7 +73,7 @@ oiyokan プロジェクトは、OData v4 server のシンプルなサンプル(h
 ## TODO
 
 - OData 4.0 の BINARY対応
-- OData 4.0 の Binary と Guid 対応の検討.
+- OData 4.0 の UUID対応
 - LONGVARCHAR, CLOB, BINARY, VARBINARY, LONGVARBINARY, BLOB
 - Postgres dvdrental を利用したテスト。
 - SQL Server Northwind を利用したテスト。
