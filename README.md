@@ -96,7 +96,6 @@ oiyokan プロジェクトは、OData v4 server のシンプルなサンプル(h
 
 ## TODO
 
-- ODataにAPI名とは別に日本語名を入れる方策を調べたい。
 - TODO BasicSqlExprExpander の通過していない箇所のテスト.
 - SQL Server Northwind 的なものを利用したテスト。該当するDBの有無は不明。
 - 認証の各種実験。
