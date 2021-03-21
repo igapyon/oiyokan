@@ -26,6 +26,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.Locale;
+import java.util.UUID;
 
 import org.apache.olingo.commons.api.data.Property;
 import org.apache.olingo.commons.api.data.ValueType;
@@ -166,8 +167,7 @@ public class BasicDbUtil {
         case Types.VARBINARY:
         case Types.LONGVARBINARY:
         case Types.BLOB:
-            if (false && "UUID".equalsIgnoreCase(rsmeta.getColumnTypeName(column))) {
-                // TODO UUIDの朱徳部分で java の UUID として読み込む処理が必要だがこれが未実装。
+            if ("UUID".equalsIgnoreCase(rsmeta.getColumnTypeName(column))) {
                 csdlProp.setType(EdmPrimitiveTypeKind.Guid.getFullQualifiedName());
             } else {
                 csdlProp.setType(EdmPrimitiveTypeKind.Binary.getFullQualifiedName());
@@ -211,60 +211,62 @@ public class BasicDbUtil {
     public static Property resultSet2Property(ResultSet rset, ResultSetMetaData rsmeta, int column,
             OiyokanCsdlEntitySet iyoEntitySet) throws ODataApplicationException, SQLException {
         // TODO FIXME これ ResultSetMetaData ではなくって、別の方法で CSDL でとった方が安全そうだぞ!!!
-        Property prop = null;
         final String columnName = rsmeta.getColumnName(column);
 
         final CsdlProperty csdlProp = iyoEntitySet.getEntityType().getProperty(columnName);
         if ("Edm.SByte".equals(csdlProp.getType())) {
-            prop = new Property(null, columnName, ValueType.PRIMITIVE, rset.getByte(column));
+            return new Property(null, columnName, ValueType.PRIMITIVE, rset.getByte(column));
         } else if ("Edm.Int16".equals(csdlProp.getType())) {
-            prop = new Property(null, columnName, ValueType.PRIMITIVE, rset.getShort(column));
+            return new Property(null, columnName, ValueType.PRIMITIVE, rset.getShort(column));
         } else if ("Edm.Int32".equals(csdlProp.getType())) {
-            prop = new Property(null, columnName, ValueType.PRIMITIVE, rset.getInt(column));
+            return new Property(null, columnName, ValueType.PRIMITIVE, rset.getInt(column));
         } else if ("Edm.Int64".equals(csdlProp.getType())) {
-            prop = new Property(null, columnName, ValueType.PRIMITIVE, rset.getLong(column));
+            return new Property(null, columnName, ValueType.PRIMITIVE, rset.getLong(column));
         } else if ("Edm.Decimal".equals(csdlProp.getType())) {
-            prop = new Property(null, columnName, ValueType.PRIMITIVE, rset.getBigDecimal(column));
+            return new Property(null, columnName, ValueType.PRIMITIVE, rset.getBigDecimal(column));
         } else if ("Edm.Boolean".equals(csdlProp.getType())) {
-            prop = new Property(null, columnName, ValueType.PRIMITIVE, rset.getBoolean(column));
+            return new Property(null, columnName, ValueType.PRIMITIVE, rset.getBoolean(column));
         } else if ("Edm.Single".equals(csdlProp.getType())) {
-            prop = new Property(null, columnName, ValueType.PRIMITIVE, rset.getFloat(column));
+            return new Property(null, columnName, ValueType.PRIMITIVE, rset.getFloat(column));
         } else if ("Edm.Double".equals(csdlProp.getType())) {
-            prop = new Property(null, columnName, ValueType.PRIMITIVE, rset.getDouble(column));
+            return new Property(null, columnName, ValueType.PRIMITIVE, rset.getDouble(column));
         } else if ("Edm.Date".equals(csdlProp.getType())) {
-            prop = new Property(null, columnName, ValueType.PRIMITIVE, rset.getDate(column));
+            return new Property(null, columnName, ValueType.PRIMITIVE, rset.getDate(column));
         } else if ("Edm.DateTimeOffset".equals(csdlProp.getType())) {
-            prop = new Property(null, columnName, ValueType.PRIMITIVE, rset.getTimestamp(column));
+            return new Property(null, columnName, ValueType.PRIMITIVE, rset.getTimestamp(column));
         } else if ("Edm.TimeOfDay".equals(csdlProp.getType())) {
-            prop = new Property(null, columnName, ValueType.PRIMITIVE, rset.getTime(column));
+            return new Property(null, columnName, ValueType.PRIMITIVE, rset.getTime(column));
         } else if ("Edm.String".equals(csdlProp.getType())) {
             // CLOB だとまずいので、やむを得ず rsmeta の情報を利用
             if (Types.CLOB == rsmeta.getColumnType(column)) {
                 try {
-                    prop = new Property(null, columnName, ValueType.PRIMITIVE,
+                    return new Property(null, columnName, ValueType.PRIMITIVE,
                             StreamUtils.copyToString(rset.getAsciiStream(column), Charset.forName("UTF-8")));
                 } catch (IOException ex) {
                     throw new ODataApplicationException(
                             "UNEXPECTED: fail to read from CLOB: " + rsmeta.getColumnName(column), 500, Locale.ENGLISH);
                 }
             } else {
-                prop = new Property(null, columnName, ValueType.PRIMITIVE, rset.getString(column));
+                return new Property(null, columnName, ValueType.PRIMITIVE, rset.getString(column));
             }
         } else if ("Edm.Binary".equals(csdlProp.getType())) {
             try {
-                prop = new Property(null, columnName, ValueType.PRIMITIVE,
+                return new Property(null, columnName, ValueType.PRIMITIVE,
                         StreamUtils.copyToByteArray(rset.getBinaryStream(column)));
             } catch (IOException ex) {
                 throw new ODataApplicationException(
                         "UNEXPECTED: fail to read from binary: " + rsmeta.getColumnName(column), 500, Locale.ENGLISH);
             }
+        } else if ("Edm.Guid".equals(csdlProp.getType())) {
+            // Guid については UUID として読み込む。
+            java.util.UUID look = (UUID) rset.getObject(column);
+            return new Property(null, columnName, ValueType.PRIMITIVE, look);
         } else {
             // ARRAY と OTHER には対応しない。そもそもここ通過しないのじゃないの?
-            throw new ODataApplicationException("UNEXPECTED: fail to read : type["+csdlProp.getType()+"], " + rsmeta.getColumnName(column), 500,
+            throw new ODataApplicationException(
+                    "UNEXPECTED: missing impl: type[" + csdlProp.getType() + "], " + rsmeta.getColumnName(column), 500,
                     Locale.ENGLISH);
         }
-
-        return prop;
     }
 
     /**

@@ -75,7 +75,6 @@ oiyokan プロジェクトは、OData v4 server のシンプルなサンプル(h
 - Postgres dvdrental を利用したテスト。
 - 更新など対応しない命令の場合、適切に例外で異常停止。ODataApplicationExceptionの利用を想定。
 - SQL Server Northwind 的なものを利用したテスト。該当するDBの有無は不明。
-- OData 4.0 の UUID対応。java.util.UUIDに対応して一連が対応できる。
 - 認証の実験。
 - TimeOfDay が未テスト.
 - 実験的に全文検索である `$search` をサポートしたものの、もう少し詳しいところが調べられていない。また全文検索で有効なのはアルファベットのみ。h2 database でここを深掘りしても不毛か?
