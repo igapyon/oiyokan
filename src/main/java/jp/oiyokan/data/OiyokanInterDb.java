@@ -28,7 +28,6 @@ import org.apache.olingo.server.api.ODataApplicationException;
 
 import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.basic.BasicDbUtil;
-import jp.oiyokan.h2.data.OiyokanResourceSqlUtil;
 
 /**
  * Oiyokan (OData v4 server) が動作する際に必要になる内部データおよびサンプルデータをセットアップ.

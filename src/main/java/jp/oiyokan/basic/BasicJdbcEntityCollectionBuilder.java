@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jp.oiyokan.h2.data;
+package jp.oiyokan.basic;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -35,16 +35,16 @@ import org.apache.olingo.server.api.uri.UriInfo;
 import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanCsdlEntitySet;
 import jp.oiyokan.OiyokanEdmProvider;
-import jp.oiyokan.basic.BasicDbUtil;
 import jp.oiyokan.basic.sql.BasicSqlBuilder;
+import jp.oiyokan.h2.data.TinyH2TrialFullTextSearch;
 
 /**
  * 実際に返却するデータ本体を組み上げるクラス.
  * 
  * EDM要素セットを入力に実際のデータを組み上げ.
  */
-public class TinyH2EntityCollectionBuilder {
-    private TinyH2EntityCollectionBuilder() {
+public class BasicJdbcEntityCollectionBuilder {
+    private BasicJdbcEntityCollectionBuilder() {
     }
 
     /**
@@ -184,8 +184,4 @@ public class TinyH2EntityCollectionBuilder {
             throw new ODataRuntimeException("Fail to create ID EntitySet name: " + entitySetName, ex);
         }
     }
-
-    ///////////////////
-    // Mapping
-
 }
