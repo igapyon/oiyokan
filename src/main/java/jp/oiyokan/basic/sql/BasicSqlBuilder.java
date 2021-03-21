@@ -80,7 +80,13 @@ public class BasicSqlBuilder {
                 if (strColumns.length() > 0) {
                     strColumns += ",";
                 }
-                strColumns += prop.getName();
+                // もし空白を含む場合はエスケープ。SQL Serverモードでいく。
+                String columnName = prop.getName();
+                if (columnName.contains(" ")) {
+                    // Postgres ではダブルクオート.
+                    columnName = "\"" + columnName + "\"";
+                }
+                strColumns += columnName;
             }
             sqlInfo.getSqlBuilder().append(strColumns);
         } else {

@@ -175,7 +175,10 @@ public class TinyH2EntityCollectionBuilder {
      */
     public static URI createId(String entitySetName, Object id) {
         try {
-            return new URI(entitySetName + "(" + String.valueOf(id) + ")");
+            String strId = String.valueOf(id);
+            // TODO FIXME ためしにエスケープしてみたが。。。
+            strId = strId.replaceAll("[' '|':']", "-");
+            return new URI(entitySetName + "(" + strId + ")");
         } catch (URISyntaxException ex) {
             throw new ODataRuntimeException("Fail to create ID EntitySet name: " + entitySetName, ex);
         }

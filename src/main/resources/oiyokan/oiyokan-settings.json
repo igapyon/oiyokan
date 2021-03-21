@@ -102,6 +102,141 @@
 			"databaseName": "postgres1",
 			"dbTableNameLocal": "Ocsdlcustomer",
 			"dbTableNameTarget": "customer"
+		},
+		{
+			"name": "sample-pg-dvdrental-customer_list",
+			"description": "Postgres dvdrental サンプルDB: customer_list",
+			"entitySetName": "PgCustomerLists",
+			"entityName": "PgCustomerList",
+			"databaseName": "postgres1",
+			"dbTableNameLocal": "Ocsdlcustomer_list",
+			"dbTableNameTarget": "customer_list"
+		},
+		{
+			"name": "sample-pg-dvdrental-film",
+			"description": "Postgres dvdrental サンプルDB: film",
+			"entitySetName": "PgFilms",
+			"entityName": "PgFilm",
+			"databaseName": "postgres1",
+			"dbTableNameLocal": "Ocsdlfilm",
+			"dbTableNameTarget": "film"
+		},
+		{
+			"name": "sample-pg-dvdrental-film_actor",
+			"description": "Postgres dvdrental サンプルDB: film_actor",
+			"entitySetName": "PgFilmActors",
+			"entityName": "PgFilmActor",
+			"databaseName": "postgres1",
+			"dbTableNameLocal": "Ocsdlfilm_actor",
+			"dbTableNameTarget": "film_actor"
+		},
+		{
+			"name": "sample-pg-dvdrental-film_category",
+			"description": "Postgres dvdrental サンプルDB: film_category",
+			"entitySetName": "PgFilmCategorys",
+			"entityName": "PgFilmCategory",
+			"databaseName": "postgres1",
+			"dbTableNameLocal": "Ocsdlfilm_category",
+			"dbTableNameTarget": "film_category"
+		},
+		{
+			"name": "sample-pg-dvdrental-film_list",
+			"description": "Postgres dvdrental サンプルDB: film_list",
+			"entitySetName": "PgFilmLists",
+			"entityName": "PgFilmList",
+			"databaseName": "postgres1",
+			"dbTableNameLocal": "Ocsdlfilm_list",
+			"dbTableNameTarget": "film_list"
+		},
+		{
+			"name": "sample-pg-dvdrental-inventory",
+			"description": "Postgres dvdrental サンプルDB: inventory",
+			"entitySetName": "PgInventorys",
+			"entityName": "PgInventory",
+			"databaseName": "postgres1",
+			"dbTableNameLocal": "Ocsdlinventory",
+			"dbTableNameTarget": "inventory"
+		},
+		{
+			"name": "sample-pg-dvdrental-language",
+			"description": "Postgres dvdrental サンプルDB: language",
+			"entitySetName": "PgLanguages",
+			"entityName": "PgLanguage",
+			"databaseName": "postgres1",
+			"dbTableNameLocal": "Ocsdllanguage",
+			"dbTableNameTarget": "language"
+		},
+		{
+			"name": "sample-pg-dvdrental-nicer_but_slower_film_list",
+			"description": "Postgres dvdrental サンプルDB: nicer_but_slower_film_list",
+			"entitySetName": "PgNicerButSlowerFilmLists",
+			"entityName": "PgNicerButSlowerFilmList",
+			"databaseName": "postgres1",
+			"dbTableNameLocal": "Ocsdlnicer_but_slower_film_list",
+			"dbTableNameTarget": "nicer_but_slower_film_list"
+		},
+		{
+			"name": "sample-pg-dvdrental-payment",
+			"description": "Postgres dvdrental サンプルDB: payment",
+			"entitySetName": "PgPayments",
+			"entityName": "PgPayment",
+			"databaseName": "postgres1",
+			"dbTableNameLocal": "Ocsdlpayment",
+			"dbTableNameTarget": "payment"
+		},
+		{
+			"name": "sample-pg-dvdrental-rental",
+			"description": "Postgres dvdrental サンプルDB: rental",
+			"entitySetName": "PgRentals",
+			"entityName": "PgRental",
+			"databaseName": "postgres1",
+			"dbTableNameLocal": "Ocsdlrental",
+			"dbTableNameTarget": "rental"
+		},
+		{
+			"name": "sample-pg-dvdrental-sales_by_film_category",
+			"description": "Postgres dvdrental サンプルDB: sales_by_film_category",
+			"entitySetName": "PgSalesByFilmCategorys",
+			"entityName": "PgSalesByFilmCategory",
+			"databaseName": "postgres1",
+			"dbTableNameLocal": "Ocsdlsales_by_film_category",
+			"dbTableNameTarget": "sales_by_film_category"
+		},
+		{
+			"name": "sample-pg-dvdrental-sales_by_store",
+			"description": "Postgres dvdrental サンプルDB: sales_by_store",
+			"entitySetName": "PgSalesByStores",
+			"entityName": "PgSalesByStore",
+			"databaseName": "postgres1",
+			"dbTableNameLocal": "Ocsdlsales_by_store",
+			"dbTableNameTarget": "sales_by_store"
+		},
+		{
+			"name": "sample-pg-dvdrental-staff",
+			"description": "Postgres dvdrental サンプルDB: staff",
+			"entitySetName": "PgStaffs",
+			"entityName": "PgStaff",
+			"databaseName": "postgres1",
+			"dbTableNameLocal": "Ocsdlstaff",
+			"dbTableNameTarget": "staff"
+		},
+		{
+			"name": "sample-pg-dvdrental-staff_list",
+			"description": "Postgres dvdrental サンプルDB: staff_list",
+			"entitySetName": "PgStaffLists",
+			"entityName": "PgStaffList",
+			"databaseName": "postgres1",
+			"dbTableNameLocal": "Ocsdlstaff_list",
+			"dbTableNameTarget": "staff_list"
+		},
+		{
+			"name": "sample-pg-dvdrental-store",
+			"description": "Postgres dvdrental サンプルDB: store",
+			"entitySetName": "PgStores",
+			"entityName": "PgStore",
+			"databaseName": "postgres1",
+			"dbTableNameLocal": "Ocsdlstore",
+			"dbTableNameTarget": "store"
 		}
 	]
 }
