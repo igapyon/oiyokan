@@ -35,6 +35,7 @@ import org.apache.olingo.server.api.ODataApplicationException;
 import org.springframework.util.StreamUtils;
 
 import jp.oiyokan.OiyokanConstants;
+import jp.oiyokan.OiyokanCsdlEntitySet;
 import jp.oiyokan.dto.OiyokanSettingsDatabase;
 
 /**
@@ -207,73 +208,49 @@ public class BasicDbUtil {
      * @return 作成された Property
      * @throws SQLException SQL例外が発生した場合.
      */
-    public static Property resultSet2Property(ResultSet rset, ResultSetMetaData rsmeta, int column)
-            throws ODataApplicationException, SQLException {
+    public static Property resultSet2Property(ResultSet rset, ResultSetMetaData rsmeta, int column,
+            OiyokanCsdlEntitySet iyoEntitySet) throws ODataApplicationException, SQLException {
         // TODO FIXME これ ResultSetMetaData ではなくって、別の方法で CSDL でとった方が安全そうだぞ!!!
         Property prop = null;
         final String columnName = rsmeta.getColumnName(column);
-        switch (rsmeta.getColumnType(column)) {
-        case Types.TINYINT:
+
+        final CsdlProperty csdlProp = iyoEntitySet.getEntityType().getProperty(columnName);
+        if ("Edm.SByte".equals(csdlProp.getType())) {
             prop = new Property(null, columnName, ValueType.PRIMITIVE, rset.getByte(column));
-            break;
-        case Types.SMALLINT:
+        } else if ("Edm.Int16".equals(csdlProp.getType())) {
             prop = new Property(null, columnName, ValueType.PRIMITIVE, rset.getShort(column));
-            break;
-        case Types.INTEGER:
+        } else if ("Edm.Int32".equals(csdlProp.getType())) {
             prop = new Property(null, columnName, ValueType.PRIMITIVE, rset.getInt(column));
-            break;
-        case Types.BIGINT:
+        } else if ("Edm.Int64".equals(csdlProp.getType())) {
             prop = new Property(null, columnName, ValueType.PRIMITIVE, rset.getLong(column));
-            break;
-        case Types.DECIMAL:
+        } else if ("Edm.Decimal".equals(csdlProp.getType())) {
             prop = new Property(null, columnName, ValueType.PRIMITIVE, rset.getBigDecimal(column));
-            break;
-        case Types.NUMERIC:
-            // postgres で発生.
-            prop = new Property(null, columnName, ValueType.PRIMITIVE, rset.getBigDecimal(column));
-            break;
-        case Types.BOOLEAN:
+        } else if ("Edm.Boolean".equals(csdlProp.getType())) {
             prop = new Property(null, columnName, ValueType.PRIMITIVE, rset.getBoolean(column));
-            break;
-        case Types.BIT:
-            // postgres で発生.
-            prop = new Property(null, columnName, ValueType.PRIMITIVE, rset.getBoolean(column));
-            break;
-        case Types.REAL:
+        } else if ("Edm.Single".equals(csdlProp.getType())) {
             prop = new Property(null, columnName, ValueType.PRIMITIVE, rset.getFloat(column));
-            break;
-        case Types.DOUBLE:
+        } else if ("Edm.Double".equals(csdlProp.getType())) {
             prop = new Property(null, columnName, ValueType.PRIMITIVE, rset.getDouble(column));
-            break;
-        case Types.DATE:
+        } else if ("Edm.Date".equals(csdlProp.getType())) {
             prop = new Property(null, columnName, ValueType.PRIMITIVE, rset.getDate(column));
-            break;
-        case Types.TIMESTAMP:
+        } else if ("Edm.DateTimeOffset".equals(csdlProp.getType())) {
             prop = new Property(null, columnName, ValueType.PRIMITIVE, rset.getTimestamp(column));
-            break;
-        case Types.TIME:
+        } else if ("Edm.TimeOfDay".equals(csdlProp.getType())) {
             prop = new Property(null, columnName, ValueType.PRIMITIVE, rset.getTime(column));
-            break;
-        case Types.CHAR:
-        case Types.VARCHAR:
-        case Types.LONGVARCHAR:
-        case Types.LONGNVARCHAR:
-            // TODO UUIDの朱徳部分で java の UUID として読み込む処理が必要だがこれが未実装。
-            prop = new Property(null, columnName, ValueType.PRIMITIVE, rset.getString(column));
-            break;
-        case Types.CLOB:
-            try {
-                prop = new Property(null, columnName, ValueType.PRIMITIVE,
-                        StreamUtils.copyToString(rset.getAsciiStream(column), Charset.forName("UTF-8")));
-            } catch (IOException ex) {
-                throw new ODataApplicationException(
-                        "UNEXPECTED: fail to read from CLOB: " + rsmeta.getColumnName(column), 500, Locale.ENGLISH);
+        } else if ("Edm.String".equals(csdlProp.getType())) {
+            // CLOB だとまずいので、やむを得ず rsmeta の情報を利用
+            if (Types.CLOB == rsmeta.getColumnType(column)) {
+                try {
+                    prop = new Property(null, columnName, ValueType.PRIMITIVE,
+                            StreamUtils.copyToString(rset.getAsciiStream(column), Charset.forName("UTF-8")));
+                } catch (IOException ex) {
+                    throw new ODataApplicationException(
+                            "UNEXPECTED: fail to read from CLOB: " + rsmeta.getColumnName(column), 500, Locale.ENGLISH);
+                }
+            } else {
+                prop = new Property(null, columnName, ValueType.PRIMITIVE, rset.getString(column));
             }
-            break;
-        case Types.BINARY:
-        case Types.VARBINARY:
-        case Types.LONGVARBINARY:
-        case Types.BLOB:
+        } else if ("Edm.Binary".equals(csdlProp.getType())) {
             try {
                 prop = new Property(null, columnName, ValueType.PRIMITIVE,
                         StreamUtils.copyToByteArray(rset.getBinaryStream(column)));
@@ -281,17 +258,12 @@ public class BasicDbUtil {
                 throw new ODataApplicationException(
                         "UNEXPECTED: fail to read from binary: " + rsmeta.getColumnName(column), 500, Locale.ENGLISH);
             }
-            break;
-        case Types.ARRAY:
-            throw new ODataApplicationException("NOT SUPPORTED: fail to read ARRAY: " + rsmeta.getColumnName(column),
-                    500, Locale.ENGLISH);
-        case Types.OTHER:
-            throw new ODataApplicationException("NOT SUPPORTED: fail to read OTHER: " + rsmeta.getColumnName(column),
-                    500, Locale.ENGLISH);
-        default:
-            throw new ODataApplicationException("NOT SUPPORTED: Prop: JDBC Type: " + rsmeta.getColumnType(column), 500,
+        } else {
+            // ARRAY と OTHER には対応しない。そもそもここ通過しないのじゃないの?
+            throw new ODataApplicationException("UNEXPECTED: fail to read : type["+csdlProp.getType()+"], " + rsmeta.getColumnName(column), 500,
                     Locale.ENGLISH);
         }
+
         return prop;
     }
 

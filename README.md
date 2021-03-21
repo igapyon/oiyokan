@@ -72,7 +72,6 @@ oiyokan プロジェクトは、OData v4 server のシンプルなサンプル(h
 
 ## TODO
 
-- TODO FIXME ResultSetMetaData ではなくって、別の方法で CSDL でとった方が安全そうだぞ!!!
 - Postgres dvdrental を利用したテスト。
 - 更新など対応しない命令の場合、適切に例外で異常停止。ODataApplicationExceptionの利用を想定。
 - SQL Server Northwind 的なものを利用したテスト。該当するDBの有無は不明。

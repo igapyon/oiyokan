@@ -138,7 +138,7 @@ public class TinyH2EntityCollectionBuilder {
                     }
                     final Entity ent = new Entity();
                     for (int column = 1; column <= rsmeta.getColumnCount(); column++) {
-                        Property prop = BasicDbUtil.resultSet2Property(rset, rsmeta, column);
+                        Property prop = BasicDbUtil.resultSet2Property(rset, rsmeta, column, eSetTarget);
                         ent.addProperty(prop);
                     }
 
