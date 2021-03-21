@@ -22,7 +22,9 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import org.apache.olingo.server.api.ODataApplicationException;
 
@@ -130,6 +132,16 @@ public class OiyokanInterDb {
      * @throws SQLException
      */
     public static String generateCreateOcsdlDdl(Connection connTargetDb, String tableName) throws SQLException {
+        final Map<String, String> defaultValueMap = new HashMap<>();
+        {
+            final ResultSet rsdbmetacolumns = connTargetDb.getMetaData().getColumns(null, null, tableName, "%");
+            for (; rsdbmetacolumns.next();) {
+                String colName = rsdbmetacolumns.getString("COLUMN_NAME");
+                String defValue = rsdbmetacolumns.getString("COLUMN_DEF");
+                defaultValueMap.put(colName, defValue);
+            }
+        }
+
         final String sql = "SELECT * FROM " + tableName + " LIMIT 1";
         final StringBuilder sqlBuilder = new StringBuilder();
         sqlBuilder.append("CREATE TABLE IF NOT EXISTS\n");
@@ -265,6 +277,11 @@ public class OiyokanInterDb {
                             Locale.ENGLISH);
                     break;
                 }
+
+                if (defaultValueMap.get(columnName) != null) {
+                    sqlBuilder.append(" DEFAULT " + defaultValueMap.get(columnName));
+                }
+
                 if (ResultSetMetaData.columnNoNulls == rsmeta.isNullable(column)) {
                     sqlBuilder.append(" NOT NULL");
                 }
