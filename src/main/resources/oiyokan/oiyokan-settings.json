@@ -33,13 +33,22 @@
 		},
 		{
 			"name": "oiyokan-test-database",
-			"description": "Oiyokanの単体テスト用に利用するエンティティセット。この設定を不用意に変更するとビルドが失敗する。",
+			"description": "Oiyokan単体テスト用エンティティセット。MyProducts。この設定を不用意に変更するとビルドが失敗する。",
 			"entitySetName": "MyProducts",
 			"entityName": "MyProduct",
 			"databaseName": "oiyokan-internal",
 			"dbTableNameLocal": "OcsdlMyProducts",
 			"dbTableNameTarget": "MyProducts"
 		},
+        {
+            "name": "oiyokan-test-product-fulltext",
+			"description": "Oiyokan単体テスト用エンティティセット。MyProducts。この設定を不用意に変更するとビルドが失敗する。",
+            "entitySetName": "MyProductFulls",
+            "entityName": "MyProductFull",
+            "databaseName": "oiyokan-internal",
+            "dbTableNameLocal": "OcsdlMyProductFulls",
+            "dbTableNameTarget": "MyProductFulls"
+        },
 		{
 			"name": "sample-pg-dvdrental-actor",
 			"description": "Postgres dvdrental サンプルDB: actor",

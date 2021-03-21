@@ -27,7 +27,7 @@ import jp.oiyokan.dto.OiyokanSettingsDatabase;
 /**
  * 内部データベース用のCSDL用内部テーブルのDDLを生成: postgres 版.
  */
-class SampleGenOcsdlPgTest {
+class SampleGen11OcsdlPgTest {
     /**
      * postgres 接続環境が適切に存在する場合にのみ JUnit を実行。
      */
