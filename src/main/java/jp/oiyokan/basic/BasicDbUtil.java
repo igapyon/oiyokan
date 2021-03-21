@@ -184,20 +184,17 @@ public class BasicDbUtil {
                     Locale.ENGLISH);
         }
 
-        if (false) {
-            // TODO FIXME いまここを有効にすると、なんとエラーが出てしまう。
-            // NULL許容かどうか。不明な場合は設定しない。
-            switch (rsmeta.isNullable(column)) {
-            case ResultSetMetaData.columnNullable:
-                csdlProp.setNullable(true);
-                break;
-            case ResultSetMetaData.columnNoNulls:
-                csdlProp.setNullable(false);
-                break;
-            default:
-                // なにもしない.
-                break;
-            }
+        // NULL許容かどうか。不明な場合は設定しない。
+        switch (rsmeta.isNullable(column)) {
+        case ResultSetMetaData.columnNullable:
+            csdlProp.setNullable(true);
+            break;
+        case ResultSetMetaData.columnNoNulls:
+            csdlProp.setNullable(false);
+            break;
+        default:
+            // なにもしない.
+            break;
         }
 
         // TODO デフォルト値の取得???
