@@ -96,8 +96,6 @@ oiyokan プロジェクトは、OData v4 server のシンプルなサンプル(h
 
 ## TODO
 
-- OiyokanNamingUtil のマッピング表を JSONファイルから読み込む機能の実装。
-- 日本語項目名の通過有無を確認。(おそらくXSDスキーマが許容しない)。そうである場合、データベースとODataとの間に名称マッピング表として日本語項目マップ導入が必要。
 - ODataにAPI名とは別に日本語名を入れる方策を調べたい。
 - TODO BasicSqlExprExpander の通過していない箇所のテスト.
 - SQL Server Northwind 的なものを利用したテスト。該当するDBの有無は不明。
