@@ -53,6 +53,7 @@ public class BasicJdbcEntityCollectionBuilder {
      * @param edmEntitySet EDM要素セット.
      * @param uriInfo      SQL構築のデータ構造.
      * @return 要素コレクション.
+     * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
     public static EntityCollection build(EdmEntitySet edmEntitySet, UriInfo uriInfo) throws ODataApplicationException {
         final EntityCollection eCollection = new EntityCollection();
@@ -78,6 +79,7 @@ public class BasicJdbcEntityCollectionBuilder {
             return eCollection;
         }
 
+        // 対応しない処理を拒絶するための記述.
         if (uriInfo.getApplyOption() != null) {
             System.err.println("NOT SUPPORTED: URI: $apply");
             throw new ODataApplicationException("NOT SUPPORTED: URI: $apply", 500, Locale.ENGLISH);
@@ -103,91 +105,104 @@ public class BasicJdbcEntityCollectionBuilder {
                 return eCollection;
             }
 
-            {
-                // 件数をカウントして設定。
-                BasicSqlBuilder tinySql = new BasicSqlBuilder();
-                tinySql.getSqlInfo().setEntitySet((OiyokanCsdlEntitySet) eSetTarget);
-                tinySql.getSelectCountQuery(uriInfo);
-                final String sql = tinySql.getSqlInfo().getSqlBuilder().toString();
-
-                if (OiyokanConstants.IS_TRACE_ODATA_V4)
-                    System.err.println("OData v4: TRACE: SQL: " + sql);
-
-                int countWithWhere = 0;
-                try (var stmt = connTargetDb.prepareStatement(sql)) {
-                    int column = 1;
-                    for (Object look : tinySql.getSqlInfo().getSqlParamList()) {
-                        BasicDbUtil.bindPreparedParameter(stmt, column++, look);
-                    }
-
-                    stmt.executeQuery();
-                    var rset = stmt.getResultSet();
-                    rset.next();
-                    countWithWhere = rset.getInt(1);
-                } catch (SQLException ex) {
-                    System.err.println("Fail to execute count SQL: " + sql + ", " + ex.toString());
-                    throw new ODataApplicationException("Fail to execute count SQL: " + sql, 500, Locale.ENGLISH, ex);
-                }
-                eCollection.setCount(countWithWhere);
+            // 件数カウントがONの場合はカウント処理を実行。
+            if (uriInfo.getCountOption() != null && uriInfo.getCountOption().getValue()) {
+                processCountQuery(eSetTarget, uriInfo, connTargetDb, eCollection);
             }
 
-            BasicSqlBuilder tinySql = new BasicSqlBuilder();
-            tinySql.getSqlInfo().setEntitySet((OiyokanCsdlEntitySet) eSetTarget);
-
-            tinySql.getSelectQuery(uriInfo, eSetTarget.getSettingsDatabase());
-            final String sql = tinySql.getSqlInfo().getSqlBuilder().toString();
-
-            if (OiyokanConstants.IS_TRACE_ODATA_V4)
-                System.err.println("OData v4: TRACE: SQL: " + sql);
-
-            try (var stmt = connTargetDb.prepareStatement(sql)) {
-                int idxColumn = 1;
-                for (Object look : tinySql.getSqlInfo().getSqlParamList()) {
-                    BasicDbUtil.bindPreparedParameter(stmt, idxColumn++, look);
-                }
-
-                stmt.executeQuery();
-                var rset = stmt.getResultSet();
-                ResultSetMetaData rsmeta = null;
-                for (; rset.next();) {
-                    if (rsmeta == null) {
-                        rsmeta = rset.getMetaData();
-                    }
-                    final Entity ent = new Entity();
-                    for (int column = 1; column <= rsmeta.getColumnCount(); column++) {
-                        Property prop = BasicDbUtil.resultSet2Property(rset, rsmeta, column, eSetTarget);
-                        ent.addProperty(prop);
-                    }
-
-                    // キーが存在する場合は、IDとして設定。
-                    if (eSetTarget.getEntityType().getKey().size() > 0) {
-                        OiyokanCsdlEntitySet iyoEntitySet = (OiyokanCsdlEntitySet) eSetTarget;
-                        String keyValue = "";
-                        for (CsdlPropertyRef look : iyoEntitySet.getEntityType().getKey()) {
-                            if (keyValue.length() > 0) {
-                                keyValue += "-";
-                            }
-
-                            String idVal = rset.getString(look.getName());
-                            // 未整理の事項。キーの値をエスケープすべきかどうか.
-                            // 現状、スペースとコロンはアンダースコアに置き換え.
-                            idVal = idVal.replaceAll("[' '|':']", "_");
-                            keyValue += idVal;
-                        }
-                        ent.setId(createId(eSetTarget.getName(), keyValue));
-                    }
-
-                    eCollection.getEntities().add(ent);
-                }
-            } catch (SQLException ex) {
-                System.err.println("Fail to execute SQL: " + sql + ", " + ex.toString());
-                throw new ODataApplicationException("Fail to execute SQL: " + sql, 500, Locale.ENGLISH, ex);
-            }
+            // 実際のデータ取得処理を実行。
+            processCollectionQuery(eSetTarget, uriInfo, connTargetDb, eCollection);
 
             return eCollection;
         } catch (SQLException ex) {
             System.err.println("Fail on database connection SQL: " + ex.toString());
             throw new ODataApplicationException("UNEXPECTED: Fail on database connection ", 500, Locale.ENGLISH, ex);
+        }
+    }
+
+    private static void processCountQuery(OiyokanCsdlEntitySet eSetTarget, UriInfo uriInfo, Connection connTargetDb,
+            EntityCollection eCollection) throws ODataApplicationException {
+        // 件数をカウントして設定。
+        BasicSqlBuilder tinySql = new BasicSqlBuilder();
+        tinySql.getSqlInfo().setEntitySet((OiyokanCsdlEntitySet) eSetTarget);
+        tinySql.getSelectCountQuery(uriInfo);
+        final String sql = tinySql.getSqlInfo().getSqlBuilder().toString();
+
+        if (OiyokanConstants.IS_TRACE_ODATA_V4)
+            System.err.println("OData v4: TRACE: SQL: " + sql);
+
+        int countWithWhere = 0;
+        try (var stmt = connTargetDb.prepareStatement(sql)) {
+            int column = 1;
+            for (Object look : tinySql.getSqlInfo().getSqlParamList()) {
+                BasicDbUtil.bindPreparedParameter(stmt, column++, look);
+            }
+
+            stmt.executeQuery();
+            var rset = stmt.getResultSet();
+            rset.next();
+            countWithWhere = rset.getInt(1);
+        } catch (SQLException ex) {
+            System.err.println("Fail to execute count SQL: " + sql + ", " + ex.toString());
+            throw new ODataApplicationException("Fail to execute count SQL: " + sql, 500, Locale.ENGLISH, ex);
+        }
+        // 取得できたレコード件数を設定.
+        eCollection.setCount(countWithWhere);
+    }
+
+    private static void processCollectionQuery(OiyokanCsdlEntitySet eSetTarget, UriInfo uriInfo,
+            Connection connTargetDb, EntityCollection eCollection) throws ODataApplicationException {
+        BasicSqlBuilder tinySql = new BasicSqlBuilder();
+        tinySql.getSqlInfo().setEntitySet((OiyokanCsdlEntitySet) eSetTarget);
+
+        tinySql.getSelectQuery(uriInfo, eSetTarget.getSettingsDatabase());
+        final String sql = tinySql.getSqlInfo().getSqlBuilder().toString();
+
+        if (OiyokanConstants.IS_TRACE_ODATA_V4)
+            System.err.println("OData v4: TRACE: SQL: " + sql);
+
+        try (var stmt = connTargetDb.prepareStatement(sql)) {
+            int idxColumn = 1;
+            for (Object look : tinySql.getSqlInfo().getSqlParamList()) {
+                BasicDbUtil.bindPreparedParameter(stmt, idxColumn++, look);
+            }
+
+            stmt.executeQuery();
+            var rset = stmt.getResultSet();
+            ResultSetMetaData rsmeta = null;
+            for (; rset.next();) {
+                if (rsmeta == null) {
+                    rsmeta = rset.getMetaData();
+                }
+                final Entity ent = new Entity();
+                for (int column = 1; column <= rsmeta.getColumnCount(); column++) {
+                    Property prop = BasicDbUtil.resultSet2Property(rset, rsmeta, column, eSetTarget);
+                    ent.addProperty(prop);
+                }
+
+                // キーが存在する場合は、IDとして設定。
+                if (eSetTarget.getEntityType().getKey().size() > 0) {
+                    OiyokanCsdlEntitySet iyoEntitySet = (OiyokanCsdlEntitySet) eSetTarget;
+                    String keyValue = "";
+                    for (CsdlPropertyRef look : iyoEntitySet.getEntityType().getKey()) {
+                        if (keyValue.length() > 0) {
+                            keyValue += "-";
+                        }
+
+                        String idVal = rset.getString(look.getName());
+                        // 未整理の事項。キーの値をエスケープすべきかどうか.
+                        // 現状、スペースとコロンはアンダースコアに置き換え.
+                        idVal = idVal.replaceAll("[' '|':']", "_");
+                        keyValue += idVal;
+                    }
+                    ent.setId(createId(eSetTarget.getName(), keyValue));
+                }
+
+                eCollection.getEntities().add(ent);
+            }
+        } catch (SQLException ex) {
+            System.err.println("Fail to execute SQL: " + sql + ", " + ex.toString());
+            throw new ODataApplicationException("Fail to execute SQL: " + sql, 500, Locale.ENGLISH, ex);
         }
     }
 

@@ -70,6 +70,7 @@ public class BasicSqlExprExpander {
      * フィルタを展開。WHEREになる。
      * 
      * @param filterExpression フィルタ表現.
+     * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
     public void expand(Expression filterExpression) throws ODataApplicationException {
         if (filterExpression instanceof AliasImpl) {

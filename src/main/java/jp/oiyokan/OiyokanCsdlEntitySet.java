@@ -34,7 +34,9 @@ public class OiyokanCsdlEntitySet extends CsdlEntitySet {
      */
     public enum DatabaseType {
         /** h2 database */
-        H2, PG
+        H2,
+        /** postgres */
+        PG
     };
 
     /**
@@ -48,10 +50,20 @@ public class OiyokanCsdlEntitySet extends CsdlEntitySet {
 
     private OiyokanSettingsDatabase settingsDatabase = null;
 
+    /**
+     * EntitySet設定情報を取得.
+     * 
+     * @return EntitySet設定情報.
+     */
     public OiyokanSettingsEntitySet getSettingsEntitySet() {
         return settingsEntitySet;
     }
 
+    /**
+     * Database設定情報を取得.
+     * 
+     * @return Database設定情報.
+     */
     public OiyokanSettingsDatabase getSettingsDatabase() {
         return settingsDatabase;
     }
@@ -89,11 +101,8 @@ public class OiyokanCsdlEntitySet extends CsdlEntitySet {
      * エンティティ情報.
      * 
      * @param containerInfo     コンテナ情報.
-     * @param entitySetName     MyProducts 相当.
-     * @param entityName        MyProduct 相当.
-     * @param dbType            データベースタイプ.
-     * @param dbTableNameLocal  ローカルのデータベース上のテーブル名.
-     * @param dbTableNameTarget ターゲットのデータベース上のテーブル名. 通常は dbTableNameLocalと一致.
+     * @param settingsEntitySet EntitySetの設定.
+     * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
     public OiyokanCsdlEntitySet(OiyokanCsdlEntityContainer containerInfo, OiyokanSettingsEntitySet settingsEntitySet)
             throws ODataApplicationException {
@@ -139,6 +148,7 @@ public class OiyokanCsdlEntitySet extends CsdlEntitySet {
      * エンティティのFQNを取得.
      * 
      * @return エンティティのFQN(完全修飾名).
+     * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
     public FullQualifiedName getEntityNameFqnIyo() throws ODataApplicationException {
         return new FullQualifiedName(csdlEntityContainer.getNamespaceIyo(), getEntityNameIyo());

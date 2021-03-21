@@ -29,13 +29,15 @@ import org.springframework.util.StreamUtils;
  */
 public class OiyokanResourceSqlUtil {
     /**
-     * resources フォルダから設定ファイルを読み込み.
+     * 指定されたSQLリソースからSQL文の配列を読み込み.
      * 
-     * @throws ODataApplicationException
+     * @param resourceSqlFileName リソースのSQLファイルの名前.
+     * @return 読み込まれて分解されたSQL文の配列.
+     * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
-    public static String[] loadOiyokanResourceSql(final String resourceName) throws ODataApplicationException {
+    public static String[] loadOiyokanResourceSql(final String resourceSqlFileName) throws ODataApplicationException {
         // resources から読み込み。
-        final ClassPathResource cpres = new ClassPathResource(resourceName);
+        final ClassPathResource cpres = new ClassPathResource(resourceSqlFileName);
         try (InputStream inStream = cpres.getInputStream()) {
             String sqlresources = StreamUtils.copyToString(inStream, Charset.forName("UTF-8"));
             final String[] sqls = sqlresources.split(";");
