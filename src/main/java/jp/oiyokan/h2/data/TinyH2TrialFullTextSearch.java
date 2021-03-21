@@ -19,12 +19,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Locale;
 
 import org.apache.olingo.commons.api.data.Entity;
 import org.apache.olingo.commons.api.data.EntityCollection;
 import org.apache.olingo.commons.api.data.Property;
 import org.apache.olingo.commons.api.data.ValueType;
 import org.apache.olingo.commons.api.edm.EdmEntitySet;
+import org.apache.olingo.server.api.ODataApplicationException;
 import org.apache.olingo.server.api.uri.UriInfo;
 import org.apache.olingo.server.core.uri.queryoption.SearchOptionImpl;
 
@@ -37,12 +39,14 @@ public class TinyH2TrialFullTextSearch {
     /**
      * 全文検索を処理.
      * 
-     * @param conn         データベース接続.
+     * @param connTargetDb データベース接続.
      * @param edmEntitySet EdmEntitySet情報.
      * @param uriInfo      URI情報.
      * @param eCollection  検索結果の出力先.
+     * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
-    public void process(Connection conn, EdmEntitySet edmEntitySet, UriInfo uriInfo, EntityCollection eCollection) {
+    public void process(Connection connTargetDb, EdmEntitySet edmEntitySet, UriInfo uriInfo,
+            EntityCollection eCollection) throws ODataApplicationException {
         try {
             SearchOptionImpl searchOpt = (SearchOptionImpl) uriInfo.getSearchOption();
 
@@ -60,7 +64,7 @@ public class TinyH2TrialFullTextSearch {
             }
 
             String sql = "SELECT QUERY,SCORE FROM FT_SEARCH(?, " + topValue + ", " + offsetValue + ")";
-            try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            try (PreparedStatement stmt = connTargetDb.prepareStatement(sql)) {
                 if (OiyokanConstants.IS_TRACE_ODATA_V4)
                     System.err.println("OData v4: TRACE: $search: SQL: " + sql);
 
@@ -69,8 +73,8 @@ public class TinyH2TrialFullTextSearch {
                 for (; rset.next();) {
                     String valQuery = rset.getString(1);
                     // System.err.println("QUERY:" + valQuery);
-                    // TODO , FIXME ハードコード
-                    if (valQuery.contains("MyProducts") == false) {
+                    // TODO , FIXME ハードコード。なぜなら現状このテーブルにしか全文検索が対応しない。
+                    if (valQuery.contains("MyProductFulls") == false) {
                         continue;
                     }
 
@@ -78,9 +82,9 @@ public class TinyH2TrialFullTextSearch {
 
                     // TODO たぶんこれだとだめ。検索結果のIDから、select から与えられた指定の項目を取る必要あり。
                     // ただし、h2としての故記述は正しい。
-                    try (PreparedStatement stmt2 = conn.prepareStatement("SELECT ID FROM " + valQuery)) {
+                    try (PreparedStatement stmt2 = connTargetDb.prepareStatement("SELECT ID FROM " + valQuery)) {
                         ResultSet rset2 = stmt2.executeQuery();
-                        // TODO 戻り値チェック.
+                        // TODO 戻り値チェックが実装されていない.
                         rset2.next();
 
                         ent.addProperty( //
@@ -91,8 +95,8 @@ public class TinyH2TrialFullTextSearch {
                 }
             }
         } catch (SQLException ex) {
-            ex.printStackTrace();
-            throw new IllegalArgumentException("Unexpected: SQL Error:" + ex.toString(), ex);
+            System.err.println("UNEXPECTED: SQL related Error: " + ex.toString());
+            throw new ODataApplicationException("UNEXPECTED: SQL related Error", 500, Locale.ENGLISH);
         }
     }
 }

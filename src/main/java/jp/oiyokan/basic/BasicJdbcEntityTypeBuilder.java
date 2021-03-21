@@ -23,14 +23,19 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.olingo.commons.api.edm.provider.CsdlEntityType;
 import org.apache.olingo.commons.api.edm.provider.CsdlProperty;
 import org.apache.olingo.commons.api.edm.provider.CsdlPropertyRef;
+import org.apache.olingo.server.api.ODataApplicationException;
 
 import jp.oiyokan.OiyokanConstants;
+import jp.oiyokan.OiyokanCsdlEntityContainer;
 import jp.oiyokan.OiyokanCsdlEntitySet;
-import jp.oiyokan.h2.data.TinyH2DbSample;
+import jp.oiyokan.data.OiyokanInterDb;
+import jp.oiyokan.dto.OiyokanSettingsDatabase;
+import jp.oiyokan.settings.OiyokanSettingsUtil;
 
 /**
  * 典型的で基本的な JDBC処理を利用した EntityType を構築します。
@@ -57,12 +62,18 @@ public class BasicJdbcEntityTypeBuilder {
      * EntityType を取得.
      *
      * @return 取得された EntityType.
+     * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
-    public CsdlEntityType getEntityType() {
+    public CsdlEntityType getEntityType() throws ODataApplicationException {
         // インメモリ作業データベースに接続.
-        try (Connection conn = BasicDbUtil.getInternalConnection()) {
+        // EntityTypeはインメモリ内部データベースの情報をもとに構築.
+        OiyokanSettingsDatabase settingsInternalDatabase = OiyokanSettingsUtil
+                .getOiyokanInternalDatabase(OiyokanCsdlEntityContainer.getOiyokanSettingsInstance());
+
+        try (Connection connInterDb = BasicDbUtil.getConnection(settingsInternalDatabase)) {
             // テーブルをセットアップ.
-            TinyH2DbSample.createTable(conn);
+            // 特殊例. createDataをスキップ.
+            OiyokanInterDb.setupTable(connInterDb);
 
             // CSDL要素型として情報を組み上げ.
             CsdlEntityType entityType = new CsdlEntityType();
@@ -74,8 +85,10 @@ public class BasicJdbcEntityTypeBuilder {
 
             // SELECT * について、この箇所のみ記述を許容。
             // DatabaseMetaData では取りづらい情報があるためこちらを採用。
-            try (PreparedStatement stmt = conn
-                    .prepareStatement("SELECT * FROM " + entitySet.getDbTableNameLocalIyo() + " LIMIT 1")) {
+            final String sql = "SELECT * FROM " + entitySet.getDbTableNameLocalIyo() + " LIMIT 1";
+            if (OiyokanConstants.IS_TRACE_ODATA_V4)
+                System.err.println("OData v4: TRACE: Entity: SQL: " + sql);
+            try (PreparedStatement stmt = connInterDb.prepareStatement(sql)) {
                 ResultSetMetaData rsmeta = stmt.getMetaData();
                 final int columnCount = rsmeta.getColumnCount();
                 for (int column = 1; column <= columnCount; column++) {
@@ -84,7 +97,7 @@ public class BasicJdbcEntityTypeBuilder {
 
                 // テーブルのキー情報
                 final List<CsdlPropertyRef> keyRefList = new ArrayList<>();
-                final DatabaseMetaData dbmeta = conn.getMetaData();
+                final DatabaseMetaData dbmeta = connInterDb.getMetaData();
                 final ResultSet rsKey = dbmeta.getPrimaryKeys(null, null, entitySet.getDbTableNameLocalIyo());
                 for (; rsKey.next();) {
                     // キー名は利用しない: rsKey.getString("PK_NAME");
@@ -102,8 +115,8 @@ public class BasicJdbcEntityTypeBuilder {
             entitySet.setEntityType(entityType);
             return entityType;
         } catch (SQLException ex) {
-            ex.printStackTrace();
-            throw new IllegalArgumentException("DB meta 取得失敗:" + ex.toString(), ex);
+            System.err.println("UNEXPECTED: Fail to get database meta: " + ex.toString());
+            throw new ODataApplicationException("UNEXPECTED: Fail to get database meta", 500, Locale.ENGLISH);
         }
     }
 }

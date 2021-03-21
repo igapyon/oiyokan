@@ -45,8 +45,32 @@ http://localhost:8080/odata4.svc/
 ### internal version
 
 ```sh
-http://localhost:8080/odata4.svc/ODataAppInfos
+http://localhost:8080/odata4.svc/ODataAppInfos?$format=JSON
 ```
+
+# How to setup OData v4 setting
+
+## oiyokan-settings.json の設定を更新
+
+Oiyokan の設定ファイルを変更して、接続したいデータベース情報を記述します。
+
+```sh
+src/main/resources/oiyokan/oiyokan-settings.json
+```
+
+## oiyokan-targetdb.sql を設定
+
+oiyokan-targetdb.sql ファイルに ターゲットDBの Ocsdl情報をあらわす SQL/DDL文を記述.
+
+```sh
+src/main/resources/oiyokan/sql/oiyokan-targetdb.sql
+```
+
+記述内容については sample-ocsdl-pg-dvdrental.sql を参考にする。
+
+## 設定変更後は Spring Boot を再起動
+
+Spring Boot を再起動することにより設定情報の更新を反映。
 
 # OData v4 server のサンプル(simple-odata4) を祖先
 
@@ -72,10 +96,9 @@ oiyokan プロジェクトは、OData v4 server のシンプルなサンプル(h
 
 ## TODO
 
-- PreparedStatementの入力の型対応に先立ち、引数の型バリエーションを追加。特に日付・日時絡みは調整が必要な見込み。
-- PreparedStatementの入力の型対応の追加.
-- 実行時エラーを調整すること。現在 IllegalArgumentExceptionでそのまま500になったうえにエラー内容が見えてしまう。ODataApplicationException に対応することが第一案.
-- 対応しない命令の場合、適切に例外で異常停止。ODataApplicationExceptionの利用を想定。
-- 認証の実験。
+- TODO BasicSqlExprExpander の通過していない箇所のテスト.
+- SQL Server Northwind 的なものを利用したテスト。該当するDBの有無は不明。
+- 認証の各種実験。
+- TimeOfDay がテスト不十分.
 - 実験的に全文検索である `$search` をサポートしたものの、もう少し詳しいところが調べられていない。また全文検索で有効なのはアルファベットのみ。h2 database でここを深掘りしても不毛か?
 - ($search対応の後続となるため、しばらく対応できない) TODO Null (nullable) の対応。現在はコメントアウト.

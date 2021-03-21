@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jp.oiyokan.h2.sql;
+package jp.oiyokan.basic.sql;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +27,7 @@ import jp.oiyokan.OiyokanCsdlEntitySet;
  * 
  * 当面は、このクラスはSQL文とパラメータを蓄える。
  */
-public class TinySqlBuildInfo {
+public class BasicSqlBuildInfo {
     private OiyokanCsdlEntitySet entitySet = null;
     private final StringBuilder sqlBuilder = new StringBuilder();
     private final List<Object> sqlParamList = new ArrayList<>();

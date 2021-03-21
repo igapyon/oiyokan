@@ -39,12 +39,12 @@ import org.apache.olingo.server.api.uri.UriResource;
 import org.apache.olingo.server.api.uri.UriResourceEntitySet;
 import org.apache.olingo.server.core.uri.queryoption.CountOptionImpl;
 
-import jp.oiyokan.h2.data.TinyH2EntityCollectionBuilder;
+import jp.oiyokan.basic.BasicJdbcEntityCollectionBuilder;
 
 /**
- * OData 要素コレクションを処理するクラス.
+ * Oiyokan による EntityCollectionProcessor 実装.
  * 
- * コードの多くは olingo のための基礎的な記述に該当.
+ * 実際のデータ取得処理を担当.
  */
 public class OiyokanEntityCollectionProcessor implements EntityCollectionProcessor {
     /**
@@ -76,6 +76,8 @@ public class OiyokanEntityCollectionProcessor implements EntityCollectionProcess
      * @param response       OData レスポンス.
      * @param uriInfo        URI情報.
      * @param responseFormat レスポンスのフォーマット.
+     * @throws SerializerException       直列化に失敗した場合.
+     * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
     @Override
     public void readEntityCollection(ODataRequest request, ODataResponse response, //
@@ -86,7 +88,7 @@ public class OiyokanEntityCollectionProcessor implements EntityCollectionProcess
         // URI情報からURIリソースの指定を取得.
         List<UriResource> resourcePaths = uriInfo.getUriResourceParts();
         // URIリソースの最初のものを要素セット指定とみなす.
-        // TODO FIXME いまは1番目の項目のみ処理.
+        // Note: パスのうち1番目の項目のみ処理.
         UriResourceEntitySet uriResourceEntitySet = (UriResourceEntitySet) resourcePaths.get(0);
         // 要素セットの指定からEDM要素セットを取得.
         EdmEntitySet edmEntitySet = uriResourceEntitySet.getEntitySet();
@@ -94,7 +96,7 @@ public class OiyokanEntityCollectionProcessor implements EntityCollectionProcess
         // 要素セットの指定をもとに要素コレクションを取得.
         // これがデータ本体に該当.
         // ここでは h2 database のデータ構築実装を呼び出している.
-        final EntityCollection eCollection = TinyH2EntityCollectionBuilder.build(edmEntitySet, uriInfo);
+        final EntityCollection eCollection = BasicJdbcEntityCollectionBuilder.build(edmEntitySet, uriInfo);
 
         // 指定のレスポンスフォーマットに合致する直列化を準備.
         ODataSerializer serializer = odata.createSerializer(responseFormat);

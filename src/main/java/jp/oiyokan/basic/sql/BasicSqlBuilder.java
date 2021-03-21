@@ -13,14 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jp.oiyokan.h2.sql;
+package jp.oiyokan.basic.sql;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.olingo.commons.api.edm.provider.CsdlEntityType;
 import org.apache.olingo.commons.api.edm.provider.CsdlProperty;
 import org.apache.olingo.commons.api.edm.provider.CsdlPropertyRef;
+import org.apache.olingo.server.api.ODataApplicationException;
 import org.apache.olingo.server.api.uri.UriInfo;
 import org.apache.olingo.server.api.uri.UriResource;
 import org.apache.olingo.server.api.uri.queryoption.OrderByItem;
@@ -29,22 +31,24 @@ import org.apache.olingo.server.core.uri.queryoption.FilterOptionImpl;
 import org.apache.olingo.server.core.uri.queryoption.expression.MemberImpl;
 
 import jp.oiyokan.OiyokanCsdlEntitySet;
+import jp.oiyokan.dto.OiyokanSettingsDatabase;
+import jp.oiyokan.settings.OiyokanNamingUtil;
 
 /**
  * SQL文を構築するための簡易クラス.
  */
-public class TinyH2SqlBuilder {
+public class BasicSqlBuilder {
     /**
      * SQL構築のデータ構造.
      */
-    private final TinySqlBuildInfo sqlInfo = new TinySqlBuildInfo();
+    private final BasicSqlBuildInfo sqlInfo = new BasicSqlBuildInfo();
 
     /**
      * SQL構築のデータ構造を取得.
      * 
      * @return SQL構築のデータ構造.
      */
-    public TinySqlBuildInfo getSqlInfo() {
+    public BasicSqlBuildInfo getSqlInfo() {
         return sqlInfo;
     }
 
@@ -52,22 +56,26 @@ public class TinyH2SqlBuilder {
      * 件数カウント用のSQLを生成.
      * 
      * @param uriInfo URI情報.
+     * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
-    public void getSelectCountQuery(UriInfo uriInfo) {
+    public void getSelectCountQuery(UriInfo uriInfo) throws ODataApplicationException {
         sqlInfo.getSqlBuilder().append("SELECT COUNT(*) FROM " + sqlInfo.getEntitySet().getDbTableNameTargetIyo());
         if (uriInfo.getFilterOption() != null) {
             FilterOptionImpl filterOpt = (FilterOptionImpl) uriInfo.getFilterOption();
             sqlInfo.getSqlBuilder().append(" WHERE ");
-            new TinyH2SqlExprExpander(sqlInfo).expand(filterOpt.getExpression());
+            new BasicSqlExprExpander(sqlInfo).expand(filterOpt.getExpression());
         }
     }
 
     /**
      * 検索用のSQLを生成.
      * 
-     * @param uriInfo URI情報.
+     * @param uriInfo          URI情報.
+     * @param settingsDatabase データベース設定情報.
+     * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
-    public void getSelectQuery(UriInfo uriInfo) {
+    public void getSelectQuery(UriInfo uriInfo, OiyokanSettingsDatabase settingsDatabase)
+            throws ODataApplicationException {
         sqlInfo.getSqlBuilder().append("SELECT ");
 
         if (uriInfo.getSelectOption() == null) {
@@ -79,20 +87,24 @@ public class TinyH2SqlBuilder {
                 if (strColumns.length() > 0) {
                     strColumns += ",";
                 }
-                strColumns += prop.getName();
+
+                // もし空白を含む場合はエスケープ。
+                strColumns += BasicSqlBuilder.escapeKakkoFieldName(settingsDatabase,
+                        OiyokanNamingUtil.entity2Db(prop.getName()));
             }
             sqlInfo.getSqlBuilder().append(strColumns);
         } else {
             final OiyokanCsdlEntitySet iyoEntitySet = (OiyokanCsdlEntitySet) sqlInfo.getEntitySet();
             final List<String> keyTarget = new ArrayList<>();
             for (CsdlPropertyRef propRef : iyoEntitySet.getEntityType().getKey()) {
-                keyTarget.add(propRef.getName());
+                keyTarget.add(OiyokanNamingUtil.entity2Db(propRef.getName()));
             }
             int itemCount = 0;
             for (SelectItem item : uriInfo.getSelectOption().getSelectItems()) {
                 for (UriResource res : item.getResourcePath().getUriResourceParts()) {
                     sqlInfo.getSqlBuilder().append(itemCount++ == 0 ? "" : ",");
-                    sqlInfo.getSqlBuilder().append(unescapeKakkoFieldName(res.toString()));
+                    sqlInfo.getSqlBuilder()
+                            .append(OiyokanNamingUtil.entity2Db(unescapeKakkoFieldName(res.toString())));
                     for (int index = 0; index < keyTarget.size(); index++) {
                         if (keyTarget.get(index).equals(res.toString())) {
                             keyTarget.remove(index);
@@ -118,7 +130,7 @@ public class TinyH2SqlBuilder {
             FilterOptionImpl filterOpt = (FilterOptionImpl) uriInfo.getFilterOption();
             // WHERE部分についてはパラメータクエリで処理するのを基本とする.
             sqlInfo.getSqlBuilder().append(" WHERE ");
-            new TinyH2SqlExprExpander(sqlInfo).expand(filterOpt.getExpression());
+            new BasicSqlExprExpander(sqlInfo).expand(filterOpt.getExpression());
         }
 
         if (uriInfo.getOrderByOption() != null) {
@@ -131,8 +143,8 @@ public class TinyH2SqlBuilder {
                     sqlInfo.getSqlBuilder().append(",");
                 }
 
-                sqlInfo.getSqlBuilder()
-                        .append(unescapeKakkoFieldName(((MemberImpl) orderByItem.getExpression()).toString()));
+                sqlInfo.getSqlBuilder().append(OiyokanNamingUtil
+                        .entity2Db(unescapeKakkoFieldName(((MemberImpl) orderByItem.getExpression()).toString())));
 
                 if (orderByItem.isDescending()) {
                     sqlInfo.getSqlBuilder().append(" DESC");
@@ -162,5 +174,31 @@ public class TinyH2SqlBuilder {
         normalName = normalName.replaceAll("^\\[", "");
         normalName = normalName.replaceAll("\\]$", "");
         return normalName;
+    }
+
+    /**
+     * 項目名のカッコをエスケープ付与.
+     * 
+     * @param settingsDatabase データベース設定情報.
+     * @param fieldName        項目名.
+     * @return 必要に応じてエスケープされた項目名.
+     * @throws ODataApplicationException ODataアプリ例外が発生した場合.
+     */
+    public static String escapeKakkoFieldName(OiyokanSettingsDatabase settingsDatabase, String fieldName)
+            throws ODataApplicationException {
+        if (fieldName.contains(" ") == false) {
+            return fieldName;
+        }
+        if ("h2".equals(settingsDatabase.getType())) {
+            fieldName = "[" + fieldName + "]";
+        } else if ("pg".equals(settingsDatabase.getType())) {
+            fieldName = "\"" + fieldName + "\"";
+        } else {
+            System.err.println("NOT SUPPORTED: Database type: " + settingsDatabase.getType());
+            throw new ODataApplicationException("NOT SUPPORTED: Database type: " + settingsDatabase.getType(), 500,
+                    Locale.ENGLISH);
+        }
+
+        return fieldName;
     }
 }

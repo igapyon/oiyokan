@@ -16,21 +16,21 @@
 package jp.oiyokan;
 
 /**
- * Oiyokan の定数.
+ * Oiyokan (OData v4 server) の定数.
  */
 public class OiyokanConstants {
     /**
-     * Oiyokan のバージョン番号
-     */
-    public static final String VERSION = "20210319a";
-
-    /**
-     * OData v4 からはじまるトレースを出力するかどうか。
-     */
-    public static final boolean IS_TRACE_ODATA_V4 = true;
-
-    /**
-     * 名前.
+     * Oiyokan の名前.
      */
     public static final String NAME = "Oiyokan";
+
+    /**
+     * Oiyokan のバージョン番号
+     */
+    public static final String VERSION = "20210321h";
+
+    /**
+     * Oiyokan がリクエストを処理する際の 'OData v4' からはじまるトレースを出力するかどうか。
+     */
+    public static final boolean IS_TRACE_ODATA_V4 = true;
 }

@@ -15,12 +15,18 @@
  */
 package jp.oiyokan;
 
+import java.util.Locale;
+
 import org.apache.olingo.commons.api.edm.FullQualifiedName;
 import org.apache.olingo.commons.api.edm.provider.CsdlEntitySet;
 import org.apache.olingo.commons.api.edm.provider.CsdlEntityType;
+import org.apache.olingo.server.api.ODataApplicationException;
+
+import jp.oiyokan.dto.OiyokanSettingsDatabase;
+import jp.oiyokan.dto.OiyokanSettingsEntitySet;
 
 /**
- * CsdlEntitySet の Iyokan 拡張
+ * Oiyokan の CsdlEntitySet 実装.
  */
 public class OiyokanCsdlEntitySet extends CsdlEntitySet {
     /**
@@ -28,7 +34,9 @@ public class OiyokanCsdlEntitySet extends CsdlEntitySet {
      */
     public enum DatabaseType {
         /** h2 database */
-        H2
+        H2,
+        /** postgres */
+        PG
     };
 
     /**
@@ -37,6 +45,28 @@ public class OiyokanCsdlEntitySet extends CsdlEntitySet {
     private OiyokanCsdlEntityContainer csdlEntityContainer = null;
 
     private DatabaseType dbType = DatabaseType.H2;
+
+    private OiyokanSettingsEntitySet settingsEntitySet = null;
+
+    private OiyokanSettingsDatabase settingsDatabase = null;
+
+    /**
+     * EntitySet設定情報を取得.
+     * 
+     * @return EntitySet設定情報.
+     */
+    public OiyokanSettingsEntitySet getSettingsEntitySet() {
+        return settingsEntitySet;
+    }
+
+    /**
+     * Database設定情報を取得.
+     * 
+     * @return Database設定情報.
+     */
+    public OiyokanSettingsDatabase getSettingsDatabase() {
+        return settingsDatabase;
+    }
 
     /**
      * データベース型を取得.
@@ -68,42 +98,41 @@ public class OiyokanCsdlEntitySet extends CsdlEntitySet {
     }
 
     /**
-     * 要素型名. さしあたりはリレーショナルデータベースのテーブル名に相当するものと考えて差し支えない.
-     * 
-     * MyProduct 相当.
-     */
-    private String entityName = null;
-
-    /**
-     * データベース上のテーブル名.
-     */
-    private String dbTableNameLocal = null;
-
-    /**
-     * データベース上のテーブル名.
-     */
-    private String dbTableNameTarget = null;
-
-    /**
      * エンティティ情報.
      * 
      * @param containerInfo     コンテナ情報.
-     * @param entitySetName     MyProducts 相当.
-     * @param entityName        MyProduct 相当.
-     * @param dbType            データベースタイプ.
-     * @param dbTableNameLocal  ローカルのデータベース上のテーブル名.
-     * @param dbTableNameTarget ターゲットのデータベース上のテーブル名. 通常は dbTableNameLocalと一致.
+     * @param settingsEntitySet EntitySetの設定.
+     * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
-    public OiyokanCsdlEntitySet(OiyokanCsdlEntityContainer containerInfo, String entitySetName, String entityName,
-            DatabaseType dbType, String dbTableNameLocal, String dbTableNameTarget) {
+    public OiyokanCsdlEntitySet(OiyokanCsdlEntityContainer containerInfo, OiyokanSettingsEntitySet settingsEntitySet)
+            throws ODataApplicationException {
+        setName(settingsEntitySet.getEntitySetName());
         this.csdlEntityContainer = containerInfo;
-        this.entityName = entityName;
-        this.dbType = dbType;
-        this.dbTableNameLocal = dbTableNameLocal;
-        this.dbTableNameTarget = dbTableNameTarget;
+        this.settingsEntitySet = settingsEntitySet;
 
-        this.setName(entitySetName);
-        this.setType(new FullQualifiedName(containerInfo.getNamespaceIyo(), entityName));
+        for (OiyokanSettingsDatabase look : OiyokanCsdlEntityContainer.getOiyokanSettingsInstance().getDatabaseList()) {
+            if (look.getName().equals(settingsEntitySet.getDatabaseName())) {
+                settingsDatabase = look;
+            }
+        }
+        if (settingsDatabase == null) {
+            System.err.println("UNEXPECTED: No database settings found: " + settingsEntitySet.getDatabaseName());
+            throw new ODataApplicationException(
+                    "UNEXPECTED: No database settings found: " + settingsEntitySet.getDatabaseName(), 500,
+                    Locale.ENGLISH);
+        }
+
+        if ("h2".equals(settingsDatabase.getType())) {
+            this.dbType = DatabaseType.H2;
+        } else if ("pg".equals(settingsDatabase.getType())) {
+            this.dbType = DatabaseType.PG;
+        } else {
+            System.err.println("UNEXPECTED: Unknown database type: " + settingsDatabase.getType());
+            throw new ODataApplicationException("UNEXPECTED: Unknown database type: " + settingsDatabase.getType(), 500,
+                    Locale.ENGLISH);
+        }
+
+        this.setType(new FullQualifiedName(containerInfo.getNamespaceIyo(), settingsEntitySet.getEntityName()));
     }
 
     /**
@@ -112,15 +141,16 @@ public class OiyokanCsdlEntitySet extends CsdlEntitySet {
      * @return エンティティ名. MyProduct 相当.
      */
     public String getEntityNameIyo() {
-        return entityName;
+        return settingsEntitySet.getEntityName();
     }
 
     /**
      * エンティティのFQNを取得.
      * 
      * @return エンティティのFQN(完全修飾名).
+     * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
-    public FullQualifiedName getEntityNameFqnIyo() {
+    public FullQualifiedName getEntityNameFqnIyo() throws ODataApplicationException {
         return new FullQualifiedName(csdlEntityContainer.getNamespaceIyo(), getEntityNameIyo());
     }
 
@@ -130,7 +160,7 @@ public class OiyokanCsdlEntitySet extends CsdlEntitySet {
      * @return ローカルのDBテーブル名.
      */
     public String getDbTableNameLocalIyo() {
-        return dbTableNameLocal;
+        return settingsEntitySet.getDbTableNameLocal();
     }
 
     /**
@@ -139,6 +169,6 @@ public class OiyokanCsdlEntitySet extends CsdlEntitySet {
      * @return ターゲットのDBテーブル名.
      */
     public String getDbTableNameTargetIyo() {
-        return dbTableNameTarget;
+        return settingsEntitySet.getDbTableNameTarget();
     }
 }

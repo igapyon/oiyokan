@@ -18,10 +18,14 @@ package jp.oiyokan.h2.data;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.sql.Connection;
+import java.sql.ResultSetMetaData;
 
 import org.junit.jupiter.api.Test;
 
 import jp.oiyokan.basic.BasicDbUtil;
+import jp.oiyokan.data.OiyokanInterDb;
+import jp.oiyokan.dto.OiyokanSettings;
+import jp.oiyokan.settings.OiyokanSettingsUtil;
 
 /**
  * そもそも内部 h2 database への接続性を確認
@@ -29,21 +33,41 @@ import jp.oiyokan.basic.BasicDbUtil;
 class H2DatabaseTest {
     @Test
     void test01() throws Exception {
-        Connection conn = BasicDbUtil.getInternalConnection();
+        final OiyokanSettings settingsOiyokan = OiyokanSettingsUtil.loadOiyokanSettings();
+        try (Connection conn = BasicDbUtil
+                .getConnection(OiyokanSettingsUtil.getOiyokanInternalDatabase(settingsOiyokan))) {
 
-        // テーブルをセットアップ.
-        TinyH2DbSample.createTable(conn);
+            // 内部データベースのテーブルをセットアップ.
+            OiyokanInterDb.setupTable(conn);
 
-        // テーブルデータをセットアップ.
-        TinyH2DbSample.setupTableData(conn);
-
-        try (var stmt = conn.prepareStatement("SELECT ID, Name, Description FROM MyProducts ORDER BY ID LIMIT 3")) {
-            stmt.executeQuery();
-            var rset = stmt.getResultSet();
-            assertEquals(true, rset.next());
+            try (var stmt = conn.prepareStatement("SELECT ID, Name, Description FROM MyProducts ORDER BY ID LIMIT 3")) {
+                stmt.executeQuery();
+                var rset = stmt.getResultSet();
+                assertEquals(true, rset.next());
+            }
         }
-
-        conn.close();
     }
 
+    @Test
+    void testo2() throws Exception {
+        final OiyokanSettings settingsOiyokan = OiyokanSettingsUtil.loadOiyokanSettings();
+        try (Connection conn = BasicDbUtil
+                .getConnection(OiyokanSettingsUtil.getOiyokanInternalDatabase(settingsOiyokan))) {
+            // 内部データベースのテーブルをセットアップ.
+            OiyokanInterDb.setupTable(conn);
+
+            try (var stmt = conn.prepareStatement("SELECT ID, Name, Description" //
+                    + ",Sbyte1,Int16a,Int32a,Int64a,Decimal1,StringChar2,StringVar255,StringVar65535,Boolean1,Single1,Double1,DateTimeOffset1,TimeOfDay1" //
+                    + " FROM MyProducts ORDER BY ID LIMIT 1")) {
+                stmt.executeQuery();
+                var rset = stmt.getResultSet();
+                assertEquals(true, rset.next());
+                ResultSetMetaData rsmeta = rset.getMetaData();
+                for (int column = 1; column <= rsmeta.getColumnCount(); column++) {
+                    // System.err.println(rsmeta.getColumnName(column) + ", class=" +
+                    // rsmeta.getColumnClassName(column));
+                }
+            }
+        }
+    }
 }
