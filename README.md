@@ -96,9 +96,14 @@ oiyokan プロジェクトは、OData v4 server のシンプルなサンプル(h
 
 ## TODO
 
+- h2 database ベースでデータ構築して Heroku にアップできないか検討.
+- Maven Repository にアップしたい.
+- README に oiyokan-naming-settings.json の記述についての記載を追記.
+- Postgres DVDレンタルのサンプルを ON/OFFする手順またはプログラム実装を記述.
 - TODO BasicSqlExprExpander の通過していない箇所のテスト.
 - SQL Server Northwind 的なものを利用したテスト。該当するDBの有無は不明。
 - 認証の各種実験。
 - TimeOfDay がテスト不十分.
+- 一旦 $search を実装から分離する.
 - 実験的に全文検索である `$search` をサポートしたものの、もう少し詳しいところが調べられていない。また全文検索で有効なのはアルファベットのみ。h2 database でここを深掘りしても不毛か?
 - ($search対応の後続となるため、しばらく対応できない) TODO Null (nullable) の対応。現在はコメントアウト.
