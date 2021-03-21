@@ -53,6 +53,7 @@ public class BasicJdbcEntityCollectionBuilder {
      * @param edmEntitySet EDM要素セット.
      * @param uriInfo      SQL構築のデータ構造.
      * @return 要素コレクション.
+     * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
     public static EntityCollection build(EdmEntitySet edmEntitySet, UriInfo uriInfo) throws ODataApplicationException {
         final EntityCollection eCollection = new EntityCollection();

@@ -69,7 +69,8 @@ public class BasicSqlBuilder {
     /**
      * 検索用のSQLを生成.
      * 
-     * @param uriInfo URI情報.
+     * @param uriInfo          URI情報.
+     * @param settingsDatabase データベース設定情報.
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
     public void getSelectQuery(UriInfo uriInfo, OiyokanSettingsDatabase settingsDatabase)
@@ -175,9 +176,9 @@ public class BasicSqlBuilder {
     /**
      * 項目名のカッコをエスケープ付与.
      * 
-     * @param settingsDatabase
-     * @param fieldName
-     * @return
+     * @param settingsDatabase データベース設定情報.
+     * @param fieldName        項目名.
+     * @return 必要に応じてエスケープされた項目名.
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
     public static String escapeKakkoFieldName(OiyokanSettingsDatabase settingsDatabase, String fieldName)

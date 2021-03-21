@@ -62,6 +62,7 @@ public class BasicJdbcEntityTypeBuilder {
      * EntityType を取得.
      *
      * @return 取得された EntityType.
+     * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
     public CsdlEntityType getEntityType() throws ODataApplicationException {
         // インメモリ作業データベースに接続.

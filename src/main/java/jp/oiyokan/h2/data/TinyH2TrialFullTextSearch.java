@@ -43,6 +43,7 @@ public class TinyH2TrialFullTextSearch {
      * @param edmEntitySet EdmEntitySet情報.
      * @param uriInfo      URI情報.
      * @param eCollection  検索結果の出力先.
+     * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
     public void process(Connection connTargetDb, EdmEntitySet edmEntitySet, UriInfo uriInfo,
             EntityCollection eCollection) throws ODataApplicationException {

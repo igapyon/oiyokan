@@ -48,6 +48,7 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
      * 
      * @param entityTypeName 要素型名のFQN.
      * @return CSDL要素型.
+     * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
     @Override
     public CsdlEntityType getEntityType(FullQualifiedName entityTypeName) throws ODataApplicationException {
@@ -101,6 +102,7 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
      * 要素コンテナを取得.
      * 
      * @return CSDL要素コンテナ.
+     * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
     @Override
     public CsdlEntityContainer getEntityContainer() throws ODataApplicationException {
@@ -136,6 +138,7 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
      * スキーマ一覧を取得.
      * 
      * @return CSDLスキーマ.
+     * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
     @Override
     public List<CsdlSchema> getSchemas() throws ODataApplicationException {
@@ -180,6 +183,7 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
      * 
      * @param entityContainerName 要素コンテナ名.
      * @return CSDL要素コンテナ情報.
+     * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
     @Override
     public CsdlEntityContainerInfo getEntityContainerInfo(FullQualifiedName entityContainerName)

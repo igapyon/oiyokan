@@ -36,7 +36,8 @@ public class OiyokanSettingsUtil {
     /**
      * resources フォルダから設定ファイルを読み込み.
      * 
-     * @throws ODataApplicationException
+     * @return OiyokanSettings 設定情報.
+     * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
     public static OiyokanSettings loadOiyokanSettings() throws ODataApplicationException {
         if (OiyokanConstants.IS_TRACE_ODATA_V4)
@@ -55,6 +56,13 @@ public class OiyokanSettingsUtil {
         }
     }
 
+    /**
+     * OiyokanSettingsDatabase 設定情報を取得.
+     * 
+     * @param settingsOiyokan Oiyokan設定情報.
+     * @return OiyokanSettingsDatabase設定情報.
+     * @throws ODataApplicationException ODataアプリ例外が発生した場合.
+     */
     public static OiyokanSettingsDatabase getOiyokanInternalDatabase(OiyokanSettings settingsOiyokan)
             throws ODataApplicationException {
         for (OiyokanSettingsDatabase look : settingsOiyokan.getDatabaseList()) {

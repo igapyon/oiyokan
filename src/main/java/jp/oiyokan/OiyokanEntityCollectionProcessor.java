@@ -76,6 +76,8 @@ public class OiyokanEntityCollectionProcessor implements EntityCollectionProcess
      * @param response       OData レスポンス.
      * @param uriInfo        URI情報.
      * @param responseFormat レスポンスのフォーマット.
+     * @throws SerializerException 直列化に失敗した場合.
+     * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
     @Override
     public void readEntityCollection(ODataRequest request, ODataResponse response, //

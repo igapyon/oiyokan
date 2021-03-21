@@ -35,6 +35,9 @@ import jp.oiyokan.basic.BasicDbUtil;
  * Oiyokan (OData v4 server) が動作する際に必要になる内部データおよびサンプルデータをセットアップ.
  */
 public class OiyokanInterDb {
+    /**
+     * Oiyokan の設定情報を記述したファイル.
+     */
     public static final String[] OIYOKAN_FILE_SQLS = new String[] { //
             "oiyokan-testdb.sql", // Oiyokan の基本機能を確認およびビルド時の JUnit テストで利用.
             "sample-ocsdl-pg-dvdrental.sql" // Postgres の dvdrental サンプルDB に接続するための内部情報.
@@ -48,6 +51,7 @@ public class OiyokanInterDb {
      * 
      * @param connInternalDb データベース接続。
      * @return true:新規作成, false:既に存在.
+     * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
     public static boolean setupTable(final Connection connInternalDb) throws ODataApplicationException {
         if (OiyokanConstants.IS_TRACE_ODATA_V4)

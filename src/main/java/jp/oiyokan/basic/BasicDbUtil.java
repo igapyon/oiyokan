@@ -48,7 +48,9 @@ public class BasicDbUtil {
     /**
      * 内部データベースへのDB接続を取得します。
      * 
-     * @return データベース接続。
+     * @param settingsDatabase データベース設定情報.
+     * @return データベース接続.
+     * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
     public static Connection getConnection(OiyokanSettingsDatabase settingsDatabase) throws ODataApplicationException {
         Connection conn;
@@ -66,10 +68,10 @@ public class BasicDbUtil {
                         settingsDatabase.getJdbcPass());
             }
         } catch (SQLException ex) {
-            System.err.println("OData v4: UNEXPECTED: Fail to connect database: " + settingsDatabase.getName() + ", "
-                    + ex.toString());
-            throw new ODataApplicationException("UNEXPECTED: Fail to connect database: " + settingsDatabase.getName(),
-                    500, Locale.ENGLISH);
+            System.err.println("OData v4: UNEXPECTED: データベースの接続に失敗: [" + settingsDatabase.getName()
+                    + "] しばらく待って再度トライしてください。しばらく経っても改善しない場合はIT部門に連絡してください: " + ex.toString());
+            throw new ODataApplicationException("OData v4: UNEXPECTED: データベースの接続に失敗: [" + settingsDatabase.getName()
+                    + "] しばらく待って再度トライしてください。しばらく経っても改善しない場合はIT部門に連絡してください", 500, Locale.ENGLISH);
         }
 
         return conn;
@@ -102,7 +104,8 @@ public class BasicDbUtil {
      * @param rsmeta ResultSetMetaDataインスタンス.
      * @param column 項目番号.
      * @return CsdlProperty 情報.
-     * @throws SQLException SQL例外が発生した場合.
+     * @throws SQLException              SQL例外が発生した場合.
+     * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
     public static CsdlProperty resultSetMetaData2CsdlProperty(ResultSetMetaData rsmeta, int column)
             throws ODataApplicationException, SQLException {
@@ -204,11 +207,13 @@ public class BasicDbUtil {
     /**
      * 実際の EntityCollection 生成時に、ResultSet から Property を作成.
      * 
-     * @param rset   結果セット.
-     * @param rsmeta 結果セットメタデータ.
-     * @param column 項目番号. 1オリジン.
-     * @return 作成された Property
-     * @throws SQLException SQL例外が発生した場合.
+     * @param rset         結果セット.
+     * @param rsmeta       結果セットメタデータ.
+     * @param column       項目番号. 1オリジン.
+     * @param iyoEntitySet EntitySetインスタンス.
+     * @return 作成された Property.
+     * @throws SQLException              SQL例外が発生した場合.
+     * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
     public static Property resultSet2Property(ResultSet rset, ResultSetMetaData rsmeta, int column,
             OiyokanCsdlEntitySet iyoEntitySet) throws ODataApplicationException, SQLException {
@@ -284,7 +289,8 @@ public class BasicDbUtil {
      * @param stmt   PreparedStatement のインスタンス.
      * @param column 項目番号. 1オリジン.
      * @param value  セットしたい値.
-     * @throws SQLException SQL例外が発生した場合.
+     * @throws SQLException              SQL例外が発生した場合.
+     * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
     public static void bindPreparedParameter(PreparedStatement stmt, int column, Object value)
             throws ODataApplicationException, SQLException {
