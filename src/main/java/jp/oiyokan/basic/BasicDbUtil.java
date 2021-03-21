@@ -165,7 +165,12 @@ public class BasicDbUtil {
         case Types.VARBINARY:
         case Types.LONGVARBINARY:
         case Types.BLOB:
-            csdlProp.setType(EdmPrimitiveTypeKind.Binary.getFullQualifiedName());
+            if (false && "UUID".equalsIgnoreCase(rsmeta.getColumnTypeName(column))) {
+                // TODO UUIDの朱徳部分で java の UUID として読み込む処理が必要だがこれが未実装。
+                csdlProp.setType(EdmPrimitiveTypeKind.Guid.getFullQualifiedName());
+            } else {
+                csdlProp.setType(EdmPrimitiveTypeKind.Binary.getFullQualifiedName());
+            }
             break;
         default:
             throw new ODataApplicationException("NOT SUPPORTED: CSDL: JDBC Type: " + rsmeta.getColumnType(column), 500,
@@ -253,6 +258,7 @@ public class BasicDbUtil {
         case Types.VARCHAR:
         case Types.LONGVARCHAR:
         case Types.LONGNVARCHAR:
+            // TODO UUIDの朱徳部分で java の UUID として読み込む処理が必要だがこれが未実装。
             prop = new Property(null, columnName, ValueType.PRIMITIVE, rset.getString(column));
             break;
         case Types.CLOB:

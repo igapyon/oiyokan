@@ -238,7 +238,11 @@ public class OiyokanInterDb {
                     }
                     break;
                 case Types.BINARY:
-                    sqlBuilder.append("BINARY");
+                    if ("UUID".equalsIgnoreCase(rsmeta.getColumnTypeName(column))) {
+                        sqlBuilder.append("UUID");
+                    } else {
+                        sqlBuilder.append("BINARY");
+                    }
                     break;
                 case Types.VARBINARY:
                     sqlBuilder.append("VARBINARY");
