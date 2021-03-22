@@ -43,8 +43,9 @@ public class OiyokanResourceSqlUtil {
             final String[] sqls = sqlresources.split(";");
             return sqls;
         } catch (IOException ex) {
-            System.err.println("UNEXPECTED: Oiyokan 設定情報読み込み失敗: " + ex.toString());
-            throw new ODataApplicationException("UNEXPECTED: Oiyokan 設定情報読み込み失敗", 500, Locale.ENGLISH);
+            System.err.println(
+                    "UNEXPECTED: Fail to load setting SQL file [" + resourceSqlFileName + "]: " + ex.toString());
+            throw new ODataApplicationException("UNEXPECTED: Fail to load setting SQL file.", 500, Locale.ENGLISH);
         }
     }
 }

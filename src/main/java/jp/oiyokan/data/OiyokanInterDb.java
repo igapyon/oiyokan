@@ -41,7 +41,8 @@ public class OiyokanInterDb {
     public static final String[] OIYOKAN_FILE_SQLS = new String[] { //
             "oiyokan-testdb.sql", // Oiyokan の基本機能を確認およびビルド時の JUnit テストで利用. 変更するとビルドが動作しなくなる場合あり.
             "oiyokan-targetdb.sql", // Oiyokan のターゲットデータベース情報を記述。github上では空白ファイルとする.
-            "sample-ocsdl-pg-dvdrental.sql" // Postgres の dvdrental サンプルDB に接続するための内部情報.
+            "sample-sakila-db.sql", // Sakila dvdrental サンプルDB に接続するための内部情報.
+            "sample-sakila-ocsdl.sql" // Sakila dvdrental サンプルDBそのもののための内部情報.
     };
 
     private OiyokanInterDb() {
