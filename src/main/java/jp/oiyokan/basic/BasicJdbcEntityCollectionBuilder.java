@@ -123,7 +123,7 @@ public class BasicJdbcEntityCollectionBuilder {
     private static void processCountQuery(OiyokanCsdlEntitySet eSetTarget, UriInfo uriInfo, Connection connTargetDb,
             EntityCollection eCollection) throws ODataApplicationException {
         // 件数をカウントして設定。
-        BasicSqlBuilder tinySql = new BasicSqlBuilder();
+        BasicSqlBuilder tinySql = new BasicSqlBuilder(eSetTarget.getSettingsDatabase());
         tinySql.getSqlInfo().setEntitySet((OiyokanCsdlEntitySet) eSetTarget);
         tinySql.getSelectCountQuery(uriInfo);
         final String sql = tinySql.getSqlInfo().getSqlBuilder().toString();
@@ -152,7 +152,7 @@ public class BasicJdbcEntityCollectionBuilder {
 
     private static void processCollectionQuery(OiyokanCsdlEntitySet eSetTarget, UriInfo uriInfo,
             Connection connTargetDb, EntityCollection eCollection) throws ODataApplicationException {
-        BasicSqlBuilder tinySql = new BasicSqlBuilder();
+        BasicSqlBuilder tinySql = new BasicSqlBuilder(eSetTarget.getSettingsDatabase());
         tinySql.getSqlInfo().setEntitySet((OiyokanCsdlEntitySet) eSetTarget);
 
         tinySql.getSelectQuery(uriInfo, eSetTarget.getSettingsDatabase());

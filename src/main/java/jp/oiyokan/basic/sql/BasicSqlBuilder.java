@@ -52,6 +52,10 @@ public class BasicSqlBuilder {
         return sqlInfo;
     }
 
+    public BasicSqlBuilder(OiyokanSettingsDatabase settingsDatabase) {
+        sqlInfo.setSettingsDatabase(settingsDatabase);
+    }
+
     /**
      * 件数カウント用のSQLを生成.
      * 
@@ -103,8 +107,8 @@ public class BasicSqlBuilder {
             for (SelectItem item : uriInfo.getSelectOption().getSelectItems()) {
                 for (UriResource res : item.getResourcePath().getUriResourceParts()) {
                     sqlInfo.getSqlBuilder().append(itemCount++ == 0 ? "" : ",");
-                    sqlInfo.getSqlBuilder()
-                            .append(OiyokanNamingUtil.entity2Db(unescapeKakkoFieldName(res.toString())));
+                    sqlInfo.getSqlBuilder().append(escapeKakkoFieldName(settingsDatabase,
+                            OiyokanNamingUtil.entity2Db(unescapeKakkoFieldName(res.toString()))));
                     for (int index = 0; index < keyTarget.size(); index++) {
                         if (keyTarget.get(index).equals(res.toString())) {
                             keyTarget.remove(index);
@@ -114,7 +118,7 @@ public class BasicSqlBuilder {
                 }
             }
             for (int index = 0; index < keyTarget.size(); index++) {
-                // レコードを一位に表すID項目が必須。検索対象にない場合は追加.
+                // レコードを一意に表すID項目が必須。検索対象にない場合は追加.
                 sqlInfo.getSqlBuilder().append(itemCount++ == 0 ? "" : ",");
                 sqlInfo.getSqlBuilder().append(unescapeKakkoFieldName(keyTarget.get(index)));
             }
@@ -143,8 +147,8 @@ public class BasicSqlBuilder {
                     sqlInfo.getSqlBuilder().append(",");
                 }
 
-                sqlInfo.getSqlBuilder().append(OiyokanNamingUtil
-                        .entity2Db(unescapeKakkoFieldName(((MemberImpl) orderByItem.getExpression()).toString())));
+                sqlInfo.getSqlBuilder().append(escapeKakkoFieldName(settingsDatabase, OiyokanNamingUtil
+                        .entity2Db(unescapeKakkoFieldName(((MemberImpl) orderByItem.getExpression()).toString()))));
 
                 if (orderByItem.isDescending()) {
                     sqlInfo.getSqlBuilder().append(" DESC");
