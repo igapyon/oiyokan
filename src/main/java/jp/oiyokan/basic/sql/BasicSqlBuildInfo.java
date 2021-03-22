@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jp.oiyokan.OiyokanCsdlEntitySet;
+import jp.oiyokan.dto.OiyokanSettingsDatabase;
 
 /**
  * SQL文を構築するための簡易クラスの、SQL構築のデータ構造.
@@ -28,9 +29,19 @@ import jp.oiyokan.OiyokanCsdlEntitySet;
  * 当面は、このクラスはSQL文とパラメータを蓄える。
  */
 public class BasicSqlBuildInfo {
+    private OiyokanSettingsDatabase settingsDatabase = null;
+
     private OiyokanCsdlEntitySet entitySet = null;
     private final StringBuilder sqlBuilder = new StringBuilder();
     private final List<Object> sqlParamList = new ArrayList<>();
+
+    public OiyokanSettingsDatabase getSettingsDatabase() {
+        return settingsDatabase;
+    }
+
+    public void setSettingsDatabase(OiyokanSettingsDatabase settingsDatabase) {
+        this.settingsDatabase = settingsDatabase;
+    }
 
     /**
      * 処理対象のエンティティ名を設定.

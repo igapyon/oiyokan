@@ -319,7 +319,8 @@ public class BasicSqlExprExpander {
     private void expandMember(MemberImpl impl) throws ODataApplicationException {
         // そのままSQLのメンバーとせず、項目名エスケープを除去.
         sqlInfo.getSqlBuilder()
-                .append(OiyokanNamingUtil.entity2Db(BasicSqlBuilder.unescapeKakkoFieldName(impl.toString())));
+                .append(BasicSqlBuilder.escapeKakkoFieldName(sqlInfo.getSettingsDatabase(),
+                        OiyokanNamingUtil.entity2Db(BasicSqlBuilder.unescapeKakkoFieldName(impl.toString()))));
     }
 
     private void expandMethod(MethodImpl impl) throws ODataApplicationException {
