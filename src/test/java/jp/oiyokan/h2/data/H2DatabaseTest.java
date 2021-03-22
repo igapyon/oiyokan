@@ -40,7 +40,8 @@ class H2DatabaseTest {
             // 内部データベースのテーブルをセットアップ.
             OiyokanInterDb.setupTable(conn);
 
-            try (var stmt = conn.prepareStatement("SELECT ID, Name, Description FROM MyProducts ORDER BY ID LIMIT 3")) {
+            try (var stmt = conn
+                    .prepareStatement("SELECT ID, Name, Description FROM OcsdlMyProducts ORDER BY ID LIMIT 3")) {
                 stmt.executeQuery();
                 var rset = stmt.getResultSet();
                 assertEquals(true, rset.next());
@@ -58,7 +59,7 @@ class H2DatabaseTest {
 
             try (var stmt = conn.prepareStatement("SELECT ID, Name, Description" //
                     + ",Sbyte1,Int16a,Int32a,Int64a,Decimal1,StringChar2,StringVar255,StringVar65535,Boolean1,Single1,Double1,DateTimeOffset1,TimeOfDay1" //
-                    + " FROM MyProducts ORDER BY ID LIMIT 1")) {
+                    + " FROM OcsdlMyProducts ORDER BY ID LIMIT 1")) {
                 stmt.executeQuery();
                 var rset = stmt.getResultSet();
                 assertEquals(true, rset.next());

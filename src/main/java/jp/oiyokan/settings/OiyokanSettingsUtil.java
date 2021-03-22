@@ -60,6 +60,8 @@ public class OiyokanSettingsUtil {
     /**
      * OiyokanSettingsDatabase 設定情報を取得.
      * 
+     * TODO getOiyokanDatabase に集合が妥当か?
+     * 
      * @param settingsOiyokan Oiyokan設定情報.
      * @return OiyokanSettingsDatabase設定情報.
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
@@ -67,13 +69,27 @@ public class OiyokanSettingsUtil {
     public static OiyokanSettingsDatabase getOiyokanInternalDatabase(OiyokanSettings settingsOiyokan)
             throws ODataApplicationException {
         for (OiyokanSettingsDatabase look : settingsOiyokan.getDatabaseList()) {
-            if ("oiyokan-internal".equals(look.getName())) {
+            if (OiyokanConstants.OIYOKAN_INTERNAL_DB.equals(look.getName())) {
                 return look;
             }
         }
 
-        System.err.println("UNEXPECTED: Database settings [oiyokan-internal] が見つかりません");
-        throw new ODataApplicationException("UNEXPECTED: Database settings [oiyokan-internal] が見つかりません", 500,
+        System.err.println("UNEXPECTED: Database settings [" + OiyokanConstants.OIYOKAN_INTERNAL_DB + "] が見つかりません");
+        throw new ODataApplicationException(
+                "UNEXPECTED: Database settings [" + OiyokanConstants.OIYOKAN_INTERNAL_DB + "] が見つかりません", 500,
+                Locale.ENGLISH);
+    }
+
+    public static OiyokanSettingsDatabase getOiyokanDatabase(OiyokanSettings settingsOiyokan, String databaseDefName)
+            throws ODataApplicationException {
+        for (OiyokanSettingsDatabase look : settingsOiyokan.getDatabaseList()) {
+            if (databaseDefName.equals(look.getName())) {
+                return look;
+            }
+        }
+
+        System.err.println("UNEXPECTED: Database settings [" + databaseDefName + "] が見つかりません");
+        throw new ODataApplicationException("UNEXPECTED: Database settings [" + databaseDefName + "] が見つかりません", 500,
                 Locale.ENGLISH);
     }
 }

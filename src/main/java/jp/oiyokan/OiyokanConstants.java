@@ -27,10 +27,20 @@ public class OiyokanConstants {
     /**
      * Oiyokan のバージョン番号
      */
-    public static final String VERSION = "20210321h";
+    public static final String VERSION = "20210323a";
 
     /**
      * Oiyokan がリクエストを処理する際の 'OData v4' からはじまるトレースを出力するかどうか。
      */
     public static final boolean IS_TRACE_ODATA_V4 = true;
+
+    /**
+     * 内部DBへの定義名. OCSDL およびバージョン番号を格納.
+     */
+    public static final String OIYOKAN_INTERNAL_DB = "oiyokanInternal";
+
+    /**
+     * 内部DBへの定義名. ほぼビルドテスト用途.
+     */
+    public static final String OIYOKAN_INTERNAL_TARGET_DB = "oiyokanInternalTarget";
 }
