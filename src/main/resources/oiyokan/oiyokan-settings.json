@@ -3,11 +3,20 @@
 	"containerName": "Container",
 	"database": [
 		{
-			"name": "oiyokan-internal",
+			"name": "oiyokanInternal",
 			"type": "h2",
-			"description": "Oiyokanの内部DB。この設定は変更不可。",
+			"description": "Oiyokan Internal DB. Do not change this def.",
 			"jdbcDriver": "org.h2.Driver",
 			"jdbcUrl": "jdbc:h2:mem:oiyokan;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=FALSE;CASE_INSENSITIVE_IDENTIFIERS=TRUE;MODE=MSSQLServer",
+			"jdbcUser": "sa",
+			"jdbcPass": ""
+		},
+		{
+			"name": "oiyokanInternalTarget",
+			"type": "h2",
+			"description": "Oiyokan Internal Target DB. Do not change this def.",
+			"jdbcDriver": "org.h2.Driver",
+			"jdbcUrl": "jdbc:h2:mem:iyotest;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=FALSE;CASE_INSENSITIVE_IDENTIFIERS=TRUE;MODE=MSSQLServer",
 			"jdbcUser": "sa",
 			"jdbcPass": ""
 		},
@@ -27,7 +36,7 @@
 			"description": "Oiyokanが内部的に利用するエンティティセット。この設定は基本的に変更できない。",
 			"entitySetName": "ODataAppInfos",
 			"entityName": "ODataAppInfo",
-			"databaseName": "oiyokan-internal",
+			"databaseName": "oiyokanInternal",
 			"dbTableNameLocal": "ODataAppInfos",
 			"dbTableNameTarget": "ODataAppInfos"
 		},
@@ -36,25 +45,25 @@
 			"description": "Oiyokan単体テスト用エンティティセット。MyProducts。この設定を不用意に変更するとビルドが失敗する。",
 			"entitySetName": "MyProducts",
 			"entityName": "MyProduct",
-			"databaseName": "oiyokan-internal",
+			"databaseName": "oiyokanInternalTarget",
 			"dbTableNameLocal": "OcsdlMyProducts",
 			"dbTableNameTarget": "MyProducts"
 		},
-        {
-            "name": "oiyokan-test-product-fulltext",
+		{
+			"name": "oiyokan-test-product-fulltext",
 			"description": "Oiyokan単体テスト用エンティティセット。MyProducts。この設定を不用意に変更するとビルドが失敗する。",
-            "entitySetName": "MyProductFulls",
-            "entityName": "MyProductFull",
-            "databaseName": "oiyokan-internal",
-            "dbTableNameLocal": "OcsdlMyProductFulls",
-            "dbTableNameTarget": "MyProductFulls"
-        },
+			"entitySetName": "MyProductFulls",
+			"entityName": "MyProductFull",
+			"databaseName": "oiyokanInternalTarget",
+			"dbTableNameLocal": "OcsdlMyProductFulls",
+			"dbTableNameTarget": "MyProductFulls"
+		},
 		{
 			"name": "sample-pg-dvdrental-actor",
 			"description": "Postgres dvdrental サンプルDB: actor",
 			"entitySetName": "PgActors",
 			"entityName": "PgActor",
-			"databaseName": "postgres1",
+			"databaseName": "oiyokanInternalTarget",
 			"dbTableNameLocal": "Ocsdlactor",
 			"dbTableNameTarget": "actor"
 		},
@@ -63,7 +72,7 @@
 			"description": "Postgres dvdrental サンプルDB: actor_info",
 			"entitySetName": "PgActorInfos",
 			"entityName": "PgActoInfor",
-			"databaseName": "postgres1",
+			"databaseName": "oiyokanInternalTarget",
 			"dbTableNameLocal": "Ocsdlactor_info",
 			"dbTableNameTarget": "actor_info"
 		},
@@ -72,7 +81,7 @@
 			"description": "Postgres dvdrental サンプルDB: address",
 			"entitySetName": "PgAddresss",
 			"entityName": "PgAddress",
-			"databaseName": "postgres1",
+			"databaseName": "oiyokanInternalTarget",
 			"dbTableNameLocal": "Ocsdladdress",
 			"dbTableNameTarget": "address"
 		},
@@ -81,7 +90,7 @@
 			"description": "Postgres dvdrental サンプルDB: category",
 			"entitySetName": "PgCategorys",
 			"entityName": "PgCategory",
-			"databaseName": "postgres1",
+			"databaseName": "oiyokanInternalTarget",
 			"dbTableNameLocal": "Ocsdlcategory",
 			"dbTableNameTarget": "category"
 		},
@@ -90,7 +99,7 @@
 			"description": "Postgres dvdrental サンプルDB: city",
 			"entitySetName": "PgCitys",
 			"entityName": "PgCity",
-			"databaseName": "postgres1",
+			"databaseName": "oiyokanInternalTarget",
 			"dbTableNameLocal": "Ocsdlcity",
 			"dbTableNameTarget": "city"
 		},
@@ -99,7 +108,7 @@
 			"description": "Postgres dvdrental サンプルDB: country",
 			"entitySetName": "PgCountrys",
 			"entityName": "PgCountry",
-			"databaseName": "postgres1",
+			"databaseName": "oiyokanInternalTarget",
 			"dbTableNameLocal": "Ocsdlcountry",
 			"dbTableNameTarget": "country"
 		},
@@ -108,7 +117,7 @@
 			"description": "Postgres dvdrental サンプルDB: customer",
 			"entitySetName": "PgCustomers",
 			"entityName": "PgCustomer",
-			"databaseName": "postgres1",
+			"databaseName": "oiyokanInternalTarget",
 			"dbTableNameLocal": "Ocsdlcustomer",
 			"dbTableNameTarget": "customer"
 		},
@@ -117,7 +126,7 @@
 			"description": "Postgres dvdrental サンプルDB: customer_list",
 			"entitySetName": "PgCustomerLists",
 			"entityName": "PgCustomerList",
-			"databaseName": "postgres1",
+			"databaseName": "oiyokanInternalTarget",
 			"dbTableNameLocal": "Ocsdlcustomer_list",
 			"dbTableNameTarget": "customer_list"
 		},
@@ -126,7 +135,7 @@
 			"description": "Postgres dvdrental サンプルDB: film",
 			"entitySetName": "PgFilms",
 			"entityName": "PgFilm",
-			"databaseName": "postgres1",
+			"databaseName": "oiyokanInternalTarget",
 			"dbTableNameLocal": "Ocsdlfilm",
 			"dbTableNameTarget": "film"
 		},
@@ -135,7 +144,7 @@
 			"description": "Postgres dvdrental サンプルDB: film_actor",
 			"entitySetName": "PgFilmActors",
 			"entityName": "PgFilmActor",
-			"databaseName": "postgres1",
+			"databaseName": "oiyokanInternalTarget",
 			"dbTableNameLocal": "Ocsdlfilm_actor",
 			"dbTableNameTarget": "film_actor"
 		},
@@ -144,7 +153,7 @@
 			"description": "Postgres dvdrental サンプルDB: film_category",
 			"entitySetName": "PgFilmCategorys",
 			"entityName": "PgFilmCategory",
-			"databaseName": "postgres1",
+			"databaseName": "oiyokanInternalTarget",
 			"dbTableNameLocal": "Ocsdlfilm_category",
 			"dbTableNameTarget": "film_category"
 		},
@@ -153,7 +162,7 @@
 			"description": "Postgres dvdrental サンプルDB: film_list",
 			"entitySetName": "PgFilmLists",
 			"entityName": "PgFilmList",
-			"databaseName": "postgres1",
+			"databaseName": "oiyokanInternalTarget",
 			"dbTableNameLocal": "Ocsdlfilm_list",
 			"dbTableNameTarget": "film_list"
 		},
@@ -162,7 +171,7 @@
 			"description": "Postgres dvdrental サンプルDB: inventory",
 			"entitySetName": "PgInventorys",
 			"entityName": "PgInventory",
-			"databaseName": "postgres1",
+			"databaseName": "oiyokanInternalTarget",
 			"dbTableNameLocal": "Ocsdlinventory",
 			"dbTableNameTarget": "inventory"
 		},
@@ -171,7 +180,7 @@
 			"description": "Postgres dvdrental サンプルDB: language",
 			"entitySetName": "PgLanguages",
 			"entityName": "PgLanguage",
-			"databaseName": "postgres1",
+			"databaseName": "oiyokanInternalTarget",
 			"dbTableNameLocal": "Ocsdllanguage",
 			"dbTableNameTarget": "language"
 		},
@@ -180,7 +189,7 @@
 			"description": "Postgres dvdrental サンプルDB: nicer_but_slower_film_list",
 			"entitySetName": "PgNicerButSlowerFilmLists",
 			"entityName": "PgNicerButSlowerFilmList",
-			"databaseName": "postgres1",
+			"databaseName": "oiyokanInternalTarget",
 			"dbTableNameLocal": "Ocsdlnicer_but_slower_film_list",
 			"dbTableNameTarget": "nicer_but_slower_film_list"
 		},
@@ -189,7 +198,7 @@
 			"description": "Postgres dvdrental サンプルDB: payment",
 			"entitySetName": "PgPayments",
 			"entityName": "PgPayment",
-			"databaseName": "postgres1",
+			"databaseName": "oiyokanInternalTarget",
 			"dbTableNameLocal": "Ocsdlpayment",
 			"dbTableNameTarget": "payment"
 		},
@@ -198,7 +207,7 @@
 			"description": "Postgres dvdrental サンプルDB: rental",
 			"entitySetName": "PgRentals",
 			"entityName": "PgRental",
-			"databaseName": "postgres1",
+			"databaseName": "oiyokanInternalTarget",
 			"dbTableNameLocal": "Ocsdlrental",
 			"dbTableNameTarget": "rental"
 		},
@@ -207,7 +216,7 @@
 			"description": "Postgres dvdrental サンプルDB: sales_by_film_category",
 			"entitySetName": "PgSalesByFilmCategorys",
 			"entityName": "PgSalesByFilmCategory",
-			"databaseName": "postgres1",
+			"databaseName": "oiyokanInternalTarget",
 			"dbTableNameLocal": "Ocsdlsales_by_film_category",
 			"dbTableNameTarget": "sales_by_film_category"
 		},
@@ -216,7 +225,7 @@
 			"description": "Postgres dvdrental サンプルDB: sales_by_store",
 			"entitySetName": "PgSalesByStores",
 			"entityName": "PgSalesByStore",
-			"databaseName": "postgres1",
+			"databaseName": "oiyokanInternalTarget",
 			"dbTableNameLocal": "Ocsdlsales_by_store",
 			"dbTableNameTarget": "sales_by_store"
 		},
@@ -225,7 +234,7 @@
 			"description": "Postgres dvdrental サンプルDB: staff",
 			"entitySetName": "PgStaffs",
 			"entityName": "PgStaff",
-			"databaseName": "postgres1",
+			"databaseName": "oiyokanInternalTarget",
 			"dbTableNameLocal": "Ocsdlstaff",
 			"dbTableNameTarget": "staff"
 		},
@@ -234,7 +243,7 @@
 			"description": "Postgres dvdrental サンプルDB: staff_list",
 			"entitySetName": "PgStaffLists",
 			"entityName": "PgStaffList",
-			"databaseName": "postgres1",
+			"databaseName": "oiyokanInternalTarget",
 			"dbTableNameLocal": "Ocsdlstaff_list",
 			"dbTableNameTarget": "staff_list"
 		},
@@ -243,7 +252,7 @@
 			"description": "Postgres dvdrental サンプルDB: store",
 			"entitySetName": "PgStores",
 			"entityName": "PgStore",
-			"databaseName": "postgres1",
+			"databaseName": "oiyokanInternalTarget",
 			"dbTableNameLocal": "Ocsdlstore",
 			"dbTableNameTarget": "store"
 		}

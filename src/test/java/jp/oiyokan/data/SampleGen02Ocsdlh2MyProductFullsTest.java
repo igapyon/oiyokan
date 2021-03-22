@@ -17,8 +17,7 @@ package jp.oiyokan.data;
 
 import java.sql.Connection;
 
-import org.junit.jupiter.api.Test;
-
+import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.basic.BasicDbUtil;
 import jp.oiyokan.dto.OiyokanSettings;
 import jp.oiyokan.dto.OiyokanSettingsDatabase;
@@ -36,7 +35,7 @@ class SampleGen02Ocsdlh2MyProductFullsTest {
         final OiyokanSettings settingsOiyokan = OiyokanSettingsUtil.loadOiyokanSettings();
         OiyokanSettingsDatabase settingsDatabase = null;
         for (OiyokanSettingsDatabase look : settingsOiyokan.getDatabaseList()) {
-            if ("oiyokan-internal".equals(look.getName())) {
+            if (OiyokanConstants.OIYOKAN_INTERNAL_DB.equals(look.getName())) {
                 settingsDatabase = look;
             }
         }
