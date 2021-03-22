@@ -97,11 +97,9 @@ oiyokan プロジェクトは、OData v4 server のシンプルなサンプル(h
 ## TODO
 
 - Sakila sample についての記述を追記
-- Sakila sample の簡易確認HTML作成
-- h2 database ベースでデータ構築して Heroku にアップできないか検討.
 - Maven Repository にアップしたい.
 - README に oiyokan-naming-settings.json の記述についての記載を追記.
-- Postgres DVDレンタルのサンプルを ON/OFFする手順またはプログラム実装を記述.
+- Sakila DVDレンタルのサンプル、MyProducts を ON/OFFする手順またはプログラム実装を記述.
 - TODO BasicSqlExprExpander の通過していない箇所のテスト.
 - SQL Server Northwind 的なものを利用したテスト。該当するDBの有無は不明。
 - 認証の各種実験。
