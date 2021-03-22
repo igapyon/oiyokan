@@ -1,0 +1,45 @@
+<html>
+
+<head>
+    <title>Simple Oiyokan checklist</title>
+</head>
+
+<body>
+    <h1>Simple Oiyokan checklist</h1>
+    <table border="1">
+        <tbody>
+            <tr>
+                <td>root</td>
+                <td><a href="http://localhost:8080/odata4.svc/" target="_blank">local</a></td>
+                <td><a href="https://odata4-dvdrental.herokuapp.com/odata4.svc/" target="_blank">heroku</a></td>
+            </tr>
+            <tr>
+                <td>version</td>
+                <td><a href="http://localhost:8080/odata4.svc/ODataAppInfos?$format=JSON" target="_blank">local</a></td>
+                <td><a href="https://odata4-dvdrental.herokuapp.com/odata4.svc/ODataAppInfos?$format=JSON" target="_blank">heroku</a></td>
+            </tr>
+            <tr>
+                <td>metadata</td>
+                <td><a href="http://localhost:8080/odata4.svc/$metadata" target="_blank">local</a></td>
+                <td><a href="https://odata4-dvdrental.herokuapp.com/odata4.svc/$metadata" target="_blank">heroku</a></td>
+            </tr>
+            <tr>
+                <td>MyProduct : orderby</td>
+                <td><a href="http://localhost:8080/odata4.svc/MyProducts?$orderby=ID&$top=20&$count=true" target="_blank">local</a></td>
+                <td><a href="https://odata4-dvdrental.herokuapp.com/odata4.svc/MyProducts?$orderby=ID&$top=20&$count=true" target="_blank">heroku</a></td>
+            </tr>
+            <tr>
+                <td>MyProduct : filter</td>
+                <td><a href="http://localhost:8080/odata4.svc/MyProducts?$top=2001&$filter=Description eq 'MacBook Pro (13-inch, 2020, Thunderbolt 3ポートx 4)' and ID eq 1.0&$count=true&$select=ID,Name" target="_blank">local</a></td>
+                <td><a href="https://odata4-dvdrental.herokuapp.com/odata4.svc/MyProducts?$top=2001&$filter=Description eq 'MacBook Pro (13-inch, 2020, Thunderbolt 3ポートx 4)' and ID eq 1.0&$count=true&$select=ID,Name" target="_blank">heroku</a></td>
+            </tr>
+            <tr>
+                <td>MyProduct : search (Experimental)</td>
+                <td><a href="http://localhost:8080/odata4.svc/MyProductFulls?$top=6&$search=macbook&$count=true&$select=ID" target="_blank">local</a></td>
+                <td><a href="https://odata4-dvdrental.herokuapp.com/odata4.svc/MyProductFulls?$top=6&$search=macbook&$count=true&$select=ID" target="_blank">heroku</a></td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+
+</html>
