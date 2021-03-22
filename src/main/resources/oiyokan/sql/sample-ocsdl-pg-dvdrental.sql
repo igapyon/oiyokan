@@ -186,7 +186,7 @@ CREATE TABLE IF NOT EXISTS
 CREATE TABLE IF NOT EXISTS
   Ocsdlsales_by_film_category (
     category VARCHAR(25)
-    , total_sales NUMERIC
+    , total_sales NUMERIC(10,2)
     , PRIMARY KEY(category)
   );
 
@@ -194,7 +194,7 @@ CREATE TABLE IF NOT EXISTS
   Ocsdlsales_by_store (
     store VARCHAR
     , manager VARCHAR
-    , total_sales NUMERIC
+    , total_sales NUMERIC(10,2)
     , PRIMARY KEY(store)
   );
 
