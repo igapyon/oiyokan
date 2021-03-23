@@ -24,6 +24,8 @@ import org.apache.olingo.server.api.ODataApplicationException;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.StreamUtils;
 
+import jp.oiyokan.OiyokanMessages;
+
 /**
  * oiyokan-sampledb.sql ファイルに関する処理。
  */
@@ -43,9 +45,9 @@ public class OiyokanResourceSqlUtil {
             final String[] sqls = sqlresources.split(";");
             return sqls;
         } catch (IOException ex) {
-            System.err.println(
-                    "UNEXPECTED: Fail to load setting SQL file [" + resourceSqlFileName + "]: " + ex.toString());
-            throw new ODataApplicationException("UNEXPECTED: Fail to load setting SQL file.", 500, Locale.ENGLISH);
+            // [M022] UNEXPECTED: Fail to load setting SQL file
+            System.err.println(OiyokanMessages.M022 + ": " + resourceSqlFileName + ": " + ex.toString());
+            throw new ODataApplicationException(OiyokanMessages.M022, 500, Locale.ENGLISH);
         }
     }
 }
