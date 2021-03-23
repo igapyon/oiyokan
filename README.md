@@ -96,12 +96,13 @@ oiyokan プロジェクトは、OData v4 server のシンプルなサンプル(h
 
 ## TODO
 
+- OiyokanMessages が欲しい。[E001] 何かメッセージ。のようなもの。
 - Sakila sample についての記述を追記
 - Maven Repository にアップしたい.
 - README に oiyokan-naming-settings.json の記述についての記載を追記.
-- Sakila DVDレンタルのサンプル、MyProducts を ON/OFFする手順またはプログラム実装を記述.
 - TODO BasicSqlExprExpander の通過していない箇所のテスト.
 - SQL Server Northwind 的なものを利用したテスト。該当するDBの有無は不明。
+- Sakila DVDレンタルのサンプル、MyProducts を ON/OFFする手順またはプログラム実装を記述.
 - 認証の各種実験。
 - TimeOfDay がテスト不十分.
 - 一旦 $search を実装から分離する.

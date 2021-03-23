@@ -83,51 +83,59 @@ public class OiyokanEntityCollectionProcessor implements EntityCollectionProcess
     public void readEntityCollection(ODataRequest request, ODataResponse response, //
             UriInfo uriInfo, ContentType responseFormat) //
             throws ODataApplicationException, SerializerException {
-        // System.err.println("TRACE: rawQueryPath: " + request.getRawQueryPath());
+        try {
 
-        // URI情報からURIリソースの指定を取得.
-        List<UriResource> resourcePaths = uriInfo.getUriResourceParts();
-        // URIリソースの最初のものを要素セット指定とみなす.
-        // Note: パスのうち1番目の項目のみ処理.
-        UriResourceEntitySet uriResourceEntitySet = (UriResourceEntitySet) resourcePaths.get(0);
-        // 要素セットの指定からEDM要素セットを取得.
-        EdmEntitySet edmEntitySet = uriResourceEntitySet.getEntitySet();
+            // URI情報からURIリソースの指定を取得.
+            List<UriResource> resourcePaths = uriInfo.getUriResourceParts();
+            // URIリソースの最初のものを要素セット指定とみなす.
+            // Note: パスのうち1番目の項目のみ処理.
+            UriResourceEntitySet uriResourceEntitySet = (UriResourceEntitySet) resourcePaths.get(0);
+            // 要素セットの指定からEDM要素セットを取得.
+            EdmEntitySet edmEntitySet = uriResourceEntitySet.getEntitySet();
 
-        // 要素セットの指定をもとに要素コレクションを取得.
-        // これがデータ本体に該当.
-        // ここでは h2 database のデータ構築実装を呼び出している.
-        final EntityCollection eCollection = BasicJdbcEntityCollectionBuilder.build(edmEntitySet, uriInfo);
+            // 要素セットの指定をもとに要素コレクションを取得.
+            // これがデータ本体に該当.
+            // ここでは h2 database のデータ構築実装を呼び出している.
+            final EntityCollection eCollection = BasicJdbcEntityCollectionBuilder.build(edmEntitySet, uriInfo);
 
-        // 指定のレスポンスフォーマットに合致する直列化を準備.
-        ODataSerializer serializer = odata.createSerializer(responseFormat);
+            // 指定のレスポンスフォーマットに合致する直列化を準備.
+            ODataSerializer serializer = odata.createSerializer(responseFormat);
 
-        // 要素セットから要素型のEDM情報を取得してコンテキストURLをビルド.
-        EdmEntityType edmEntityType = edmEntitySet.getEntityType();
-        ContextURL conUrl = ContextURL.with().entitySet(edmEntitySet).build();
+            // 要素セットから要素型のEDM情報を取得してコンテキストURLをビルド.
+            EdmEntityType edmEntityType = edmEntitySet.getEntityType();
+            ContextURL conUrl = ContextURL.with().entitySet(edmEntitySet).build();
 
-        // 要素のIdを作成.
-        final String id = request.getRawBaseUri() + "/" + edmEntitySet.getName();
+            // 要素のIdを作成.
+            final String id = request.getRawBaseUri() + "/" + edmEntitySet.getName();
 
-        // 直列化の処理.
-        EntityCollectionSerializerOptions.Builder builder = EntityCollectionSerializerOptions.with() //
-                .id(id).contextURL(conUrl);
-        if (uriInfo.getCountOption() != null) {
-            // $count あり.
-            final CountOptionImpl copt = new CountOptionImpl();
-            copt.setValue(true);
-            builder.count(copt);
+            // 直列化の処理.
+            EntityCollectionSerializerOptions.Builder builder = EntityCollectionSerializerOptions.with() //
+                    .id(id).contextURL(conUrl);
+            if (uriInfo.getCountOption() != null) {
+                // $count あり.
+                final CountOptionImpl copt = new CountOptionImpl();
+                copt.setValue(true);
+                builder.count(copt);
+            }
+            if (uriInfo.getSelectOption() != null) {
+                // $select あり.
+                builder.select(uriInfo.getSelectOption());
+            }
+
+            SerializerResult serResult = serializer.entityCollection( //
+                    serviceMetadata, edmEntityType, eCollection, builder.build());
+
+            // OData レスポンスを返却.
+            response.setContent(serResult.getContent());
+            response.setStatusCode(HttpStatusCode.OK.getStatusCode());
+            response.setHeader(HttpHeader.CONTENT_TYPE, responseFormat.toContentTypeString());
+        } catch (ODataApplicationException ex) {
+            throw ex;
+        } catch (RuntimeException ex) {
+            // NullPointerException など想定しない例外の場合にここを通過させてスタックトレースを出力させる。
+            // ODataRuntimeException についてもこちらを通過させてスタックトレース出力させる。
+            ex.printStackTrace();
+            throw ex;
         }
-        if (uriInfo.getSelectOption() != null) {
-            // $select あり.
-            builder.select(uriInfo.getSelectOption());
-        }
-
-        SerializerResult serResult = serializer.entityCollection( //
-                serviceMetadata, edmEntityType, eCollection, builder.build());
-
-        // OData レスポンスを返却.
-        response.setContent(serResult.getContent());
-        response.setStatusCode(HttpStatusCode.OK.getStatusCode());
-        response.setHeader(HttpHeader.CONTENT_TYPE, responseFormat.toContentTypeString());
     }
 }
