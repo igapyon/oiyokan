@@ -31,6 +31,7 @@ import org.apache.olingo.server.core.uri.queryoption.FilterOptionImpl;
 import org.apache.olingo.server.core.uri.queryoption.expression.MemberImpl;
 
 import jp.oiyokan.OiyokanCsdlEntitySet;
+import jp.oiyokan.OiyokanMessages;
 import jp.oiyokan.dto.OiyokanSettingsDatabase;
 import jp.oiyokan.settings.OiyokanNamingUtil;
 
@@ -198,8 +199,9 @@ public class BasicSqlBuilder {
         } else if ("pg".equals(settingsDatabase.getType())) {
             fieldName = "\"" + fieldName + "\"";
         } else {
-            System.err.println("NOT SUPPORTED: Database type: " + settingsDatabase.getType());
-            throw new ODataApplicationException("NOT SUPPORTED: Database type: " + settingsDatabase.getType(), 500,
+            // [M020] NOT SUPPORTED: Database type
+            System.err.println(OiyokanMessages.M020 + ": " + settingsDatabase.getType());
+            throw new ODataApplicationException(OiyokanMessages.M020 + ": " + settingsDatabase.getType(), 500,
                     Locale.ENGLISH);
         }
 

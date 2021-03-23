@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package jp.oiyokan.basic.sql;
+package jp.oiyokan.fromolingo;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -69,7 +69,7 @@ public class FromOlingoUtil {
      * @return 日時。
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
-    protected static ZonedDateTime parseDateString(final String value) throws ODataApplicationException {
+    public static ZonedDateTime parseDateString(final String value) throws ODataApplicationException {
         LocalDate date;
         try {
             date = LocalDate.parse(value);
