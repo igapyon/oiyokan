@@ -97,13 +97,13 @@ oiyokan プロジェクトは、OData v4 server のシンプルなサンプル(h
 ## TODO
 
 - Sakila sample についての記述を追記
-- Maven Repository にアップしたい.
+- index.htmlにデザインを入れたい。
 - README に oiyokan-naming-settings.json の記述についての記載を追記.
 - TODO BasicSqlExprExpander の通過していない箇所のテスト.
-- SQL Server Northwind 的なものを利用したテスト。該当するDBの有無は不明。
 - Sakila DVDレンタルのサンプル、MyProducts を ON/OFFする手順またはプログラム実装を記述.
 - 認証の各種実験。
 - TimeOfDay がテスト不十分.
+- Maven Repository にアップしたい.
 - 一旦 $search を実装から分離する.
 - 実験的に全文検索である `$search` をサポートしたものの、もう少し詳しいところが調べられていない。また全文検索で有効なのはアルファベットのみ。h2 database でここを深掘りしても不毛か?
 - ($search対応の後続となるため、しばらく対応できない) TODO Null (nullable) の対応。現在はコメントアウト.
