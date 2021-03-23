@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/design-system/2.14.3/styles/salesforce-lightning-design-system.min.css"
+    rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="description" content="">
+  <title>Sakila DVD Rental</title>
+</head>
+
+<body>
+  <div class="slds-context-bar">
+    <div class="slds-context-bar__primary">
+      <div
+        class="slds-context-bar__item slds-context-bar__dropdown-trigger slds-dropdown-trigger slds-dropdown-trigger_click slds-no-hover">
+        <div class="slds-context-bar__icon-action">
+          <button class="slds-button slds-icon-waffle_container slds-context-bar__button"
+            title="No application at this moment.">
+            <span class="slds-icon-waffle">
+              <span class="slds-r1"></span>
+              <span class="slds-r2"></span>
+              <span class="slds-r3"></span>
+              <span class="slds-r4"></span>
+              <span class="slds-r5"></span>
+              <span class="slds-r6"></span>
+              <span class="slds-r7"></span>
+              <span class="slds-r8"></span>
+              <span class="slds-r9"></span>
+            </span>
+            <span class="slds-assistive-text">Open App Launcher</span>
+          </button>
+        </div>
+        <span class="slds-context-bar__label-action slds-context-bar__app-name">
+          <span class="slds-truncate" title="Oiyokan OData v4">Oiyokan OData v4</span>
+        </span>
+      </div>
+    </div>
+    <nav class="slds-context-bar__secondary" role="navigation">
+      <ul class="slds-grid">
+        <li class="slds-context-bar__item">
+          <a href="index.html" class="slds-context-bar__label-action" title="Home">
+            <span class="slds-truncate" title="Home">Home</span>
+          </a>
+        </li>
+        <li class="slds-context-bar__item slds-is-active">
+          <a href="#" class="slds-context-bar__label-action" title="Dvd Rental">
+            <span class="slds-assistive-text">Current Page:</span>
+            <span class="slds-truncate" title="Dvd Rental">Dvd Rental</span>
+          </a>
+        </li>
+        <li class="slds-context-bar__item">
+          <a href="oiyokan-unittest.html" class="slds-context-bar__label-action" title="Oiyokan Basic Test">
+            <span class="slds-truncate" title="Oiyokan Basic Test">Oiyokan Basic Test</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+
+
+
+  <body>
+    <h1>Simple Sakili dvdrental checklist</h1>
+    <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+      <thead>
+        <tr class="slds-line-height_reset">
+          <th class="" scope="col">
+            <div class="slds-truncate" title="Function">Function</div>
+          </th>
+          <th class="" scope="col">
+            <div class="slds-truncate" title="Heroku">Heroku</div>
+          </th>
+          <th class="" scope="col">
+            <div class="slds-truncate" title="Localhost">Localhost</div>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="slds-hint-parent">
+          <td>SklActors</td>
+          <td><a href="https://odata4-dvdrental.herokuapp.com/odata4.svc/SklActors?$count=true&$top=20"
+              target="_blank">heroku</a></td>
+          <td><a href="http://localhost:8080/odata4.svc/SklActors?$count=true&$top=20" target="_blank">local</a></td>
+        </tr>
+        <tr class="slds-hint-parent">
+          <td>SklActorInfos (VIEW)</td>
+          <td><a href="https://odata4-dvdrental.herokuapp.com/odata4.svc/SklActorInfos?$count=true&$top=20"
+              target="_blank">heroku</a>
+          </td>
+          <td><a href="http://localhost:8080/odata4.svc/SklActorInfos?$count=true&$top=20" target="_blank">local</a>
+          </td>
+        </tr>
+        <tr class="slds-hint-parent">
+          <td>SklAddresss</td>
+          <td><a href="https://odata4-dvdrental.herokuapp.com/odata4.svc/SklAddresss?$count=true&$top=20"
+              target="_blank">heroku</a></td>
+          <td><a href="http://localhost:8080/odata4.svc/SklAddresss?$count=true&$top=20" target="_blank">local</a></td>
+        </tr>
+        <tr class="slds-hint-parent">
+          <td>SklCategorys</td>
+          <td><a href="https://odata4-dvdrental.herokuapp.com/odata4.svc/SklAddresss?$count=true&$top=20"
+              target="_blank">heroku</a></td>
+          <td><a href="http://localhost:8080/odata4.svc/SklCategorys?$count=true&$top=20" target="_blank">local</a></td>
+        </tr>
+        <tr class="slds-hint-parent">
+          <td>SklCitys</td>
+          <td><a
+              href="https://odata4-dvdrental.herokuapp.com/odata4.svc/SklCitys?$count=true&$top=20&$orderby=country_id"
+              target="_blank">heroku</a></td>
+          <td><a href="http://localhost:8080/odata4.svc/SklCitys?$count=true&$top=20&$orderby=country_id"
+              target="_blank">local</a></td>
+        </tr>
+        <tr class="slds-hint-parent">
+          <td>SklCountrys</td>
+          <td><a
+              href="https://odata4-dvdrental.herokuapp.com/odata4.svc/SklCountrys?$count=true&$top=20&$orderby=country"
+              target="_blank">heroku</a></td>
+          <td><a href="http://localhost:8080/odata4.svc/SklCountrys?$count=true&$top=20&$orderby=country"
+              target="_blank">local</a></td>
+        </tr>
+        <tr class="slds-hint-parent">
+          <td>SklCustomers</td>
+          <td><a href="https://odata4-dvdrental.herokuapp.com/odata4.svc/SklCustomers?$count=true&$top=20"
+              target="_blank">heroku</a></td>
+          <td><a href="http://localhost:8080/odata4.svc/SklCustomers?$count=true&$top=20" target="_blank">local</a></td>
+        </tr>
+        <tr class="slds-hint-parent">
+          <td>SklCustomerLists (VIEW)</td>
+          <td><a href="https://odata4-dvdrental.herokuapp.com/odata4.svc/SklCustomerLists?$count=true&$top=20"
+              target="_blank">heroku</a></td>
+          <td><a href="http://localhost:8080/odata4.svc/SklCustomerLists?$count=true&$top=20" target="_blank">local</a>
+          </td>
+        </tr>
+        <tr class="slds-hint-parent">
+          <td>SklFilms</td>
+          <td><a href="https://odata4-dvdrental.herokuapp.com/odata4.svc/SklFilms?$count=true&$top=20&$orderby=title"
+              target="_blank">heroku</a></td>
+          <td><a href="http://localhost:8080/odata4.svc/SklFilms?$count=true&$top=20&$orderby=title"
+              target="_blank">local</a></td>
+        </tr>
+        <tr class="slds-hint-parent">
+          <td>SklFilmActors</td>
+          <td><a href="https://odata4-dvdrental.herokuapp.com/odata4.svc/SklFilmActors?$count=true&$top=20"
+              target="_blank">heroku</a></td>
+          <td><a href="http://localhost:8080/odata4.svc/SklFilmActors?$count=true&$top=20" target="_blank">local</a>
+          </td>
+        </tr>
+        <tr class="slds-hint-parent">
+          <td>SklFilmCategorys</td>
+          <td><a href="https://odata4-dvdrental.herokuapp.com/odata4.svc/SklFilmCategorys?$count=true&$top=20"
+              target="_blank">heroku</a></td>
+          <td><a href="http://localhost:8080/odata4.svc/SklFilmCategorys?$count=true&$top=20" target="_blank">local</a>
+          </td>
+        </tr>
+        <tr class="slds-hint-parent">
+          <td>SklFilmLists (VIEW)</td>
+          <td><a href="https://odata4-dvdrental.herokuapp.com/odata4.svc/SklFilmLists?$count=true&$top=20"
+              target="_blank">heroku</a></td>
+          <td><a href="http://localhost:8080/odata4.svc/SklFilmLists?$count=true&$top=20" target="_blank">local</a></td>
+        </tr>
+        <tr class="slds-hint-parent">
+          <td>SklInventorys</td>
+          <td><a href="https://odata4-dvdrental.herokuapp.com/odata4.svc/SklInventorys?$count=true&$top=20"
+              target="_blank">heroku</a></td>
+          <td><a href="http://localhost:8080/odata4.svc/SklInventorys?$count=true&$top=20" target="_blank">local</a>
+          </td>
+        </tr>
+        <tr class="slds-hint-parent">
+          <td>SklLanguages</td>
+          <td><a href="https://odata4-dvdrental.herokuapp.com/odata4.svc/SklLanguages?$count=true&$top=20"
+              target="_blank">heroku</a></td>
+          <td><a href="http://localhost:8080/odata4.svc/SklLanguages?$count=true&$top=20" target="_blank">local</a></td>
+        </tr>
+        <tr class="slds-hint-parent">
+          <td>SklNicerButSlowerFilmLists (VIEW)</td>
+          <td><a href="https://odata4-dvdrental.herokuapp.com/odata4.svc/SklNicerButSlowerFilmLists?$count=true&$top=20"
+              target="_blank">heroku</a></td>
+          <td><a href="http://localhost:8080/odata4.svc/SklNicerButSlowerFilmLists?$count=true&$top=20"
+              target="_blank">local</a></td>
+        </tr>
+        <tr class="slds-hint-parent">
+          <td>SklPayments</td>
+          <td><a href="https://odata4-dvdrental.herokuapp.com/odata4.svc/SklPayments?$count=true&$top=20"
+              target="_blank">heroku</a></td>
+          <td><a href="http://localhost:8080/odata4.svc/SklPayments?$count=true&$top=20" target="_blank">local</a></td>
+        </tr>
+        <tr class="slds-hint-parent">
+          <td>SklRentals</td>
+          <td><a href="https://odata4-dvdrental.herokuapp.com/odata4.svc/SklRentals?$count=true&$top=20"
+              target="_blank">heroku</a></td>
+          <td><a href="http://localhost:8080/odata4.svc/SklRentals?$count=true&$top=20" target="_blank">local</a></td>
+        </tr>
+        <tr class="slds-hint-parent">
+          <td>SklSalesByFilmCategorys (VIEW)</td>
+          <td><a href="https://odata4-dvdrental.herokuapp.com/odata4.svc/SklSalesByFilmCategorys?$count=true&$top=20"
+              target="_blank">heroku</a></td>
+          <td><a href="http://localhost:8080/odata4.svc/SklSalesByFilmCategorys?$count=true&$top=20"
+              target="_blank">local</a></td>
+        </tr>
+        <tr class="slds-hint-parent">
+          <td>SklSalesByStores (VIEW)</td>
+          <td><a href="https://odata4-dvdrental.herokuapp.com/odata4.svc/SklSalesByStores?$count=true&$top=20"
+              target="_blank">heroku</a></td>
+          <td><a href="http://localhost:8080/odata4.svc/SklSalesByStores?$count=true&$top=20" target="_blank">local</a>
+          </td>
+        </tr>
+        <tr class="slds-hint-parent">
+          <td>SklStaffs</td>
+          <td><a href="https://odata4-dvdrental.herokuapp.com/odata4.svc/SklStaffs?$count=true&$top=20"
+              target="_blank">heroku</a></td>
+          <td><a href="http://localhost:8080/odata4.svc/SklStaffs?$count=true&$top=20" target="_blank">local</a></td>
+        </tr>
+        <tr class="slds-hint-parent">
+          <td>SklStaffLists (VIEW)</td>
+          <td><a
+              href="https://odata4-dvdrental.herokuapp.com/odata4.svc/SklStaffLists?$count=true&$top=20&$select=zip_code&$orderby=zip_code&$filter=zip_code ne '00000'"
+              target="_blank">heroku</a></td>
+          <td><a
+              href="http://localhost:8080/odata4.svc/SklStaffLists?$count=true&$top=20&$select=zip_code&$orderby=zip_code&$filter=zip_code ne '00000'"
+              target="_blank">local</a></td>
+        </tr>
+        <tr class="slds-hint-parent">
+          <td>SklStores</td>
+          <td><a href="https://odata4-dvdrental.herokuapp.com/odata4.svc/SklStores?$count=true"
+              target="_blank">heroku</a></td>
+          <td><a href="http://localhost:8080/odata4.svc/SklStores?$count=true" target="_blank">local</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+
+</html>
