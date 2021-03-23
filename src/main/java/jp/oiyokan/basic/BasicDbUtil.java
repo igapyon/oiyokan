@@ -36,6 +36,7 @@ import org.apache.olingo.server.api.ODataApplicationException;
 import org.springframework.util.StreamUtils;
 
 import jp.oiyokan.OiyokanCsdlEntitySet;
+import jp.oiyokan.OiyokanMessages;
 import jp.oiyokan.dto.OiyokanSettingsDatabase;
 import jp.oiyokan.settings.OiyokanNamingUtil;
 
@@ -69,10 +70,11 @@ public class BasicDbUtil {
                         settingsDatabase.getJdbcPass());
             }
         } catch (SQLException ex) {
-            System.err.println("OData v4: UNEXPECTED: データベースの接続に失敗: [" + settingsDatabase.getName()
-                    + "] しばらく待って再度トライしてください。しばらく経っても改善しない場合はIT部門に連絡してください: " + ex.toString());
-            throw new ODataApplicationException("OData v4: UNEXPECTED: データベースの接続に失敗: [" + settingsDatabase.getName()
-                    + "] しばらく待って再度トライしてください。しばらく経っても改善しない場合はIT部門に連絡してください", 500, Locale.ENGLISH);
+            // [M005] UNEXPECTED: データベースの接続に失敗:
+            // しばらく待って再度トライしてください。しばらく経っても改善しない場合はIT部門に連絡してください
+            System.err.println(OiyokanMessages.M005 + ": " + settingsDatabase.getName() + ": " + ex.toString());
+            throw new ODataApplicationException(OiyokanMessages.M005 + ": " + settingsDatabase.getName(), //
+                    500, Locale.ENGLISH);
         }
 
         return conn;
@@ -184,9 +186,10 @@ public class BasicDbUtil {
             }
             break;
         default:
-            System.err.println("NOT SUPPORTED: CSDL: JDBC Type: " + rsmeta.getColumnType(column));
-            throw new ODataApplicationException("NOT SUPPORTED: CSDL: JDBC Type: " + rsmeta.getColumnType(column), 500,
-                    Locale.ENGLISH);
+            // [M006] NOT SUPPORTED: CSDL: JDBC Type
+            System.err.println(OiyokanMessages.M006 + ": " + rsmeta.getColumnType(column));
+            throw new ODataApplicationException(OiyokanMessages.M006 + ": " + rsmeta.getColumnType(column), //
+                    500, Locale.ENGLISH);
         }
 
         // NULL許容かどうか。不明な場合は設定しない。
@@ -254,10 +257,11 @@ public class BasicDbUtil {
                     return new Property(null, propName, ValueType.PRIMITIVE,
                             StreamUtils.copyToString(rset.getAsciiStream(column), Charset.forName("UTF-8")));
                 } catch (IOException ex) {
-                    System.err.println("UNEXPECTED: fail to read from CLOB: " + rsmeta.getColumnName(column) + ": "
-                            + ex.toString());
-                    throw new ODataApplicationException(
-                            "UNEXPECTED: fail to read from CLOB: " + rsmeta.getColumnName(column), 500, Locale.ENGLISH);
+                    // [M007] UNEXPECTED: fail to read from CLOB
+                    System.err
+                            .println(OiyokanMessages.M007 + ": " + rsmeta.getColumnName(column) + ": " + ex.toString());
+                    throw new ODataApplicationException(OiyokanMessages.M007 + ": " + rsmeta.getColumnName(column), //
+                            500, Locale.ENGLISH);
                 }
             } else {
                 return new Property(null, propName, ValueType.PRIMITIVE, rset.getString(column));
@@ -267,10 +271,10 @@ public class BasicDbUtil {
                 return new Property(null, propName, ValueType.PRIMITIVE,
                         StreamUtils.copyToByteArray(rset.getBinaryStream(column)));
             } catch (IOException ex) {
-                System.err.println(
-                        "UNEXPECTED: fail to read from binary: " + rsmeta.getColumnName(column) + ": " + ex.toString());
-                throw new ODataApplicationException(
-                        "UNEXPECTED: fail to read from binary: " + rsmeta.getColumnName(column), 500, Locale.ENGLISH);
+                // [M008] UNEXPECTED: fail to read from binary
+                System.err.println(OiyokanMessages.M008 + ": " + rsmeta.getColumnName(column) + ": " + ex.toString());
+                throw new ODataApplicationException(OiyokanMessages.M008 + ": " + rsmeta.getColumnName(column), //
+                        500, Locale.ENGLISH);
             }
         } else if ("Edm.Guid".equals(csdlProp.getType())) {
             // Guid については UUID として読み込む。
@@ -278,11 +282,12 @@ public class BasicDbUtil {
             return new Property(null, propName, ValueType.PRIMITIVE, look);
         } else {
             // ARRAY と OTHER には対応しない。そもそもここ通過しないのじゃないの?
+            // [M009] UNEXPECTED: missing impl
             System.err.println(
-                    "UNEXPECTED: missing impl: type[" + csdlProp.getType() + "], " + rsmeta.getColumnName(column));
+                    OiyokanMessages.M009 + ": type[" + csdlProp.getType() + "], " + rsmeta.getColumnName(column));
             throw new ODataApplicationException(
-                    "UNEXPECTED: missing impl: type[" + csdlProp.getType() + "], " + rsmeta.getColumnName(column), 500,
-                    Locale.ENGLISH);
+                    OiyokanMessages.M009 + ": type[" + csdlProp.getType() + "], " + rsmeta.getColumnName(column), //
+                    500, Locale.ENGLISH);
         }
     }
 
@@ -321,8 +326,9 @@ public class BasicDbUtil {
         } else if (value instanceof String) {
             stmt.setString(column, (String) value);
         } else {
-            System.err.println("NOT SUPPORTED: Parameter Type: " + value.getClass().getCanonicalName());
-            throw new ODataApplicationException("NOT SUPPORTED: Parameter Type: " + value.getClass().getCanonicalName(),
+            // [M010] NOT SUPPORTED: Parameter Type
+            System.err.println(OiyokanMessages.M010 + ": " + value.getClass().getCanonicalName());
+            throw new ODataApplicationException(OiyokanMessages.M010 + ": " + value.getClass().getCanonicalName(), //
                     500, Locale.ENGLISH);
         }
     }

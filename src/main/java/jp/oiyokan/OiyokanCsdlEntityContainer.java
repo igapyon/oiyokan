@@ -87,17 +87,20 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
                     if ("h2".equals(settingsDatabase.getType()) || "pg".equals(settingsDatabase.getType())) {
                         // OK
                     } else {
-                        System.err.println("UNEXPECTED: [" + settingsDatabase.getName() + "]の type 指定["
-                                + settingsDatabase.getType() + "]が不正");
-                        throw new ODataApplicationException("UNEXPECTED: [" + settingsDatabase.getName() + "]の type 指定["
-                                + settingsDatabase.getType() + "]が不正", 500, Locale.ENGLISH);
+                        // [M002] UNEXPECTED: Illegal data type in database settings
+                        System.err.println(OiyokanMessages.M002 + ": dbname:" + settingsDatabase.getName() //
+                                + ", type:" + settingsDatabase.getType());
+                        throw new ODataApplicationException(
+                                OiyokanMessages.M002 + ": dbname:" + settingsDatabase.getName() //
+                                        + ", type:" + settingsDatabase.getType(),
+                                500, Locale.ENGLISH);
                     }
                 } catch (ClassNotFoundException ex) {
-                    System.err.println("UNEXPECTED: Fail to load JDBC driver: " + settingsDatabase.getJdbcDriver()
+                    // [M003] UNEXPECTED: Fail to load JDBC driver
+                    System.err.println(OiyokanMessages.M003 + ": " + settingsDatabase.getJdbcDriver() //
                             + ": " + ex.toString());
-                    throw new ODataApplicationException(
-                            "UNEXPECTED: Fail to load JDBC driver: " + settingsDatabase.getJdbcDriver(), 500,
-                            Locale.ENGLISH);
+                    throw new ODataApplicationException(OiyokanMessages.M003 + ": " + settingsDatabase.getJdbcDriver(),
+                            500, Locale.ENGLISH);
                 }
             }
 
@@ -109,8 +112,9 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
                     // テーブルをセットアップ.
                     OiyokanInterDb.setupTable(connInterDb);
                 } catch (SQLException ex) {
-                    System.err.println("UNEXPECTED Database error: " + ex.toString());
-                    new ODataApplicationException("UNEXPECTED Database error.", 500, Locale.ENGLISH);
+                    // [M004] UNEXPECTED Database error
+                    System.err.println(OiyokanMessages.M004 + ": " + ex.toString());
+                    new ODataApplicationException(OiyokanMessages.M004, 500, Locale.ENGLISH);
                 }
             }
 

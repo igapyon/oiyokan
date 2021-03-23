@@ -52,7 +52,9 @@ public class OiyokanOdata4Register {
                 // Query String を uri に追加.
                 uri += "?" + new URLCodec().decode(req.getQueryString());
             } catch (DecoderException ex) {
-                throw new ServletException("Can't decode specified decodec url[1]:" + ex.toString());
+                // [M001] Can't decode specified decodec url
+                System.err.println(OiyokanMessages.M001 + ": " + ex.toString());
+                throw new ServletException(OiyokanMessages.M001);
             }
         }
 
