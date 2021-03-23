@@ -97,7 +97,6 @@ oiyokan プロジェクトは、OData v4 server のシンプルなサンプル(h
 ## TODO
 
 - Sakila sample についての記述を追記
-- index.htmlにデザインを入れたい。
 - README に oiyokan-naming-settings.json の記述についての記載を追記.
 - TODO BasicSqlExprExpander の通過していない箇所のテスト.
 - Sakila DVDレンタルのサンプル、MyProducts を ON/OFFする手順またはプログラム実装を記述.
