@@ -12,9 +12,9 @@
 
 	<groupId>jp.oiyokan</groupId>
 	<artifactId>oiyokan</artifactId>
-	<version>0.20210323.8</version>
+	<version>0.20210324.1</version>
 	<name>oiyokan</name>
-	<description>Simple OData v4 server.</description>
+	<description>Oiyokan is a simple OData v4 Server. (based on Apache Olingo / Spring Boot / h2 database)</description>
 
 	<properties>
 		<java.version>11</java.version>
