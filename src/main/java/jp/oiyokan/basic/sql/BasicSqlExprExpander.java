@@ -170,15 +170,22 @@ public class BasicSqlExprExpander {
         } else if (opKind == BinaryOperatorKind.EQ) {
             // EQ
             sqlInfo.getSqlBuilder().append("(");
-            expand(impl.getLeftOperand());
-
             if (impl.getRightOperand() instanceof LiteralImpl //
                     && null == ((LiteralImpl) impl.getRightOperand()).getType()) {
+                expand(impl.getLeftOperand());
                 // 特殊処理 : 右辺が Literal かつ nullの場合は IS NULL 展開する。こうしないと h2 database は NULL検索できない.
                 // また、リテラルに null が指定されている場合に、LiteralImpl の getType() 自体が null で渡ってくる。
                 sqlInfo.getSqlBuilder().append(" IS NULL)");
                 return;
+            } else if (impl.getLeftOperand() instanceof LiteralImpl //
+                    && null == ((LiteralImpl) impl.getLeftOperand()).getType()) {
+                expand(impl.getRightOperand());
+                // 特殊処理 : 左辺が Literal かつ nullの場合は IS NULL 展開する。こうしないと h2 database は NULL検索できない.
+                // また、リテラルに null が指定されている場合に、LiteralImpl の getType() 自体が null で渡ってくる。
+                sqlInfo.getSqlBuilder().append(" IS NULL)");
+                return;
             } else {
+                expand(impl.getLeftOperand());
                 sqlInfo.getSqlBuilder().append(" = ");
                 expand(impl.getRightOperand());
                 sqlInfo.getSqlBuilder().append(")");
