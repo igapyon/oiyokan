@@ -10,7 +10,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta charset="UTF-8" />
   <meta name="description" content="">
-  <title>index</title>
+  <title>Oiyokan Unit Test</title>
 </head>
 
 <body data-page-initialized="true">
@@ -109,10 +109,10 @@
                 <div class="slds-truncate" title="Path">Path</div>
               </th>
               <th class="" scope="col">
-                <div class="slds-truncate" title="Heroku">Heroku</div>
+                <div class="slds-truncate" title="Request">Request</div>
               </th>
               <th class="" scope="col">
-                <div class="slds-truncate" title="Localhost">Localhost</div>
+                <div class="slds-truncate" title="Note">Note</div>
               </th>
             </tr>
           </thead>
@@ -124,13 +124,11 @@
               <td data-label="Path">
                 <div class="slds-truncate" title="Path">/</div>
               </td>
-              <td data-label="Heroku">
-                <div class="slds-truncate" title="Heroku"><a href="https://odata4-dvdrental.herokuapp.com/odata4.svc/"
-                    target="_blank">heroku</a></div>
+              <td data-label="Request">
+                <div class="slds-truncate" title="Request"><a href="./odata4.svc/" target="_blank">Request</a></div>
               </td>
-              <td data-label="Localhost">
-                <div class="slds-truncate" title="Localhost"><a href="http://localhost:8080/odata4.svc/"
-                    target="_blank">local</a></div>
+              <td data-label="Note">
+                <div class="slds-truncate" title="Localhost">Root of OData v4 server.</div>
               </td>
             </tr>
             <tr class="slds-hint-parent">
@@ -140,14 +138,12 @@
               <td data-label="Path">
                 <div class="slds-truncate" title="Path">/ODataAppInfos?$format=JSON</div>
               </td>
-              <td data-label="Heroku">
-                <div class="slds-truncate" title="Heroku"><a
-                    href="https://odata4-dvdrental.herokuapp.com/odata4.svc/ODataAppInfos?$format=JSON"
-                    target="_blank">heroku</a></div>
+              <td data-label="Request">
+                <div class="slds-truncate" title="Request"><a href="./ODataAppInfos?$format=JSON"
+                    target="_blank">Request</a></div>
               </td>
-              <td data-label="Localhost">
-                <div class="slds-truncate" title="Localhost"><a
-                    href="http://localhost:8080/odata4.svc/ODataAppInfos?$format=JSON" target="_blank">local</a></div>
+              <td data-label="Note">
+                <div class="slds-truncate" title="Localhost">Show Oiyokan version.</div>
               </td>
             </tr>
             <tr class="slds-hint-parent">
@@ -157,14 +153,13 @@
               <td data-label="Path">
                 <div class="slds-truncate" title="Path">/$metadata</div>
               </td>
-              <td data-label="Heroku">
-                <div class="slds-truncate" title="Heroku"><a
-                    href="https://odata4-dvdrental.herokuapp.com/odata4.svc/$metadata" target="_blank">heroku</a>
+              <td data-label="Request">
+                <div class="slds-truncate" title="Request"><a
+                    href="./odata4.svc/$metadata" target="_blank">Request</a>
                 </div>
               </td>
-              <td data-label="Localhost">
-                <div class="slds-truncate" title="Localhost"><a href="http://localhost:8080/odata4.svc/$metadata"
-                    target="_blank">local</a></div>
+              <td data-label="Note">
+                <div class="slds-truncate" title="Localhost">Metadata of OData.</div>
               </td>
             </tr>
             <tr class="slds-hint-parent">
@@ -174,15 +169,13 @@
               <td data-label="Path">
                 <div class="slds-truncate" title="Path">/MyProducts?$orderby=ID&$top=20&$count=true</div>
               </td>
-              <td data-label="Heroku">
-                <div class="slds-truncate" title="Heroku"><a
-                    href="https://odata4-dvdrental.herokuapp.com/odata4.svc/MyProducts?$orderby=ID&$top=20&$count=true"
-                    target="_blank">heroku</a></div>
+              <td data-label="Request">
+                <div class="slds-truncate" title="Request"><a
+                    href="./odata4.svc/MyProducts?$orderby=ID&$top=20&$count=true"
+                    target="_blank">Request</a></div>
               </td>
-              <td data-label="Localhost">
-                <div class="slds-truncate" title="Localhost"><a
-                    href="http://localhost:8080/odata4.svc/MyProducts?$orderby=ID&$top=20&$count=true"
-                    target="_blank">local</a></div>
+              <td data-label="Note">
+                <div class="slds-truncate" title="Localhost">Sort test.</div>
               </td>
             </tr>
             <tr class="slds-hint-parent">
@@ -192,15 +185,13 @@
               <td data-label="Path">
                 <div class="slds-truncate" title="Path">/MyProducts?$top=2001&$filter=Description eq 'MacBook P...</div>
               </td>
-              <td data-label="Heroku">
-                <div class="slds-truncate" title="Heroku"><a
+              <td data-label="Request">
+                <div class="slds-truncate" title="Request"><a
                     href="https://odata4-dvdrental.herokuapp.com/odata4.svc/MyProducts?$top=2001&$filter=Description eq 'MacBook Pro (13-inch, 2020, Thunderbolt 3ポートx 4)' and ID eq 1.0&$count=true&$select=ID,Name"
-                    target="_blank">heroku</a></div>
+                    target="_blank">Request</a></div>
               </td>
-              <td data-label="Localhost">
-                <div class="slds-truncate" title="Localhost"><a
-                    href="http://localhost:8080/odata4.svc/MyProducts?$top=2001&$filter=Description eq 'MacBook Pro (13-inch, 2020, Thunderbolt 3ポートx 4)' and ID eq 1.0&$count=true&$select=ID,Name"
-                    target="_blank">local</a></div>
+              <td data-label="Note">
+                <div class="slds-truncate" title="Localhost">Filter test.</div>
               </td>
             </tr>
             <tr class="slds-hint-parent">
@@ -208,17 +199,16 @@
                 <div class="slds-truncate" title="search">MyProduct : $search (Experimental)</div>
               </td>
               <td data-label="Path">
-                <div class="slds-truncate" title="Path">/MyProductFulls?$top=6&$search=macbook&$count=true&$select=ID</div>
+                <div class="slds-truncate" title="Path">/MyProductFulls?$top=6&$search=macbook&$count=true&$select=ID
+                </div>
               </td>
-              <td data-label="Heroku">
-                <div class="slds-truncate" title="Heroku"><a
-                    href="https://odata4-dvdrental.herokuapp.com/odata4.svc/MyProductFulls?$top=6&$search=macbook&$count=true&$select=ID"
-                    target="_blank">heroku</a></div>
+              <td data-label="Request">
+                <div class="slds-truncate" title="Request"><a
+                    href="./odata4.svc/MyProductFulls?$top=6&$search=macbook&$count=true&$select=ID"
+                    target="_blank">Request</a></div>
               </td>
-              <td data-label="Localhost">
-                <div class="slds-truncate" title="Localhost"><a
-                    href="http://localhost:8080/odata4.svc/MyProductFulls?$top=6&$search=macbook&$count=true&$select=ID"
-                    target="_blank">local</a></div>
+              <td data-label="Note">
+                <div class="slds-truncate" title="Localhost">Full text search test (Experimental).</div>
               </td>
             </tr>
           </tbody>
