@@ -76,4 +76,28 @@ class BasicODataSampleSklNullTest {
                 result);
         assertEquals(200, resp.getStatusCode());
     }
+
+    /**
+     * リテラルの null 対応
+     * 
+     * IS NOT NULL 展開の確認。
+     */
+    @Test
+    void test03() throws Exception {
+        final ODataHttpHandler handler = BasicODataSampleTestUtil.getHandler();
+        final ODataRequest req = new ODataRequest();
+        req.setMethod(HttpMethod.GET);
+        req.setRawBaseUri("http://localhost:8080/odata4.svc");
+        req.setRawODataPath("/SklAddresss");
+        req.setRawQueryPath("$top=1&$count=true&$filter=address2%20ne%20null&$select=address_id&$orderby=address_id"); // NULLの件数をカウント.
+        req.setRawRequestUri(req.getRawBaseUri() + req.getRawODataPath() + "?" + req.getRawQueryPath());
+
+        final ODataResponse resp = handler.process(req);
+        final String result = BasicODataSampleTestUtil.stream2String(resp.getContent());
+        // 検索結果が存在するべき。
+        assertEquals(
+                "{\"@odata.context\":\"$metadata#SklAddresss\",\"@odata.count\":599,\"value\":[{\"address_id\":5}]}",
+                result);
+        assertEquals(200, resp.getStatusCode());
+    }
 }

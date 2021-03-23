@@ -192,13 +192,21 @@ public class BasicSqlExprExpander {
                 return;
             }
         } else if (opKind == BinaryOperatorKind.NE) {
-            // TODO FIXME おそらく EQ と同様な特殊処理が必要.
-
             // NE
             sqlInfo.getSqlBuilder().append("(");
-            expand(impl.getLeftOperand());
-            sqlInfo.getSqlBuilder().append(" <> ");
-            expand(impl.getRightOperand());
+            if (impl.getRightOperand() instanceof LiteralImpl //
+                    && null == ((LiteralImpl) impl.getRightOperand()).getType()) {
+                expand(impl.getLeftOperand());
+                // 特殊処理 : 右辺が Literal かつ nullの場合は IS NOT NULL 展開する。こうしないと h2 database は
+                // NULL検索できない.
+                // また、リテラルに null が指定されている場合に、LiteralImpl の getType() 自体が null で渡ってくる。
+                sqlInfo.getSqlBuilder().append(" IS NOT NULL");
+                // なお、 「null ne 項目」のように左辺に NULL を記述する IS NOT NULL は Olingoにて指定不可。
+            } else {
+                expand(impl.getLeftOperand());
+                sqlInfo.getSqlBuilder().append(" <> ");
+                expand(impl.getRightOperand());
+            }
             sqlInfo.getSqlBuilder().append(")");
             return;
         } else if (opKind == BinaryOperatorKind.AND) {
