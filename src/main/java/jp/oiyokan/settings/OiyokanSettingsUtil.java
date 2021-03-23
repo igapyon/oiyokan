@@ -27,6 +27,7 @@ import org.springframework.util.StreamUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jp.oiyokan.OiyokanConstants;
+import jp.oiyokan.OiyokanMessages;
 import jp.oiyokan.dto.OiyokanSettings;
 import jp.oiyokan.dto.OiyokanSettingsDatabase;
 
@@ -52,8 +53,9 @@ public class OiyokanSettingsUtil {
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(strOiyokanSettings, OiyokanSettings.class);
         } catch (IOException ex) {
-            System.err.println("UNEXPECTED: Fail to load Oiyokan settings: " + ex.toString());
-            throw new ODataApplicationException("UNEXPECTED: Fail to load Oiyokan settings", 500, Locale.ENGLISH);
+            // [M024] UNEXPECTED: Fail to load Oiyokan settings
+            System.err.println(OiyokanMessages.M024 + ": " + ex.toString());
+            throw new ODataApplicationException(OiyokanMessages.M024, 500, Locale.ENGLISH);
         }
     }
 
@@ -74,10 +76,10 @@ public class OiyokanSettingsUtil {
             }
         }
 
-        System.err.println("UNEXPECTED: Database settings [" + OiyokanConstants.OIYOKAN_INTERNAL_DB + "] が見つかりません");
-        throw new ODataApplicationException(
-                "UNEXPECTED: Database settings [" + OiyokanConstants.OIYOKAN_INTERNAL_DB + "] が見つかりません", 500,
-                Locale.ENGLISH);
+        // [M025] UNEXPECTED: Database settings NOT found
+        System.err.println(OiyokanMessages.M025 + ": " + OiyokanConstants.OIYOKAN_INTERNAL_DB);
+        throw new ODataApplicationException(OiyokanMessages.M025 + ": " + OiyokanConstants.OIYOKAN_INTERNAL_DB, //
+                500, Locale.ENGLISH);
     }
 
     public static OiyokanSettingsDatabase getOiyokanDatabase(OiyokanSettings settingsOiyokan, String databaseDefName)
@@ -88,8 +90,8 @@ public class OiyokanSettingsUtil {
             }
         }
 
-        System.err.println("UNEXPECTED: Database settings [" + databaseDefName + "] が見つかりません");
-        throw new ODataApplicationException("UNEXPECTED: Database settings [" + databaseDefName + "] が見つかりません", 500,
-                Locale.ENGLISH);
+        // [M026] UNEXPECTED: Database settings NOT found
+        System.err.println(OiyokanMessages.M026 + ": " + databaseDefName);
+        throw new ODataApplicationException(OiyokanMessages.M026 + ": " + databaseDefName, 500, Locale.ENGLISH);
     }
 }

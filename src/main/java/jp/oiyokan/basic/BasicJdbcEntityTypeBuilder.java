@@ -33,6 +33,7 @@ import org.apache.olingo.server.api.ODataApplicationException;
 import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanCsdlEntityContainer;
 import jp.oiyokan.OiyokanCsdlEntitySet;
+import jp.oiyokan.OiyokanMessages;
 import jp.oiyokan.data.OiyokanInterDb;
 import jp.oiyokan.dto.OiyokanSettingsDatabase;
 import jp.oiyokan.settings.OiyokanSettingsUtil;
@@ -124,8 +125,9 @@ public class BasicJdbcEntityTypeBuilder {
             entitySet.setEntityType(entityType);
             return entityType;
         } catch (SQLException ex) {
-            System.err.println("UNEXPECTED: Fail to get database meta: " + ex.toString());
-            throw new ODataApplicationException("UNEXPECTED: Fail to get database meta", 500, Locale.ENGLISH);
+            // [M019] UNEXPECTED: Fail to get database meta
+            System.err.println(OiyokanMessages.M019 + ": " + ex.toString());
+            throw new ODataApplicationException(OiyokanMessages.M019, 500, Locale.ENGLISH);
         }
     }
 }

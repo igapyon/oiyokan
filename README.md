@@ -96,7 +96,6 @@ oiyokan プロジェクトは、OData v4 server のシンプルなサンプル(h
 
 ## TODO
 
-- OiyokanMessages が欲しい。[E001] 何かメッセージ。のようなもの。
 - Sakila sample についての記述を追記
 - Maven Repository にアップしたい.
 - README に oiyokan-naming-settings.json の記述についての記載を追記.

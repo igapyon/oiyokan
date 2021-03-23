@@ -29,6 +29,7 @@ import org.springframework.util.StreamUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jp.oiyokan.OiyokanConstants;
+import jp.oiyokan.OiyokanMessages;
 import jp.oiyokan.dto.OiyokanNamingSettings;
 import jp.oiyokan.dto.OiyokanNamingSettingsDb2Entity;
 
@@ -70,9 +71,9 @@ public class OiyokanNamingUtil {
             db2entityMap = workDb2entityMap;
             entity2dbMap = workEntity2dbMap;
         } catch (IOException ex) {
-            System.err.println("UNEXPECTED: Fail to load Oiyokan naming settings: " + ex.toString());
-            throw new ODataApplicationException("UNEXPECTED: Fail to load Oiyokan naming settings", 500,
-                    Locale.ENGLISH);
+            // [M023] UNEXPECTED: Fail to load Oiyokan naming settings
+            System.err.println(OiyokanMessages.M023 + ": " + ex.toString());
+            throw new ODataApplicationException(OiyokanMessages.M023, 500, Locale.ENGLISH);
         }
     }
 

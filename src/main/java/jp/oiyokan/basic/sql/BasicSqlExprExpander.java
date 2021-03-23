@@ -46,6 +46,8 @@ import org.apache.olingo.server.core.uri.queryoption.expression.MethodImpl;
 import org.apache.olingo.server.core.uri.queryoption.expression.TypeLiteralImpl;
 import org.apache.olingo.server.core.uri.queryoption.expression.UnaryImpl;
 
+import jp.oiyokan.OiyokanMessages;
+import jp.oiyokan.fromolingo.FromOlingoUtil;
 import jp.oiyokan.settings.OiyokanNamingUtil;
 
 /**
@@ -76,15 +78,20 @@ public class BasicSqlExprExpander {
      */
     public void expand(Expression filterExpression) throws ODataApplicationException {
         if (filterExpression instanceof AliasImpl) {
-            throw new ODataApplicationException("NOT SUPPORTED: Filter Expression: AliasImpl", 500, Locale.ENGLISH);
+            // [M101] NOT SUPPORTED: Filter Expression: AliasImpl
+            System.err.println(OiyokanMessages.M101);
+            throw new ODataApplicationException(OiyokanMessages.M101, 500, Locale.ENGLISH);
         } else if (filterExpression instanceof BinaryImpl) {
             expandBinary((BinaryImpl) filterExpression);
             return;
         } else if (filterExpression instanceof EnumerationImpl) {
-            throw new ODataApplicationException("NOT SUPPORTED: Filter Expression: EnumerationImpl", 500,
-                    Locale.ENGLISH);
+            // [M102] NOT SUPPORTED: Filter Expression: EnumerationImpl
+            System.err.println(OiyokanMessages.M102);
+            throw new ODataApplicationException(OiyokanMessages.M102, 500, Locale.ENGLISH);
         } else if (filterExpression instanceof LambdaRefImpl) {
-            throw new ODataApplicationException("NOT SUPPORTED: Filter Expression: LambdaRefImpl", 500, Locale.ENGLISH);
+            // [M103] NOT SUPPORTED: Filter Expression: LambdaRefImpl
+            System.err.println(OiyokanMessages.M103);
+            throw new ODataApplicationException(OiyokanMessages.M103, 500, Locale.ENGLISH);
         } else if (filterExpression instanceof LiteralImpl) {
             expandLiteral((LiteralImpl) filterExpression);
             return;
@@ -95,17 +102,19 @@ public class BasicSqlExprExpander {
             expandMethod((MethodImpl) filterExpression);
             return;
         } else if (filterExpression instanceof TypeLiteralImpl) {
-            throw new ODataApplicationException("NOT SUPPORTED: Filter Expression: TypeLiteralImpl", 500,
-                    Locale.ENGLISH);
+            // [M104] NOT SUPPORTED: Filter Expression: TypeLiteralImpl"
+            System.err.println(OiyokanMessages.M104);
+            throw new ODataApplicationException(OiyokanMessages.M104, 500, Locale.ENGLISH);
         } else if (filterExpression instanceof UnaryImpl) {
             UnaryImpl impl = (UnaryImpl) filterExpression;
             expandUnary(impl);
             return;
         }
 
-        System.err.println("UNEXPECTED: Expression が処理できない:" + filterExpression.toString() + ": "
-                + filterExpression.getClass().getName() + "," + filterExpression.toString() + "]");
-        throw new ODataApplicationException("UNEXPECTED: 処理できない Expression: " + filterExpression.toString(), 500,
+        // [M105] UNEXPECTED: Fail to process Expression
+        System.err.println(OiyokanMessages.M105 + ": " + filterExpression.toString() + ": "
+                + filterExpression.getClass().getName() + "," + "]");
+        throw new ODataApplicationException(OiyokanMessages.M105 + ": " + filterExpression.toString(), 500,
                 Locale.ENGLISH);
     }
 
@@ -227,9 +236,9 @@ public class BasicSqlExprExpander {
             return;
         }
 
-        System.err.println("UNEXPECTED: Unsupported binary operator:" + opKind + "," + impl.toString());
-        throw new ODataApplicationException("UNEXPECTED: Unsupported binary operator:" + opKind + "," + impl.toString(),
-                500, Locale.ENGLISH);
+        // [M106] UNEXPECTED: Unsupported binary operator
+        System.err.println(OiyokanMessages.M106 + ": " + opKind + "," + impl.toString());
+        throw new ODataApplicationException(OiyokanMessages.M106 + ": " + opKind, 500, Locale.ENGLISH);
     }
 
     /**
@@ -343,10 +352,9 @@ public class BasicSqlExprExpander {
             return;
         }
 
-        System.err.println("NOT SUPPORTED: LiteralImpl: Type:" + impl.getType().getName());
-        System.err.println("NOT SUPPORTED: LiteralImpl: " + impl.toString());
-        System.err.println("NOT SUPPORTED: LiteralImpl: " + impl.getClass().getTypeName());
-        throw new ODataApplicationException("NOT SUPPORTED: LiteralImpl: " + impl.getClass().getTypeName(), 500,
+        // [M107] NOT SUPPORTED: LiteralImpl
+        System.err.println(OiyokanMessages.M107 + ": " + impl.getClass().getTypeName());
+        throw new ODataApplicationException(OiyokanMessages.M107 + ": " + impl.getClass().getTypeName(), 500,
                 Locale.ENGLISH);
     }
 
@@ -381,7 +389,9 @@ public class BasicSqlExprExpander {
 
         // ENDSWITH
         if (impl.getMethod() == MethodKind.ENDSWITH) {
-            throw new ODataApplicationException("NOT SUPPORTED: MethodKind.ENDSWITH", 500, Locale.ENGLISH);
+            // [M123] NOT SUPPORTED: MethodKind.ENDSWITH
+            System.err.println(OiyokanMessages.M123);
+            throw new ODataApplicationException(OiyokanMessages.M123, 500, Locale.ENGLISH);
         }
 
         // LENGTH
@@ -515,42 +525,58 @@ public class BasicSqlExprExpander {
 
         // FRACTIONALSECONDS
         if (impl.getMethod() == MethodKind.FRACTIONALSECONDS) {
-            throw new ODataApplicationException("NOT SUPPORTED: MethodKind.FRACTIONALSECONDS", 500, Locale.ENGLISH);
+            // [M108] NOT SUPPORTED: MethodKind.FRACTIONALSECONDS
+            System.err.println(OiyokanMessages.M108);
+            throw new ODataApplicationException(OiyokanMessages.M108, 500, Locale.ENGLISH);
         }
 
         // TOTALSECONDS
         if (impl.getMethod() == MethodKind.TOTALSECONDS) {
-            throw new ODataApplicationException("NOT SUPPORTED: MethodKind.TOTALSECONDS", 500, Locale.ENGLISH);
+            // [M109] NOT SUPPORTED: MethodKind.TOTALSECONDS
+            System.err.println(OiyokanMessages.M109);
+            throw new ODataApplicationException(OiyokanMessages.M109, 500, Locale.ENGLISH);
         }
 
         // DATE
         if (impl.getMethod() == MethodKind.DATE) {
-            throw new ODataApplicationException("NOT SUPPORTED: MethodKind.DATE", 500, Locale.ENGLISH);
+            // [M110] NOT SUPPORTED: MethodKind.DATE
+            System.err.println(OiyokanMessages.M110);
+            throw new ODataApplicationException(OiyokanMessages.M110, 500, Locale.ENGLISH);
         }
 
         // TIME
         if (impl.getMethod() == MethodKind.TIME) {
-            throw new ODataApplicationException("NOT SUPPORTED: MethodKind.TIME", 500, Locale.ENGLISH);
+            // [M111] NOT SUPPORTED: MethodKind.TIME
+            System.err.println(OiyokanMessages.M111);
+            throw new ODataApplicationException(OiyokanMessages.M111, 500, Locale.ENGLISH);
         }
 
         // TOTALOFFSETMINUTES
         if (impl.getMethod() == MethodKind.TOTALOFFSETMINUTES) {
-            throw new ODataApplicationException("NOT SUPPORTED: MethodKind.TOTALOFFSETMINUTES", 500, Locale.ENGLISH);
+            // [M112] NOT SUPPORTED: MethodKind.TOTALOFFSETMINUTES
+            System.err.println(OiyokanMessages.M112);
+            throw new ODataApplicationException(OiyokanMessages.M112, 500, Locale.ENGLISH);
         }
 
         // MINDATETIME
         if (impl.getMethod() == MethodKind.MINDATETIME) {
-            throw new ODataApplicationException("NOT SUPPORTED: MethodKind.MINDATETIME", 500, Locale.ENGLISH);
+            // [M113] NOT SUPPORTED: MethodKind.MINDATETIME
+            System.err.println(OiyokanMessages.M113);
+            throw new ODataApplicationException(OiyokanMessages.M113, 500, Locale.ENGLISH);
         }
 
         // MAXDATETIME
         if (impl.getMethod() == MethodKind.MAXDATETIME) {
-            throw new ODataApplicationException("NOT SUPPORTED: MethodKind.MAXDATETIME", 500, Locale.ENGLISH);
+            // [M114] NOT SUPPORTED: MethodKind.MAXDATETIME
+            System.err.println(OiyokanMessages.M114);
+            throw new ODataApplicationException(OiyokanMessages.M114, 500, Locale.ENGLISH);
         }
 
         // NOW
         if (impl.getMethod() == MethodKind.NOW) {
-            throw new ODataApplicationException("NOT SUPPORTED: MethodKind.NOW", 500, Locale.ENGLISH);
+            // [M115] NOT SUPPORTED: MethodKind.NOW
+            System.err.println(OiyokanMessages.M115);
+            throw new ODataApplicationException(OiyokanMessages.M115, 500, Locale.ENGLISH);
         }
 
         // ROUND
@@ -582,27 +608,37 @@ public class BasicSqlExprExpander {
 
         // GEODISTANCE
         if (impl.getMethod() == MethodKind.GEODISTANCE) {
-            throw new ODataApplicationException("NOT SUPPORTED: MethodKind.GEODISTANCE", 500, Locale.ENGLISH);
+            // [M116] NOT SUPPORTED: MethodKind.GEODISTANCE
+            System.err.println(OiyokanMessages.M116);
+            throw new ODataApplicationException(OiyokanMessages.M116, 500, Locale.ENGLISH);
         }
 
         // GEOLENGTH
         if (impl.getMethod() == MethodKind.GEOLENGTH) {
-            throw new ODataApplicationException("NOT SUPPORTED: MethodKind.GEOLENGTH", 500, Locale.ENGLISH);
+            // [M117] NOT SUPPORTED: MethodKind.GEOLENGTH
+            System.err.println(OiyokanMessages.M117);
+            throw new ODataApplicationException(OiyokanMessages.M117, 500, Locale.ENGLISH);
         }
 
         // GEOINTERSECTS
         if (impl.getMethod() == MethodKind.GEOINTERSECTS) {
-            throw new ODataApplicationException("NOT SUPPORTED: MethodKind.GEOINTERSECTS", 500, Locale.ENGLISH);
+            // [M118] NOT SUPPORTED: MethodKind.GEOINTERSECTS
+            System.err.println(OiyokanMessages.M118);
+            throw new ODataApplicationException(OiyokanMessages.M118, 500, Locale.ENGLISH);
         }
 
         // CAST
         if (impl.getMethod() == MethodKind.CAST) {
-            throw new ODataApplicationException("NOT SUPPORTED: MethodKind.CAST", 500, Locale.ENGLISH);
+            // [M119] NOT SUPPORTED: MethodKind.CAST
+            System.err.println(OiyokanMessages.M119);
+            throw new ODataApplicationException(OiyokanMessages.M119, 500, Locale.ENGLISH);
         }
 
         // ISOF
         if (impl.getMethod() == MethodKind.ISOF) {
-            throw new ODataApplicationException("NOT SUPPORTED: MethodKind.ISOF", 500, Locale.ENGLISH);
+            // [M120] NOT SUPPORTED: MethodKind.ISOF
+            System.err.println(OiyokanMessages.M120);
+            throw new ODataApplicationException(OiyokanMessages.M120, 500, Locale.ENGLISH);
         }
 
         // SUBSTRINGOF
@@ -615,9 +651,9 @@ public class BasicSqlExprExpander {
             return;
         }
 
-        System.err.println("UNEXPECTED : NOT SUPPORTED MethodKind:" + impl.getMethod() + "," + impl.toString());
-        throw new ODataApplicationException(
-                "UNEXPECTED : NOT SUPPORTED MethodKind:" + impl.getMethod() + "," + impl.toString(), 500,
+        // [M121] UNEXPECTED: NOT SUPPORTED MethodKind
+        System.err.println(OiyokanMessages.M121 + ": " + impl.getMethod() + "," + impl.toString());
+        throw new ODataApplicationException(OiyokanMessages.M121 + ": " + impl.getMethod() + "," + impl.toString(), 500,
                 Locale.ENGLISH);
     }
 
@@ -634,9 +670,9 @@ public class BasicSqlExprExpander {
             return;
         }
 
-        System.err.println("UNEXPECTED: Unsupported UnaryOperatorKind:" + impl.getOperator() + "," + impl.toString());
-        throw new ODataApplicationException(
-                "UNEXPECTED: Unsupported UnaryOperatorKind:" + impl.getOperator() + "," + impl.toString(), 500,
-                Locale.ENGLISH);
+        // [M122] UNEXPECTED: Unsupported UnaryOperatorKind
+        System.err.println(OiyokanMessages.M122 + ": " + impl.getOperator() + "," + impl.toString());
+        throw new ODataApplicationException(OiyokanMessages.M122 + ": " + impl.getOperator() + "," + impl.toString(),
+                500, Locale.ENGLISH);
     }
 }
