@@ -117,100 +117,25 @@
             </tr>
           </thead>
           <tbody>
-            <tr class="slds-hint-parent">
-              <td data-label="Function">
-                <div class="slds-truncate" title="Root">root</div>
-              </td>
-              <td data-label="Path">
-                <div class="slds-truncate" title="Path">/</div>
-              </td>
-              <td data-label="Request">
-                <div class="slds-truncate" title="Request"><a href="./odata4.svc/" target="_blank">Request</a></div>
-              </td>
-              <td data-label="Note">
-                <div class="slds-truncate" title="Localhost">Root of OData v4 server.</div>
-              </td>
-            </tr>
-            <tr class="slds-hint-parent">
-              <td data-label="Function">
-                <div class="slds-truncate" title="version">version</div>
-              </td>
-              <td data-label="Path">
-                <div class="slds-truncate" title="Path">/ODataAppInfos?$format=JSON</div>
-              </td>
-              <td data-label="Request">
-                <div class="slds-truncate" title="Request"><a href="./ODataAppInfos?$format=JSON"
-                    target="_blank">Request</a></div>
-              </td>
-              <td data-label="Note">
-                <div class="slds-truncate" title="Localhost">Show Oiyokan version.</div>
-              </td>
-            </tr>
-            <tr class="slds-hint-parent">
-              <td data-label="Function">
-                <div class="slds-truncate" title="metadata">$metadata</div>
-              </td>
-              <td data-label="Path">
-                <div class="slds-truncate" title="Path">/$metadata</div>
-              </td>
-              <td data-label="Request">
-                <div class="slds-truncate" title="Request"><a
-                    href="./odata4.svc/$metadata" target="_blank">Request</a>
-                </div>
-              </td>
-              <td data-label="Note">
-                <div class="slds-truncate" title="Localhost">Metadata of OData.</div>
-              </td>
-            </tr>
-            <tr class="slds-hint-parent">
-              <td data-label="Function">
-                <div class="slds-truncate" title="orderby">MyProduct : $orderby</div>
-              </td>
-              <td data-label="Path">
-                <div class="slds-truncate" title="Path">/MyProducts?$orderby=ID&$top=20&$count=true</div>
-              </td>
-              <td data-label="Request">
-                <div class="slds-truncate" title="Request"><a
-                    href="./odata4.svc/MyProducts?$orderby=ID&$top=20&$count=true"
-                    target="_blank">Request</a></div>
-              </td>
-              <td data-label="Note">
-                <div class="slds-truncate" title="Localhost">Sort test.</div>
-              </td>
-            </tr>
-            <tr class="slds-hint-parent">
-              <td data-label="Function">
-                <div class="slds-truncate" title="filter">MyProduct : $filter</div>
-              </td>
-              <td data-label="Path">
-                <div class="slds-truncate" title="Path">/MyProducts?$top=2001&$filter=Description eq 'MacBook P...</div>
-              </td>
-              <td data-label="Request">
-                <div class="slds-truncate" title="Request"><a
-                    href="https://odata4-dvdrental.herokuapp.com/odata4.svc/MyProducts?$top=2001&$filter=Description eq 'MacBook Pro (13-inch, 2020, Thunderbolt 3ポートx 4)' and ID eq 1.0&$count=true&$select=ID,Name"
-                    target="_blank">Request</a></div>
-              </td>
-              <td data-label="Note">
-                <div class="slds-truncate" title="Localhost">Filter test.</div>
-              </td>
-            </tr>
-            <tr class="slds-hint-parent">
-              <td data-label="Function">
-                <div class="slds-truncate" title="search">MyProduct : $search (Experimental)</div>
-              </td>
-              <td data-label="Path">
-                <div class="slds-truncate" title="Path">/MyProductFulls?$top=6&$search=macbook&$count=true&$select=ID
-                </div>
-              </td>
-              <td data-label="Request">
-                <div class="slds-truncate" title="Request"><a
-                    href="./odata4.svc/MyProductFulls?$top=6&$search=macbook&$count=true&$select=ID"
-                    target="_blank">Request</a></div>
-              </td>
-              <td data-label="Note">
-                <div class="slds-truncate" title="Localhost">Full text search test (Experimental).</div>
-              </td>
-            </tr>
+            <div th:each="urlEntry,stat : ${UrlEntryList}" th:remove="tag">
+              <tr class="slds-hint-parent">
+                <td data-label="Function">
+                  <div class="slds-truncate" th:title="${urlEntry.name}"><span th:text="${urlEntry.name}"
+                      th:remove="tag" /></div>
+                </td>
+                <td data-label="Path">
+                  <div class="slds-truncate" title="Path"><span th:text="${urlEntry.pathWithTrimg}" th:remove="tag" />
+                  </div>
+                </td>
+                <td data-label="Request">
+                  <div class="slds-truncate" title="Request"><a th:href="${'./odata4.svc' + urlEntry.path}"
+                      target="_blank">Request</a></div>
+                </td>
+                <td data-label="Note">
+                  <div class="slds-truncate" title="Note"><span th:text="${urlEntry.note}" th:remove="tag" /></div>
+                </td>
+              </tr>
+            </div>
           </tbody>
         </table>
       </main>
