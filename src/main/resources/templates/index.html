@@ -62,13 +62,6 @@
     </nav>
   </div>
 
-
-
-
-
-
-
-
   <div class="slds-illustration slds-illustration_large">
     <svg class="slds-illustration__svg" viewBox="0 0 466 297" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
       <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -325,11 +318,10 @@
         </g>
       </g>
     </svg>
-    <h3 class="slds-illustration__header slds-text-heading_medium">Oiyokan</h3>
+    <h3 class="slds-illustration__header slds-text-heading_medium">Oiyokan v<span th:text="${indexBean.version}"
+        th:remove="tag" /></h3>
     <p class="slds-text-body_regular">Welcome to the OData v4 server world.</p>
   </div>
-
-
 
 </body>
 
