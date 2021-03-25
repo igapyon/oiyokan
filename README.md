@@ -96,7 +96,6 @@ oiyokan プロジェクトは、OData v4 server のシンプルなサンプル(h
 
 ## TODO
 
-- サンプルDBは、ビルド時に db ファイルとして構築するよう変更したい。現在そうでないため初回アクセス時の反応が遅い。
 - Sakila sample についての記述を追記
 - README に oiyokan-naming-settings.json の記述についての記載を追記.
 - TODO BasicSqlExprExpander の通過していない箇所のテスト.
