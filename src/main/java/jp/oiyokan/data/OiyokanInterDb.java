@@ -46,8 +46,9 @@ public class OiyokanInterDb {
     private static final String[][] OIYOKAN_FILE_SQLS = new String[][] { //
             /*
              * Oiyokan の基本機能を確認およびビルド時の JUnitテストで利用. 変更するとビルドが動作しなくなる場合あり.
+             * この内容は BuildInternalDbTest.java により別途生成.
              */
-            { OiyokanConstants.OIYOKAN_INTERNAL_TARGET_DB, "oiyokan-test-db.sql" }, //
+            // { OiyokanConstants.OIYOKAN_INTERNAL_TARGET_DB, "oiyokan-test-db.sql" }, //
 
             /*
              * Oiyokan の基本機能を確認およびビルド時の JUnitテストで利用. 変更するとビルドが動作しなくなる場合あり.
@@ -56,8 +57,9 @@ public class OiyokanInterDb {
 
             /*
              * Sakila dvdrental サンプルDB の内容そのもの.
+             * この内容は BuildInternalDbTest.java により別途生成.
              */
-            { OiyokanConstants.OIYOKAN_INTERNAL_TARGET_DB, "sample-sakila-db.sql" }, //
+            // { OiyokanConstants.OIYOKAN_INTERNAL_TARGET_DB, "sample-sakila-db.sql" }, //
 
             /*
              * Sakila dvdrental サンプルDB に接続するためのOCSDL情報.
