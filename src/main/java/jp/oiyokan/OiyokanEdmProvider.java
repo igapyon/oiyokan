@@ -179,7 +179,7 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
     /**
      * 要素コンテナ情報を取得.
      * 
-     * 次のようなURLの場合に呼び出される: http://localhost:8080/simple.svc/
+     * 次のようなURLの場合に呼び出される: http://localhost:8080/odata4.svc/
      * 
      * @param entityContainerName 要素コンテナ名.
      * @return CSDL要素コンテナ情報.

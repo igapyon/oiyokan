@@ -51,7 +51,7 @@ public class TinyH2TrialFullTextSearch {
             SearchOptionImpl searchOpt = (SearchOptionImpl) uriInfo.getSearchOption();
 
             // 想定: $top=6&$search=増産&$count=true&$select=ID
-            // http://localhost:8080/simple.svc/MyProducts?$search=PixelSense&$count=true&$select=ID
+            // http://localhost:8080/odata4.svc/MyProducts?$search=PixelSense&$count=true&$select=ID
             // ただしh2は日本語ダメかも。
 
             int topValue = 100;
