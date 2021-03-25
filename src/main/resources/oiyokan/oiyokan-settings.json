@@ -16,7 +16,7 @@
 			"type": "h2",
 			"description": "Oiyokan Internal Target DB. Do not change this def.",
 			"jdbcDriver": "org.h2.Driver",
-			"jdbcUrl": "jdbc:h2:mem:iyotest;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=FALSE;CASE_INSENSITIVE_IDENTIFIERS=TRUE;MODE=MSSQLServer",
+			"jdbcUrl": "jdbc:h2:file:./src/main/resources/db/iyotest;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=FALSE;CASE_INSENSITIVE_IDENTIFIERS=TRUE;MODE=MSSQLServer",
 			"jdbcUser": "sa",
 			"jdbcPass": ""
 		},

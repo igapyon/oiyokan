@@ -10,7 +10,7 @@ import jp.oiyokan.OiyokanConstants;
 
 @Controller
 public class IndexCtrl {
-    @RequestMapping("/index.html")
+    @RequestMapping(value = { "/", "/index.html" })
     public String oiyokanUnittest(Model model) throws IOException {
 
         IndexBean index = new IndexBean();
