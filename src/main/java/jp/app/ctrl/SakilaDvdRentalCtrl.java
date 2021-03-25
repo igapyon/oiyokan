@@ -16,7 +16,7 @@ public class SakilaDvdRentalCtrl {
         final List<UrlEntry> urlEntryList = new ArrayList<>();
         model.addAttribute("UrlEntryList", urlEntryList);
 
-        urlEntryList.add(new UrlEntry("SklActors", "/SklActors?$count=true&$top=20", "TABLE: actors"));
+        urlEntryList.add(new UrlEntry("SklActors", "/SklActors?$filter=first_name%20eq%20'Adam'&$select=last_name&$orderby=last_name&$count=true&$top=20", "TABLE: actors"));
         urlEntryList.add(new UrlEntry("SklActorInfos", "/SklActorInfos?$count=true&$top=20", "VIEW: actor_info"));
         urlEntryList.add(new UrlEntry("SklAddresss", "/SklAddresss?$count=true&$top=20", ""));
         urlEntryList.add(new UrlEntry("SklCategorys", "/SklCategorys?$count=true&$top=20", ""));
