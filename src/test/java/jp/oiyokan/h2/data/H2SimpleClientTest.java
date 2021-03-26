@@ -15,6 +15,8 @@
  */
 package jp.oiyokan.h2.data;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.sql.Connection;
 
 import org.junit.jupiter.api.Test;
@@ -49,8 +51,7 @@ class H2SimpleClientTest {
                 stmt.executeQuery();
                 var rset = stmt.getResultSet();
                 if (rset.next()) {
-                    System.err.println("address_id: " + rset.getString(1));
-                    // assertEquals(true, rset.next());
+                    assertEquals("1", rset.getString(1));
                 }
             }
         }

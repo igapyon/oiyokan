@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class SakilaDvdRentalCtrl {
     public static final String[][] ODATA_ENTRY_INFOS = new String[][] { //
             { "SklActors",
-                    "/SklActors?$filter=first_name%20eq%20'Adam'&$select=last_name&$orderby=last_name&$count=true",
+                    "/SklActors?$filter=first_name%20eq%20%27Adam%27&$select=last_name&$orderby=last_name&$count=true",
                     "TABLE: actors" },
             { "SklActorInfos", "/SklActorInfos?$orderby=last_name,first_name,actor_id&$count=true&$top=20&$skip=3",
                     "VIEW: actor_info" },
@@ -35,65 +35,20 @@ public class SakilaDvdRentalCtrl {
             { "SklSalesByStores", "/SklSalesByStores?$count=true&$top=20", "VIEW: " },
             { "SklStaffs", "/SklStaffs?$count=true&$top=20", "" },
             { "SklStaffLists",
-                    "/SklStaffLists?$count=true&$top=20&$select=zip_code&$orderby=zip_code&$filter=zip_code ne '00000'",
+                    "/SklStaffLists?$count=true&$top=20&$select=zip_code&$orderby=zip_code&$filter=zip_code%20ne%20%2700000%27",
                     "VIEW: " },
             { "SklStores", "/SklStores?$count=true", "" }, };
 
     @RequestMapping("/sakila-dvdrental.html")
     public String oiyokanUnittest(Model model) throws IOException {
 
-        final List<UrlEntry> urlEntryList = new ArrayList<>();
+        final List<UrlEntryBean> urlEntryList = new ArrayList<>();
         model.addAttribute("UrlEntryList", urlEntryList);
 
         for (String[] look : ODATA_ENTRY_INFOS) {
-            urlEntryList.add(new UrlEntry(look[0], look[1], look[2]));
+            urlEntryList.add(new UrlEntryBean(look[0], look[1], look[2]));
         }
 
         return "sakila-dvdrental";
-    }
-
-    public static class UrlEntry {
-        private String name;
-        private String path;
-        private String note = "何か説明.";
-
-        public UrlEntry(String name, String path, String note) {
-            this.name = name;
-            this.path = path;
-            this.note = note;
-        }
-
-        public String getPath() {
-            return path;
-        }
-
-        public void setPath(String path) {
-            this.path = path;
-        }
-
-        public String getNote() {
-            return note;
-        }
-
-        public void setNote(String note) {
-            this.note = note;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        ///////////
-        public String getPathWithTrimg() {
-            if (path.length() > 36) {
-                return path.substring(0, Math.min(path.length(), 36)) + "...";
-            } else {
-                return path;
-            }
-        }
     }
 }

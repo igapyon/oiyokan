@@ -15,6 +15,8 @@
  */
 package jp.oiyokan.basic;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.apache.olingo.commons.api.http.HttpMethod;
 import org.apache.olingo.server.api.ODataHttpHandler;
 import org.apache.olingo.server.api.ODataRequest;
@@ -42,9 +44,10 @@ class BasicODataSampleDbTest {
 
             final ODataResponse resp = handler.process(req);
             final String result = BasicODataSampleTestUtil.stream2String(resp.getContent());
-            System.err.println("[" + entrys[0] + "], result: " + result);
-            // TODO FIXME 以下がなぜエラーになる場合があるのか調査
-            // assertEquals(200, resp.getStatusCode());
+            // System.err.println("[" + entrys[0] + "], [" + entrys[1] + "], result: " +
+            // result);
+            // 注意：入力の文字列が正しくURLエンコードされていないと以下の asset が失敗する.
+            assertEquals(200, resp.getStatusCode());
         }
     }
 }
