@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class SakilaDvdRentalCtrl {
     public static final String[][] ODATA_ENTRY_INFOS = new String[][] { //
             { "SklActors",
-                    "/SklActors?$filter=first_name%20eq%20'Adam'&$select=last_name&$orderby=last_name&$count=true",
+                    "/SklActors?$filter=first_name%20eq%20%27Adam%27&$select=last_name&$orderby=last_name&$count=true",
                     "TABLE: actors" },
             { "SklActorInfos", "/SklActorInfos?$orderby=last_name,first_name,actor_id&$count=true&$top=20&$skip=3",
                     "VIEW: actor_info" },
@@ -35,7 +35,7 @@ public class SakilaDvdRentalCtrl {
             { "SklSalesByStores", "/SklSalesByStores?$count=true&$top=20", "VIEW: " },
             { "SklStaffs", "/SklStaffs?$count=true&$top=20", "" },
             { "SklStaffLists",
-                    "/SklStaffLists?$count=true&$top=20&$select=zip_code&$orderby=zip_code&$filter=zip_code ne '00000'",
+                    "/SklStaffLists?$count=true&$top=20&$select=zip_code&$orderby=zip_code&$filter=zip_code%20ne%20%2700000%27",
                     "VIEW: " },
             { "SklStores", "/SklStores?$count=true", "" }, };
 

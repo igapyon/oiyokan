@@ -77,9 +77,9 @@ class BasicODataSakilaDbTest {
         req.setRawRequestUri(req.getRawBaseUri() + req.getRawODataPath() + "?" + req.getRawQueryPath());
 
         final ODataResponse resp = handler.process(req);
-        // assertEquals(200, resp.getStatusCode());
+        assertEquals(200, resp.getStatusCode());
         // コンテンツ内容は確認なし.
-        System.err.println(BasicODataSampleTestUtil.stream2String(resp.getContent()));
+        // System.err.println(BasicODataSampleTestUtil.stream2String(resp.getContent()));
     }
 
     @Test
