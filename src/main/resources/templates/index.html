@@ -49,12 +49,12 @@
           </a>
         </li>
         <li class="slds-context-bar__item">
-          <a href="sakila-dvdrental.html" class="slds-context-bar__label-action" title="Dvd Rental">
+          <a href="sakila.html" class="slds-context-bar__label-action" title="Dvd Rental">
             <span class="slds-truncate" title="Dvd Rental">Sakila DVD Rental</span>
           </a>
         </li>
         <li class="slds-context-bar__item">
-          <a href="oiyokan-unittest.html" class="slds-context-bar__label-action" title="Oiyokan Unit Test">
+          <a href="unittest.html" class="slds-context-bar__label-action" title="Oiyokan Unit Test">
             <span class="slds-truncate" title="Oiyokan Unit Test">Oiyokan Unit Test</span>
           </a>
         </li>
@@ -62,7 +62,7 @@
     </nav>
   </div>
 
-  <div class="slds-illustration slds-illustration_large">
+  <div class="slds-illustration slds-illustration_small">
     <svg class="slds-illustration__svg" viewBox="0 0 466 297" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
       <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
         <g transform="translate(-69.000000, -68.000000)">
@@ -318,9 +318,30 @@
         </g>
       </g>
     </svg>
-    <h3 class="slds-illustration__header slds-text-heading_medium">Oiyokan v<span th:text="${indexBean.version}"
-        th:remove="tag" /></h3>
-    <p class="slds-text-body_regular">Welcome to the OData v4 server world.</p>
+    <div class="slds-text-longform">
+      <h3 class="slds-illustration__header slds-text-heading_medium">Oiyokan OData v4 Server SDK</h3>
+      <p class="slds-badge .slds-badge_lightest">v<span th:text="${indexBean.version}" th:remove="tag" /></p>
+    </div>
+  </div>
+
+  <div class="slds-align_absolute-center slds-m-left_medium slds-m-right_medium">
+    <dl>
+      <dt>Oiyokan is an OData v4 server SDK.</dt>
+      <dd>
+        <ul class="slds-list_dotted">
+          <li>Based on <a href="https://olingo.apache.org/" target="_blank">Apache Olingo</a>. Build with <a href="https://spring.io/projects/spring-boot" target="_blank">Spring Boot</a>, Java, <a href="https://www.h2database.com/" target="_blank">h2</a>.</li>
+          <li>Oiyokan provides read-only OData v4 access to resources.</li>
+          <li><a href="https://github.com/igapyon/oiyokan" target="_blank">Source code at github</a>, license : <a href="https://www.apache.org/licenses/LICENSE-2.0" target="_blank">Apache License</a>.</li>
+        </ul>
+      </dd>
+      <dt>Sample implementation using Oiyokan.</dt>
+      <dd>
+        <ul class="slds-list_dotted">
+          <li>This site provides OData server sample of <a href="https://www.jooq.org/sakila" target="_blank">Sakila DVD rental</a>.</li>
+          <li>Metadata of OData sample is provided at <a href="/odata4.svc/$metadata" target="_blank">$metadata</a>.</li>
+        </ul>
+      </dd>
+    </dl>
   </div>
 
 </body>

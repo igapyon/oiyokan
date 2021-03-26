@@ -1,6 +1,15 @@
 # oiyokan
 
-Oiyokan is a simple OData v4 Server. (based on Apache Olingo / Spring Boot / h2 database)
+Oiyokan is an OData v4 server SDK.
+
+- Based on Apache Olingo. Build with Spring Boot, Java, h2.
+- Oiyokan provides read-only OData v4 access to resources.
+- Source code at github, license : Apache License.
+
+## Sample implementation using Oiyokan
+
+- Oiyokan provides OData server sample of Sakila DVD rental.
+- Metadata of OData sample is provided at $metadata.
 
 # Try to run oiyokan
 
@@ -96,13 +105,17 @@ oiyokan プロジェクトは、OData v4 server のシンプルなサンプル(h
 
 ## TODO
 
-- Sakila sample についての記述を追記
+- OData v4 ServerはREADONLYであることを表記。
+- Sakila dvdrental sample についての記述を追記
+- Sakila のサンプルアクセスの $filter や $orderby などをもう少し良いものにする。
+- OData のサイトに掲載する
 - README に oiyokan-naming-settings.json の記述についての記載を追記.
+- サンプル EntitySet の html説明について Card 型に変更したい
 - TODO BasicSqlExprExpander の通過していない箇所のテスト.
 - Sakila DVDレンタルのサンプル、MyProducts を ON/OFFする手順またはプログラム実装を記述.
 - 認証の各種実験。
 - TimeOfDay がテスト不十分.
 - Maven Repository にアップしたい.
-- 一旦 $search を実装から分離する.
+- 一旦 $search を実装から分離する. 一旦除去したうえで SearchOptionが 非nullのときに例外が妥当か?
 - 実験的に全文検索である `$search` をサポートしたものの、もう少し詳しいところが調べられていない。また全文検索で有効なのはアルファベットのみ。h2 database でここを深掘りしても不毛か?
 - ($search対応の後続となるため、しばらく対応できない) TODO Null (nullable) の対応。現在はコメントアウト.
