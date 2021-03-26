@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS
-  OcsdlMyProducts (
+  OcsdlODataTest1 (
     ID INT NOT NULL
     , Name VARCHAR(80) NOT NULL
     , Description VARCHAR(250)
@@ -26,11 +26,11 @@ CREATE TABLE IF NOT EXISTS
     , Uuid1 UUID DEFAULT RANDOM_UUID()
     , PRIMARY KEY(ID)
   );
-INSERT INTO OcsdlMyProducts (ID, Name, Description) VALUES (
+INSERT INTO OcsdlODataTest1 (ID, Name, Description) VALUES (
   1, 'DummyName', 'DummyDesc');
 
 CREATE TABLE IF NOT EXISTS
-  OcsdlMyProductFulls (
+  OcsdlODataTestFulls1 (
     ID INT NOT NULL
     , Name VARCHAR(80) NOT NULL
     , Description VARCHAR(250)
@@ -53,4 +53,3 @@ CREATE TABLE IF NOT EXISTS
 
 CREATE ALIAS IF NOT EXISTS FT_INIT FOR "org.h2.fulltext.FullText.init";
 CALL FT_INIT();
-

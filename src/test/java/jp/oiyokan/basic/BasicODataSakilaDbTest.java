@@ -55,14 +55,14 @@ class BasicODataSakilaDbTest {
         final ODataRequest req = new ODataRequest();
         req.setMethod(HttpMethod.GET);
         req.setRawBaseUri("http://localhost:8080/odata4.svc");
-        req.setRawODataPath("/MyProducts");
+        req.setRawODataPath("/ODataTests1");
         req.setRawQueryPath("$orderby=ID&$top=1&$select=ID,Name,Description");
         req.setRawRequestUri(req.getRawBaseUri() + req.getRawODataPath() + "?" + req.getRawQueryPath());
 
         final ODataResponse resp = handler.process(req);
         assertEquals(200, resp.getStatusCode());
         assertEquals(
-                "{\"@odata.context\":\"$metadata#MyProducts\",\"value\":[{\"ID\":1,\"Name\":\"MacBookPro16,2\",\"Description\":\"MacBook Pro (13-inch, 2020, Thunderbolt 3ポートx 4)\"}]}",
+                "{\"@odata.context\":\"$metadata#ODataTests1\",\"value\":[{\"ID\":1,\"Name\":\"MacBookPro16,2\",\"Description\":\"MacBook Pro (13-inch, 2020, Thunderbolt 3ポートx 4)\"}]}",
                 BasicODataSampleTestUtil.stream2String(resp.getContent()));
     }
 
@@ -72,7 +72,7 @@ class BasicODataSakilaDbTest {
         final ODataRequest req = new ODataRequest();
         req.setMethod(HttpMethod.GET);
         req.setRawBaseUri("http://localhost:8080/odata4.svc");
-        req.setRawODataPath("/MyProducts");
+        req.setRawODataPath("/ODataTests1");
         req.setRawQueryPath("$orderby=ID&$top=2");
         req.setRawRequestUri(req.getRawBaseUri() + req.getRawODataPath() + "?" + req.getRawQueryPath());
 
@@ -88,14 +88,14 @@ class BasicODataSakilaDbTest {
         final ODataRequest req = new ODataRequest();
         req.setMethod(HttpMethod.GET);
         req.setRawBaseUri("http://localhost:8080/odata4.svc");
-        req.setRawODataPath("/MyProducts");
+        req.setRawODataPath("/ODataTests1");
         req.setRawQueryPath("$top=2&$filter=ID%20eq%205.0&$count=true&$select=ID,Name");
         req.setRawRequestUri(req.getRawBaseUri() + req.getRawODataPath() + "?" + req.getRawQueryPath());
 
         final ODataResponse resp = handler.process(req);
         assertEquals(200, resp.getStatusCode());
         assertEquals(
-                "{\"@odata.context\":\"$metadata#MyProducts\",\"@odata.count\":1,\"value\":[{\"ID\":5,\"Name\":\"PopTablet1\"}]}",
+                "{\"@odata.context\":\"$metadata#ODataTests1\",\"@odata.count\":1,\"value\":[{\"ID\":5,\"Name\":\"PopTablet1\"}]}",
                 BasicODataSampleTestUtil.stream2String(resp.getContent()));
     }
 
@@ -105,13 +105,13 @@ class BasicODataSakilaDbTest {
         final ODataRequest req = new ODataRequest();
         req.setMethod(HttpMethod.GET);
         req.setRawBaseUri("http://localhost:8080/odata4.svc");
-        req.setRawODataPath("/MyProducts");
+        req.setRawODataPath("/ODataTests1");
         req.setRawQueryPath("$top=6&$search=macbook&$count=true&$select=ID");
         req.setRawRequestUri(req.getRawBaseUri() + req.getRawODataPath() + "?" + req.getRawQueryPath());
 
         final ODataResponse resp = handler.process(req);
         assertEquals(200, resp.getStatusCode());
-        assertEquals("{\"@odata.context\":\"$metadata#MyProducts\",\"value\":[{\"ID\":1},{\"ID\":2}]}",
+        assertEquals("{\"@odata.context\":\"$metadata#ODataTests1\",\"value\":[{\"ID\":1},{\"ID\":2}]}",
                 BasicODataSampleTestUtil.stream2String(resp.getContent()));
     }
 }

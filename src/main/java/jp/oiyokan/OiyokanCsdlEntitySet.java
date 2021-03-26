@@ -136,9 +136,9 @@ public class OiyokanCsdlEntitySet extends CsdlEntitySet {
     }
 
     /**
-     * エンティティ名. MyProduct 相当.
+     * エンティティ名. ODataTest1 相当.
      * 
-     * @return エンティティ名. MyProduct 相当.
+     * @return エンティティ名. ODataTest1 相当.
      */
     public String getEntityNameIyo() {
         return settingsEntitySet.getEntityName();
