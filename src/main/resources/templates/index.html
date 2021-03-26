@@ -62,7 +62,7 @@
     </nav>
   </div>
 
-  <div class="slds-illustration slds-illustration_large">
+  <div class="slds-illustration slds-illustration_small">
     <svg class="slds-illustration__svg" viewBox="0 0 466 297" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
       <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
         <g transform="translate(-69.000000, -68.000000)">
@@ -318,9 +318,20 @@
         </g>
       </g>
     </svg>
-    <h3 class="slds-illustration__header slds-text-heading_medium">Oiyokan v<span th:text="${indexBean.version}"
-        th:remove="tag" /></h3>
-    <p class="slds-text-body_regular">Welcome to the OData v4 server world.</p>
+    <div class="slds-text-longform">
+      <h3 class="slds-illustration__header slds-text-heading_medium">Oiyokan OData v4 Server SDK</h3>
+      <p class="slds-badge .slds-badge_lightest">v<span th:text="${indexBean.version}" th:remove="tag" /></p>
+    </div>
+  </div>
+
+  <div class="slds-align_absolute-center slds-m-left_medium slds-m-right_medium">
+    <p class="slds-text-body_regular">Oiyokan is an OData v4 server SDK based on Apache Olingo.</p>
+<!--    <dl>
+      <dt>アプリ:</dt>
+      <dd>Apache Olingo、Sakila</dd>
+      <dt>Second Label:</dt>
+      <dd>Description for second label</dd>
+    </dl> -->
   </div>
 
 </body>

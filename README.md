@@ -96,8 +96,8 @@ oiyokan プロジェクトは、OData v4 server のシンプルなサンプル(h
 
 ## TODO
 
-- index に　Oiyokan、Apache Olingo、Sakila についての説明を追加。githubのリンクも付与。
-- READONLYであることを主張したい。
+- index に　Oiyokan、Apache Olingo、Sakila, そして SLDS についての説明を追加。githubのリンクも付与。
+- OData v4 ServerはREADONLYであることを表記。
 - Sakila dvdrental sample についての記述を追記
 - Sakila のサンプルアクセスの $filter や $orderby などをもう少し良いものにする。
 - OData のサイトに掲載する
