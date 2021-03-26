@@ -42,58 +42,13 @@ public class SakilaDvdRentalCtrl {
     @RequestMapping("/sakila-dvdrental.html")
     public String oiyokanUnittest(Model model) throws IOException {
 
-        final List<UrlEntry> urlEntryList = new ArrayList<>();
+        final List<UrlEntryBean> urlEntryList = new ArrayList<>();
         model.addAttribute("UrlEntryList", urlEntryList);
 
         for (String[] look : ODATA_ENTRY_INFOS) {
-            urlEntryList.add(new UrlEntry(look[0], look[1], look[2]));
+            urlEntryList.add(new UrlEntryBean(look[0], look[1], look[2]));
         }
 
         return "sakila-dvdrental";
-    }
-
-    public static class UrlEntry {
-        private String name;
-        private String path;
-        private String note = "何か説明.";
-
-        public UrlEntry(String name, String path, String note) {
-            this.name = name;
-            this.path = path;
-            this.note = note;
-        }
-
-        public String getPath() {
-            return path;
-        }
-
-        public void setPath(String path) {
-            this.path = path;
-        }
-
-        public String getNote() {
-            return note;
-        }
-
-        public void setNote(String note) {
-            this.note = note;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        ///////////
-        public String getPathWithTrimg() {
-            if (path.length() > 36) {
-                return path.substring(0, Math.min(path.length(), 36)) + "...";
-            } else {
-                return path;
-            }
-        }
     }
 }

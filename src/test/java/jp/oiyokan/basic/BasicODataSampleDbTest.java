@@ -42,7 +42,7 @@ class BasicODataSampleDbTest {
 
             final ODataResponse resp = handler.process(req);
             final String result = BasicODataSampleTestUtil.stream2String(resp.getContent());
-            System.err.println("[" + entrys[0] + "], result: " + result);
+            // System.err.println("[" + entrys[0] + "], result: " + result);
             // TODO FIXME 以下がなぜエラーになる場合があるのか調査
             // assertEquals(200, resp.getStatusCode());
         }
