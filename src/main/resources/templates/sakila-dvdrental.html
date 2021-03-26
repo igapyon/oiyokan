@@ -94,7 +94,7 @@
     <thead>
       <tr class="slds-line-height_reset">
         <th class="" scope="col">
-          <div class="slds-truncate" title="Function">Function</div>
+          <div class="slds-truncate" title="EntitySet">EntitySet</div>
         </th>
         <th class="" scope="col">
           <div class="slds-truncate" title="Path">Path</div>
@@ -110,7 +110,7 @@
     <tbody>
       <div th:each="urlEntry,stat : ${UrlEntryList}" th:remove="tag">
         <tr class="slds-hint-parent">
-          <td data-label="Function">
+          <td data-label="EntitySet">
             <div class="slds-truncate" th:title="${urlEntry.name}"><span th:text="${urlEntry.name}"
                 th:remove="tag" /></div>
           </td>
