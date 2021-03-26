@@ -1,6 +1,15 @@
 # oiyokan
 
-Oiyokan is a simple OData v4 Server. (based on Apache Olingo / Spring Boot / h2 database)
+Oiyokan is an OData v4 server SDK.
+
+- Based on Apache Olingo. Build with Spring Boot, Java, h2.
+- Oiyokan provides read-only OData v4 access to resources.
+- Source code at github, license : Apache License.
+
+## Sample implementation using Oiyokan
+
+- Oiyokan provides OData server sample of Sakila DVD rental.
+- Metadata of OData sample is provided at $metadata.
 
 # Try to run oiyokan
 
@@ -96,7 +105,6 @@ oiyokan プロジェクトは、OData v4 server のシンプルなサンプル(h
 
 ## TODO
 
-- index に　Oiyokan、Apache Olingo、Sakila, そして SLDS についての説明を追加。githubのリンクも付与。
 - OData v4 ServerはREADONLYであることを表記。
 - Sakila dvdrental sample についての記述を追記
 - Sakila のサンプルアクセスの $filter や $orderby などをもう少し良いものにする。
