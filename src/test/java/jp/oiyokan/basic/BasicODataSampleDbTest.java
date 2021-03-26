@@ -23,7 +23,7 @@ import org.apache.olingo.server.api.ODataRequest;
 import org.apache.olingo.server.api.ODataResponse;
 import org.junit.jupiter.api.Test;
 
-import jp.app.ctrl.SakilaDvdRentalCtrl;
+import jp.app.ctrl.ThSakilaCtrl;
 
 /**
  * OData サーバについて、おおざっぱな通過によるデグレードを検知.
@@ -32,7 +32,7 @@ class BasicODataSampleDbTest {
     @Test
     void testSimpleVersion() throws Exception {
         final ODataHttpHandler handler = BasicODataSampleTestUtil.getHandler();
-        for (String[] entrys : SakilaDvdRentalCtrl.ODATA_ENTRY_INFOS) {
+        for (String[] entrys : ThSakilaCtrl.ODATA_ENTRY_INFOS) {
             String[] entry = entrys[1].split("['?']");
 
             final ODataRequest req = new ODataRequest();
