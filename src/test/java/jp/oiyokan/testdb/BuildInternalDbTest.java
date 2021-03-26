@@ -51,7 +51,7 @@ class BuildInternalDbTest {
      */
     @Test
     void test01() throws Exception {
-        if (new File("./src/main/resources/db/iyotest.mv.db").exists()) {
+        if (new File("./src/main/resources/db/oiyokan-internal.mv.db").exists()) {
             // すでにファイルが存在する場合は処理スキップ。
             System.err.println("テスト用内部データベースファイルはすでに存在するので作成をスキップ。");
             System.err.println("テスト用内部データベースの内容を更新する場合には、データベースファイルを削除して再度テスト実行してください。");
