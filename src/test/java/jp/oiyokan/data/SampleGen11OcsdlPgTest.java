@@ -17,19 +17,19 @@ package jp.oiyokan.data;
 
 import java.sql.Connection;
 
-import org.junit.jupiter.api.Test;
-
 import jp.oiyokan.basic.BasicDbUtil;
 import jp.oiyokan.dto.OiyokanSettings;
 import jp.oiyokan.dto.OiyokanSettingsDatabase;
 import jp.oiyokan.settings.OiyokanSettingsUtil;
 
 /**
- * 内部データベース用のCSDL用内部テーブルのDDLを生成: postgres 版.
+ * 内部データベース用のCSDL用内部テーブルのDDLをコマンドライン生成.
  */
 class SampleGen11OcsdlPgTest {
     /**
-     * postgres 接続環境が適切に存在する場合にのみ JUnit を実行。
+     * postgres 接続環境が適切に存在する場合にのみ実行可能。
+     * 
+     * Ocsdlテーブルのスキーマを取得したい場合にのみ JUnit を実行する。
      */
     // @Test
     void test01() throws Exception {

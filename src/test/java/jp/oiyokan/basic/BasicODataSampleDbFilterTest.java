@@ -33,7 +33,7 @@ class BasicODataSampleDbFilterTest {
         final ODataRequest req = new ODataRequest();
         req.setMethod(HttpMethod.GET);
         req.setRawBaseUri("http://localhost:8080/odata4.svc");
-        req.setRawODataPath("/MyProducts");
+        req.setRawODataPath("/ODataTests1");
         req.setRawQueryPath(
                 "$top=51&$filter=DateTimeOffset1 lt 2020-12-31T21:53:00Z&$orderby=ID&$count=true&$select=ID");
         req.setRawRequestUri(req.getRawBaseUri() + req.getRawODataPath() + "?" + req.getRawQueryPath());
@@ -42,7 +42,7 @@ class BasicODataSampleDbFilterTest {
         assertEquals(200, resp.getStatusCode());
         final String result = BasicODataSampleTestUtil.stream2String(resp.getContent());
         // System.err.println("result: " + result);
-        assertEquals("{\"@odata.context\":\"$metadata#MyProducts\",\"@odata.count\":0,\"value\":[]}", result);
+        assertEquals("{\"@odata.context\":\"$metadata#ODataTests1\",\"@odata.count\":0,\"value\":[]}", result);
     }
 
     @Test
@@ -51,7 +51,7 @@ class BasicODataSampleDbFilterTest {
         final ODataRequest req = new ODataRequest();
         req.setMethod(HttpMethod.GET);
         req.setRawBaseUri("http://localhost:8080/odata4.svc");
-        req.setRawODataPath("/MyProducts");
+        req.setRawODataPath("/ODataTests1");
         req.setRawQueryPath("$top=51&$filter=Date1 lt 2021-01-01&$orderby=ID&$count=true&$select=ID");
         req.setRawRequestUri(req.getRawBaseUri() + req.getRawODataPath() + "?" + req.getRawQueryPath());
 
@@ -59,7 +59,7 @@ class BasicODataSampleDbFilterTest {
         assertEquals(200, resp.getStatusCode());
         final String result = BasicODataSampleTestUtil.stream2String(resp.getContent());
         // System.err.println("result: " + result);
-        assertEquals("{\"@odata.context\":\"$metadata#MyProducts\",\"@odata.count\":0,\"value\":[]}", result);
+        assertEquals("{\"@odata.context\":\"$metadata#ODataTests1\",\"@odata.count\":0,\"value\":[]}", result);
     }
 
     @Test
@@ -68,7 +68,7 @@ class BasicODataSampleDbFilterTest {
         final ODataRequest req = new ODataRequest();
         req.setMethod(HttpMethod.GET);
         req.setRawBaseUri("http://localhost:8080/odata4.svc");
-        req.setRawODataPath("/MyProducts");
+        req.setRawODataPath("/ODataTests1");
         req.setRawQueryPath("$filter=Boolean1 eq false&$orderby=ID&$select=ID&$top=1");
         req.setRawRequestUri(req.getRawBaseUri() + req.getRawODataPath() + "?" + req.getRawQueryPath());
 
@@ -76,7 +76,7 @@ class BasicODataSampleDbFilterTest {
         assertEquals(200, resp.getStatusCode());
         final String result = BasicODataSampleTestUtil.stream2String(resp.getContent());
         // System.err.println("result: " + result);
-        assertEquals("{\"@odata.context\":\"$metadata#MyProducts\",\"value\":[{\"ID\":1}]}", result);
+        assertEquals("{\"@odata.context\":\"$metadata#ODataTests1\",\"value\":[{\"ID\":1}]}", result);
     }
 
     @Test
@@ -104,7 +104,7 @@ class BasicODataSampleDbFilterTest {
         final ODataRequest req = new ODataRequest();
         req.setMethod(HttpMethod.GET);
         req.setRawBaseUri("http://localhost:8080/odata4.svc");
-        req.setRawODataPath("/MyProducts");
+        req.setRawODataPath("/ODataTests1");
         req.setRawQueryPath("$top=1&$filter=Int16a eq 32767&$orderby=ID&$select=ID");
         req.setRawRequestUri(req.getRawBaseUri() + req.getRawODataPath() + "?" + req.getRawQueryPath());
 
@@ -112,7 +112,7 @@ class BasicODataSampleDbFilterTest {
         assertEquals(200, resp.getStatusCode());
         final String result = BasicODataSampleTestUtil.stream2String(resp.getContent());
         // System.err.println("result: " + result);
-        assertEquals("{\"@odata.context\":\"$metadata#MyProducts\",\"value\":[{\"ID\":1}]}", result);
+        assertEquals("{\"@odata.context\":\"$metadata#ODataTests1\",\"value\":[{\"ID\":1}]}", result);
     }
 
     @Test
@@ -121,7 +121,7 @@ class BasicODataSampleDbFilterTest {
         final ODataRequest req = new ODataRequest();
         req.setMethod(HttpMethod.GET);
         req.setRawBaseUri("http://localhost:8080/odata4.svc");
-        req.setRawODataPath("/MyProducts");
+        req.setRawODataPath("/ODataTests1");
         req.setRawQueryPath("$top=2&$filter=Int32a eq 2147483647&$orderby=ID&$count=true&$select=ID");
         req.setRawRequestUri(req.getRawBaseUri() + req.getRawODataPath() + "?" + req.getRawQueryPath());
 
@@ -130,7 +130,7 @@ class BasicODataSampleDbFilterTest {
         final String result = BasicODataSampleTestUtil.stream2String(resp.getContent());
         // System.err.println("result: " + result);
         assertEquals(
-                "{\"@odata.context\":\"$metadata#MyProducts\",\"@odata.count\":203,\"value\":[{\"ID\":1},{\"ID\":2}]}",
+                "{\"@odata.context\":\"$metadata#ODataTests1\",\"@odata.count\":203,\"value\":[{\"ID\":1},{\"ID\":2}]}",
                 result);
     }
 
@@ -142,7 +142,7 @@ class BasicODataSampleDbFilterTest {
         final ODataRequest req = new ODataRequest();
         req.setMethod(HttpMethod.GET);
         req.setRawBaseUri("http://localhost:8080/odata4.svc");
-        req.setRawODataPath("/MyProducts");
+        req.setRawODataPath("/ODataTests1");
         req.setRawQueryPath("$top=1&$filter=Sbyte1 eq 127&$orderby=ID&$count=true&$select=ID");
         req.setRawRequestUri(req.getRawBaseUri() + req.getRawODataPath() + "?" + req.getRawQueryPath());
 
@@ -150,7 +150,7 @@ class BasicODataSampleDbFilterTest {
         assertEquals(200, resp.getStatusCode());
         final String result = BasicODataSampleTestUtil.stream2String(resp.getContent());
         // System.err.println("result: " + result);
-        assertEquals("{\"@odata.context\":\"$metadata#MyProducts\",\"@odata.count\":203,\"value\":[{\"ID\":1}]}",
+        assertEquals("{\"@odata.context\":\"$metadata#ODataTests1\",\"@odata.count\":203,\"value\":[{\"ID\":1}]}",
                 result);
     }
 
@@ -160,7 +160,7 @@ class BasicODataSampleDbFilterTest {
         final ODataRequest req = new ODataRequest();
         req.setMethod(HttpMethod.GET);
         req.setRawBaseUri("http://localhost:8080/odata4.svc");
-        req.setRawODataPath("/MyProducts");
+        req.setRawODataPath("/ODataTests1");
         req.setRawQueryPath("$top=1&$filter=Single1 eq 123.45678711&$orderby=ID&$count=true&$select=ID");
         req.setRawRequestUri(req.getRawBaseUri() + req.getRawODataPath() + "?" + req.getRawQueryPath());
 
@@ -168,7 +168,7 @@ class BasicODataSampleDbFilterTest {
         assertEquals(200, resp.getStatusCode());
         final String result = BasicODataSampleTestUtil.stream2String(resp.getContent());
         // System.err.println("result: " + result);
-        assertEquals("{\"@odata.context\":\"$metadata#MyProducts\",\"@odata.count\":203,\"value\":[{\"ID\":1}]}",
+        assertEquals("{\"@odata.context\":\"$metadata#ODataTests1\",\"@odata.count\":203,\"value\":[{\"ID\":1}]}",
                 result);
     }
 
@@ -178,7 +178,7 @@ class BasicODataSampleDbFilterTest {
         final ODataRequest req = new ODataRequest();
         req.setMethod(HttpMethod.GET);
         req.setRawBaseUri("http://localhost:8080/odata4.svc");
-        req.setRawODataPath("/MyProducts");
+        req.setRawODataPath("/ODataTests1");
         req.setRawQueryPath("$top=51&$filter=Double1 lt 123.456789&$orderby=ID&$count=true&$select=ID");
         req.setRawRequestUri(req.getRawBaseUri() + req.getRawODataPath() + "?" + req.getRawQueryPath());
 
@@ -186,6 +186,6 @@ class BasicODataSampleDbFilterTest {
         assertEquals(200, resp.getStatusCode());
         final String result = BasicODataSampleTestUtil.stream2String(resp.getContent());
         // System.err.println("result: " + result);
-        assertEquals("{\"@odata.context\":\"$metadata#MyProducts\",\"@odata.count\":0,\"value\":[]}", result);
+        assertEquals("{\"@odata.context\":\"$metadata#ODataTests1\",\"@odata.count\":0,\"value\":[]}", result);
     }
 }

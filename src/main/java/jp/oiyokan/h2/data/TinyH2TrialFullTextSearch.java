@@ -50,9 +50,7 @@ public class TinyH2TrialFullTextSearch {
         try {
             SearchOptionImpl searchOpt = (SearchOptionImpl) uriInfo.getSearchOption();
 
-            // 想定: $top=6&$search=増産&$count=true&$select=ID
-            // http://localhost:8080/odata4.svc/MyProducts?$search=PixelSense&$count=true&$select=ID
-            // ただしh2は日本語ダメかも。
+            // TODO FIXME h2のこの呼び出し方だと日本語が検索できない。
 
             int topValue = 100;
             if (uriInfo.getTopOption() != null) {
@@ -74,7 +72,7 @@ public class TinyH2TrialFullTextSearch {
                     String valQuery = rset.getString(1);
                     // System.err.println("QUERY:" + valQuery);
                     // TODO , FIXME ハードコード。なぜなら現状このテーブルにしか全文検索が対応しない。
-                    if (valQuery.contains("MyProductFulls") == false) {
+                    if (valQuery.contains("ODataTestFulls1") == false) {
                         continue;
                     }
 

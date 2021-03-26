@@ -40,7 +40,7 @@ class TinyH2SqlExprExpanderTest {
         ServiceMetadata edm = odata.createServiceMetadata(new OiyokanEdmProvider(), new ArrayList<>());
 
         final Parser parser = new Parser(edm.getEdm(), odata);
-        final UriInfo uriInfo = parser.parseUri("/MyProducts", "$filter=ID eq 1.0", "",
+        final UriInfo uriInfo = parser.parseUri("/ODataTests1", "$filter=ID eq 1.0", "",
                 "http://localhost:8080/odata4.svc/");
         BasicSqlBuildInfo sqlInfo = new BasicSqlBuildInfo();
         new BasicSqlExprExpander(sqlInfo).expand(uriInfo.getFilterOption().getExpression());
@@ -54,7 +54,7 @@ class TinyH2SqlExprExpanderTest {
         ServiceMetadata edm = odata.createServiceMetadata(new OiyokanEdmProvider(), new ArrayList<>());
 
         final Parser parser = new Parser(edm.getEdm(), odata);
-        final UriInfo uriInfo = parser.parseUri("/MyProducts", "$filter=Description eq 'Mac' and ID eq 2.0", "",
+        final UriInfo uriInfo = parser.parseUri("/ODataTests1", "$filter=Description eq 'Mac' and ID eq 2.0", "",
                 "http://localhost:8080/odata4.svc/");
         BasicSqlBuildInfo sqlInfo = new BasicSqlBuildInfo();
         new BasicSqlExprExpander(sqlInfo).expand(uriInfo.getFilterOption().getExpression());
@@ -67,7 +67,7 @@ class TinyH2SqlExprExpanderTest {
         ServiceMetadata edm = odata.createServiceMetadata(new OiyokanEdmProvider(), new ArrayList<>());
 
         final Parser parser = new Parser(edm.getEdm(), odata);
-        final UriInfo uriInfo = parser.parseUri("/MyProducts",
+        final UriInfo uriInfo = parser.parseUri("/ODataTests1",
                 "%24top=51&%24filter=%20indexof%28Description%2C%27%E5%A2%97%E6%AE%96%E3%82%BF%E3%83%96%E3%83%AC%E3%83%83%E3%83%887%27%29%20ne%20-1&%24orderby=ID&%24count=true&%24select=Description%2CID%2CName",
                 "", "http://localhost:8080/odata4.svc/");
         BasicSqlBuildInfo sqlInfo = new BasicSqlBuildInfo();

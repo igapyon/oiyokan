@@ -111,16 +111,17 @@
       <div th:each="urlEntry,stat : ${UrlEntryList}" th:remove="tag">
         <tr class="slds-hint-parent">
           <td data-label="EntitySet">
-            <div class="slds-truncate" th:title="${urlEntry.name}"><span th:text="${urlEntry.name}"
-                th:remove="tag" /></div>
+            <div class="slds-truncate" th:title="${urlEntry.name}"><span th:text="${urlEntry.name}" th:remove="tag" />
+            </div>
           </td>
           <td data-label="Path">
-            <div class="slds-truncate" title="Path"><span th:text="${urlEntry.pathWithTrimg}" th:remove="tag" />
+            <div class="slds-truncate" th:title="${urlEntry.path}"><span th:text="${urlEntry.pathWithTrimg}"
+                th:remove="tag" />
             </div>
           </td>
           <td data-label="Request">
-            <div class="slds-truncate" title="Request"><a th:href="${'./odata4.svc' + urlEntry.path}"
-                target="_blank">Request</a></div>
+            <div class="slds-truncate" title="${'./odata4.svc' + urlEntry.path}"><a
+                th:href="${'./odata4.svc' + urlEntry.path}" target="_blank">Request</a></div>
           </td>
           <td data-label="Note">
             <div class="slds-truncate" title="Note"><span th:text="${urlEntry.note}" th:remove="tag" /></div>

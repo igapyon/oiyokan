@@ -14,9 +14,9 @@
 		{
 			"name": "oiyokanInternalTarget",
 			"type": "h2",
-			"description": "Oiyokan Internal Target DB. Do not change this def.",
+			"description": "Oiyokan Internal Target Test DB. Do not change this def.",
 			"jdbcDriver": "org.h2.Driver",
-			"jdbcUrl": "jdbc:h2:file:./src/main/resources/db/iyotest;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=FALSE;CASE_INSENSITIVE_IDENTIFIERS=TRUE;MODE=MSSQLServer",
+			"jdbcUrl": "jdbc:h2:file:./src/main/resources/db/oiyokan-internal;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=FALSE;CASE_INSENSITIVE_IDENTIFIERS=TRUE;MODE=MSSQLServer",
 			"jdbcUser": "sa",
 			"jdbcPass": ""
 		},
@@ -42,21 +42,21 @@
 		},
 		{
 			"name": "oiyokan-test-database",
-			"description": "Oiyokan単体テスト用エンティティセット。MyProducts。この設定を不用意に変更するとビルドが失敗する。",
-			"entitySetName": "MyProducts",
-			"entityName": "MyProduct",
+			"description": "Oiyokan単体テスト用エンティティセット。ODataTests1。この設定を不用意に変更するとビルドが失敗する。",
+			"entitySetName": "ODataTests1",
+			"entityName": "ODataTest1",
 			"databaseName": "oiyokanInternalTarget",
-			"dbTableNameLocal": "OcsdlMyProducts",
-			"dbTableNameTarget": "MyProducts"
+			"dbTableNameLocal": "OcsdlODataTest1",
+			"dbTableNameTarget": "ODataTest1"
 		},
 		{
 			"name": "oiyokan-test-product-fulltext",
-			"description": "Oiyokan単体テスト用エンティティセット。MyProducts。この設定を不用意に変更するとビルドが失敗する。",
-			"entitySetName": "MyProductFulls",
-			"entityName": "MyProductFull",
+			"description": "Oiyokan単体テスト用エンティティセット。ODataTestFulls1。この設定を不用意に変更するとビルドが失敗する。",
+			"entitySetName": "ODataTestFulls1",
+			"entityName": "ODataTestFull1",
 			"databaseName": "oiyokanInternalTarget",
-			"dbTableNameLocal": "OcsdlMyProductFulls",
-			"dbTableNameTarget": "MyProductFulls"
+			"dbTableNameLocal": "OcsdlODataTestFulls1",
+			"dbTableNameTarget": "ODataTestFulls1"
 		},
 		{
 			"name": "sample-pg-dvdrental-actor",
