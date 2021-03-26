@@ -99,7 +99,7 @@ class BasicODataSakilaDbTest {
                 BasicODataSampleTestUtil.stream2String(resp.getContent()));
     }
 
-    // @Test
+    @Test
     void testSimpleSearch() throws Exception {
         final ODataHttpHandler handler = BasicODataSampleTestUtil.getHandler();
         final ODataRequest req = new ODataRequest();

@@ -17,8 +17,6 @@ package jp.oiyokan.data;
 
 import java.sql.Connection;
 
-import org.junit.jupiter.api.Test;
-
 import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.basic.BasicDbUtil;
 import jp.oiyokan.dto.OiyokanSettings;
@@ -26,18 +24,18 @@ import jp.oiyokan.dto.OiyokanSettingsDatabase;
 import jp.oiyokan.settings.OiyokanSettingsUtil;
 
 /**
- * 内部データベース用のCSDL用内部テーブルのDDLを生成: h2 版.
+ * 内部データベース用のCSDL用内部テーブルのDDLをコマンドライン生成.
  */
 class SampleGen01Ocsdlh2ODataTests1Test {
     /**
-     * postgres 接続環境が適切に存在する場合にのみ JUnit を実行。
+     * Ocsdlテーブルのスキーマを取得したい場合にのみ JUnit を実行する。
      */
     // @Test
     void test01() throws Exception {
         final OiyokanSettings settingsOiyokan = OiyokanSettingsUtil.loadOiyokanSettings();
         OiyokanSettingsDatabase settingsDatabase = null;
         for (OiyokanSettingsDatabase look : settingsOiyokan.getDatabaseList()) {
-            if (OiyokanConstants.OIYOKAN_INTERNAL_DB.equals(look.getName())) {
+            if (OiyokanConstants.OIYOKAN_INTERNAL_TARGET_DB.equals(look.getName())) {
                 settingsDatabase = look;
             }
         }
@@ -46,7 +44,7 @@ class SampleGen01Ocsdlh2ODataTests1Test {
             // 内部データベースのテーブルをセットアップ.
             OiyokanInterDb.setupTable(connTargetDb);
 
-            System.err.println(OiyokanInterDb.generateCreateOcsdlDdl(connTargetDb, "MyProducts"));
+            System.err.println(OiyokanInterDb.generateCreateOcsdlDdl(connTargetDb, "ODataTest1"));
 
         }
     }
