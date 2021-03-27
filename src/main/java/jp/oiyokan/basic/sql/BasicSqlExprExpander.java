@@ -20,6 +20,7 @@ import java.time.ZonedDateTime;
 import java.util.Locale;
 
 import org.apache.olingo.commons.core.edm.primitivetype.EdmBoolean;
+import org.apache.olingo.commons.core.edm.primitivetype.EdmByte;
 import org.apache.olingo.commons.core.edm.primitivetype.EdmDate;
 import org.apache.olingo.commons.core.edm.primitivetype.EdmDateTimeOffset;
 import org.apache.olingo.commons.core.edm.primitivetype.EdmDecimal;
@@ -271,6 +272,15 @@ public class BasicSqlExprExpander {
             sqlInfo.getSqlParamList().add(look);
             return;
         }
+        if (EdmByte.getInstance() == impl.getType()) {
+            if (IS_DEBUG_EXPAND_LITERAL)
+                System.err.println("TRACE: EdmByte: " + impl.getText());
+            // 符号なしByteはJavaには該当する型がないので Shortで代用.
+            Short look = Short.valueOf(impl.getText());
+            sqlInfo.getSqlBuilder().append("?");
+            sqlInfo.getSqlParamList().add(look);
+            return;
+        }
         if (EdmInt16.getInstance() == impl.getType()) {
             if (IS_DEBUG_EXPAND_LITERAL)
                 System.err.println("TRACE: EdmInt16: " + impl.getText());
@@ -361,9 +371,8 @@ public class BasicSqlExprExpander {
         }
 
         // [M107] NOT SUPPORTED: LiteralImpl
-        System.err.println(OiyokanMessages.M107 + ": " + impl.getClass().getTypeName());
-        throw new ODataApplicationException(OiyokanMessages.M107 + ": " + impl.getClass().getTypeName(), 500,
-                Locale.ENGLISH);
+        System.err.println(OiyokanMessages.M107 + ": " + impl.getType());
+        throw new ODataApplicationException(OiyokanMessages.M107 + ": " + impl.getType(), 500, Locale.ENGLISH);
     }
 
     private void expandMember(MemberImpl impl) throws ODataApplicationException {

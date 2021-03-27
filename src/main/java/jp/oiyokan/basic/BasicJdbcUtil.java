@@ -232,6 +232,8 @@ public class BasicJdbcUtil {
         final CsdlProperty csdlProp = iyoEntitySet.getEntityType().getProperty(propName);
         if ("Edm.SByte".equals(csdlProp.getType())) {
             return new Property(null, propName, ValueType.PRIMITIVE, rset.getByte(column));
+        } else if ("Edm.Byte".equals(csdlProp.getType())) {
+            return new Property(null, propName, ValueType.PRIMITIVE, rset.getShort(column));
         } else if ("Edm.Int16".equals(csdlProp.getType())) {
             return new Property(null, propName, ValueType.PRIMITIVE, rset.getShort(column));
         } else if ("Edm.Int32".equals(csdlProp.getType())) {
