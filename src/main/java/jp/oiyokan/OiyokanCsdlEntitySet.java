@@ -32,12 +32,18 @@ import jp.oiyokan.settings.OiyokanSettingsUtil;
  */
 public class OiyokanCsdlEntitySet extends CsdlEntitySet {
     /**
-     * コンテナに関する情報を記憶.
+     * この EntitySet が所属するコンテナに関する情報を記憶.
      */
     private OiyokanCsdlEntityContainer csdlEntityContainer = null;
 
+    /**
+     * この EntitySet が接続する先のデータベースタイプを記憶.
+     */
     private DatabaseType dbType = DatabaseType.h2;
 
+    /**
+     * EntitySet の設定情報.
+     */
     private OiyokanSettingsEntitySet settingsEntitySet = null;
 
     private OiyokanSettingsDatabase settingsDatabase = null;
