@@ -101,6 +101,11 @@ class BasicODataTestDbTest {
 
     @Test
     void testSimpleSearch() throws Exception {
+        if (!OiyokanConstants.IS_EXPERIMENTAL_SEARCH_ENABLED) {
+            System.err.println("$search はサポート外: テストスキップします.");
+            return;
+        }
+
         final ODataHttpHandler handler = BasicODataSampleTestUtil.getHandler();
         final ODataRequest req = new ODataRequest();
         req.setMethod(HttpMethod.GET);

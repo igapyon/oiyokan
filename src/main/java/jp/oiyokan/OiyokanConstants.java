@@ -36,8 +36,10 @@ public class OiyokanConstants {
 
     /**
      * 実験的な $search が有効化されているかどうか。
+     * 
+     * 当面、リリース時には false.
      */
-    public static final boolean IS_EXPERIMENTAL_SEARCH_ENABLED = true;
+    public static final boolean IS_EXPERIMENTAL_SEARCH_ENABLED = false;
 
     /**
      * 接続先リソースの Databaseの型の列挙. 基本的にはリレーショナルデータベースを想定.
