@@ -72,5 +72,11 @@ public class OiyokanMessages {
     public static final String M121 = "[M121] UNEXPECTED: NOT SUPPORTED MethodKind";
     public static final String M122 = "[M122] UNEXPECTED: Unsupported UnaryOperatorKind";
     public static final String M123 = "[M123] NOT SUPPORTED: MethodKind.ENDSWITH";
-
+    public static final String M124 = "[M124] NOT SUPPORTED: BinaryOperatorKind.HAS";
+    public static final String M125 = "[M125] NOT SUPPORTED: BinaryOperatorKind.IN";
+    public static final String M126 = "[M126] NOT SUPPORTED: BinaryOperatorKind.MUL";
+    public static final String M127 = "[M127] NOT SUPPORTED: BinaryOperatorKind.DIV";
+    public static final String M128 = "[M128] NOT SUPPORTED: BinaryOperatorKind.MOD";
+    public static final String M129 = "[M129] NOT SUPPORTED: BinaryOperatorKind.ADD";
+    public static final String M130 = "[M130] NOT SUPPORTED: BinaryOperatorKind.SUB";
 }
