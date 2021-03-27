@@ -233,6 +233,7 @@ public class BasicJdbcUtil {
         if ("Edm.SByte".equals(csdlProp.getType())) {
             return new Property(null, propName, ValueType.PRIMITIVE, rset.getByte(column));
         } else if ("Edm.Byte".equals(csdlProp.getType())) {
+            // Edm.Byteに相当する型がJavaにないので Shortで代替.
             return new Property(null, propName, ValueType.PRIMITIVE, rset.getShort(column));
         } else if ("Edm.Int16".equals(csdlProp.getType())) {
             return new Property(null, propName, ValueType.PRIMITIVE, rset.getShort(column));
