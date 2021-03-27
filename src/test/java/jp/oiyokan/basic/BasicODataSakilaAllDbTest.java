@@ -52,7 +52,8 @@ class BasicODataSakilaAllDbTest {
 
             final ODataResponse resp = handler.process(req);
             final String result = BasicODataSampleTestUtil.stream2String(resp.getContent());
-            System.err.println("[" + entrys[0] + "], [" + entrys[1] + "], result: " + result);
+            // System.err.println("[" + entrys[0] + "], [" + entrys[1] + "], result: " +
+            // result);
             assertEquals(200, resp.getStatusCode());
         }
     }
