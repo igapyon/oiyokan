@@ -35,6 +35,7 @@ import org.apache.olingo.server.api.uri.UriInfo;
 import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanCsdlEntitySet;
 import jp.oiyokan.OiyokanEdmProvider;
+import jp.oiyokan.OiyokanEntityCollectionBuilderInterface;
 import jp.oiyokan.OiyokanMessages;
 import jp.oiyokan.basic.sql.BasicSqlBuilder;
 import jp.oiyokan.h2.data.ExperimentalH2FullTextSearch;
@@ -44,10 +45,7 @@ import jp.oiyokan.h2.data.ExperimentalH2FullTextSearch;
  * 
  * EDM要素セットを入力に実際のデータを組み上げ.
  */
-public class BasicJdbcEntityCollectionBuilder {
-    private BasicJdbcEntityCollectionBuilder() {
-    }
-
+public class BasicJdbcEntityCollectionBuilder implements OiyokanEntityCollectionBuilderInterface {
     /**
      * 指定のEDM要素セットに対応する要素コレクションを作成.
      * 
@@ -56,7 +54,7 @@ public class BasicJdbcEntityCollectionBuilder {
      * @return 要素コレクション.
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
-    public static EntityCollection build(EdmEntitySet edmEntitySet, UriInfo uriInfo) throws ODataApplicationException {
+    public EntityCollection build(EdmEntitySet edmEntitySet, UriInfo uriInfo) throws ODataApplicationException {
         final EntityCollection eCollection = new EntityCollection();
 
         OiyokanEdmProvider provider = new OiyokanEdmProvider();
@@ -161,7 +159,7 @@ public class BasicJdbcEntityCollectionBuilder {
         eCollection.setCount(countWithWhere);
     }
 
-    private static void processCollectionQuery(OiyokanCsdlEntitySet entitySet, UriInfo uriInfo, Connection connTargetDb,
+    private void processCollectionQuery(OiyokanCsdlEntitySet entitySet, UriInfo uriInfo, Connection connTargetDb,
             EntityCollection eCollection) throws ODataApplicationException {
         BasicSqlBuilder basicSqlBuilder = new BasicSqlBuilder(entitySet);
 
