@@ -15,8 +15,6 @@
  */
 package jp.oiyokan;
 
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
@@ -28,9 +26,8 @@ import org.apache.olingo.commons.api.edm.provider.CsdlEntitySet;
 import org.apache.olingo.commons.api.edm.provider.CsdlEntityType;
 import org.apache.olingo.server.api.ODataApplicationException;
 
-import jp.oiyokan.basic.BasicDbUtil;
 import jp.oiyokan.basic.BasicJdbcEntityTypeBuilder;
-import jp.oiyokan.data.OiyokanInterDb;
+import jp.oiyokan.data.OiyokanInternalDatabase;
 import jp.oiyokan.dto.OiyokanSettings;
 import jp.oiyokan.dto.OiyokanSettingsDatabase;
 import jp.oiyokan.dto.OiyokanSettingsEntitySet;
@@ -114,19 +111,8 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
                 }
             }
 
-            {
-                OiyokanSettingsDatabase settingsInterDatabase = OiyokanSettingsUtil
-                        .getOiyokanDatabase(OiyokanConstants.OIYOKAN_INTERNAL_DB);
-
-                try (Connection connInterDb = BasicDbUtil.getConnection(settingsInterDatabase)) {
-                    // テーブルをセットアップ.
-                    OiyokanInterDb.setupTable(connInterDb);
-                } catch (SQLException ex) {
-                    // [M004] UNEXPECTED Database error
-                    System.err.println(OiyokanMessages.M004 + ": " + ex.toString());
-                    new ODataApplicationException(OiyokanMessages.M004, 500, Locale.ENGLISH);
-                }
-            }
+            // Oiyokan が動作する際に必要になる内部データベースのバージョン情報および Ocsdl info をセットアップ.
+            OiyokanInternalDatabase.setupInternalDatabase();
 
             for (OiyokanSettingsEntitySet entitySetCnof : getSettingsInstance().getEntitySetList()) {
                 // EntitySet の初期セットを実施。

@@ -35,9 +35,9 @@ import jp.oiyokan.dto.OiyokanSettingsDatabase;
 import jp.oiyokan.settings.OiyokanSettingsUtil;
 
 /**
- * Oiyokan (OData v4 server) が動作する際に必要になる内部データおよびサンプルデータをセットアップ.
+ * Oiyokan (OData v4 server) が動作する際に必要になる内部データベースのバージョン情報および Ocsdl info をセットアップ.
  */
-public class OiyokanInterDb {
+public class OiyokanInternalDatabase {
     /**
      * Oiyokan の設定情報を記述したファイル.
      */
@@ -67,104 +67,114 @@ public class OiyokanInterDb {
              */
             { OiyokanConstants.OIYOKAN_INTERNAL_DB, "oiyokan-ocsdl.sql" }, };
 
-    private OiyokanInterDb() {
+    private OiyokanInternalDatabase() {
     }
 
     /**
-     * 情報を格納するためのテーブルをセットアップします。
+     * 内部データベースの情報一式をセットアップします。
      * 
-     * @param connInterDb 内部DB.
      * @return true:新規作成, false:既に存在.
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
-    public static boolean setupTable(Connection connInterDb) throws ODataApplicationException {
+    public static synchronized boolean setupInternalDatabase() throws ODataApplicationException {
         if (OiyokanConstants.IS_TRACE_ODATA_V4)
             System.err.println( //
-                    "OData v4: setup internal table" + " (Oiyokan: " + OiyokanConstants.VERSION + ")");
+                    "OData v4: setup internal database (Oiyokan: " + OiyokanConstants.VERSION + ")");
 
-        // Oiyokan が動作する上で必要なテーブルのセットアップ.
-        try (var stmt = connInterDb.prepareStatement("CREATE TABLE IF NOT EXISTS " //
-                + "ODataAppInfos (" //
-                + "KeyName VARCHAR(20) NOT NULL" //
-                + ",KeyValue VARCHAR(255)" //
-                + ",PRIMARY KEY(KeyName)" //
-                + ")")) {
-            stmt.executeUpdate();
-        } catch (SQLException ex) {
-            System.err.println("UNEXPECTED: Fail to create local table: ODataAppInfos: " + ex.toString());
-            throw new ODataApplicationException("UNEXPECTED: Fail to create local table: ODataAppInfos", 500,
-                    Locale.ENGLISH);
-        }
+        OiyokanSettingsDatabase settingsInterDatabase = OiyokanSettingsUtil
+                .getOiyokanDatabase(OiyokanConstants.OIYOKAN_INTERNAL_DB);
 
-        // ODataAppInfos が既に存在するかどうか確認. 存在する場合は処理中断.
-        try (var stmt = connInterDb.prepareStatement("SELECT COUNT(*) FROM ODataAppInfos")) {
-            stmt.executeQuery();
-            var rset = stmt.getResultSet();
-            rset.next();
-            if (rset.getInt(1) > 0) {
-                // すでにテーブルがセットアップ済み。処理中断します。
-                return false;
+        try (Connection connInterDb = BasicDbUtil.getConnection(settingsInterDatabase)) {
+            // Internal Database の バージョン情報および Ocsdl テーブルを setup.
+
+            // Oiyokan が動作する上で必要なテーブルのセットアップ.
+            try (var stmt = connInterDb.prepareStatement("CREATE TABLE IF NOT EXISTS " //
+                    + "ODataAppInfos (" //
+                    + "KeyName VARCHAR(20) NOT NULL" //
+                    + ",KeyValue VARCHAR(255)" //
+                    + ",PRIMARY KEY(KeyName)" //
+                    + ")")) {
+                stmt.executeUpdate();
+            } catch (SQLException ex) {
+                System.err.println("UNEXPECTED: Fail to create local table: ODataAppInfos: " + ex.toString());
+                throw new ODataApplicationException("UNEXPECTED: Fail to create local table: ODataAppInfos", 500,
+                        Locale.ENGLISH);
             }
-        } catch (SQLException ex) {
-            System.err.println("UNEXPECTED: Fail to check local table exists: ODataAppInfos: " + ex.toString());
-            throw new ODataApplicationException("UNEXPECTED: Fail to check local table exists: ODataAppInfos", 500,
-                    Locale.ENGLISH, ex);
-        }
 
-        ///////////////////////////////////////////
-        // 内部データの作成に突入.
-        if (OiyokanConstants.IS_TRACE_ODATA_V4)
-            System.err.println( //
-                    "OData v4: setup internal data " + " (Oiyokan: " + OiyokanConstants.VERSION + ")");
-
-        ///////////////////////////////////////////
-        // ODataAppInfos にバージョン情報などデータの追加
-        try (var stmt = connInterDb.prepareStatement("INSERT INTO ODataAppInfos (KeyName, KeyValue) VALUES ("
-                + BasicDbUtil.getQueryPlaceholderString(2) + ")")) {
-            stmt.setString(1, "Version");
-            stmt.setString(2, OiyokanConstants.VERSION);
-            stmt.executeUpdate();
-
-            stmt.clearParameters();
-            stmt.setString(1, "Provider");
-            stmt.setString(2, OiyokanConstants.NAME);
-            stmt.executeUpdate();
-
-            connInterDb.commit();
-        } catch (SQLException ex) {
-            System.err.println("UNEXPECTED: Fail to execute SQL for local internal table: " + ex.toString());
-            throw new ODataApplicationException("UNEXPECTED: Fail to execute SQL for local internal table", 500,
-                    Locale.ENGLISH);
-        }
-
-        for (String[] sqlFileDef : OIYOKAN_FILE_SQLS) {
-            if (OiyokanConstants.IS_TRACE_ODATA_V4)
-                System.err.println("OData v4: load: db:" + sqlFileDef[0] + ", sql: " + sqlFileDef[1]);
-
-            OiyokanSettingsDatabase lookDatabase = OiyokanSettingsUtil.getOiyokanDatabase(sqlFileDef[0]);
-
-            try (Connection connLoookDatabase = BasicDbUtil.getConnection(lookDatabase)) {
-                final String[] sqls = OiyokanResourceSqlUtil.loadOiyokanResourceSql("oiyokan/sql/" + sqlFileDef[1]);
-                for (String sql : sqls) {
-                    try (var stmt = connLoookDatabase.prepareStatement(sql.trim())) {
-                        // System.err.println("SQL: " + sql);
-                        stmt.executeUpdate();
-                        connLoookDatabase.commit();
-                    } catch (SQLException ex) {
-                        System.err.println(
-                                "UNEXPECTED: Fail to execute SQL for local internal table(2): " + ex.toString());
-                        throw new ODataApplicationException(
-                                "UNEXPECTED: Fail to execute SQL for local internal table(2)", 500, Locale.ENGLISH);
-                    }
+            // ODataAppInfos が既に存在するかどうか確認. 存在する場合は処理中断.
+            try (var stmt = connInterDb.prepareStatement("SELECT COUNT(*) FROM ODataAppInfos")) {
+                stmt.executeQuery();
+                var rset = stmt.getResultSet();
+                rset.next();
+                if (rset.getInt(1) > 0) {
+                    // すでにテーブルがセットアップ済み。処理中断します。
+                    return false;
                 }
             } catch (SQLException ex) {
-                System.err.println("UNEXPECTED: Fail to execute Dabaase: " + ex.toString());
-                throw new ODataApplicationException("UNEXPECTED: Fail to execute Dabaase", 500, Locale.ENGLISH);
+                System.err.println("UNEXPECTED: Fail to check local table exists: ODataAppInfos: " + ex.toString());
+                throw new ODataApplicationException("UNEXPECTED: Fail to check local table exists: ODataAppInfos", 500,
+                        Locale.ENGLISH, ex);
             }
-        }
 
-        // 新規作成.
-        return true;
+            ///////////////////////////////////////////
+            // 内部データの作成に突入.
+            if (OiyokanConstants.IS_TRACE_ODATA_V4)
+                System.err.println( //
+                        "OData v4: setup internal data " + " (Oiyokan: " + OiyokanConstants.VERSION + ")");
+
+            ///////////////////////////////////////////
+            // ODataAppInfos にバージョン情報などデータの追加
+            try (var stmt = connInterDb.prepareStatement("INSERT INTO ODataAppInfos (KeyName, KeyValue) VALUES ("
+                    + BasicDbUtil.getQueryPlaceholderString(2) + ")")) {
+                stmt.setString(1, "Version");
+                stmt.setString(2, OiyokanConstants.VERSION);
+                stmt.executeUpdate();
+
+                stmt.clearParameters();
+                stmt.setString(1, "Provider");
+                stmt.setString(2, OiyokanConstants.NAME);
+                stmt.executeUpdate();
+
+                connInterDb.commit();
+            } catch (SQLException ex) {
+                System.err.println("UNEXPECTED: Fail to execute SQL for local internal table: " + ex.toString());
+                throw new ODataApplicationException("UNEXPECTED: Fail to execute SQL for local internal table", 500,
+                        Locale.ENGLISH);
+            }
+
+            for (String[] sqlFileDef : OIYOKAN_FILE_SQLS) {
+                if (OiyokanConstants.IS_TRACE_ODATA_V4)
+                    System.err.println("OData v4: load: db:" + sqlFileDef[0] + ", sql: " + sqlFileDef[1]);
+
+                OiyokanSettingsDatabase lookDatabase = OiyokanSettingsUtil.getOiyokanDatabase(sqlFileDef[0]);
+
+                try (Connection connLoookDatabase = BasicDbUtil.getConnection(lookDatabase)) {
+                    final String[] sqls = OiyokanResourceSqlUtil.loadOiyokanResourceSql("oiyokan/sql/" + sqlFileDef[1]);
+                    for (String sql : sqls) {
+                        try (var stmt = connLoookDatabase.prepareStatement(sql.trim())) {
+                            // System.err.println("SQL: " + sql);
+                            stmt.executeUpdate();
+                            connLoookDatabase.commit();
+                        } catch (SQLException ex) {
+                            System.err.println(
+                                    "UNEXPECTED: Fail to execute SQL for local internal table(2): " + ex.toString());
+                            throw new ODataApplicationException(
+                                    "UNEXPECTED: Fail to execute SQL for local internal table(2)", 500, Locale.ENGLISH);
+                        }
+                    }
+                } catch (SQLException ex) {
+                    System.err.println("UNEXPECTED: Fail to execute Dabaase: " + ex.toString());
+                    throw new ODataApplicationException("UNEXPECTED: Fail to execute Dabaase", 500, Locale.ENGLISH);
+                }
+            }
+
+            // 新規作成.
+            return true;
+        } catch (SQLException ex) {
+            // [M004] UNEXPECTED: Database error in setup internal database.
+            System.err.println(OiyokanMessages.M004 + ": " + ex.toString());
+            throw new ODataApplicationException(OiyokanMessages.M004, 500, Locale.ENGLISH);
+        }
     }
 
     /**

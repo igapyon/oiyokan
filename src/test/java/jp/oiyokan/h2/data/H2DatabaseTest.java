@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test;
 
 import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.basic.BasicDbUtil;
-import jp.oiyokan.data.OiyokanInterDb;
+import jp.oiyokan.data.OiyokanInternalDatabase;
 import jp.oiyokan.settings.OiyokanSettingsUtil;
 
 /**
@@ -37,7 +37,7 @@ class H2DatabaseTest {
                 .getConnection(OiyokanSettingsUtil.getOiyokanDatabase(OiyokanConstants.OIYOKAN_INTERNAL_DB))) {
 
             // 内部データベースのテーブルをセットアップ.
-            OiyokanInterDb.setupTable(conn);
+            OiyokanInternalDatabase.setupInternalDatabase();
 
             try (var stmt = conn
                     .prepareStatement("SELECT ID, Name, Description FROM OcsdlODataTest1 ORDER BY ID LIMIT 3")) {
@@ -53,7 +53,7 @@ class H2DatabaseTest {
         try (Connection conn = BasicDbUtil
                 .getConnection(OiyokanSettingsUtil.getOiyokanDatabase(OiyokanConstants.OIYOKAN_INTERNAL_DB))) {
             // 内部データベースのテーブルをセットアップ.
-            OiyokanInterDb.setupTable(conn);
+            OiyokanInternalDatabase.setupInternalDatabase();
 
             try (var stmt = conn.prepareStatement("SELECT ID, Name, Description" //
                     + ",Sbyte1,Int16a,Int32a,Int64a,Decimal1,StringChar2,StringVar255,StringVar65535,Boolean1,Single1,Double1,DateTimeOffset1,TimeOfDay1" //

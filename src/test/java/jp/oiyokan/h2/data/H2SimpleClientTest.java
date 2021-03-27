@@ -23,7 +23,7 @@ import org.junit.jupiter.api.Test;
 
 import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.basic.BasicDbUtil;
-import jp.oiyokan.data.OiyokanInterDb;
+import jp.oiyokan.data.OiyokanInternalDatabase;
 import jp.oiyokan.settings.OiyokanSettingsUtil;
 
 /**
@@ -35,7 +35,7 @@ class H2SimpleClientTest {
         try (Connection conn = BasicDbUtil
                 .getConnection(OiyokanSettingsUtil.getOiyokanDatabase(OiyokanConstants.OIYOKAN_INTERNAL_DB))) {
             // 内部データベースのテーブルをセットアップ.
-            OiyokanInterDb.setupTable(conn);
+            OiyokanInternalDatabase.setupInternalDatabase();
         }
 
         try (Connection conn = BasicDbUtil

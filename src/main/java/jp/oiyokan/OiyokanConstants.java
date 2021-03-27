@@ -53,7 +53,7 @@ public class OiyokanConstants {
     };
 
     /**
-     * 内部DBへの定義名. OCSDL およびバージョン番号を格納.
+     * 内部DBへの定義名. この DBはアプリ起動都度初期化される揮発的なもの. OCSDL およびバージョン番号を格納.
      */
     public static final String OIYOKAN_INTERNAL_DB = "oiyokanInternal";
 

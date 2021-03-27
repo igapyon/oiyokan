@@ -19,7 +19,7 @@ public class OiyokanMessages {
     public static final String M001 = "[M001] Can't decode specified decodec url";
     public static final String M002 = "[M002] UNEXPECTED: Illegal data type in database settings";
     public static final String M003 = "[M003] UNEXPECTED: Fail to load JDBC driver. Check JDBC Driver classname or JDBC Driver is on classpath.";
-    public static final String M004 = "[M004] UNEXPECTED Database error";
+    public static final String M004 = "[M004] UNEXPECTED: Database error in setup internal database.";
     public static final String M005 = "[M005] UNEXPECTED: データベースの接続に失敗: しばらく待って再度トライしてください。しばらく経っても改善しない場合はIT部門などに連絡してください";
     public static final String M006 = "[M006] NOT SUPPORTED: CSDL: JDBC Type";
     public static final String M007 = "[M007] UNEXPECTED: fail to read from CLOB";

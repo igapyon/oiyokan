@@ -33,7 +33,7 @@ import org.apache.olingo.server.api.ODataApplicationException;
 import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanCsdlEntitySet;
 import jp.oiyokan.OiyokanMessages;
-import jp.oiyokan.data.OiyokanInterDb;
+import jp.oiyokan.data.OiyokanInternalDatabase;
 import jp.oiyokan.dto.OiyokanSettingsDatabase;
 import jp.oiyokan.settings.OiyokanSettingsUtil;
 
@@ -73,7 +73,8 @@ public class BasicJdbcEntityTypeBuilder {
         try (Connection connInterDb = BasicDbUtil.getConnection(settingsInternalDatabase)) {
             // テーブルをセットアップ.
             // 特殊例. createDataをスキップ.
-            OiyokanInterDb.setupTable(connInterDb);
+            // FIXME TODO この記述は省略可能なはず。
+            OiyokanInternalDatabase.setupInternalDatabase();
 
             // CSDL要素型として情報を組み上げ.
             CsdlEntityType entityType = new CsdlEntityType();
