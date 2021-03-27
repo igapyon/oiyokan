@@ -70,7 +70,8 @@ class SampleGen11OcsdlPgTest {
 
             System.err.println(OiyokanInternalDatabase.generateCreateOcsdlDdl(connTargetDb, "language"));
 
-            System.err.println(OiyokanInternalDatabase.generateCreateOcsdlDdl(connTargetDb, "nicer_but_slower_film_list"));
+            System.err.println(
+                    OiyokanInternalDatabase.generateCreateOcsdlDdl(connTargetDb, "nicer_but_slower_film_list"));
 
             System.err.println(OiyokanInternalDatabase.generateCreateOcsdlDdl(connTargetDb, "payment"));
 
