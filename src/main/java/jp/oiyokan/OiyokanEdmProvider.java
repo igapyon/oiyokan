@@ -122,7 +122,7 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
 
             // 要素コンテナを作成.
             final OiyokanCsdlEntityContainer newEntityContainer = new OiyokanCsdlEntityContainer();
-            newEntityContainer.setName(localTemplateEntityContainer.getContainerNameIyo());
+            newEntityContainer.setName(OiyokanCsdlEntityContainer.getSettingsInstance().getContainerName());
             newEntityContainer.setEntitySets(newEntitySetList);
 
             newEntityContainer.ensureBuild();
