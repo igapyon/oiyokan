@@ -22,6 +22,7 @@ import org.apache.olingo.commons.api.edm.provider.CsdlEntitySet;
 import org.apache.olingo.commons.api.edm.provider.CsdlEntityType;
 import org.apache.olingo.server.api.ODataApplicationException;
 
+import jp.oiyokan.OiyokanConstants.DatabaseType;
 import jp.oiyokan.dto.OiyokanSettingsDatabase;
 import jp.oiyokan.dto.OiyokanSettingsEntitySet;
 
@@ -29,16 +30,6 @@ import jp.oiyokan.dto.OiyokanSettingsEntitySet;
  * Oiyokan の CsdlEntitySet 実装.
  */
 public class OiyokanCsdlEntitySet extends CsdlEntitySet {
-    /**
-     * Databaseの型の列挙.
-     */
-    public enum DatabaseType {
-        /** h2 database */
-        H2,
-        /** postgres */
-        PG
-    };
-
     /**
      * コンテナに関する情報を記憶.
      */
@@ -125,7 +116,7 @@ public class OiyokanCsdlEntitySet extends CsdlEntitySet {
         if ("h2".equals(settingsDatabase.getType())) {
             this.dbType = DatabaseType.H2;
         } else if ("pg".equals(settingsDatabase.getType())) {
-            this.dbType = DatabaseType.PG;
+            this.dbType = DatabaseType.Postgres;
         } else {
             System.err.println("UNEXPECTED: Unknown database type: " + settingsDatabase.getType());
             throw new ODataApplicationException("UNEXPECTED: Unknown database type: " + settingsDatabase.getType(), 500,
