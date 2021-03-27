@@ -145,23 +145,6 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
     }
 
     /**
-     * エンティティ名からエンティティセットを取得。
-     * 
-     * @param entitySetName エンティティ名.
-     * @return エンティティセット.
-     */
-    public OiyokanCsdlEntitySet getEntitySetByEntityNameIyo(String entitySetName) {
-        for (CsdlEntitySet look : this.getEntitySets()) {
-            OiyokanCsdlEntitySet look2 = (OiyokanCsdlEntitySet) look;
-            if (look2.getEntityNameIyo().equals(entitySetName)) {
-                return look2;
-            }
-        }
-
-        return null;
-    }
-
-    /**
      * エンティティ名FQNをもとに エンティティセットを取得.
      * 
      * @param entityNameFQN エンティティ名FQN.
