@@ -111,6 +111,7 @@ public class BasicJdbcEntityCollectionBuilder {
 
             // 件数カウントがONの場合はカウント処理を実行。
             if (uriInfo.getCountOption() != null && uriInfo.getCountOption().getValue()) {
+                // $count.
                 processCountQuery(entitySet, uriInfo, connTargetDb, eCollection);
             }
 
@@ -128,10 +129,9 @@ public class BasicJdbcEntityCollectionBuilder {
     private static void processCountQuery(OiyokanCsdlEntitySet entitySet, UriInfo uriInfo, Connection connTargetDb,
             EntityCollection eCollection) throws ODataApplicationException {
         // 件数をカウントして設定。
-        BasicSqlBuilder tinySql = new BasicSqlBuilder(entitySet.getSettingsDatabase());
-        tinySql.getSqlInfo().setEntitySet((OiyokanCsdlEntitySet) entitySet);
-        tinySql.getSelectCountQuery(uriInfo);
-        final String sql = tinySql.getSqlInfo().getSqlBuilder().toString();
+        BasicSqlBuilder basicSqlBuilder = new BasicSqlBuilder(entitySet);
+        basicSqlBuilder.getSelectCountQuery(uriInfo);
+        final String sql = basicSqlBuilder.getSqlInfo().getSqlBuilder().toString();
 
         if (OiyokanConstants.IS_TRACE_ODATA_V4)
             System.err.println("OData v4: TRACE: SQL: " + sql);
@@ -139,7 +139,7 @@ public class BasicJdbcEntityCollectionBuilder {
         int countWithWhere = 0;
         try (var stmt = connTargetDb.prepareStatement(sql)) {
             int column = 1;
-            for (Object look : tinySql.getSqlInfo().getSqlParamList()) {
+            for (Object look : basicSqlBuilder.getSqlInfo().getSqlParamList()) {
                 BasicJdbcUtil.bindPreparedParameter(stmt, column++, look);
             }
 
@@ -158,18 +158,17 @@ public class BasicJdbcEntityCollectionBuilder {
 
     private static void processCollectionQuery(OiyokanCsdlEntitySet entitySet, UriInfo uriInfo, Connection connTargetDb,
             EntityCollection eCollection) throws ODataApplicationException {
-        BasicSqlBuilder tinySql = new BasicSqlBuilder(entitySet.getSettingsDatabase());
-        tinySql.getSqlInfo().setEntitySet((OiyokanCsdlEntitySet) entitySet);
+        BasicSqlBuilder basicSqlBuilder = new BasicSqlBuilder(entitySet);
 
-        tinySql.getSelectQuery(uriInfo, entitySet.getSettingsDatabase());
-        final String sql = tinySql.getSqlInfo().getSqlBuilder().toString();
+        basicSqlBuilder.getSelectQuery(uriInfo, entitySet.getSettingsDatabase());
+        final String sql = basicSqlBuilder.getSqlInfo().getSqlBuilder().toString();
 
         if (OiyokanConstants.IS_TRACE_ODATA_V4)
             System.err.println("OData v4: TRACE: SQL: " + sql);
 
         try (var stmt = connTargetDb.prepareStatement(sql)) {
             int idxColumn = 1;
-            for (Object look : tinySql.getSqlInfo().getSqlParamList()) {
+            for (Object look : basicSqlBuilder.getSqlInfo().getSqlParamList()) {
                 BasicJdbcUtil.bindPreparedParameter(stmt, idxColumn++, look);
             }
 
@@ -188,7 +187,7 @@ public class BasicJdbcEntityCollectionBuilder {
 
                 if (entitySet.getEntityType().getKey().size() == 0) {
                     // キーが存在しないのは OData としてはまずい。
-                    // 別の箇所にて標準エラー出力にて報告済み。O
+                    // 別の箇所にて標準エラー出力にて報告。
                 } else {
                     // キーが存在する場合は、IDとして設定。
                     OiyokanCsdlEntitySet iyoEntitySet = (OiyokanCsdlEntitySet) entitySet;

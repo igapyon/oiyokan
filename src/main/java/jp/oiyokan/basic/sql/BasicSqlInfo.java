@@ -18,6 +18,8 @@ package jp.oiyokan.basic.sql;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.olingo.server.api.ODataApplicationException;
+
 import jp.oiyokan.OiyokanCsdlEntitySet;
 import jp.oiyokan.dto.OiyokanSettingsDatabase;
 
@@ -28,19 +30,14 @@ import jp.oiyokan.dto.OiyokanSettingsDatabase;
  * 
  * 当面は、このクラスはSQL文とパラメータを蓄える。
  */
-public class BasicSqlBuildInfo {
-    private OiyokanSettingsDatabase settingsDatabase = null;
-
+public class BasicSqlInfo {
     private OiyokanCsdlEntitySet entitySet = null;
+
     private final StringBuilder sqlBuilder = new StringBuilder();
     private final List<Object> sqlParamList = new ArrayList<>();
 
-    public OiyokanSettingsDatabase getSettingsDatabase() {
-        return settingsDatabase;
-    }
-
-    public void setSettingsDatabase(OiyokanSettingsDatabase settingsDatabase) {
-        this.settingsDatabase = settingsDatabase;
+    public BasicSqlInfo(OiyokanCsdlEntitySet entitySet) {
+        this.entitySet = entitySet;
     }
 
     /**
@@ -50,15 +47,6 @@ public class BasicSqlBuildInfo {
      */
     public OiyokanCsdlEntitySet getEntitySet() {
         return entitySet;
-    }
-
-    /**
-     * EntitySet を指定.
-     * 
-     * @param entitySet OiyokanCsdlEntitySet のインスタンス.
-     */
-    public void setEntitySet(OiyokanCsdlEntitySet entitySet) {
-        this.entitySet = entitySet;
     }
 
     /**
@@ -77,5 +65,15 @@ public class BasicSqlBuildInfo {
      */
     public List<Object> getSqlParamList() {
         return sqlParamList;
+    }
+
+    /**
+     * このSQLがひもづく OiyokanSettingsDatabase を取得.
+     * 
+     * @return OiyokanSettingsDatabase インスタンス.
+     * @throws ODataApplicationException ODataアプリ例外が発生.
+     */
+    public OiyokanSettingsDatabase getSettingsDatabase() throws ODataApplicationException {
+        return entitySet.getSettingsDatabase();
     }
 }

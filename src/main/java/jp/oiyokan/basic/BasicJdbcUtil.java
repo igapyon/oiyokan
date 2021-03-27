@@ -41,7 +41,7 @@ import jp.oiyokan.dto.OiyokanSettingsDatabase;
 import jp.oiyokan.settings.OiyokanNamingUtil;
 
 /**
- * Oiyokan 関連のDBまわりユーティリティクラス.
+ * Oiyokan 関連の JDBC まわりユーティリティクラス.
  */
 public class BasicJdbcUtil {
     private BasicJdbcUtil() {
