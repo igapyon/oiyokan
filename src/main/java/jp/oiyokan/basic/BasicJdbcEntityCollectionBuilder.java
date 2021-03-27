@@ -66,16 +66,14 @@ public class BasicJdbcEntityCollectionBuilder {
         }
 
         OiyokanCsdlEntitySet entitySet = null;
-        String targetEntityName = null;
         for (CsdlEntitySet look : provider.getEntityContainer().getEntitySets()) {
             if (edmEntitySet.getName().equals(look.getName())) {
                 entitySet = (OiyokanCsdlEntitySet) look;
-                targetEntityName = look.getName();
                 break;
             }
         }
 
-        if (targetEntityName == null) {
+        if (entitySet == null) {
             // 処理対象外の要素セットです. 処理せずに戻します.
             return eCollection;
         }
@@ -158,8 +156,8 @@ public class BasicJdbcEntityCollectionBuilder {
         eCollection.setCount(countWithWhere);
     }
 
-    private static void processCollectionQuery(OiyokanCsdlEntitySet entitySet, UriInfo uriInfo,
-            Connection connTargetDb, EntityCollection eCollection) throws ODataApplicationException {
+    private static void processCollectionQuery(OiyokanCsdlEntitySet entitySet, UriInfo uriInfo, Connection connTargetDb,
+            EntityCollection eCollection) throws ODataApplicationException {
         BasicSqlBuilder tinySql = new BasicSqlBuilder(entitySet.getSettingsDatabase());
         tinySql.getSqlInfo().setEntitySet((OiyokanCsdlEntitySet) entitySet);
 
