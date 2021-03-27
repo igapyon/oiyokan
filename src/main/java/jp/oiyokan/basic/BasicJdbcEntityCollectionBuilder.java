@@ -125,7 +125,7 @@ public class BasicJdbcEntityCollectionBuilder implements OiyokanEntityCollection
         } catch (SQLException ex) {
             // [M015] UNEXPECTED: Fail on database connection SQL
             System.err.println(OiyokanMessages.M015 + ": " + ex.toString());
-            throw new ODataApplicationException(OiyokanMessages.M015, 500, Locale.ENGLISH, ex);
+            throw new ODataApplicationException(OiyokanMessages.M015, 500, Locale.ENGLISH);
         }
     }
 
@@ -153,7 +153,7 @@ public class BasicJdbcEntityCollectionBuilder implements OiyokanEntityCollection
         } catch (SQLException ex) {
             // [M015] UNEXPECTED: Fail on database connection SQL
             System.err.println(OiyokanMessages.M015 + ": " + sql + ", " + ex.toString());
-            throw new ODataApplicationException(OiyokanMessages.M015 + ": " + sql, 500, Locale.ENGLISH, ex);
+            throw new ODataApplicationException(OiyokanMessages.M015 + ": " + sql, 500, Locale.ENGLISH);
         }
         // 取得できたレコード件数を設定.
         eCollection.setCount(countWithWhere);
@@ -214,7 +214,7 @@ public class BasicJdbcEntityCollectionBuilder implements OiyokanEntityCollection
         } catch (SQLException ex) {
             // [M017] Fail to execute SQL
             System.err.println(OiyokanMessages.M017 + ": " + sql + ", " + ex.toString());
-            throw new ODataApplicationException(OiyokanMessages.M017 + ": " + sql, 500, Locale.ENGLISH, ex);
+            throw new ODataApplicationException(OiyokanMessages.M017 + ": " + sql, 500, Locale.ENGLISH);
         }
     }
 
@@ -231,7 +231,8 @@ public class BasicJdbcEntityCollectionBuilder implements OiyokanEntityCollection
         } catch (URISyntaxException ex) {
             // [M018] UNEXPECTED: Fail to create ID EntitySet name
             System.err.println(OiyokanMessages.M018 + ": " + entitySetName + ": " + ex.toString());
-            throw new ODataRuntimeException(OiyokanMessages.M018 + ": " + entitySetName, ex);
+            ex.printStackTrace();
+            throw new ODataRuntimeException(OiyokanMessages.M018 + ": " + entitySetName);
         }
     }
 }

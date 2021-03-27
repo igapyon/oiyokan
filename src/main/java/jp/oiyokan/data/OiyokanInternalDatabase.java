@@ -113,7 +113,7 @@ public class OiyokanInternalDatabase {
             } catch (SQLException ex) {
                 // [M028] UNEXPECTED: Fail to check local table exists: ODataAppInfos
                 System.err.println(OiyokanMessages.M028 + ": " + ex.toString());
-                throw new ODataApplicationException(OiyokanMessages.M028, 500, Locale.ENGLISH, ex);
+                throw new ODataApplicationException(OiyokanMessages.M028, 500, Locale.ENGLISH);
             }
 
             ///////////////////////////////////////////

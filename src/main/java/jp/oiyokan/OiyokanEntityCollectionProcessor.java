@@ -16,6 +16,7 @@
 package jp.oiyokan;
 
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.olingo.commons.api.data.ContextURL;
 import org.apache.olingo.commons.api.data.EntityCollection;
@@ -162,7 +163,9 @@ public class OiyokanEntityCollectionProcessor implements EntityCollectionProcess
             return new BasicJdbcEntityCollectionBuilder();
         case BigQuery:
             // TODO FIXME BigQuery用の実装が必要.
-            return new BasicJdbcEntityCollectionBuilder();
+            // [M999] NOT IMPLEMENTED: Generic NOT implemented message.
+            System.err.println(OiyokanMessages.M999);
+            throw new ODataApplicationException(OiyokanMessages.M999, 500, Locale.ENGLISH);
         }
     }
 }
