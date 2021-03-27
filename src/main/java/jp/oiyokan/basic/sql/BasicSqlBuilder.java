@@ -191,9 +191,11 @@ public class BasicSqlBuilder {
      */
     public static String escapeKakkoFieldName(OiyokanSettingsDatabase settingsDatabase, String fieldName)
             throws ODataApplicationException {
+        // TODO FIXME 見直し
         if (fieldName.contains(" ") == false) {
             return fieldName;
         }
+        // TODO FIXME 見直し
         if ("h2".equals(settingsDatabase.getType())) {
             fieldName = "[" + fieldName + "]";
         } else if ("pg".equals(settingsDatabase.getType())) {

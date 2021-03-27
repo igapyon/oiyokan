@@ -80,7 +80,7 @@ public class BasicJdbcEntityCollectionBuilder {
 
         //////////////////////////////////////////////
         // Oiyokan が対応しない処理を拒絶するための記述.
-        if (uriInfo.getSearchOption() != null && OiyokanConstants.IS_EXPERIMENTAL_SEARCH_ENABLED == false) {
+        if (uriInfo.getSearchOption() != null && !OiyokanConstants.IS_EXPERIMENTAL_SEARCH_ENABLED) {
             // [M032] NOT SUPPORTED: URI: $search
             System.err.println(OiyokanMessages.M032);
             throw new ODataApplicationException(OiyokanMessages.M032, 500, Locale.ENGLISH);
