@@ -33,7 +33,7 @@ import org.apache.olingo.server.api.ODataApplicationException;
 /**
  * Apache Olingo から複写したソースコード。
  */
-public class FromOlingoUtil {
+public class FromApacheOlingoUtil {
     private static final Pattern PATTERN_EdmDateTimeOffset = Pattern
             .compile("(-?\\p{Digit}{4,})-(\\p{Digit}{2})-(\\p{Digit}{2})"
                     + "T(\\p{Digit}{2}):(\\p{Digit}{2})(?::(\\p{Digit}{2})(\\.(\\p{Digit}{0,12}?)0*)?)?"

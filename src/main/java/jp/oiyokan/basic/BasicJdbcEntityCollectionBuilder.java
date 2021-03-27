@@ -37,7 +37,7 @@ import jp.oiyokan.OiyokanCsdlEntitySet;
 import jp.oiyokan.OiyokanEdmProvider;
 import jp.oiyokan.OiyokanMessages;
 import jp.oiyokan.basic.sql.BasicSqlBuilder;
-import jp.oiyokan.h2.data.TinyH2TrialFullTextSearch;
+import jp.oiyokan.h2.data.ExperimentalH2FullTextSearch;
 
 /**
  * 実際に返却するデータ本体を組み上げるクラス.
@@ -105,7 +105,7 @@ public class BasicJdbcEntityCollectionBuilder {
         try (Connection connTargetDb = BasicJdbcUtil.getConnection(entitySet.getSettingsDatabase())) {
             if (uriInfo.getSearchOption() != null) {
                 // $search.
-                new TinyH2TrialFullTextSearch().process(connTargetDb, edmEntitySet, uriInfo, eCollection);
+                new ExperimentalH2FullTextSearch().process(connTargetDb, edmEntitySet, uriInfo, eCollection);
                 return eCollection;
             }
 

@@ -33,9 +33,9 @@ import org.apache.olingo.server.core.uri.queryoption.SearchOptionImpl;
 import jp.oiyokan.OiyokanConstants;
 
 /**
- * 全文検索の実験的な実装。
+ * h2 用の全文検索の実験的な実装。
  */
-public class TinyH2TrialFullTextSearch {
+public class ExperimentalH2FullTextSearch {
     /**
      * 全文検索を処理.
      * 

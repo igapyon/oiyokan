@@ -47,7 +47,7 @@ import org.apache.olingo.server.core.uri.queryoption.expression.TypeLiteralImpl;
 import org.apache.olingo.server.core.uri.queryoption.expression.UnaryImpl;
 
 import jp.oiyokan.OiyokanMessages;
-import jp.oiyokan.fromolingo.FromOlingoUtil;
+import jp.oiyokan.fromolingo.FromApacheOlingoUtil;
 import jp.oiyokan.settings.OiyokanNamingUtil;
 
 /**
@@ -326,7 +326,7 @@ public class BasicSqlExprExpander {
         if (EdmDate.getInstance() == impl.getType()) {
             if (IS_DEBUG_EXPAND_LITERAL)
                 System.err.println("TRACE: EdmDate: " + impl.getText());
-            ZonedDateTime zdt = FromOlingoUtil.parseDateString(impl.getText());
+            ZonedDateTime zdt = FromApacheOlingoUtil.parseDateString(impl.getText());
             sqlInfo.getSqlBuilder().append("?");
             Timestamp tstamp = Timestamp.from(zdt.toInstant());
             sqlInfo.getSqlParamList().add(tstamp);
@@ -335,7 +335,7 @@ public class BasicSqlExprExpander {
         if (EdmDateTimeOffset.getInstance() == impl.getType()) {
             if (IS_DEBUG_EXPAND_LITERAL)
                 System.err.println("TRACE: EdmDateTimeOffset: " + impl.getText());
-            ZonedDateTime zdt = FromOlingoUtil.parseZonedDateTime(impl.getText());
+            ZonedDateTime zdt = FromApacheOlingoUtil.parseZonedDateTime(impl.getText());
             sqlInfo.getSqlBuilder().append("?");
             Timestamp tstamp = Timestamp.from(zdt.toInstant());
             sqlInfo.getSqlParamList().add(tstamp);
