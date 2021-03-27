@@ -124,26 +124,33 @@ public class BasicSqlExprExpander {
     private void expandBinary(BinaryImpl impl) throws ODataApplicationException {
         BinaryOperatorKind opKind = impl.getOperator();
         if (opKind == BinaryOperatorKind.HAS) {
-            // HAS
-            throw new ODataApplicationException("NOT SUPPORTED: BinaryOperatorKind:" + opKind, 500, Locale.ENGLISH);
+            // [M124] NOT SUPPORTED: BinaryOperatorKind.HAS
+            System.err.println(OiyokanMessages.M124 + ": " + impl.toString());
+            throw new ODataApplicationException(OiyokanMessages.M124, 500, Locale.ENGLISH);
         } else if (opKind == BinaryOperatorKind.IN) {
-            // IN
-            throw new ODataApplicationException("NOT SUPPORTED: BinaryOperatorKind:" + opKind, 500, Locale.ENGLISH);
+            // [M125] NOT SUPPORTED: BinaryOperatorKind.IN
+            System.err.println(OiyokanMessages.M125 + ": " + impl.toString());
+            throw new ODataApplicationException(OiyokanMessages.M125, 500, Locale.ENGLISH);
         } else if (opKind == BinaryOperatorKind.MUL) {
-            // MUL
-            throw new ODataApplicationException("NOT SUPPORTED: BinaryOperatorKind:" + opKind, 500, Locale.ENGLISH);
+            // [M126] NOT SUPPORTED: BinaryOperatorKind.MUL
+            System.err.println(OiyokanMessages.M126 + ": " + impl.toString());
+            throw new ODataApplicationException(OiyokanMessages.M126, 500, Locale.ENGLISH);
         } else if (opKind == BinaryOperatorKind.DIV) {
-            // DIV
-            throw new ODataApplicationException("NOT SUPPORTED: BinaryOperatorKind:" + opKind, 500, Locale.ENGLISH);
+            // [M127] NOT SUPPORTED: BinaryOperatorKind.DIV
+            System.err.println(OiyokanMessages.M127 + ": " + impl.toString());
+            throw new ODataApplicationException(OiyokanMessages.M127, 500, Locale.ENGLISH);
         } else if (opKind == BinaryOperatorKind.MOD) {
-            // MOD
-            throw new ODataApplicationException("NOT SUPPORTED: BinaryOperatorKind:" + opKind, 500, Locale.ENGLISH);
+            // [M128] NOT SUPPORTED: BinaryOperatorKind.MOD
+            System.err.println(OiyokanMessages.M128 + ": " + impl.toString());
+            throw new ODataApplicationException(OiyokanMessages.M128, 500, Locale.ENGLISH);
         } else if (opKind == BinaryOperatorKind.ADD) {
-            // ADD
-            throw new ODataApplicationException("NOT SUPPORTED: BinaryOperatorKind:" + opKind, 500, Locale.ENGLISH);
+            // [M129] NOT SUPPORTED: BinaryOperatorKind.ADD
+            System.err.println(OiyokanMessages.M129 + ": " + impl.toString());
+            throw new ODataApplicationException(OiyokanMessages.M129, 500, Locale.ENGLISH);
         } else if (opKind == BinaryOperatorKind.SUB) {
-            // SUB
-            throw new ODataApplicationException("NOT SUPPORTED: BinaryOperatorKind:" + opKind, 500, Locale.ENGLISH);
+            // [M130] NOT SUPPORTED: BinaryOperatorKind.SUB
+            System.err.println(OiyokanMessages.M130 + ": " + impl.toString());
+            throw new ODataApplicationException(OiyokanMessages.M130, 500, Locale.ENGLISH);
         } else if (opKind == BinaryOperatorKind.GT) {
             // GT
             sqlInfo.getSqlBuilder().append("(");
