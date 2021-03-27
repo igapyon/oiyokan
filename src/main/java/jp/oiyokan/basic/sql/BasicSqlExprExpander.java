@@ -59,14 +59,14 @@ public class BasicSqlExprExpander {
     /**
      * SQL構築のデータ構造.
      */
-    private BasicSqlBuildInfo sqlInfo = null;
+    private BasicSqlInfo sqlInfo = null;
 
     /**
      * コンストラクタ.
      * 
      * @param sqlInfo SQL構築のデータ構造.
      */
-    public BasicSqlExprExpander(BasicSqlBuildInfo sqlInfo) {
+    public BasicSqlExprExpander(BasicSqlInfo sqlInfo) {
         this.sqlInfo = sqlInfo;
     }
 

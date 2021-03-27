@@ -129,8 +129,7 @@ public class BasicJdbcEntityCollectionBuilder {
     private static void processCountQuery(OiyokanCsdlEntitySet entitySet, UriInfo uriInfo, Connection connTargetDb,
             EntityCollection eCollection) throws ODataApplicationException {
         // 件数をカウントして設定。
-        BasicSqlBuilder basicSqlBuilder = new BasicSqlBuilder(entitySet.getSettingsDatabase());
-        basicSqlBuilder.getSqlInfo().setEntitySet(entitySet);
+        BasicSqlBuilder basicSqlBuilder = new BasicSqlBuilder(entitySet);
         basicSqlBuilder.getSelectCountQuery(uriInfo);
         final String sql = basicSqlBuilder.getSqlInfo().getSqlBuilder().toString();
 
@@ -159,8 +158,7 @@ public class BasicJdbcEntityCollectionBuilder {
 
     private static void processCollectionQuery(OiyokanCsdlEntitySet entitySet, UriInfo uriInfo, Connection connTargetDb,
             EntityCollection eCollection) throws ODataApplicationException {
-        BasicSqlBuilder basicSqlBuilder = new BasicSqlBuilder(entitySet.getSettingsDatabase());
-        basicSqlBuilder.getSqlInfo().setEntitySet(entitySet);
+        BasicSqlBuilder basicSqlBuilder = new BasicSqlBuilder(entitySet);
 
         basicSqlBuilder.getSelectQuery(uriInfo, entitySet.getSettingsDatabase());
         final String sql = basicSqlBuilder.getSqlInfo().getSqlBuilder().toString();

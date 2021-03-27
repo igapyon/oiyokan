@@ -42,19 +42,19 @@ public class BasicSqlBuilder {
     /**
      * SQL構築のデータ構造.
      */
-    private final BasicSqlBuildInfo sqlInfo = new BasicSqlBuildInfo();
+    private BasicSqlInfo sqlInfo;
 
     /**
      * SQL構築のデータ構造を取得.
      * 
      * @return SQL構築のデータ構造.
      */
-    public BasicSqlBuildInfo getSqlInfo() {
+    public BasicSqlInfo getSqlInfo() {
         return sqlInfo;
     }
 
-    public BasicSqlBuilder(OiyokanSettingsDatabase settingsDatabase) {
-        sqlInfo.setSettingsDatabase(settingsDatabase);
+    public BasicSqlBuilder(OiyokanCsdlEntitySet entitySet) {
+        this.sqlInfo = new BasicSqlInfo(entitySet);
     }
 
     /**
