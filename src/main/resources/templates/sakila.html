@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/design-system/2.14.3/styles/salesforce-lightning-design-system.min.css"
+    rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="description" content="">
+  <title>Sakila DVD Rental</title>
+</head>
+
+<body>
+  <div class="slds-context-bar">
+    <div class="slds-context-bar__primary">
+      <div
+        class="slds-context-bar__item slds-context-bar__dropdown-trigger slds-dropdown-trigger slds-dropdown-trigger_click slds-no-hover">
+        <div class="slds-context-bar__icon-action">
+          <button class="slds-button slds-icon-waffle_container slds-context-bar__button"
+            title="No application at this moment.">
+            <span class="slds-icon-waffle">
+              <span class="slds-r1"></span>
+              <span class="slds-r2"></span>
+              <span class="slds-r3"></span>
+              <span class="slds-r4"></span>
+              <span class="slds-r5"></span>
+              <span class="slds-r6"></span>
+              <span class="slds-r7"></span>
+              <span class="slds-r8"></span>
+              <span class="slds-r9"></span>
+            </span>
+            <span class="slds-assistive-text">Open App Launcher</span>
+          </button>
+        </div>
+        <span class="slds-context-bar__label-action slds-context-bar__app-name">
+          <span class="slds-truncate" title="Oiyokan OData v4">Oiyokan OData v4</span>
+        </span>
+      </div>
+    </div>
+    <nav class="slds-context-bar__secondary" role="navigation">
+      <ul class="slds-grid">
+        <li class="slds-context-bar__item">
+          <a href="index.html" class="slds-context-bar__label-action" title="Home">
+            <span class="slds-truncate" title="Home">Home</span>
+          </a>
+        </li>
+        <li class="slds-context-bar__item slds-is-active">
+          <a href="#" class="slds-context-bar__label-action" title="Dvd Rental">
+            <span class="slds-assistive-text">Current Page:</span>
+            <span class="slds-truncate" title="Dvd Rental">Sakila DVD Rental</span>
+          </a>
+        </li>
+        <li class="slds-context-bar__item">
+          <a href="unittest.html" class="slds-context-bar__label-action" title="Oiyokan Basic Test">
+            <span class="slds-truncate" title="Oiyokan Basic Test">Oiyokan Unit Test</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+
+  <div class="slds-page-header">
+    <div class="slds-page-header__row">
+      <div class="slds-page-header__col-title">
+        <div class="slds-media">
+          <div class="slds-media__figure">
+            <span class="slds-icon_container slds-icon-standard-account" title="account">
+              <svg class="slds-icon slds-page-header__icon" aria-hidden="true">
+                <use xlink:href="/assets/icons/standard-sprite/svg/symbols.svg#account"></use>
+              </svg>
+              <span class="slds-assistive-text">Sakila - DVD Rental</span>
+            </span>
+          </div>
+          <div class="slds-media__body">
+            <div class="slds-page-header__name">
+              <div class="slds-page-header__name-title">
+                <h1>
+                  <span class="slds-page-header__title slds-truncate" title="Sakila - DVD Rental sample">Sakila - DVD
+                    Rental</span>
+                </h1>
+              </div>
+            </div>
+            <p class="slds-page-header__name-meta">OData v4 Server for Sakila dvd rental.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+    <thead>
+      <tr class="slds-line-height_reset">
+        <th class="" scope="col">
+          <div class="slds-truncate" title="EntitySet">EntitySet</div>
+        </th>
+        <th class="" scope="col">
+          <div class="slds-truncate" title="Path">Path</div>
+        </th>
+        <th class="" scope="col">
+          <div class="slds-truncate" title="Request">Request</div>
+        </th>
+        <th class="" scope="col">
+          <div class="slds-truncate" title="Note">Note</div>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <div th:each="urlEntry,stat : ${UrlEntryList}" th:remove="tag">
+        <tr class="slds-hint-parent">
+          <td data-label="EntitySet">
+            <div class="slds-truncate" th:title="${urlEntry.name}"><span th:text="${urlEntry.name}" th:remove="tag" />
+            </div>
+          </td>
+          <td data-label="Path">
+            <div class="slds-truncate" th:title="${urlEntry.path}"><span th:text="${urlEntry.pathWithTrimg}"
+                th:remove="tag" />
+            </div>
+          </td>
+          <td data-label="Request">
+            <div class="slds-truncate" title="${'./odata4.svc' + urlEntry.path}"><a
+                th:href="${'./odata4.svc' + urlEntry.path}" target="_blank">Request</a></div>
+          </td>
+          <td data-label="Note">
+            <div class="slds-truncate" title="Note"><span th:text="${urlEntry.note}" th:remove="tag" /></div>
+          </td>
+        </tr>
+      </div>
+    </tbody>
+  </table>
+</body>
+
+</html>

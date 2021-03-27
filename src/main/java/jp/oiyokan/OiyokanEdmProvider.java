@@ -113,21 +113,7 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
             // テンプレートを念押しビルド.
             localTemplateEntityContainer.ensureBuild();
 
-            // 要素セットを作成.
-            List<CsdlEntitySet> newEntitySetList = new ArrayList<>();
-            for (CsdlEntitySet look : localTemplateEntityContainer.getEntitySets()) {
-                OiyokanCsdlEntitySet look2 = (OiyokanCsdlEntitySet) look;
-                newEntitySetList.add(getEntitySet(localTemplateEntityContainer.getContainerFqnIyo(), look2.getName()));
-            }
-
-            // 要素コンテナを作成.
-            final OiyokanCsdlEntityContainer newEntityContainer = new OiyokanCsdlEntityContainer();
-            newEntityContainer.setName(localTemplateEntityContainer.getContainerNameIyo());
-            newEntityContainer.setEntitySets(newEntitySetList);
-
-            newEntityContainer.ensureBuild();
-
-            return newEntityContainer;
+            return localTemplateEntityContainer;
         } catch (RuntimeException ex) {
             System.err.println("OiyokanEdmProvider#getEntityContainer: exception: " + ex.toString());
             throw ex;
@@ -179,7 +165,7 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
     /**
      * 要素コンテナ情報を取得.
      * 
-     * 次のようなURLの場合に呼び出される: http://localhost:8080/simple.svc/
+     * 次のようなURLの場合に呼び出される: http://localhost:8080/odata4.svc/
      * 
      * @param entityContainerName 要素コンテナ名.
      * @return CSDL要素コンテナ情報.

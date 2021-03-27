@@ -31,14 +31,15 @@ import org.apache.olingo.commons.api.edm.provider.CsdlPropertyRef;
 import org.apache.olingo.server.api.ODataApplicationException;
 
 import jp.oiyokan.OiyokanConstants;
-import jp.oiyokan.OiyokanCsdlEntityContainer;
 import jp.oiyokan.OiyokanCsdlEntitySet;
-import jp.oiyokan.data.OiyokanInterDb;
+import jp.oiyokan.OiyokanMessages;
 import jp.oiyokan.dto.OiyokanSettingsDatabase;
 import jp.oiyokan.settings.OiyokanSettingsUtil;
 
 /**
- * 典型的で基本的な JDBC処理を利用した EntityType を構築します。
+ * 典型的で基本的な JDBC処理を利用した EntityType を構築。
+ * 
+ * 内部データベースをもとにした Ocsdl 形式での処理であるため接続先のリソースの種類によらず Oiyokan ではこのクラスを利用.
  */
 public class BasicJdbcEntityTypeBuilder {
     /**
@@ -65,26 +66,22 @@ public class BasicJdbcEntityTypeBuilder {
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
     public CsdlEntityType getEntityType() throws ODataApplicationException {
-        // インメモリ作業データベースに接続.
+        // 内部データベースである インメモリ作業データベースに接続.
         // EntityTypeはインメモリ内部データベースの情報をもとに構築.
         OiyokanSettingsDatabase settingsInternalDatabase = OiyokanSettingsUtil
-                .getOiyokanInternalDatabase(OiyokanCsdlEntityContainer.getOiyokanSettingsInstance());
+                .getOiyokanDatabase(OiyokanConstants.OIYOKAN_INTERNAL_DB);
 
-        try (Connection connInterDb = BasicDbUtil.getConnection(settingsInternalDatabase)) {
-            // テーブルをセットアップ.
-            // 特殊例. createDataをスキップ.
-            OiyokanInterDb.setupTable(connInterDb);
-
+        try (Connection connInterDb = BasicJdbcUtil.getConnection(settingsInternalDatabase)) {
             // CSDL要素型として情報を組み上げ.
-            CsdlEntityType entityType = new CsdlEntityType();
+            final CsdlEntityType entityType = new CsdlEntityType();
             entityType.setName(entitySet.getEntityNameIyo());
 
-            // 基本的な動作: バッファ的な h2 データベースから該当情報を取得.
+            // 基本的な動作: 内部データベースである h2 データベースから該当する Ocsdl による情報取得.
             final List<CsdlProperty> propertyList = new ArrayList<>();
             entityType.setProperties(propertyList);
 
             // SELECT * について、この箇所のみ記述を許容。
-            // DatabaseMetaData では取りづらい情報があるためこちらを採用。
+            // DatabaseMetaData では情報を取りづらい場合があるためこちら ResultSetMetaData を使用。
             final String sql = "SELECT * FROM " + entitySet.getDbTableNameLocalIyo() + " LIMIT 1";
             if (OiyokanConstants.IS_TRACE_ODATA_V4)
                 System.err.println("OData v4: TRACE: Entity: SQL: " + sql);
@@ -92,7 +89,7 @@ public class BasicJdbcEntityTypeBuilder {
                 ResultSetMetaData rsmeta = stmt.getMetaData();
                 final int columnCount = rsmeta.getColumnCount();
                 for (int column = 1; column <= columnCount; column++) {
-                    propertyList.add(BasicDbUtil.resultSetMetaData2CsdlProperty(rsmeta, column));
+                    propertyList.add(BasicJdbcUtil.resultSetMetaData2CsdlProperty(rsmeta, column));
                 }
 
                 // テーブルのキー情報
@@ -100,12 +97,21 @@ public class BasicJdbcEntityTypeBuilder {
                 final DatabaseMetaData dbmeta = connInterDb.getMetaData();
                 final ResultSet rsKey = dbmeta.getPrimaryKeys(null, null, entitySet.getDbTableNameLocalIyo());
                 for (; rsKey.next();) {
-                    // キー名は利用しない: rsKey.getString("PK_NAME");
+                    // キー名はここでは利用する必要がない: rsKey.getString("PK_NAME");
                     String colName = rsKey.getString("COLUMN_NAME");
 
                     CsdlPropertyRef propertyRef = new CsdlPropertyRef();
                     propertyRef.setName(colName);
                     keyRefList.add(propertyRef);
+                }
+
+                if (keyRefList.size() == 0) {
+                    // キーがないものは OData 的に不都合があるため警告する。
+                    if (OiyokanConstants.IS_TRACE_ODATA_V4) {
+                        System.err.println("OData v4: WARNING: No ID: " + entitySet.getName());
+                        System.err.println("OData v4: WARNING: Set primary key on Ocsdl table: "
+                                + entitySet.getDbTableNameLocalIyo());
+                    }
                 }
 
                 entityType.setKey(keyRefList);
@@ -115,8 +121,9 @@ public class BasicJdbcEntityTypeBuilder {
             entitySet.setEntityType(entityType);
             return entityType;
         } catch (SQLException ex) {
-            System.err.println("UNEXPECTED: Fail to get database meta: " + ex.toString());
-            throw new ODataApplicationException("UNEXPECTED: Fail to get database meta", 500, Locale.ENGLISH);
+            // [M019] UNEXPECTED: Fail to get database meta
+            System.err.println(OiyokanMessages.M019 + ": " + ex.toString());
+            throw new ODataApplicationException(OiyokanMessages.M019, 500, Locale.ENGLISH);
         }
     }
 }

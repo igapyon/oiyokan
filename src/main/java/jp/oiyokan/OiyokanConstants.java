@@ -27,10 +27,45 @@ public class OiyokanConstants {
     /**
      * Oiyokan のバージョン番号
      */
-    public static final String VERSION = "20210321h";
+    public static final String VERSION = "20210327g";
 
     /**
      * Oiyokan がリクエストを処理する際の 'OData v4' からはじまるトレースを出力するかどうか。
      */
     public static final boolean IS_TRACE_ODATA_V4 = true;
+
+    /**
+     * 実験的な $search が有効化されているかどうか。
+     * 
+     * 当面、リリース時には false.
+     */
+    public static final boolean IS_EXPERIMENTAL_SEARCH_ENABLED = false;
+
+    /**
+     * 接続先リソースの Databaseの型の列挙. 基本的にはリレーショナルデータベースを想定.
+     */
+    public enum DatabaseType {
+        /** h2 database */
+        h2,
+        /** Postgres */
+        postgres,
+        /** MySQL */
+        MySQL,
+        /** MSSQL : placeholder, not tested */
+        MSSQL,
+        /** Oracle : placeholder, not supported, not tested */
+        ORACLE,
+        /** BigQuery : placeholder, not supported, not tested */
+        BigQuery,
+    };
+
+    /**
+     * 内部DBへの定義名. この DBはアプリ起動都度初期化される揮発的なもの. OCSDL およびバージョン番号を格納.
+     */
+    public static final String OIYOKAN_INTERNAL_DB = "oiyokanInternal";
+
+    /**
+     * 内部DBへの定義名. ほぼビルドテスト用途.
+     */
+    public static final String OIYOKAN_INTERNAL_TARGET_DB = "oiyokanInternalTarget";
 }

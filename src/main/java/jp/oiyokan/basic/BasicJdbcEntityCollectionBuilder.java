@@ -35,18 +35,17 @@ import org.apache.olingo.server.api.uri.UriInfo;
 import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanCsdlEntitySet;
 import jp.oiyokan.OiyokanEdmProvider;
+import jp.oiyokan.OiyokanEntityCollectionBuilderInterface;
+import jp.oiyokan.OiyokanMessages;
 import jp.oiyokan.basic.sql.BasicSqlBuilder;
-import jp.oiyokan.h2.data.TinyH2TrialFullTextSearch;
+import jp.oiyokan.h2.data.ExperimentalH2FullTextSearch;
 
 /**
  * 実際に返却するデータ本体を組み上げるクラス.
  * 
  * EDM要素セットを入力に実際のデータを組み上げ.
  */
-public class BasicJdbcEntityCollectionBuilder {
-    private BasicJdbcEntityCollectionBuilder() {
-    }
-
+public class BasicJdbcEntityCollectionBuilder implements OiyokanEntityCollectionBuilderInterface {
     /**
      * 指定のEDM要素セットに対応する要素コレクションを作成.
      * 
@@ -55,7 +54,7 @@ public class BasicJdbcEntityCollectionBuilder {
      * @return 要素コレクション.
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
-    public static EntityCollection build(EdmEntitySet edmEntitySet, UriInfo uriInfo) throws ODataApplicationException {
+    public EntityCollection build(EdmEntitySet edmEntitySet, UriInfo uriInfo) throws ODataApplicationException {
         final EntityCollection eCollection = new EntityCollection();
 
         OiyokanEdmProvider provider = new OiyokanEdmProvider();
@@ -64,69 +63,78 @@ public class BasicJdbcEntityCollectionBuilder {
             return eCollection;
         }
 
-        OiyokanCsdlEntitySet eSetTarget = null;
-        String targetEntityName = null;
-        for (CsdlEntitySet eSetProvided : provider.getEntityContainer().getEntitySets()) {
-            if (edmEntitySet.getName().equals(eSetProvided.getName())) {
-                eSetTarget = (OiyokanCsdlEntitySet) eSetProvided;
-                targetEntityName = eSetProvided.getName();
+        OiyokanCsdlEntitySet entitySet = null;
+        for (CsdlEntitySet look : provider.getEntityContainer().getEntitySets()) {
+            if (edmEntitySet.getName().equals(look.getName())) {
+                entitySet = (OiyokanCsdlEntitySet) look;
                 break;
             }
         }
 
-        if (targetEntityName == null) {
+        if (entitySet == null) {
             // 処理対象外の要素セットです. 処理せずに戻します.
             return eCollection;
         }
 
-        // 対応しない処理を拒絶するための記述.
+        //////////////////////////////////////////////
+        // Oiyokan が対応しない処理を拒絶するための記述.
+        if (uriInfo.getSearchOption() != null && !OiyokanConstants.IS_EXPERIMENTAL_SEARCH_ENABLED) {
+            // [M032] NOT SUPPORTED: URI: $search
+            System.err.println(OiyokanMessages.M032);
+            throw new ODataApplicationException(OiyokanMessages.M032, 500, Locale.ENGLISH);
+        }
         if (uriInfo.getApplyOption() != null) {
-            System.err.println("NOT SUPPORTED: URI: $apply");
-            throw new ODataApplicationException("NOT SUPPORTED: URI: $apply", 500, Locale.ENGLISH);
+            // [M011] NOT SUPPORTED: URI: $apply
+            System.err.println(OiyokanMessages.M011);
+            throw new ODataApplicationException(OiyokanMessages.M011, 500, Locale.ENGLISH);
         }
         if (uriInfo.getCustomQueryOptions() != null && uriInfo.getCustomQueryOptions().size() > 0) {
-            System.err.println("NOT SUPPORTED: URI: customQuery");
-            throw new ODataApplicationException("NOT SUPPORTED: URI: customQuery", 500, Locale.ENGLISH);
+            // [M012] NOT SUPPORTED: URI: customQuery
+            System.err.println(OiyokanMessages.M012);
+            throw new ODataApplicationException(OiyokanMessages.M012, 500, Locale.ENGLISH);
         }
         if (uriInfo.getDeltaTokenOption() != null) {
-            System.err.println("NOT SUPPORTED: URI: deltaToken");
-            throw new ODataApplicationException("NOT SUPPORTED: URI: deltaToken", 500, Locale.ENGLISH);
+            // [M013] NOT SUPPORTED: URI: deltaToken
+            System.err.println(OiyokanMessages.M013);
+            throw new ODataApplicationException(OiyokanMessages.M013, 500, Locale.ENGLISH);
         }
         if (uriInfo.getExpandOption() != null && uriInfo.getExpandOption().getExpandItems().size() > 0) {
-            System.err.println("NOT SUPPORTED: URI: $expand");
-            throw new ODataApplicationException("NOT SUPPORTED: URI: $expand", 500, Locale.ENGLISH);
+            // [M014] NOT SUPPORTED: URI: $expand
+            System.err.println(OiyokanMessages.M014);
+            throw new ODataApplicationException(OiyokanMessages.M014, 500, Locale.ENGLISH);
         }
 
-        // インメモリ作業データベースに接続.
-        try (Connection connTargetDb = BasicDbUtil.getConnection(eSetTarget.getSettingsDatabase())) {
+        // データベースに接続.
+        try (Connection connTargetDb = BasicJdbcUtil.getConnection(entitySet.getSettingsDatabase())) {
             if (uriInfo.getSearchOption() != null) {
                 // $search.
-                new TinyH2TrialFullTextSearch().process(connTargetDb, edmEntitySet, uriInfo, eCollection);
+                new ExperimentalH2FullTextSearch().process(connTargetDb, edmEntitySet, uriInfo, eCollection);
                 return eCollection;
             }
 
             // 件数カウントがONの場合はカウント処理を実行。
             if (uriInfo.getCountOption() != null && uriInfo.getCountOption().getValue()) {
-                processCountQuery(eSetTarget, uriInfo, connTargetDb, eCollection);
+                // $count.
+                processCountQuery(entitySet, uriInfo, connTargetDb, eCollection);
             }
 
             // 実際のデータ取得処理を実行。
-            processCollectionQuery(eSetTarget, uriInfo, connTargetDb, eCollection);
+            processCollectionQuery(entitySet, uriInfo, connTargetDb, eCollection);
 
             return eCollection;
         } catch (SQLException ex) {
-            System.err.println("Fail on database connection SQL: " + ex.toString());
-            throw new ODataApplicationException("UNEXPECTED: Fail on database connection ", 500, Locale.ENGLISH, ex);
+            // [M015] UNEXPECTED: Fail on database connection SQL
+            System.err.println(OiyokanMessages.M015 + ": " + ex.toString());
+            throw new ODataApplicationException(OiyokanMessages.M015, 500, Locale.ENGLISH);
         }
     }
 
-    private static void processCountQuery(OiyokanCsdlEntitySet eSetTarget, UriInfo uriInfo, Connection connTargetDb,
+    private static void processCountQuery(OiyokanCsdlEntitySet entitySet, UriInfo uriInfo, Connection connTargetDb,
             EntityCollection eCollection) throws ODataApplicationException {
         // 件数をカウントして設定。
-        BasicSqlBuilder tinySql = new BasicSqlBuilder();
-        tinySql.getSqlInfo().setEntitySet((OiyokanCsdlEntitySet) eSetTarget);
-        tinySql.getSelectCountQuery(uriInfo);
-        final String sql = tinySql.getSqlInfo().getSqlBuilder().toString();
+        BasicSqlBuilder basicSqlBuilder = new BasicSqlBuilder(entitySet);
+        basicSqlBuilder.getSelectCountQuery(uriInfo);
+        final String sql = basicSqlBuilder.getSqlInfo().getSqlBuilder().toString();
 
         if (OiyokanConstants.IS_TRACE_ODATA_V4)
             System.err.println("OData v4: TRACE: SQL: " + sql);
@@ -134,8 +142,8 @@ public class BasicJdbcEntityCollectionBuilder {
         int countWithWhere = 0;
         try (var stmt = connTargetDb.prepareStatement(sql)) {
             int column = 1;
-            for (Object look : tinySql.getSqlInfo().getSqlParamList()) {
-                BasicDbUtil.bindPreparedParameter(stmt, column++, look);
+            for (Object look : basicSqlBuilder.getSqlInfo().getSqlParamList()) {
+                BasicJdbcUtil.bindPreparedParameter(stmt, column++, look);
             }
 
             stmt.executeQuery();
@@ -143,28 +151,28 @@ public class BasicJdbcEntityCollectionBuilder {
             rset.next();
             countWithWhere = rset.getInt(1);
         } catch (SQLException ex) {
-            System.err.println("Fail to execute count SQL: " + sql + ", " + ex.toString());
-            throw new ODataApplicationException("Fail to execute count SQL: " + sql, 500, Locale.ENGLISH, ex);
+            // [M015] UNEXPECTED: Fail on database connection SQL
+            System.err.println(OiyokanMessages.M015 + ": " + sql + ", " + ex.toString());
+            throw new ODataApplicationException(OiyokanMessages.M015 + ": " + sql, 500, Locale.ENGLISH);
         }
         // 取得できたレコード件数を設定.
         eCollection.setCount(countWithWhere);
     }
 
-    private static void processCollectionQuery(OiyokanCsdlEntitySet eSetTarget, UriInfo uriInfo,
-            Connection connTargetDb, EntityCollection eCollection) throws ODataApplicationException {
-        BasicSqlBuilder tinySql = new BasicSqlBuilder();
-        tinySql.getSqlInfo().setEntitySet((OiyokanCsdlEntitySet) eSetTarget);
+    private void processCollectionQuery(OiyokanCsdlEntitySet entitySet, UriInfo uriInfo, Connection connTargetDb,
+            EntityCollection eCollection) throws ODataApplicationException {
+        BasicSqlBuilder basicSqlBuilder = new BasicSqlBuilder(entitySet);
 
-        tinySql.getSelectQuery(uriInfo, eSetTarget.getSettingsDatabase());
-        final String sql = tinySql.getSqlInfo().getSqlBuilder().toString();
+        basicSqlBuilder.getSelectQuery(uriInfo);
+        final String sql = basicSqlBuilder.getSqlInfo().getSqlBuilder().toString();
 
         if (OiyokanConstants.IS_TRACE_ODATA_V4)
             System.err.println("OData v4: TRACE: SQL: " + sql);
 
         try (var stmt = connTargetDb.prepareStatement(sql)) {
             int idxColumn = 1;
-            for (Object look : tinySql.getSqlInfo().getSqlParamList()) {
-                BasicDbUtil.bindPreparedParameter(stmt, idxColumn++, look);
+            for (Object look : basicSqlBuilder.getSqlInfo().getSqlParamList()) {
+                BasicJdbcUtil.bindPreparedParameter(stmt, idxColumn++, look);
             }
 
             stmt.executeQuery();
@@ -176,13 +184,16 @@ public class BasicJdbcEntityCollectionBuilder {
                 }
                 final Entity ent = new Entity();
                 for (int column = 1; column <= rsmeta.getColumnCount(); column++) {
-                    Property prop = BasicDbUtil.resultSet2Property(rset, rsmeta, column, eSetTarget);
+                    Property prop = BasicJdbcUtil.resultSet2Property(rset, rsmeta, column, entitySet);
                     ent.addProperty(prop);
                 }
 
-                // キーが存在する場合は、IDとして設定。
-                if (eSetTarget.getEntityType().getKey().size() > 0) {
-                    OiyokanCsdlEntitySet iyoEntitySet = (OiyokanCsdlEntitySet) eSetTarget;
+                if (entitySet.getEntityType().getKey().size() == 0) {
+                    // キーが存在しないのは OData としてはまずい。
+                    // 別の箇所にて標準エラー出力にて報告。
+                } else {
+                    // キーが存在する場合は、IDとして設定。
+                    OiyokanCsdlEntitySet iyoEntitySet = (OiyokanCsdlEntitySet) entitySet;
                     String keyValue = "";
                     for (CsdlPropertyRef look : iyoEntitySet.getEntityType().getKey()) {
                         if (keyValue.length() > 0) {
@@ -195,14 +206,15 @@ public class BasicJdbcEntityCollectionBuilder {
                         idVal = idVal.replaceAll("[' '|':']", "_");
                         keyValue += idVal;
                     }
-                    ent.setId(createId(eSetTarget.getName(), keyValue));
+                    ent.setId(createId(entitySet.getName(), keyValue));
                 }
 
                 eCollection.getEntities().add(ent);
             }
         } catch (SQLException ex) {
-            System.err.println("Fail to execute SQL: " + sql + ", " + ex.toString());
-            throw new ODataApplicationException("Fail to execute SQL: " + sql, 500, Locale.ENGLISH, ex);
+            // [M017] Fail to execute SQL
+            System.err.println(OiyokanMessages.M017 + ": " + sql + ", " + ex.toString());
+            throw new ODataApplicationException(OiyokanMessages.M017 + ": " + sql, 500, Locale.ENGLISH);
         }
     }
 
@@ -217,8 +229,10 @@ public class BasicJdbcEntityCollectionBuilder {
         try {
             return new URI(entitySetName + "(" + id + ")");
         } catch (URISyntaxException ex) {
-            System.err.println("UNEXPECTED: Fail to create ID EntitySet name: " + entitySetName + ": " + ex.toString());
-            throw new ODataRuntimeException("UNEXPECTED: Fail to create ID EntitySet name: " + entitySetName, ex);
+            // [M018] UNEXPECTED: Fail to create ID EntitySet name
+            System.err.println(OiyokanMessages.M018 + ": " + entitySetName + ": " + ex.toString());
+            ex.printStackTrace();
+            throw new ODataRuntimeException(OiyokanMessages.M018 + ": " + entitySetName);
         }
     }
 }

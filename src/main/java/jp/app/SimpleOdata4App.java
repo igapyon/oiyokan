@@ -25,6 +25,7 @@ import org.springframework.context.annotation.ComponentScan;
  * (at)ComponentScan("jp.oiyokan") により Oiyokan server を有効化.
  */
 @ComponentScan("jp.oiyokan")
+@ComponentScan("jp.app")
 @SpringBootApplication
 public class SimpleOdata4App {
     /**

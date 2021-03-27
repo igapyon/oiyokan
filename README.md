@@ -1,58 +1,40 @@
-# oiyokan
+# Oiyokan
 
-Oiyokan is a simple OData v4 Server. (based on Apache Olingo / Spring Boot / h2 database)
+Oiyokan is an OData v4 server SDK.
 
-# Try to run oiyokan
+- Based on Apache Olingo. Build with Spring Boot, Java, h2.
+- Oiyokan provides read-only OData v4 access to resources.
+- Source code at github, license : Apache License.
 
-## Spring Boot Web Server
+## Sample implementation using Oiyokan
+
+- Oiyokan provides OData server sample of Sakila DVD rental.
+- Metadata of OData sample is provided at $metadata.
+
+# Try the Oiyokan OData v4 sample server
+
+## Heroku
+
+You can find the running OData v4 sample server at Heroku.
+
+- https://oiyokan.herokuapp.com/
+
+## Local
+
+You can try OData v4 sample server at your computer.
+
+Check out source code repository and you can run it as Spring Boot Web Server.
 
 ```sh
 mvn clean install spring-boot:run
-```
-
-## Run query
-
-### $metadata
-
-```sh
-http://localhost:8080/odata4.svc/$metadata
-```
-
-### $orderby
-
-```sh
-http://localhost:8080/odata4.svc/MyProducts?$orderby=ID&$top=20&$count=true
-```
-
-### $filter
-
-```sh
-http://localhost:8080/odata4.svc/MyProducts?$top=2001&$filter=Description eq 'MacBook Pro (13-inch, 2020, Thunderbolt 3ポートx 4)' and ID eq 1.0&$count=true&$select=ID,Name
-```
-
-### $search
-
-```sh
-http://localhost:8080/odata4.svc/MyProducts?$top=6&$search=macbook&$count=true&$select=ID
-```
-
-### root
-
-```sh
-http://localhost:8080/odata4.svc/
-```
-
-### internal version
-
-```sh
-http://localhost:8080/odata4.svc/ODataAppInfos?$format=JSON
 ```
 
 # How to setup OData v4 setting
 
 ## oiyokan-settings.json の設定を更新
 
-Oiyokan の設定ファイルを変更して、接続したいデータベース情報を記述します。
+最も重要なのは Oiyokan の設定ファイルを変更して、接続したいデータベース情報を記述することです。
+より詳しい説明はソースコードから読み込むことが可能です。
 
 ```sh
 src/main/resources/oiyokan/oiyokan-settings.json
@@ -96,9 +78,13 @@ oiyokan プロジェクトは、OData v4 server のシンプルなサンプル(h
 
 ## TODO
 
-- TODO BasicSqlExprExpander の通過していない箇所のテスト.
-- SQL Server Northwind 的なものを利用したテスト。該当するDBの有無は不明。
+- Sakila のサンプルアクセスの $filter や $orderby などをもう少し良いものにする。
+- OData のサイトに掲載する
+- README に oiyokan-naming-settings.json の記述についての記載を追記.
+- サンプル EntitySet の html説明について Card 型に変更したい
+- BasicSqlExprExpander の通過していない箇所のテスト.
+- Sakila DVDレンタルのサンプル (SklActors 等)、ODataTests1 を ON/OFFする手順またはプログラム実装を記述.
 - 認証の各種実験。
 - TimeOfDay がテスト不十分.
-- 実験的に全文検索である `$search` をサポートしたものの、もう少し詳しいところが調べられていない。また全文検索で有効なのはアルファベットのみ。h2 database でここを深掘りしても不毛か?
+- Maven Repository にアップしたい.
 - ($search対応の後続となるため、しばらく対応できない) TODO Null (nullable) の対応。現在はコメントアウト.

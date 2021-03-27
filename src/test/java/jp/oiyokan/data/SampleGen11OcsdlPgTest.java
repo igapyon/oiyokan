@@ -17,19 +17,19 @@ package jp.oiyokan.data;
 
 import java.sql.Connection;
 
-import org.junit.jupiter.api.Test;
-
-import jp.oiyokan.basic.BasicDbUtil;
+import jp.oiyokan.basic.BasicJdbcUtil;
 import jp.oiyokan.dto.OiyokanSettings;
 import jp.oiyokan.dto.OiyokanSettingsDatabase;
 import jp.oiyokan.settings.OiyokanSettingsUtil;
 
 /**
- * 内部データベース用のCSDL用内部テーブルのDDLを生成: postgres 版.
+ * 内部データベース用のCSDL用内部テーブルのDDLをコマンドライン生成.
  */
 class SampleGen11OcsdlPgTest {
     /**
-     * postgres 接続環境が適切に存在する場合にのみ JUnit を実行。
+     * postgres 接続環境が適切に存在する場合にのみ実行可能。
+     * 
+     * Ocsdlテーブルのスキーマを取得したい場合にのみ JUnit を実行する。
      */
     // @Test
     void test01() throws Exception {
@@ -41,50 +41,51 @@ class SampleGen11OcsdlPgTest {
             }
         }
 
-        try (Connection connTargetDb = BasicDbUtil.getConnection(settingsDatabase)) {
-            System.err.println(OiyokanInterDb.generateCreateOcsdlDdl(connTargetDb, "actor"));
+        try (Connection connTargetDb = BasicJdbcUtil.getConnection(settingsDatabase)) {
+            System.err.println(OiyokanInternalDatabase.generateCreateOcsdlDdl(connTargetDb, "actor"));
 
-            System.err.println(OiyokanInterDb.generateCreateOcsdlDdl(connTargetDb, "actor_info"));
+            System.err.println(OiyokanInternalDatabase.generateCreateOcsdlDdl(connTargetDb, "actor_info"));
 
-            System.err.println(OiyokanInterDb.generateCreateOcsdlDdl(connTargetDb, "address"));
+            System.err.println(OiyokanInternalDatabase.generateCreateOcsdlDdl(connTargetDb, "address"));
 
-            System.err.println(OiyokanInterDb.generateCreateOcsdlDdl(connTargetDb, "category"));
+            System.err.println(OiyokanInternalDatabase.generateCreateOcsdlDdl(connTargetDb, "category"));
 
-            System.err.println(OiyokanInterDb.generateCreateOcsdlDdl(connTargetDb, "city"));
+            System.err.println(OiyokanInternalDatabase.generateCreateOcsdlDdl(connTargetDb, "city"));
 
-            System.err.println(OiyokanInterDb.generateCreateOcsdlDdl(connTargetDb, "country"));
+            System.err.println(OiyokanInternalDatabase.generateCreateOcsdlDdl(connTargetDb, "country"));
 
-            System.err.println(OiyokanInterDb.generateCreateOcsdlDdl(connTargetDb, "customer"));
+            System.err.println(OiyokanInternalDatabase.generateCreateOcsdlDdl(connTargetDb, "customer"));
 
-            System.err.println(OiyokanInterDb.generateCreateOcsdlDdl(connTargetDb, "customer_list"));
+            System.err.println(OiyokanInternalDatabase.generateCreateOcsdlDdl(connTargetDb, "customer_list"));
 
-            System.err.println(OiyokanInterDb.generateCreateOcsdlDdl(connTargetDb, "film"));
+            System.err.println(OiyokanInternalDatabase.generateCreateOcsdlDdl(connTargetDb, "film"));
 
-            System.err.println(OiyokanInterDb.generateCreateOcsdlDdl(connTargetDb, "film_actor"));
+            System.err.println(OiyokanInternalDatabase.generateCreateOcsdlDdl(connTargetDb, "film_actor"));
 
-            System.err.println(OiyokanInterDb.generateCreateOcsdlDdl(connTargetDb, "film_category"));
+            System.err.println(OiyokanInternalDatabase.generateCreateOcsdlDdl(connTargetDb, "film_category"));
 
-            System.err.println(OiyokanInterDb.generateCreateOcsdlDdl(connTargetDb, "film_list"));
+            System.err.println(OiyokanInternalDatabase.generateCreateOcsdlDdl(connTargetDb, "film_list"));
 
-            System.err.println(OiyokanInterDb.generateCreateOcsdlDdl(connTargetDb, "inventory"));
+            System.err.println(OiyokanInternalDatabase.generateCreateOcsdlDdl(connTargetDb, "inventory"));
 
-            System.err.println(OiyokanInterDb.generateCreateOcsdlDdl(connTargetDb, "language"));
+            System.err.println(OiyokanInternalDatabase.generateCreateOcsdlDdl(connTargetDb, "language"));
 
-            System.err.println(OiyokanInterDb.generateCreateOcsdlDdl(connTargetDb, "nicer_but_slower_film_list"));
+            System.err.println(
+                    OiyokanInternalDatabase.generateCreateOcsdlDdl(connTargetDb, "nicer_but_slower_film_list"));
 
-            System.err.println(OiyokanInterDb.generateCreateOcsdlDdl(connTargetDb, "payment"));
+            System.err.println(OiyokanInternalDatabase.generateCreateOcsdlDdl(connTargetDb, "payment"));
 
-            System.err.println(OiyokanInterDb.generateCreateOcsdlDdl(connTargetDb, "rental"));
+            System.err.println(OiyokanInternalDatabase.generateCreateOcsdlDdl(connTargetDb, "rental"));
 
-            System.err.println(OiyokanInterDb.generateCreateOcsdlDdl(connTargetDb, "sales_by_film_category"));
+            System.err.println(OiyokanInternalDatabase.generateCreateOcsdlDdl(connTargetDb, "sales_by_film_category"));
 
-            System.err.println(OiyokanInterDb.generateCreateOcsdlDdl(connTargetDb, "sales_by_store"));
+            System.err.println(OiyokanInternalDatabase.generateCreateOcsdlDdl(connTargetDb, "sales_by_store"));
 
-            System.err.println(OiyokanInterDb.generateCreateOcsdlDdl(connTargetDb, "staff"));
+            System.err.println(OiyokanInternalDatabase.generateCreateOcsdlDdl(connTargetDb, "staff"));
 
-            System.err.println(OiyokanInterDb.generateCreateOcsdlDdl(connTargetDb, "staff_list"));
+            System.err.println(OiyokanInternalDatabase.generateCreateOcsdlDdl(connTargetDb, "staff_list"));
 
-            System.err.println(OiyokanInterDb.generateCreateOcsdlDdl(connTargetDb, "store"));
+            System.err.println(OiyokanInternalDatabase.generateCreateOcsdlDdl(connTargetDb, "store"));
         }
     }
 }

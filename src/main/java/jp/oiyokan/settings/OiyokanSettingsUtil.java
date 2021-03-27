@@ -27,6 +27,8 @@ import org.springframework.util.StreamUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jp.oiyokan.OiyokanConstants;
+import jp.oiyokan.OiyokanCsdlEntityContainer;
+import jp.oiyokan.OiyokanMessages;
 import jp.oiyokan.dto.OiyokanSettings;
 import jp.oiyokan.dto.OiyokanSettingsDatabase;
 
@@ -52,28 +54,29 @@ public class OiyokanSettingsUtil {
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(strOiyokanSettings, OiyokanSettings.class);
         } catch (IOException ex) {
-            System.err.println("UNEXPECTED: Fail to load Oiyokan settings: " + ex.toString());
-            throw new ODataApplicationException("UNEXPECTED: Fail to load Oiyokan settings", 500, Locale.ENGLISH);
+            // [M024] UNEXPECTED: Fail to load Oiyokan settings
+            System.err.println(OiyokanMessages.M024 + ": " + ex.toString());
+            throw new ODataApplicationException(OiyokanMessages.M024, 500, Locale.ENGLISH);
         }
     }
 
     /**
      * OiyokanSettingsDatabase 設定情報を取得.
      * 
-     * @param settingsOiyokan Oiyokan設定情報.
-     * @return OiyokanSettingsDatabase設定情報.
+     * @param databaseDefName Database setting name.
+     * @return OiyokanSettingsDatabase setting info.
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
-    public static OiyokanSettingsDatabase getOiyokanInternalDatabase(OiyokanSettings settingsOiyokan)
-            throws ODataApplicationException {
+    public static OiyokanSettingsDatabase getOiyokanDatabase(String databaseDefName) throws ODataApplicationException {
+        final OiyokanSettings settingsOiyokan = OiyokanCsdlEntityContainer.getSettingsInstance();
         for (OiyokanSettingsDatabase look : settingsOiyokan.getDatabaseList()) {
-            if ("oiyokan-internal".equals(look.getName())) {
+            if (databaseDefName.equals(look.getName())) {
                 return look;
             }
         }
 
-        System.err.println("UNEXPECTED: Database settings [oiyokan-internal] が見つかりません");
-        throw new ODataApplicationException("UNEXPECTED: Database settings [oiyokan-internal] が見つかりません", 500,
-                Locale.ENGLISH);
+        // [M026] UNEXPECTED: Database settings NOT found
+        System.err.println(OiyokanMessages.M026 + ": " + databaseDefName);
+        throw new ODataApplicationException(OiyokanMessages.M026 + ": " + databaseDefName, 500, Locale.ENGLISH);
     }
 }
