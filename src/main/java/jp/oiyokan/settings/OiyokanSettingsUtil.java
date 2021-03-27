@@ -62,26 +62,11 @@ public class OiyokanSettingsUtil {
     /**
      * OiyokanSettingsDatabase 設定情報を取得.
      * 
-     * TODO getOiyokanDatabase に集合が妥当か?
-     * 
-     * @param settingsOiyokan Oiyokan設定情報.
-     * @return OiyokanSettingsDatabase設定情報.
+     * @param settingsOiyokan Oiyokan setting info.
+     * @param databaseDefName Database setting name.
+     * @return OiyokanSettingsDatabase setting info.
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
-    public static OiyokanSettingsDatabase getOiyokanInternalDatabase(OiyokanSettings settingsOiyokan)
-            throws ODataApplicationException {
-        for (OiyokanSettingsDatabase look : settingsOiyokan.getDatabaseList()) {
-            if (OiyokanConstants.OIYOKAN_INTERNAL_DB.equals(look.getName())) {
-                return look;
-            }
-        }
-
-        // [M025] UNEXPECTED: Database settings NOT found
-        System.err.println(OiyokanMessages.M025 + ": " + OiyokanConstants.OIYOKAN_INTERNAL_DB);
-        throw new ODataApplicationException(OiyokanMessages.M025 + ": " + OiyokanConstants.OIYOKAN_INTERNAL_DB, //
-                500, Locale.ENGLISH);
-    }
-
     public static OiyokanSettingsDatabase getOiyokanDatabase(OiyokanSettings settingsOiyokan, String databaseDefName)
             throws ODataApplicationException {
         for (OiyokanSettingsDatabase look : settingsOiyokan.getDatabaseList()) {

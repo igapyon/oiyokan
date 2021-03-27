@@ -68,8 +68,8 @@ public class BasicJdbcEntityTypeBuilder {
     public CsdlEntityType getEntityType() throws ODataApplicationException {
         // インメモリ作業データベースに接続.
         // EntityTypeはインメモリ内部データベースの情報をもとに構築.
-        OiyokanSettingsDatabase settingsInternalDatabase = OiyokanSettingsUtil
-                .getOiyokanInternalDatabase(OiyokanCsdlEntityContainer.getSettingsInstance());
+        OiyokanSettingsDatabase settingsInternalDatabase = OiyokanSettingsUtil.getOiyokanDatabase(
+                OiyokanCsdlEntityContainer.getSettingsInstance(), OiyokanConstants.OIYOKAN_INTERNAL_DB);
 
         try (Connection connInterDb = BasicDbUtil.getConnection(settingsInternalDatabase)) {
             // テーブルをセットアップ.

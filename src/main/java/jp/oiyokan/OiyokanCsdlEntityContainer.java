@@ -103,6 +103,7 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
                 }
 
                 try {
+                    // 指定のデータベース名の文字列が妥当かどうかチェック。
                     OiyokanConstants.DatabaseType.valueOf(settingsDatabase.getType());
                 } catch (IllegalArgumentException ex) {
                     // [M002] UNEXPECTED: Illegal data type in database settings
@@ -114,10 +115,10 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
             }
 
             {
-                OiyokanSettingsDatabase settingsInternalDatabase = OiyokanSettingsUtil
-                        .getOiyokanInternalDatabase(getSettingsInstance());
+                OiyokanSettingsDatabase settingsInterDatabase = OiyokanSettingsUtil
+                        .getOiyokanDatabase(getSettingsInstance(), OiyokanConstants.OIYOKAN_INTERNAL_DB);
 
-                try (Connection connInterDb = BasicDbUtil.getConnection(settingsInternalDatabase)) {
+                try (Connection connInterDb = BasicDbUtil.getConnection(settingsInterDatabase)) {
                     // テーブルをセットアップ.
                     OiyokanInterDb.setupTable(connInterDb);
                 } catch (SQLException ex) {
