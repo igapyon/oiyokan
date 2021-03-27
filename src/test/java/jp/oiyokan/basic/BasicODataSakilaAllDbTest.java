@@ -24,15 +24,23 @@ import org.apache.olingo.server.api.ODataResponse;
 import org.junit.jupiter.api.Test;
 
 import jp.app.ctrl.ThSakilaCtrl;
+import jp.oiyokan.OiyokanConstants;
 
 /**
  * OData サーバについて、おおざっぱな通過によるデグレードを検知.
  */
-class BasicODataSampleDbTest {
+class BasicODataSakilaAllDbTest {
     @Test
-    void testSimpleVersion() throws Exception {
+    void test01() throws Exception {
         final ODataHttpHandler handler = BasicODataSampleTestUtil.getHandler();
         for (String[] entrys : ThSakilaCtrl.ODATA_ENTRY_INFOS) {
+            if (entrys[0].indexOf("$search") >= 0) {
+                if (!OiyokanConstants.IS_EXPERIMENTAL_SEARCH_ENABLED) {
+                    // 実験的 $search について無効化されているためテストから除外.
+                    continue;
+                }
+            }
+
             String[] entry = entrys[1].split("['?']");
 
             final ODataRequest req = new ODataRequest();

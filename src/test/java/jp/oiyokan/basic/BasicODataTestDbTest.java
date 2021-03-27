@@ -28,7 +28,7 @@ import jp.oiyokan.OiyokanConstants;
 /**
  * OData サーバについて、おおざっぱな通過によるデグレードを検知.
  */
-class BasicODataSakilaDbTest {
+class BasicODataTestDbTest {
     @Test
     void testSimpleVersion() throws Exception {
         final ODataHttpHandler handler = BasicODataSampleTestUtil.getHandler();
@@ -105,13 +105,13 @@ class BasicODataSakilaDbTest {
         final ODataRequest req = new ODataRequest();
         req.setMethod(HttpMethod.GET);
         req.setRawBaseUri("http://localhost:8080/odata4.svc");
-        req.setRawODataPath("/ODataTests1");
+        req.setRawODataPath("/ODataTestFulls1");
         req.setRawQueryPath("$top=6&$search=macbook&$count=true&$select=ID");
         req.setRawRequestUri(req.getRawBaseUri() + req.getRawODataPath() + "?" + req.getRawQueryPath());
 
         final ODataResponse resp = handler.process(req);
-        assertEquals(200, resp.getStatusCode());
-        assertEquals("{\"@odata.context\":\"$metadata#ODataTests1\",\"value\":[{\"ID\":1},{\"ID\":2}]}",
+        assertEquals("{\"@odata.context\":\"$metadata#ODataTestFulls1\",\"value\":[{\"ID\":1},{\"ID\":2}]}",
                 BasicODataSampleTestUtil.stream2String(resp.getContent()));
+        assertEquals(200, resp.getStatusCode());
     }
 }

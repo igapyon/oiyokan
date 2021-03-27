@@ -50,6 +50,7 @@ public class OiyokanMessages {
     public static final String M029 = "[M029] UNEXPECTED: Fail to execute SQL for local internal table";
     public static final String M030 = "[M030] UNEXPECTED: Fail to execute SQL for local internal table(2)";
     public static final String M031 = "[M031] UNEXPECTED: Fail to execute Dabaase";
+    public static final String M032 = "[M032] NOT SUPPORTED: URI: $search";
 
     ///////////////////
     // Expression

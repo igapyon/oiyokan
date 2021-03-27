@@ -35,6 +35,11 @@ public class OiyokanConstants {
     public static final boolean IS_TRACE_ODATA_V4 = true;
 
     /**
+     * 実験的な $search が有効化されているかどうか。
+     */
+    public static final boolean IS_EXPERIMENTAL_SEARCH_ENABLED = true;
+
+    /**
      * 接続先リソースの Databaseの型の列挙. 基本的にはリレーショナルデータベースを想定.
      */
     public enum DatabaseType {
