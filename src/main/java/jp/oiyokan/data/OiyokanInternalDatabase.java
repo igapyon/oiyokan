@@ -96,9 +96,9 @@ public class OiyokanInternalDatabase {
                     + ")")) {
                 stmt.executeUpdate();
             } catch (SQLException ex) {
-                System.err.println("UNEXPECTED: Fail to create local table: ODataAppInfos: " + ex.toString());
-                throw new ODataApplicationException("UNEXPECTED: Fail to create local table: ODataAppInfos", 500,
-                        Locale.ENGLISH);
+                // [M027] UNEXPECTED: Fail to create local table: ODataAppInfos
+                System.err.println(OiyokanMessages.M027 + ": " + ex.toString());
+                throw new ODataApplicationException(OiyokanMessages.M027, 500, Locale.ENGLISH);
             }
 
             // ODataAppInfos が既に存在するかどうか確認. 存在する場合は処理中断.
@@ -111,9 +111,9 @@ public class OiyokanInternalDatabase {
                     return false;
                 }
             } catch (SQLException ex) {
-                System.err.println("UNEXPECTED: Fail to check local table exists: ODataAppInfos: " + ex.toString());
-                throw new ODataApplicationException("UNEXPECTED: Fail to check local table exists: ODataAppInfos", 500,
-                        Locale.ENGLISH, ex);
+                // [M028] UNEXPECTED: Fail to check local table exists: ODataAppInfos
+                System.err.println(OiyokanMessages.M028 + ": " + ex.toString());
+                throw new ODataApplicationException(OiyokanMessages.M028, 500, Locale.ENGLISH, ex);
             }
 
             ///////////////////////////////////////////
@@ -137,9 +137,9 @@ public class OiyokanInternalDatabase {
 
                 connInterDb.commit();
             } catch (SQLException ex) {
-                System.err.println("UNEXPECTED: Fail to execute SQL for local internal table: " + ex.toString());
-                throw new ODataApplicationException("UNEXPECTED: Fail to execute SQL for local internal table", 500,
-                        Locale.ENGLISH);
+                // [M029] UNEXPECTED: Fail to execute SQL for local internal table
+                System.err.println(OiyokanMessages.M029 + ": " + ex.toString());
+                throw new ODataApplicationException(OiyokanMessages.M029, 500, Locale.ENGLISH);
             }
 
             for (String[] sqlFileDef : OIYOKAN_FILE_SQLS) {
@@ -156,15 +156,15 @@ public class OiyokanInternalDatabase {
                             stmt.executeUpdate();
                             connLoookDatabase.commit();
                         } catch (SQLException ex) {
-                            System.err.println(
-                                    "UNEXPECTED: Fail to execute SQL for local internal table(2): " + ex.toString());
-                            throw new ODataApplicationException(
-                                    "UNEXPECTED: Fail to execute SQL for local internal table(2)", 500, Locale.ENGLISH);
+                            // [M030] UNEXPECTED: Fail to execute SQL for local internal table(2)
+                            System.err.println(OiyokanMessages.M030 + ": " + ex.toString());
+                            throw new ODataApplicationException(OiyokanMessages.M030, 500, Locale.ENGLISH);
                         }
                     }
                 } catch (SQLException ex) {
-                    System.err.println("UNEXPECTED: Fail to execute Dabaase: " + ex.toString());
-                    throw new ODataApplicationException("UNEXPECTED: Fail to execute Dabaase", 500, Locale.ENGLISH);
+                    // [M031] UNEXPECTED: Fail to execute Dabaase
+                    System.err.println(OiyokanMessages.M031 + ": " + ex.toString());
+                    throw new ODataApplicationException(OiyokanMessages.M031, 500, Locale.ENGLISH);
                 }
             }
 

@@ -36,6 +36,11 @@ public class BasicSqlInfo {
     private final StringBuilder sqlBuilder = new StringBuilder();
     private final List<Object> sqlParamList = new ArrayList<>();
 
+    /**
+     * BasicSqlInfo Constructor.
+     * 
+     * @param entitySet EntitySet instance.
+     */
     public BasicSqlInfo(OiyokanCsdlEntitySet entitySet) {
         this.entitySet = entitySet;
     }

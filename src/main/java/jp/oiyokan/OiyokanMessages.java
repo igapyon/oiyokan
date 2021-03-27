@@ -45,6 +45,11 @@ public class OiyokanMessages {
     public static final String M024 = "[M024] UNEXPECTED: Fail to load Oiyokan settings";
     public static final String M025 = "[M025] UNEXPECTED: Database settings NOT found";
     public static final String M026 = "[M026] UNEXPECTED: Database settings NOT found";
+    public static final String M027 = "[M027] UNEXPECTED: Fail to create local table: ODataAppInfos";
+    public static final String M028 = "[M028] UNEXPECTED: Fail to check local table exists: ODataAppInfos";
+    public static final String M029 = "[M029] UNEXPECTED: Fail to execute SQL for local internal table";
+    public static final String M030 = "[M030] UNEXPECTED: Fail to execute SQL for local internal table(2)";
+    public static final String M031 = "[M031] UNEXPECTED: Fail to execute Dabaase";
 
     ///////////////////
     // Expression
