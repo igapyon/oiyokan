@@ -52,9 +52,7 @@ class BasicODataSakilaAllDbTest {
 
             final ODataResponse resp = handler.process(req);
             final String result = BasicODataSampleTestUtil.stream2String(resp.getContent());
-            // System.err.println("[" + entrys[0] + "], [" + entrys[1] + "], result: " +
-            // result);
-            // 注意：入力の文字列が正しくURLエンコードされていないと以下の asset が失敗する.
+            System.err.println("[" + entrys[0] + "], [" + entrys[1] + "], result: " + result);
             assertEquals(200, resp.getStatusCode());
         }
     }
