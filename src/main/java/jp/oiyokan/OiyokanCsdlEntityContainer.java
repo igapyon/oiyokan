@@ -91,25 +91,25 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
                 if (OiyokanConstants.IS_TRACE_ODATA_V4)
                     System.err.println("OData v4: Check JDBC Driver: " + settingsDatabase.getJdbcDriver());
                 try {
+                    // Database Driver が loadable か念押し確認.
                     Class.forName(settingsDatabase.getJdbcDriver());
-
-                    if ("h2".equals(settingsDatabase.getType()) || "pg".equals(settingsDatabase.getType())) {
-                        // OK
-                    } else {
-                        // [M002] UNEXPECTED: Illegal data type in database settings
-                        System.err.println(OiyokanMessages.M002 + ": dbname:" + settingsDatabase.getName() //
-                                + ", type:" + settingsDatabase.getType());
-                        throw new ODataApplicationException(
-                                OiyokanMessages.M002 + ": dbname:" + settingsDatabase.getName() //
-                                        + ", type:" + settingsDatabase.getType(),
-                                500, Locale.ENGLISH);
-                    }
                 } catch (ClassNotFoundException ex) {
-                    // [M003] UNEXPECTED: Fail to load JDBC driver
+                    // [M003] UNEXPECTED: Fail to load JDBC driver. Check JDBC Driver classname or
+                    // JDBC Driver is on classpath."
                     System.err.println(OiyokanMessages.M003 + ": " + settingsDatabase.getJdbcDriver() //
                             + ": " + ex.toString());
                     throw new ODataApplicationException(OiyokanMessages.M003 + ": " + settingsDatabase.getJdbcDriver(),
                             500, Locale.ENGLISH);
+                }
+
+                try {
+                    OiyokanConstants.DatabaseType.valueOf(settingsDatabase.getType());
+                } catch (IllegalArgumentException ex) {
+                    // [M002] UNEXPECTED: Illegal data type in database settings
+                    System.err.println(OiyokanMessages.M002 + ": dbname:" + settingsDatabase.getName() //
+                            + ", type:" + settingsDatabase.getType());
+                    throw new ODataApplicationException(OiyokanMessages.M002 + ": dbname:" + settingsDatabase.getName() //
+                            + ", type:" + settingsDatabase.getType(), 500, Locale.ENGLISH);
                 }
             }
 

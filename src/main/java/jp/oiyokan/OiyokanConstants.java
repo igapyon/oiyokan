@@ -39,9 +39,9 @@ public class OiyokanConstants {
      */
     public enum DatabaseType {
         /** h2 database */
-        H2,
+        h2,
         /** Postgres */
-        Postgres,
+        postgres,
         /** MySQL */
         MySQL,
         /** MSSQL : placeholder, not tested */
