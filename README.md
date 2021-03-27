@@ -105,17 +105,13 @@ oiyokan プロジェクトは、OData v4 server のシンプルなサンプル(h
 
 ## TODO
 
-- OData v4 ServerはREADONLYであることを表記。
-- Sakila dvdrental sample についての記述を追記
 - Sakila のサンプルアクセスの $filter や $orderby などをもう少し良いものにする。
 - OData のサイトに掲載する
 - README に oiyokan-naming-settings.json の記述についての記載を追記.
 - サンプル EntitySet の html説明について Card 型に変更したい
-- TODO BasicSqlExprExpander の通過していない箇所のテスト.
-- Sakila DVDレンタルのサンプル、MyProducts を ON/OFFする手順またはプログラム実装を記述.
+- BasicSqlExprExpander の通過していない箇所のテスト.
+- Sakila DVDレンタルのサンプル (SklActors 等)、ODataTests1 を ON/OFFする手順またはプログラム実装を記述.
 - 認証の各種実験。
 - TimeOfDay がテスト不十分.
 - Maven Repository にアップしたい.
-- 一旦 $search を実装から分離する. 一旦除去したうえで SearchOptionが 非nullのときに例外が妥当か?
-- 実験的に全文検索である `$search` をサポートしたものの、もう少し詳しいところが調べられていない。また全文検索で有効なのはアルファベットのみ。h2 database でここを深掘りしても不毛か?
 - ($search対応の後続となるため、しばらく対応できない) TODO Null (nullable) の対応。現在はコメントアウト.

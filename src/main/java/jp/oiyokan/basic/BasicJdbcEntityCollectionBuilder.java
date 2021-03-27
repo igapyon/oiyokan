@@ -35,19 +35,17 @@ import org.apache.olingo.server.api.uri.UriInfo;
 import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanCsdlEntitySet;
 import jp.oiyokan.OiyokanEdmProvider;
+import jp.oiyokan.OiyokanEntityCollectionBuilderInterface;
 import jp.oiyokan.OiyokanMessages;
 import jp.oiyokan.basic.sql.BasicSqlBuilder;
-import jp.oiyokan.h2.data.TinyH2TrialFullTextSearch;
+import jp.oiyokan.h2.data.ExperimentalH2FullTextSearch;
 
 /**
  * 実際に返却するデータ本体を組み上げるクラス.
  * 
  * EDM要素セットを入力に実際のデータを組み上げ.
  */
-public class BasicJdbcEntityCollectionBuilder {
-    private BasicJdbcEntityCollectionBuilder() {
-    }
-
+public class BasicJdbcEntityCollectionBuilder implements OiyokanEntityCollectionBuilderInterface {
     /**
      * 指定のEDM要素セットに対応する要素コレクションを作成.
      * 
@@ -56,7 +54,7 @@ public class BasicJdbcEntityCollectionBuilder {
      * @return 要素コレクション.
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
-    public static EntityCollection build(EdmEntitySet edmEntitySet, UriInfo uriInfo) throws ODataApplicationException {
+    public EntityCollection build(EdmEntitySet edmEntitySet, UriInfo uriInfo) throws ODataApplicationException {
         final EntityCollection eCollection = new EntityCollection();
 
         OiyokanEdmProvider provider = new OiyokanEdmProvider();
@@ -80,6 +78,11 @@ public class BasicJdbcEntityCollectionBuilder {
 
         //////////////////////////////////////////////
         // Oiyokan が対応しない処理を拒絶するための記述.
+        if (uriInfo.getSearchOption() != null && !OiyokanConstants.IS_EXPERIMENTAL_SEARCH_ENABLED) {
+            // [M032] NOT SUPPORTED: URI: $search
+            System.err.println(OiyokanMessages.M032);
+            throw new ODataApplicationException(OiyokanMessages.M032, 500, Locale.ENGLISH);
+        }
         if (uriInfo.getApplyOption() != null) {
             // [M011] NOT SUPPORTED: URI: $apply
             System.err.println(OiyokanMessages.M011);
@@ -105,7 +108,7 @@ public class BasicJdbcEntityCollectionBuilder {
         try (Connection connTargetDb = BasicJdbcUtil.getConnection(entitySet.getSettingsDatabase())) {
             if (uriInfo.getSearchOption() != null) {
                 // $search.
-                new TinyH2TrialFullTextSearch().process(connTargetDb, edmEntitySet, uriInfo, eCollection);
+                new ExperimentalH2FullTextSearch().process(connTargetDb, edmEntitySet, uriInfo, eCollection);
                 return eCollection;
             }
 
@@ -122,7 +125,7 @@ public class BasicJdbcEntityCollectionBuilder {
         } catch (SQLException ex) {
             // [M015] UNEXPECTED: Fail on database connection SQL
             System.err.println(OiyokanMessages.M015 + ": " + ex.toString());
-            throw new ODataApplicationException(OiyokanMessages.M015, 500, Locale.ENGLISH, ex);
+            throw new ODataApplicationException(OiyokanMessages.M015, 500, Locale.ENGLISH);
         }
     }
 
@@ -150,17 +153,17 @@ public class BasicJdbcEntityCollectionBuilder {
         } catch (SQLException ex) {
             // [M015] UNEXPECTED: Fail on database connection SQL
             System.err.println(OiyokanMessages.M015 + ": " + sql + ", " + ex.toString());
-            throw new ODataApplicationException(OiyokanMessages.M015 + ": " + sql, 500, Locale.ENGLISH, ex);
+            throw new ODataApplicationException(OiyokanMessages.M015 + ": " + sql, 500, Locale.ENGLISH);
         }
         // 取得できたレコード件数を設定.
         eCollection.setCount(countWithWhere);
     }
 
-    private static void processCollectionQuery(OiyokanCsdlEntitySet entitySet, UriInfo uriInfo, Connection connTargetDb,
+    private void processCollectionQuery(OiyokanCsdlEntitySet entitySet, UriInfo uriInfo, Connection connTargetDb,
             EntityCollection eCollection) throws ODataApplicationException {
         BasicSqlBuilder basicSqlBuilder = new BasicSqlBuilder(entitySet);
 
-        basicSqlBuilder.getSelectQuery(uriInfo, entitySet.getSettingsDatabase());
+        basicSqlBuilder.getSelectQuery(uriInfo);
         final String sql = basicSqlBuilder.getSqlInfo().getSqlBuilder().toString();
 
         if (OiyokanConstants.IS_TRACE_ODATA_V4)
@@ -211,7 +214,7 @@ public class BasicJdbcEntityCollectionBuilder {
         } catch (SQLException ex) {
             // [M017] Fail to execute SQL
             System.err.println(OiyokanMessages.M017 + ": " + sql + ", " + ex.toString());
-            throw new ODataApplicationException(OiyokanMessages.M017 + ": " + sql, 500, Locale.ENGLISH, ex);
+            throw new ODataApplicationException(OiyokanMessages.M017 + ": " + sql, 500, Locale.ENGLISH);
         }
     }
 
@@ -228,7 +231,8 @@ public class BasicJdbcEntityCollectionBuilder {
         } catch (URISyntaxException ex) {
             // [M018] UNEXPECTED: Fail to create ID EntitySet name
             System.err.println(OiyokanMessages.M018 + ": " + entitySetName + ": " + ex.toString());
-            throw new ODataRuntimeException(OiyokanMessages.M018 + ": " + entitySetName, ex);
+            ex.printStackTrace();
+            throw new ODataRuntimeException(OiyokanMessages.M018 + ": " + entitySetName);
         }
     }
 }

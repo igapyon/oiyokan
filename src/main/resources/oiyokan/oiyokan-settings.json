@@ -79,7 +79,7 @@
 		{
 			"name": "sample-pg-dvdrental-address",
 			"description": "Sakila dvdrental sample db: address",
-			"entitySetName": "SklAddresss",
+			"entitySetName": "SklAddresses",
 			"entityName": "SklAddress",
 			"databaseName": "oiyokanInternalTarget",
 			"dbTableNameLocal": "Ocsdladdress",
@@ -88,7 +88,7 @@
 		{
 			"name": "sample-pg-dvdrental-category",
 			"description": "Sakila dvdrental sample db: category",
-			"entitySetName": "SklCategorys",
+			"entitySetName": "SklCategories",
 			"entityName": "SklCategory",
 			"databaseName": "oiyokanInternalTarget",
 			"dbTableNameLocal": "Ocsdlcategory",
@@ -97,7 +97,7 @@
 		{
 			"name": "sample-pg-dvdrental-city",
 			"description": "Sakila dvdrental sample db: city",
-			"entitySetName": "SklCitys",
+			"entitySetName": "SklCities",
 			"entityName": "SklCity",
 			"databaseName": "oiyokanInternalTarget",
 			"dbTableNameLocal": "Ocsdlcity",
@@ -106,7 +106,7 @@
 		{
 			"name": "sample-pg-dvdrental-country",
 			"description": "Sakila dvdrental sample db: country",
-			"entitySetName": "SklCountrys",
+			"entitySetName": "SklCountries",
 			"entityName": "SklCountry",
 			"databaseName": "oiyokanInternalTarget",
 			"dbTableNameLocal": "Ocsdlcountry",
@@ -151,7 +151,7 @@
 		{
 			"name": "sample-pg-dvdrental-film_category",
 			"description": "Sakila dvdrental sample db: film_category",
-			"entitySetName": "SklFilmCategorys",
+			"entitySetName": "SklFilmCategories",
 			"entityName": "SklFilmCategory",
 			"databaseName": "oiyokanInternalTarget",
 			"dbTableNameLocal": "Ocsdlfilm_category",
@@ -169,7 +169,7 @@
 		{
 			"name": "sample-pg-dvdrental-inventory",
 			"description": "Sakila dvdrental sample db: inventory",
-			"entitySetName": "SklInventorys",
+			"entitySetName": "SklInventories",
 			"entityName": "SklInventory",
 			"databaseName": "oiyokanInternalTarget",
 			"dbTableNameLocal": "Ocsdlinventory",
@@ -214,7 +214,7 @@
 		{
 			"name": "sample-pg-dvdrental-sales_by_film_category",
 			"description": "Sakila dvdrental sample db: sales_by_film_category",
-			"entitySetName": "SklSalesByFilmCategorys",
+			"entitySetName": "SklSalesByFilmCategories",
 			"entityName": "SklSalesByFilmCategory",
 			"databaseName": "oiyokanInternalTarget",
 			"dbTableNameLocal": "Ocsdlsales_by_film_category",

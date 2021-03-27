@@ -37,6 +37,7 @@ import org.springframework.util.StreamUtils;
 
 import jp.oiyokan.OiyokanCsdlEntitySet;
 import jp.oiyokan.OiyokanMessages;
+import jp.oiyokan.basic.sql.BasicSqlInfo;
 import jp.oiyokan.dto.OiyokanSettingsDatabase;
 import jp.oiyokan.settings.OiyokanNamingUtil;
 
@@ -331,6 +332,63 @@ public class BasicJdbcUtil {
             // [M010] NOT SUPPORTED: Parameter Type
             System.err.println(OiyokanMessages.M010 + ": " + value.getClass().getCanonicalName());
             throw new ODataApplicationException(OiyokanMessages.M010 + ": " + value.getClass().getCanonicalName(), //
+                    500, Locale.ENGLISH);
+        }
+    }
+
+    ////////////////////////////
+    // 項目名に関するユーティリティ
+
+    /**
+     * かっこつき項目名のかっこを除去.
+     * 
+     * @param escapedFieldName かっこ付き項目名.
+     * @return かっこなし項目名.
+     */
+    public static String unescapeKakkoFieldName(String escapedFieldName) {
+        String normalName = escapedFieldName;
+        normalName = normalName.replaceAll("^\\[", "");
+        normalName = normalName.replaceAll("\\]$", "");
+        return normalName;
+    }
+
+    /**
+     * 項目名のカッコをエスケープ付与.
+     * 
+     * @param sqlInfo   SQL設定情報.
+     * @param fieldName 項目名.
+     * @return 必要に応じてエスケープされた項目名.
+     * @throws ODataApplicationException ODataアプリ例外が発生した場合.
+     */
+    public static String escapeKakkoFieldName(BasicSqlInfo sqlInfo, String fieldName) throws ODataApplicationException {
+        switch (sqlInfo.getEntitySet().getDatabaseType()) {
+        case h2:
+        case MSSQL:
+            if (fieldName.indexOf(" ") <= 0 && fieldName.indexOf(".") <= 0) {
+                // 空白のない場合はエスケープしない.
+                return fieldName;
+            }
+            return "[" + fieldName + "]";
+
+        case postgres:
+        case ORACLE:
+            if (fieldName.indexOf(" ") <= 0 && fieldName.indexOf(".") <= 0) {
+                // 空白のない場合はエスケープしない.
+                return fieldName;
+            }
+            return "\"" + fieldName + "\"";
+
+        case BigQuery:
+            if (fieldName.indexOf(" ") <= 0 && fieldName.indexOf(".") <= 0) {
+                // 空白やピリオドのない場合はエスケープしない.
+                return fieldName;
+            }
+            return "`" + fieldName + "`";
+
+        default:
+            // [M020] NOT SUPPORTED: Database type
+            System.err.println(OiyokanMessages.M020 + ": " + sqlInfo.getSettingsDatabase().getType());
+            throw new ODataApplicationException(OiyokanMessages.M020 + ": " + sqlInfo.getSettingsDatabase().getType(),
                     500, Locale.ENGLISH);
         }
     }

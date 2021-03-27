@@ -16,11 +16,13 @@
 package jp.oiyokan;
 
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.olingo.commons.api.data.ContextURL;
 import org.apache.olingo.commons.api.data.EntityCollection;
 import org.apache.olingo.commons.api.edm.EdmEntitySet;
 import org.apache.olingo.commons.api.edm.EdmEntityType;
+import org.apache.olingo.commons.api.edm.provider.CsdlEntitySet;
 import org.apache.olingo.commons.api.format.ContentType;
 import org.apache.olingo.commons.api.http.HttpHeader;
 import org.apache.olingo.commons.api.http.HttpStatusCode;
@@ -93,11 +95,11 @@ public class OiyokanEntityCollectionProcessor implements EntityCollectionProcess
             // 要素セットの指定からEDM要素セットを取得.
             EdmEntitySet edmEntitySet = uriResourceEntitySet.getEntitySet();
 
+            OiyokanEntityCollectionBuilderInterface entityCollectionBuilder = getEntityCollectionBuilder(edmEntitySet);
+
             // 要素セットの指定をもとに要素コレクションを取得.
             // これがデータ本体に該当.
-            // ここでは h2 database のデータ構築実装を呼び出している.
-            // TODO FIXME ここでは DatabaseType に従って処理を分岐すべき.
-            final EntityCollection eCollection = BasicJdbcEntityCollectionBuilder.build(edmEntitySet, uriInfo);
+            EntityCollection eCollection = entityCollectionBuilder.build(edmEntitySet, uriInfo);
 
             // 指定のレスポンスフォーマットに合致する直列化を準備.
             ODataSerializer serializer = odata.createSerializer(responseFormat);
@@ -137,6 +139,33 @@ public class OiyokanEntityCollectionProcessor implements EntityCollectionProcess
             // ODataRuntimeException についてもこちらを通過させてスタックトレース出力させる。
             ex.printStackTrace();
             throw ex;
+        }
+    }
+
+    private static final OiyokanEntityCollectionBuilderInterface getEntityCollectionBuilder(EdmEntitySet edmEntitySet)
+            throws ODataApplicationException {
+        OiyokanCsdlEntitySet entitySet = null;
+        OiyokanEdmProvider provider = new OiyokanEdmProvider();
+        for (CsdlEntitySet look : provider.getEntityContainer().getEntitySets()) {
+            if (edmEntitySet.getName().equals(look.getName())) {
+                entitySet = (OiyokanCsdlEntitySet) look;
+                break;
+            }
+        }
+
+        switch (entitySet.getDatabaseType()) {
+        case h2:
+        case postgres:
+        case MySQL:
+        case MSSQL:
+        case ORACLE:
+        default:
+            return new BasicJdbcEntityCollectionBuilder();
+        case BigQuery:
+            // TODO FIXME BigQuery用の実装が必要.
+            // [M999] NOT IMPLEMENTED: Generic NOT implemented message.
+            System.err.println(OiyokanMessages.M999);
+            throw new ODataApplicationException(OiyokanMessages.M999, 500, Locale.ENGLISH);
         }
     }
 }

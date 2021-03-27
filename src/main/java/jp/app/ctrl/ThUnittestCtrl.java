@@ -8,6 +8,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import jp.oiyokan.OiyokanConstants;
+
 @Controller
 public class ThUnittestCtrl {
     public static final String[][] ODATA_ENTRY_INFOS = new String[][] { //
@@ -28,6 +30,13 @@ public class ThUnittestCtrl {
         model.addAttribute("UrlEntryList", urlEntryList);
 
         for (String[] look : ODATA_ENTRY_INFOS) {
+            if (look[0].indexOf("$search") >= 0) {
+                if (!OiyokanConstants.IS_EXPERIMENTAL_SEARCH_ENABLED) {
+                    // 実験的 $search について無効化されているためテスト対象から除外.
+                    continue;
+                }
+            }
+
             urlEntryList.add(new UrlEntryBean(look[0], look[1], look[2]));
         }
 
