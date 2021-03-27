@@ -73,6 +73,9 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
         // OiyokanSettings の singleton を確実にインスタンス化.
         getSettingsInstance();
 
+        if (getName() == null) {
+            setName(OiyokanCsdlEntityContainer.getSettingsInstance().getContainerName());
+        }
         if (getEntitySets() == null) {
             setEntitySets(new ArrayList<CsdlEntitySet>());
         }
