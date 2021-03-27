@@ -17,7 +17,6 @@ package jp.oiyokan.basic.sql;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import org.apache.olingo.commons.api.edm.provider.CsdlEntityType;
 import org.apache.olingo.commons.api.edm.provider.CsdlProperty;
@@ -31,8 +30,7 @@ import org.apache.olingo.server.core.uri.queryoption.FilterOptionImpl;
 import org.apache.olingo.server.core.uri.queryoption.expression.MemberImpl;
 
 import jp.oiyokan.OiyokanCsdlEntitySet;
-import jp.oiyokan.OiyokanMessages;
-import jp.oiyokan.dto.OiyokanSettingsDatabase;
+import jp.oiyokan.basic.BasicJdbcUtil;
 import jp.oiyokan.settings.OiyokanNamingUtil;
 
 /**
@@ -75,12 +73,10 @@ public class BasicSqlBuilder {
     /**
      * 検索用のSQLを生成.
      * 
-     * @param uriInfo          URI情報.
-     * @param settingsDatabase データベース設定情報.
+     * @param uriInfo URI情報.
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
-    public void getSelectQuery(UriInfo uriInfo, OiyokanSettingsDatabase settingsDatabase)
-            throws ODataApplicationException {
+    public void getSelectQuery(UriInfo uriInfo) throws ODataApplicationException {
         sqlInfo.getSqlBuilder().append("SELECT ");
 
         if (uriInfo.getSelectOption() == null) {
@@ -94,8 +90,7 @@ public class BasicSqlBuilder {
                 }
 
                 // もし空白を含む場合はエスケープ。
-                strColumns += BasicSqlBuilder.escapeKakkoFieldName(settingsDatabase,
-                        OiyokanNamingUtil.entity2Db(prop.getName()));
+                strColumns += BasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyokanNamingUtil.entity2Db(prop.getName()));
             }
             sqlInfo.getSqlBuilder().append(strColumns);
         } else {
@@ -108,8 +103,8 @@ public class BasicSqlBuilder {
             for (SelectItem item : uriInfo.getSelectOption().getSelectItems()) {
                 for (UriResource res : item.getResourcePath().getUriResourceParts()) {
                     sqlInfo.getSqlBuilder().append(itemCount++ == 0 ? "" : ",");
-                    sqlInfo.getSqlBuilder().append(escapeKakkoFieldName(settingsDatabase,
-                            OiyokanNamingUtil.entity2Db(unescapeKakkoFieldName(res.toString()))));
+                    sqlInfo.getSqlBuilder().append(BasicJdbcUtil.escapeKakkoFieldName(sqlInfo,
+                            OiyokanNamingUtil.entity2Db(BasicJdbcUtil.unescapeKakkoFieldName(res.toString()))));
                     for (int index = 0; index < keyTarget.size(); index++) {
                         if (keyTarget.get(index).equals(res.toString())) {
                             keyTarget.remove(index);
@@ -121,7 +116,7 @@ public class BasicSqlBuilder {
             for (int index = 0; index < keyTarget.size(); index++) {
                 // レコードを一意に表すID項目が必須。検索対象にない場合は追加.
                 sqlInfo.getSqlBuilder().append(itemCount++ == 0 ? "" : ",");
-                sqlInfo.getSqlBuilder().append(unescapeKakkoFieldName(keyTarget.get(index)));
+                sqlInfo.getSqlBuilder().append(BasicJdbcUtil.unescapeKakkoFieldName(keyTarget.get(index)));
             }
         }
 
@@ -148,8 +143,8 @@ public class BasicSqlBuilder {
                     sqlInfo.getSqlBuilder().append(",");
                 }
 
-                sqlInfo.getSqlBuilder().append(escapeKakkoFieldName(settingsDatabase, OiyokanNamingUtil
-                        .entity2Db(unescapeKakkoFieldName(((MemberImpl) orderByItem.getExpression()).toString()))));
+                sqlInfo.getSqlBuilder().append(BasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyokanNamingUtil.entity2Db(
+                        BasicJdbcUtil.unescapeKakkoFieldName(((MemberImpl) orderByItem.getExpression()).toString()))));
 
                 if (orderByItem.isDescending()) {
                     sqlInfo.getSqlBuilder().append(" DESC");
@@ -166,47 +161,5 @@ public class BasicSqlBuilder {
             sqlInfo.getSqlBuilder().append(" OFFSET ");
             sqlInfo.getSqlBuilder().append(uriInfo.getSkipOption().getValue());
         }
-    }
-
-    /**
-     * かっこつき項目名のかっこを除去.
-     * 
-     * @param escapedFieldName かっこ付き項目名.
-     * @return かっこなし項目名.
-     */
-    public static String unescapeKakkoFieldName(String escapedFieldName) {
-        String normalName = escapedFieldName;
-        normalName = normalName.replaceAll("^\\[", "");
-        normalName = normalName.replaceAll("\\]$", "");
-        return normalName;
-    }
-
-    /**
-     * 項目名のカッコをエスケープ付与.
-     * 
-     * @param settingsDatabase データベース設定情報.
-     * @param fieldName        項目名.
-     * @return 必要に応じてエスケープされた項目名.
-     * @throws ODataApplicationException ODataアプリ例外が発生した場合.
-     */
-    public static String escapeKakkoFieldName(OiyokanSettingsDatabase settingsDatabase, String fieldName)
-            throws ODataApplicationException {
-        // TODO FIXME 見直し
-        if (fieldName.contains(" ") == false) {
-            return fieldName;
-        }
-        // TODO FIXME 見直し
-        if ("h2".equals(settingsDatabase.getType())) {
-            fieldName = "[" + fieldName + "]";
-        } else if ("pg".equals(settingsDatabase.getType())) {
-            fieldName = "\"" + fieldName + "\"";
-        } else {
-            // [M020] NOT SUPPORTED: Database type
-            System.err.println(OiyokanMessages.M020 + ": " + settingsDatabase.getType());
-            throw new ODataApplicationException(OiyokanMessages.M020 + ": " + settingsDatabase.getType(), 500,
-                    Locale.ENGLISH);
-        }
-
-        return fieldName;
     }
 }

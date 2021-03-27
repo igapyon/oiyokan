@@ -47,6 +47,7 @@ import org.apache.olingo.server.core.uri.queryoption.expression.TypeLiteralImpl;
 import org.apache.olingo.server.core.uri.queryoption.expression.UnaryImpl;
 
 import jp.oiyokan.OiyokanMessages;
+import jp.oiyokan.basic.BasicJdbcUtil;
 import jp.oiyokan.fromolingo.FromApacheOlingoUtil;
 import jp.oiyokan.settings.OiyokanNamingUtil;
 
@@ -367,8 +368,8 @@ public class BasicSqlExprExpander {
 
     private void expandMember(MemberImpl impl) throws ODataApplicationException {
         // そのままSQLのメンバーとせず、項目名エスケープを除去.
-        sqlInfo.getSqlBuilder().append(BasicSqlBuilder.escapeKakkoFieldName(sqlInfo.getSettingsDatabase(),
-                OiyokanNamingUtil.entity2Db(BasicSqlBuilder.unescapeKakkoFieldName(impl.toString()))));
+        sqlInfo.getSqlBuilder().append(BasicJdbcUtil.escapeKakkoFieldName(sqlInfo,
+                OiyokanNamingUtil.entity2Db(BasicJdbcUtil.unescapeKakkoFieldName(impl.toString()))));
     }
 
     private void expandMethod(MethodImpl impl) throws ODataApplicationException {

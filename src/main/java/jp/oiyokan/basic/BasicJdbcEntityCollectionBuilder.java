@@ -165,7 +165,7 @@ public class BasicJdbcEntityCollectionBuilder {
             EntityCollection eCollection) throws ODataApplicationException {
         BasicSqlBuilder basicSqlBuilder = new BasicSqlBuilder(entitySet);
 
-        basicSqlBuilder.getSelectQuery(uriInfo, entitySet.getSettingsDatabase());
+        basicSqlBuilder.getSelectQuery(uriInfo);
         final String sql = basicSqlBuilder.getSqlInfo().getSqlBuilder().toString();
 
         if (OiyokanConstants.IS_TRACE_ODATA_V4)
