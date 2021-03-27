@@ -18,7 +18,7 @@ package jp.oiyokan.data;
 import java.sql.Connection;
 
 import jp.oiyokan.OiyokanConstants;
-import jp.oiyokan.basic.BasicDbUtil;
+import jp.oiyokan.basic.BasicJdbcUtil;
 import jp.oiyokan.dto.OiyokanSettings;
 import jp.oiyokan.dto.OiyokanSettingsDatabase;
 import jp.oiyokan.settings.OiyokanSettingsUtil;
@@ -40,7 +40,7 @@ class SampleGen02Ocsdlh2ODataTestFulls1Test {
             }
         }
 
-        try (Connection connTargetDb = BasicDbUtil.getConnection(settingsDatabase)) {
+        try (Connection connTargetDb = BasicJdbcUtil.getConnection(settingsDatabase)) {
             // 内部データベースのテーブルをセットアップ.
             OiyokanInternalDatabase.setupInternalDatabase();
 

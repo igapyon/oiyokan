@@ -71,7 +71,7 @@ public class BasicJdbcEntityTypeBuilder {
         OiyokanSettingsDatabase settingsInternalDatabase = OiyokanSettingsUtil
                 .getOiyokanDatabase(OiyokanConstants.OIYOKAN_INTERNAL_DB);
 
-        try (Connection connInterDb = BasicDbUtil.getConnection(settingsInternalDatabase)) {
+        try (Connection connInterDb = BasicJdbcUtil.getConnection(settingsInternalDatabase)) {
             // CSDL要素型として情報を組み上げ.
             final CsdlEntityType entityType = new CsdlEntityType();
             entityType.setName(entitySet.getEntityNameIyo());
@@ -89,7 +89,7 @@ public class BasicJdbcEntityTypeBuilder {
                 ResultSetMetaData rsmeta = stmt.getMetaData();
                 final int columnCount = rsmeta.getColumnCount();
                 for (int column = 1; column <= columnCount; column++) {
-                    propertyList.add(BasicDbUtil.resultSetMetaData2CsdlProperty(rsmeta, column));
+                    propertyList.add(BasicJdbcUtil.resultSetMetaData2CsdlProperty(rsmeta, column));
                 }
 
                 // テーブルのキー情報

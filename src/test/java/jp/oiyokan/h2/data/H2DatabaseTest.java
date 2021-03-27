@@ -23,7 +23,7 @@ import java.sql.ResultSetMetaData;
 import org.junit.jupiter.api.Test;
 
 import jp.oiyokan.OiyokanConstants;
-import jp.oiyokan.basic.BasicDbUtil;
+import jp.oiyokan.basic.BasicJdbcUtil;
 import jp.oiyokan.data.OiyokanInternalDatabase;
 import jp.oiyokan.settings.OiyokanSettingsUtil;
 
@@ -33,7 +33,7 @@ import jp.oiyokan.settings.OiyokanSettingsUtil;
 class H2DatabaseTest {
     @Test
     void test01() throws Exception {
-        try (Connection conn = BasicDbUtil
+        try (Connection conn = BasicJdbcUtil
                 .getConnection(OiyokanSettingsUtil.getOiyokanDatabase(OiyokanConstants.OIYOKAN_INTERNAL_DB))) {
 
             // 内部データベースのテーブルをセットアップ.
@@ -50,7 +50,7 @@ class H2DatabaseTest {
 
     @Test
     void testo2() throws Exception {
-        try (Connection conn = BasicDbUtil
+        try (Connection conn = BasicJdbcUtil
                 .getConnection(OiyokanSettingsUtil.getOiyokanDatabase(OiyokanConstants.OIYOKAN_INTERNAL_DB))) {
             // 内部データベースのテーブルをセットアップ.
             OiyokanInternalDatabase.setupInternalDatabase();

@@ -17,7 +17,7 @@ package jp.oiyokan.data;
 
 import java.sql.Connection;
 
-import jp.oiyokan.basic.BasicDbUtil;
+import jp.oiyokan.basic.BasicJdbcUtil;
 import jp.oiyokan.dto.OiyokanSettings;
 import jp.oiyokan.dto.OiyokanSettingsDatabase;
 import jp.oiyokan.settings.OiyokanSettingsUtil;
@@ -41,7 +41,7 @@ class SampleGen11OcsdlPgTest {
             }
         }
 
-        try (Connection connTargetDb = BasicDbUtil.getConnection(settingsDatabase)) {
+        try (Connection connTargetDb = BasicJdbcUtil.getConnection(settingsDatabase)) {
             System.err.println(OiyokanInternalDatabase.generateCreateOcsdlDdl(connTargetDb, "actor"));
 
             System.err.println(OiyokanInternalDatabase.generateCreateOcsdlDdl(connTargetDb, "actor_info"));
