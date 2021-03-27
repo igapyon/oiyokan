@@ -101,7 +101,7 @@ public class OiyokanCsdlEntitySet extends CsdlEntitySet {
         this.csdlEntityContainer = containerInfo;
         this.settingsEntitySet = settingsEntitySet;
 
-        for (OiyokanSettingsDatabase look : OiyokanCsdlEntityContainer.getOiyokanSettingsInstance().getDatabaseList()) {
+        for (OiyokanSettingsDatabase look : OiyokanCsdlEntityContainer.getSettingsInstance().getDatabaseList()) {
             if (look.getName().equals(settingsEntitySet.getDatabaseName())) {
                 settingsDatabase = look;
             }

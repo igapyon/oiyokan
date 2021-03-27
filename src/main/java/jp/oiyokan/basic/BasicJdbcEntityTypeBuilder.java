@@ -69,7 +69,7 @@ public class BasicJdbcEntityTypeBuilder {
         // インメモリ作業データベースに接続.
         // EntityTypeはインメモリ内部データベースの情報をもとに構築.
         OiyokanSettingsDatabase settingsInternalDatabase = OiyokanSettingsUtil
-                .getOiyokanInternalDatabase(OiyokanCsdlEntityContainer.getOiyokanSettingsInstance());
+                .getOiyokanInternalDatabase(OiyokanCsdlEntityContainer.getSettingsInstance());
 
         try (Connection connInterDb = BasicDbUtil.getConnection(settingsInternalDatabase)) {
             // テーブルをセットアップ.

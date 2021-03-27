@@ -40,20 +40,24 @@ import jp.oiyokan.settings.OiyokanSettingsUtil;
  * Oiyokan の CsdlEntityContainer 実装.
  */
 public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
+    /**
+     * OiyokanSettings を singleton に記憶.
+     */
     private static volatile OiyokanSettings settingsOiyokan = null;
 
     /**
-     * CsdlEntityTypeをすでに取得済みであればそれをキャッシュから返却する場合に利用.
+     * CsdlEntityType をすでに取得済みであればそれをキャッシュとして利用.
      */
     private Map<String, CsdlEntityType> cachedCsdlEntityTypeMap = new HashMap<>();
 
     /**
-     * OiyokanSettings 設定情報をシングルトンに取得.
+     * OiyokanSettings 設定情報を singleton に取得.
      * 
-     * @return OiyokanSettings インスタンス。
+     * @return OiyokanSettings instance. 参照のみで利用.
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
-    public static OiyokanSettings getOiyokanSettingsInstance() throws ODataApplicationException {
+    public static synchronized OiyokanSettings getSettingsInstance() throws ODataApplicationException {
+        // singleton by static synchronized.
         if (settingsOiyokan == null) {
             settingsOiyokan = OiyokanSettingsUtil.loadOiyokanSettings();
         }
@@ -69,16 +73,21 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
     public void ensureBuild() throws ODataApplicationException {
+        // OiyokanSettings の singleton を確実にインスタンス化.
+        getSettingsInstance();
+
         if (getEntitySets() == null) {
             setEntitySets(new ArrayList<CsdlEntitySet>());
         }
 
-        // 念押しロード.
-        getOiyokanSettingsInstance();
+        synchronized (getEntitySets()) {
+            // すでに CsdlEntityContainer の EntitySet が構築済みかどうか確認.
+            if (getEntitySets().size() != 0) {
+                // CsdlEntityContainer の EntitySet が構築済みであれば処理中断.
+                return;
+            }
 
-        // テンプレートとそれから生成された複写物と2種類あるため、フラグではなくサイズで判定が必要だった.
-        if (getEntitySets().size() == 0) {
-            for (OiyokanSettingsDatabase settingsDatabase : getOiyokanSettingsInstance().getDatabaseList()) {
+            for (OiyokanSettingsDatabase settingsDatabase : getSettingsInstance().getDatabaseList()) {
                 if (OiyokanConstants.IS_TRACE_ODATA_V4)
                     System.err.println("OData v4: Check JDBC Driver: " + settingsDatabase.getJdbcDriver());
                 try {
@@ -106,7 +115,7 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
 
             {
                 OiyokanSettingsDatabase settingsInternalDatabase = OiyokanSettingsUtil
-                        .getOiyokanInternalDatabase(getOiyokanSettingsInstance());
+                        .getOiyokanInternalDatabase(getSettingsInstance());
 
                 try (Connection connInterDb = BasicDbUtil.getConnection(settingsInternalDatabase)) {
                     // テーブルをセットアップ.
@@ -118,7 +127,7 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
                 }
             }
 
-            for (OiyokanSettingsEntitySet entitySetCnof : getOiyokanSettingsInstance().getEntitySetList()) {
+            for (OiyokanSettingsEntitySet entitySetCnof : getSettingsInstance().getEntitySetList()) {
                 // EntitySet の初期セットを実施。
                 getEntitySets().add(new OiyokanCsdlEntitySet(this, entitySetCnof));
             }
@@ -132,7 +141,7 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
     public String getNamespaceIyo() throws ODataApplicationException {
-        return getOiyokanSettingsInstance().getNamespace();
+        return getSettingsInstance().getNamespace();
     }
 
     /**
@@ -142,7 +151,7 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
     public String getContainerNameIyo() throws ODataApplicationException {
-        return getOiyokanSettingsInstance().getContainerName();
+        return getSettingsInstance().getContainerName();
     }
 
     /**

@@ -140,7 +140,7 @@ public class OiyokanInterDb {
                     Locale.ENGLISH);
         }
 
-        final OiyokanSettings iyoSettings = OiyokanCsdlEntityContainer.getOiyokanSettingsInstance();
+        final OiyokanSettings iyoSettings = OiyokanCsdlEntityContainer.getSettingsInstance();
 
         for (String[] sqlFileDef : OIYOKAN_FILE_SQLS) {
             if (OiyokanConstants.IS_TRACE_ODATA_V4)
