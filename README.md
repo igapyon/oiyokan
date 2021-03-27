@@ -1,4 +1,4 @@
-# oiyokan
+# Oiyokan
 
 Oiyokan is an OData v4 server SDK.
 
@@ -11,57 +11,30 @@ Oiyokan is an OData v4 server SDK.
 - Oiyokan provides OData server sample of Sakila DVD rental.
 - Metadata of OData sample is provided at $metadata.
 
-# Try to run oiyokan
+# Try the Oiyokan OData v4 sample server
 
-## Spring Boot Web Server
+## Heroku
+
+You can find the running OData v4 sample server at Heroku.
+
+- https://oiyokan.herokuapp.com/
+
+## Local
+
+You can try OData v4 sample server at your computer.
+
+Check out source code repository and you can run it as Spring Boot Web Server.
 
 ```sh
 mvn clean install spring-boot:run
-```
-
-## Run query
-
-### $metadata
-
-```sh
-http://localhost:8080/odata4.svc/$metadata
-```
-
-### $orderby
-
-```sh
-http://localhost:8080/odata4.svc/MyProducts?$orderby=ID&$top=20&$count=true
-```
-
-### $filter
-
-```sh
-http://localhost:8080/odata4.svc/MyProducts?$top=2001&$filter=Description eq 'MacBook Pro (13-inch, 2020, Thunderbolt 3ポートx 4)' and ID eq 1.0&$count=true&$select=ID,Name
-```
-
-### $search
-
-```sh
-http://localhost:8080/odata4.svc/MyProducts?$top=6&$search=macbook&$count=true&$select=ID
-```
-
-### root
-
-```sh
-http://localhost:8080/odata4.svc/
-```
-
-### internal version
-
-```sh
-http://localhost:8080/odata4.svc/ODataAppInfos?$format=JSON
 ```
 
 # How to setup OData v4 setting
 
 ## oiyokan-settings.json の設定を更新
 
-Oiyokan の設定ファイルを変更して、接続したいデータベース情報を記述します。
+最も重要なのは Oiyokan の設定ファイルを変更して、接続したいデータベース情報を記述することです。
+より詳しい説明はソースコードから読み込むことが可能です。
 
 ```sh
 src/main/resources/oiyokan/oiyokan-settings.json
