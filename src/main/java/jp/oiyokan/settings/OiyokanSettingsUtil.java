@@ -27,6 +27,7 @@ import org.springframework.util.StreamUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jp.oiyokan.OiyokanConstants;
+import jp.oiyokan.OiyokanCsdlEntityContainer;
 import jp.oiyokan.OiyokanMessages;
 import jp.oiyokan.dto.OiyokanSettings;
 import jp.oiyokan.dto.OiyokanSettingsDatabase;
@@ -62,28 +63,12 @@ public class OiyokanSettingsUtil {
     /**
      * OiyokanSettingsDatabase 設定情報を取得.
      * 
-     * TODO getOiyokanDatabase に集合が妥当か?
-     * 
-     * @param settingsOiyokan Oiyokan設定情報.
-     * @return OiyokanSettingsDatabase設定情報.
+     * @param databaseDefName Database setting name.
+     * @return OiyokanSettingsDatabase setting info.
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
-    public static OiyokanSettingsDatabase getOiyokanInternalDatabase(OiyokanSettings settingsOiyokan)
-            throws ODataApplicationException {
-        for (OiyokanSettingsDatabase look : settingsOiyokan.getDatabaseList()) {
-            if (OiyokanConstants.OIYOKAN_INTERNAL_DB.equals(look.getName())) {
-                return look;
-            }
-        }
-
-        // [M025] UNEXPECTED: Database settings NOT found
-        System.err.println(OiyokanMessages.M025 + ": " + OiyokanConstants.OIYOKAN_INTERNAL_DB);
-        throw new ODataApplicationException(OiyokanMessages.M025 + ": " + OiyokanConstants.OIYOKAN_INTERNAL_DB, //
-                500, Locale.ENGLISH);
-    }
-
-    public static OiyokanSettingsDatabase getOiyokanDatabase(OiyokanSettings settingsOiyokan, String databaseDefName)
-            throws ODataApplicationException {
+    public static OiyokanSettingsDatabase getOiyokanDatabase(String databaseDefName) throws ODataApplicationException {
+        final OiyokanSettings settingsOiyokan = OiyokanCsdlEntityContainer.getSettingsInstance();
         for (OiyokanSettingsDatabase look : settingsOiyokan.getDatabaseList()) {
             if (databaseDefName.equals(look.getName())) {
                 return look;

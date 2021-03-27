@@ -19,7 +19,6 @@ import java.sql.Connection;
 
 import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.basic.BasicDbUtil;
-import jp.oiyokan.dto.OiyokanSettings;
 import jp.oiyokan.dto.OiyokanSettingsDatabase;
 import jp.oiyokan.settings.OiyokanSettingsUtil;
 
@@ -32,19 +31,14 @@ class SampleGen01Ocsdlh2ODataTests1Test {
      */
     // @Test
     void test01() throws Exception {
-        final OiyokanSettings settingsOiyokan = OiyokanSettingsUtil.loadOiyokanSettings();
-        OiyokanSettingsDatabase settingsDatabase = null;
-        for (OiyokanSettingsDatabase look : settingsOiyokan.getDatabaseList()) {
-            if (OiyokanConstants.OIYOKAN_INTERNAL_TARGET_DB.equals(look.getName())) {
-                settingsDatabase = look;
-            }
-        }
+        OiyokanSettingsDatabase settingsDatabase = OiyokanSettingsUtil
+                .getOiyokanDatabase(OiyokanConstants.OIYOKAN_INTERNAL_TARGET_DB);
 
         try (Connection connTargetDb = BasicDbUtil.getConnection(settingsDatabase)) {
             // 内部データベースのテーブルをセットアップ.
-            OiyokanInterDb.setupTable(connTargetDb);
+            OiyokanInternalDatabase.setupInternalDatabase();
 
-            System.err.println(OiyokanInterDb.generateCreateOcsdlDdl(connTargetDb, "ODataTest1"));
+            System.err.println(OiyokanInternalDatabase.generateCreateOcsdlDdl(connTargetDb, "ODataTest1"));
 
         }
     }

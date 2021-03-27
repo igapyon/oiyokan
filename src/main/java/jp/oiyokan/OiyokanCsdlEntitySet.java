@@ -22,6 +22,7 @@ import org.apache.olingo.commons.api.edm.provider.CsdlEntitySet;
 import org.apache.olingo.commons.api.edm.provider.CsdlEntityType;
 import org.apache.olingo.server.api.ODataApplicationException;
 
+import jp.oiyokan.OiyokanConstants.DatabaseType;
 import jp.oiyokan.dto.OiyokanSettingsDatabase;
 import jp.oiyokan.dto.OiyokanSettingsEntitySet;
 
@@ -30,21 +31,11 @@ import jp.oiyokan.dto.OiyokanSettingsEntitySet;
  */
 public class OiyokanCsdlEntitySet extends CsdlEntitySet {
     /**
-     * Databaseの型の列挙.
-     */
-    public enum DatabaseType {
-        /** h2 database */
-        H2,
-        /** postgres */
-        PG
-    };
-
-    /**
      * コンテナに関する情報を記憶.
      */
     private OiyokanCsdlEntityContainer csdlEntityContainer = null;
 
-    private DatabaseType dbType = DatabaseType.H2;
+    private DatabaseType dbType = DatabaseType.h2;
 
     private OiyokanSettingsEntitySet settingsEntitySet = null;
 
@@ -110,7 +101,7 @@ public class OiyokanCsdlEntitySet extends CsdlEntitySet {
         this.csdlEntityContainer = containerInfo;
         this.settingsEntitySet = settingsEntitySet;
 
-        for (OiyokanSettingsDatabase look : OiyokanCsdlEntityContainer.getOiyokanSettingsInstance().getDatabaseList()) {
+        for (OiyokanSettingsDatabase look : OiyokanCsdlEntityContainer.getSettingsInstance().getDatabaseList()) {
             if (look.getName().equals(settingsEntitySet.getDatabaseName())) {
                 settingsDatabase = look;
             }
@@ -123,9 +114,9 @@ public class OiyokanCsdlEntitySet extends CsdlEntitySet {
         }
 
         if ("h2".equals(settingsDatabase.getType())) {
-            this.dbType = DatabaseType.H2;
+            this.dbType = DatabaseType.h2;
         } else if ("pg".equals(settingsDatabase.getType())) {
-            this.dbType = DatabaseType.PG;
+            this.dbType = DatabaseType.postgres;
         } else {
             System.err.println("UNEXPECTED: Unknown database type: " + settingsDatabase.getType());
             throw new ODataApplicationException("UNEXPECTED: Unknown database type: " + settingsDatabase.getType(), 500,

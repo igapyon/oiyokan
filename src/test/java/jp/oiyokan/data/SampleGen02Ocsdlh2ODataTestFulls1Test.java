@@ -42,9 +42,9 @@ class SampleGen02Ocsdlh2ODataTestFulls1Test {
 
         try (Connection connTargetDb = BasicDbUtil.getConnection(settingsDatabase)) {
             // 内部データベースのテーブルをセットアップ.
-            OiyokanInterDb.setupTable(connTargetDb);
+            OiyokanInternalDatabase.setupInternalDatabase();
 
-            System.err.println(OiyokanInterDb.generateCreateOcsdlDdl(connTargetDb, "ODataTestFulls1"));
+            System.err.println(OiyokanInternalDatabase.generateCreateOcsdlDdl(connTargetDb, "ODataTestFulls1"));
 
         }
     }
