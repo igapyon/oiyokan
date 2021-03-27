@@ -42,8 +42,10 @@ class BasicODataSampleSklFoundCasesTest {
 
         final ODataResponse resp = handler.process(req);
         final String result = BasicODataSampleTestUtil.stream2String(resp.getContent());
-         System.err.println("result: " + result);
-    //    assertEquals("{\"@odata.context\":\"$metadata#SklStaffLists\",\"@odata.count\":0,\"value\":[]}", result);
+        // System.err.println("result: " + result);
+        assertEquals(
+                "{\"@odata.context\":\"$metadata#SklFilmActors\",\"@odata.count\":1,\"value\":[{\"actor_id\":1,\"film_id\":140,\"last_update\":\"2006-02-15T01:05:03Z\"}]}",
+                result);
         assertEquals(200, resp.getStatusCode());
     }
 }
