@@ -116,7 +116,7 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
 
             {
                 OiyokanSettingsDatabase settingsInterDatabase = OiyokanSettingsUtil
-                        .getOiyokanDatabase(getSettingsInstance(), OiyokanConstants.OIYOKAN_INTERNAL_DB);
+                        .getOiyokanDatabase(OiyokanConstants.OIYOKAN_INTERNAL_DB);
 
                 try (Connection connInterDb = BasicDbUtil.getConnection(settingsInterDatabase)) {
                     // テーブルをセットアップ.

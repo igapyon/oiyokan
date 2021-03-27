@@ -29,10 +29,8 @@ import java.util.Map;
 import org.apache.olingo.server.api.ODataApplicationException;
 
 import jp.oiyokan.OiyokanConstants;
-import jp.oiyokan.OiyokanCsdlEntityContainer;
 import jp.oiyokan.OiyokanMessages;
 import jp.oiyokan.basic.BasicDbUtil;
-import jp.oiyokan.dto.OiyokanSettings;
 import jp.oiyokan.dto.OiyokanSettingsDatabase;
 import jp.oiyokan.settings.OiyokanSettingsUtil;
 
@@ -45,8 +43,8 @@ public class OiyokanInterDb {
      */
     private static final String[][] OIYOKAN_FILE_SQLS = new String[][] { //
             /*
-             * Oiyokan の基本機能を確認およびビルド時の JUnitテストで利用. 変更するとビルドが動作しなくなる場合あり.
-             * この内容は BuildInternalDbTest.java により別途生成.
+             * Oiyokan の基本機能を確認およびビルド時の JUnitテストで利用. 変更するとビルドが動作しなくなる場合あり. この内容は
+             * BuildInternalDbTest.java により別途生成.
              */
             // { OiyokanConstants.OIYOKAN_INTERNAL_TARGET_DB, "oiyokan-test-db.sql" }, //
 
@@ -56,8 +54,7 @@ public class OiyokanInterDb {
             { OiyokanConstants.OIYOKAN_INTERNAL_DB, "oiyokan-test-ocsdl.sql" },
 
             /*
-             * Sakila dvdrental サンプルDB の内容そのもの.
-             * この内容は BuildInternalDbTest.java により別途生成.
+             * Sakila dvdrental サンプルDB の内容そのもの. この内容は BuildInternalDbTest.java により別途生成.
              */
             // { OiyokanConstants.OIYOKAN_INTERNAL_TARGET_DB, "sample-sakila-db.sql" }, //
 
@@ -140,13 +137,11 @@ public class OiyokanInterDb {
                     Locale.ENGLISH);
         }
 
-        final OiyokanSettings iyoSettings = OiyokanCsdlEntityContainer.getSettingsInstance();
-
         for (String[] sqlFileDef : OIYOKAN_FILE_SQLS) {
             if (OiyokanConstants.IS_TRACE_ODATA_V4)
                 System.err.println("OData v4: load: db:" + sqlFileDef[0] + ", sql: " + sqlFileDef[1]);
 
-            OiyokanSettingsDatabase lookDatabase = OiyokanSettingsUtil.getOiyokanDatabase(iyoSettings, sqlFileDef[0]);
+            OiyokanSettingsDatabase lookDatabase = OiyokanSettingsUtil.getOiyokanDatabase(sqlFileDef[0]);
 
             try (Connection connLoookDatabase = BasicDbUtil.getConnection(lookDatabase)) {
                 final String[] sqls = OiyokanResourceSqlUtil.loadOiyokanResourceSql("oiyokan/sql/" + sqlFileDef[1]);

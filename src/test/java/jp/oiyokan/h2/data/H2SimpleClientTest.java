@@ -24,7 +24,6 @@ import org.junit.jupiter.api.Test;
 import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.basic.BasicDbUtil;
 import jp.oiyokan.data.OiyokanInterDb;
-import jp.oiyokan.dto.OiyokanSettings;
 import jp.oiyokan.settings.OiyokanSettingsUtil;
 
 /**
@@ -33,16 +32,14 @@ import jp.oiyokan.settings.OiyokanSettingsUtil;
 class H2SimpleClientTest {
     @Test
     void test01() throws Exception {
-        final OiyokanSettings settingsOiyokan = OiyokanSettingsUtil.loadOiyokanSettings();
-
-        try (Connection conn = BasicDbUtil.getConnection(
-                OiyokanSettingsUtil.getOiyokanDatabase(settingsOiyokan, OiyokanConstants.OIYOKAN_INTERNAL_DB))) {
+        try (Connection conn = BasicDbUtil
+                .getConnection(OiyokanSettingsUtil.getOiyokanDatabase(OiyokanConstants.OIYOKAN_INTERNAL_DB))) {
             // 内部データベースのテーブルをセットアップ.
             OiyokanInterDb.setupTable(conn);
         }
 
-        try (Connection conn = BasicDbUtil.getConnection(
-                OiyokanSettingsUtil.getOiyokanDatabase(settingsOiyokan, OiyokanConstants.OIYOKAN_INTERNAL_TARGET_DB))) {
+        try (Connection conn = BasicDbUtil
+                .getConnection(OiyokanSettingsUtil.getOiyokanDatabase(OiyokanConstants.OIYOKAN_INTERNAL_TARGET_DB))) {
 
             try (var stmt = conn.prepareStatement(
                     "SELECT address_id FROM address WHERE ((address2 IS NULL) AND (address = ?)) LIMIT 2001")) {

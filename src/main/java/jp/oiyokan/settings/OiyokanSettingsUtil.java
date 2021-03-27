@@ -27,6 +27,7 @@ import org.springframework.util.StreamUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jp.oiyokan.OiyokanConstants;
+import jp.oiyokan.OiyokanCsdlEntityContainer;
 import jp.oiyokan.OiyokanMessages;
 import jp.oiyokan.dto.OiyokanSettings;
 import jp.oiyokan.dto.OiyokanSettingsDatabase;
@@ -62,13 +63,12 @@ public class OiyokanSettingsUtil {
     /**
      * OiyokanSettingsDatabase 設定情報を取得.
      * 
-     * @param settingsOiyokan Oiyokan setting info.
      * @param databaseDefName Database setting name.
      * @return OiyokanSettingsDatabase setting info.
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
-    public static OiyokanSettingsDatabase getOiyokanDatabase(OiyokanSettings settingsOiyokan, String databaseDefName)
-            throws ODataApplicationException {
+    public static OiyokanSettingsDatabase getOiyokanDatabase(String databaseDefName) throws ODataApplicationException {
+        final OiyokanSettings settingsOiyokan = OiyokanCsdlEntityContainer.getSettingsInstance();
         for (OiyokanSettingsDatabase look : settingsOiyokan.getDatabaseList()) {
             if (databaseDefName.equals(look.getName())) {
                 return look;

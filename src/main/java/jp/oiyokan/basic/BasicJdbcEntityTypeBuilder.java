@@ -31,7 +31,6 @@ import org.apache.olingo.commons.api.edm.provider.CsdlPropertyRef;
 import org.apache.olingo.server.api.ODataApplicationException;
 
 import jp.oiyokan.OiyokanConstants;
-import jp.oiyokan.OiyokanCsdlEntityContainer;
 import jp.oiyokan.OiyokanCsdlEntitySet;
 import jp.oiyokan.OiyokanMessages;
 import jp.oiyokan.data.OiyokanInterDb;
@@ -68,8 +67,8 @@ public class BasicJdbcEntityTypeBuilder {
     public CsdlEntityType getEntityType() throws ODataApplicationException {
         // インメモリ作業データベースに接続.
         // EntityTypeはインメモリ内部データベースの情報をもとに構築.
-        OiyokanSettingsDatabase settingsInternalDatabase = OiyokanSettingsUtil.getOiyokanDatabase(
-                OiyokanCsdlEntityContainer.getSettingsInstance(), OiyokanConstants.OIYOKAN_INTERNAL_DB);
+        OiyokanSettingsDatabase settingsInternalDatabase = OiyokanSettingsUtil
+                .getOiyokanDatabase(OiyokanConstants.OIYOKAN_INTERNAL_DB);
 
         try (Connection connInterDb = BasicDbUtil.getConnection(settingsInternalDatabase)) {
             // テーブルをセットアップ.
