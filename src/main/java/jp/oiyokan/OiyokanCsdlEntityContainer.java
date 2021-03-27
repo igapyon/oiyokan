@@ -145,23 +145,6 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
     }
 
     /**
-     * エンティティ名からエンティティセットを取得。
-     * 
-     * @param entitySetName エンティティ名.
-     * @return エンティティセット.
-     */
-    public OiyokanCsdlEntitySet getEntitySetByEntityNameIyo(String entitySetName) {
-        for (CsdlEntitySet look : this.getEntitySets()) {
-            OiyokanCsdlEntitySet look2 = (OiyokanCsdlEntitySet) look;
-            if (look2.getEntityNameIyo().equals(entitySetName)) {
-                return look2;
-            }
-        }
-
-        return null;
-    }
-
-    /**
      * エンティティ名FQNをもとに エンティティセットを取得.
      * 
      * @param entityNameFQN エンティティ名FQN.
@@ -197,11 +180,15 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
             return cachedCsdlEntityTypeMap.get(entityTypeName.getFullQualifiedNameAsString());
         }
 
+        // 処理したことのない EntityType。これから型情報を構築。
+        // 内部データベースをもとに Ocsdl 形式を構築するため、リソースの型によらず常に以下のクラスで処理.
         BasicJdbcEntityTypeBuilder entityTypeBuilder = new BasicJdbcEntityTypeBuilder(
                 getEntitySetByEntityNameFqnIyo(entityTypeName));
+
         // キャッシュに記憶.
         CsdlEntityType newEntityType = entityTypeBuilder.getEntityType();
         cachedCsdlEntityTypeMap.put(entityTypeName.getFullQualifiedNameAsString(), newEntityType);
+
         return newEntityType;
     }
 }

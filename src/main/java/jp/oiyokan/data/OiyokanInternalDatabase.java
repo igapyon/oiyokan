@@ -30,7 +30,7 @@ import org.apache.olingo.server.api.ODataApplicationException;
 
 import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanMessages;
-import jp.oiyokan.basic.BasicDbUtil;
+import jp.oiyokan.basic.BasicJdbcUtil;
 import jp.oiyokan.dto.OiyokanSettingsDatabase;
 import jp.oiyokan.settings.OiyokanSettingsUtil;
 
@@ -84,7 +84,7 @@ public class OiyokanInternalDatabase {
         OiyokanSettingsDatabase settingsInterDatabase = OiyokanSettingsUtil
                 .getOiyokanDatabase(OiyokanConstants.OIYOKAN_INTERNAL_DB);
 
-        try (Connection connInterDb = BasicDbUtil.getConnection(settingsInterDatabase)) {
+        try (Connection connInterDb = BasicJdbcUtil.getConnection(settingsInterDatabase)) {
             // Internal Database の バージョン情報および Ocsdl テーブルを setup.
 
             // Oiyokan が動作する上で必要なテーブルのセットアップ.
@@ -125,7 +125,7 @@ public class OiyokanInternalDatabase {
             ///////////////////////////////////////////
             // ODataAppInfos にバージョン情報などデータの追加
             try (var stmt = connInterDb.prepareStatement("INSERT INTO ODataAppInfos (KeyName, KeyValue) VALUES ("
-                    + BasicDbUtil.getQueryPlaceholderString(2) + ")")) {
+                    + BasicJdbcUtil.getQueryPlaceholderString(2) + ")")) {
                 stmt.setString(1, "Version");
                 stmt.setString(2, OiyokanConstants.VERSION);
                 stmt.executeUpdate();
@@ -148,7 +148,7 @@ public class OiyokanInternalDatabase {
 
                 OiyokanSettingsDatabase lookDatabase = OiyokanSettingsUtil.getOiyokanDatabase(sqlFileDef[0]);
 
-                try (Connection connLoookDatabase = BasicDbUtil.getConnection(lookDatabase)) {
+                try (Connection connLoookDatabase = BasicJdbcUtil.getConnection(lookDatabase)) {
                     final String[] sqls = OiyokanResourceSqlUtil.loadOiyokanResourceSql("oiyokan/sql/" + sqlFileDef[1]);
                     for (String sql : sqls) {
                         try (var stmt = connLoookDatabase.prepareStatement(sql.trim())) {

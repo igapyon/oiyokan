@@ -96,6 +96,7 @@ public class OiyokanEntityCollectionProcessor implements EntityCollectionProcess
             // 要素セットの指定をもとに要素コレクションを取得.
             // これがデータ本体に該当.
             // ここでは h2 database のデータ構築実装を呼び出している.
+            // TODO FIXME ここでは DatabaseType に従って処理を分岐すべき.
             final EntityCollection eCollection = BasicJdbcEntityCollectionBuilder.build(edmEntitySet, uriInfo);
 
             // 指定のレスポンスフォーマットに合致する直列化を準備.

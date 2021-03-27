@@ -22,7 +22,7 @@ import java.sql.Connection;
 import org.junit.jupiter.api.Test;
 
 import jp.oiyokan.OiyokanConstants;
-import jp.oiyokan.basic.BasicDbUtil;
+import jp.oiyokan.basic.BasicJdbcUtil;
 import jp.oiyokan.data.OiyokanInternalDatabase;
 import jp.oiyokan.settings.OiyokanSettingsUtil;
 
@@ -32,13 +32,13 @@ import jp.oiyokan.settings.OiyokanSettingsUtil;
 class H2SimpleClientTest {
     @Test
     void test01() throws Exception {
-        try (Connection conn = BasicDbUtil
+        try (Connection conn = BasicJdbcUtil
                 .getConnection(OiyokanSettingsUtil.getOiyokanDatabase(OiyokanConstants.OIYOKAN_INTERNAL_DB))) {
             // 内部データベースのテーブルをセットアップ.
             OiyokanInternalDatabase.setupInternalDatabase();
         }
 
-        try (Connection conn = BasicDbUtil
+        try (Connection conn = BasicJdbcUtil
                 .getConnection(OiyokanSettingsUtil.getOiyokanDatabase(OiyokanConstants.OIYOKAN_INTERNAL_TARGET_DB))) {
 
             try (var stmt = conn.prepareStatement(

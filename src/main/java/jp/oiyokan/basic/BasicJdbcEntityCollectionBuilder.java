@@ -65,22 +65,21 @@ public class BasicJdbcEntityCollectionBuilder {
             return eCollection;
         }
 
-        OiyokanCsdlEntitySet eSetTarget = null;
-        String targetEntityName = null;
-        for (CsdlEntitySet eSetProvided : provider.getEntityContainer().getEntitySets()) {
-            if (edmEntitySet.getName().equals(eSetProvided.getName())) {
-                eSetTarget = (OiyokanCsdlEntitySet) eSetProvided;
-                targetEntityName = eSetProvided.getName();
+        OiyokanCsdlEntitySet entitySet = null;
+        for (CsdlEntitySet look : provider.getEntityContainer().getEntitySets()) {
+            if (edmEntitySet.getName().equals(look.getName())) {
+                entitySet = (OiyokanCsdlEntitySet) look;
                 break;
             }
         }
 
-        if (targetEntityName == null) {
+        if (entitySet == null) {
             // 処理対象外の要素セットです. 処理せずに戻します.
             return eCollection;
         }
 
-        // 対応しない処理を拒絶するための記述.
+        //////////////////////////////////////////////
+        // Oiyokan が対応しない処理を拒絶するための記述.
         if (uriInfo.getApplyOption() != null) {
             // [M011] NOT SUPPORTED: URI: $apply
             System.err.println(OiyokanMessages.M011);
@@ -102,8 +101,8 @@ public class BasicJdbcEntityCollectionBuilder {
             throw new ODataApplicationException(OiyokanMessages.M014, 500, Locale.ENGLISH);
         }
 
-        // インメモリ作業データベースに接続.
-        try (Connection connTargetDb = BasicDbUtil.getConnection(eSetTarget.getSettingsDatabase())) {
+        // データベースに接続.
+        try (Connection connTargetDb = BasicJdbcUtil.getConnection(entitySet.getSettingsDatabase())) {
             if (uriInfo.getSearchOption() != null) {
                 // $search.
                 new TinyH2TrialFullTextSearch().process(connTargetDb, edmEntitySet, uriInfo, eCollection);
@@ -112,11 +111,11 @@ public class BasicJdbcEntityCollectionBuilder {
 
             // 件数カウントがONの場合はカウント処理を実行。
             if (uriInfo.getCountOption() != null && uriInfo.getCountOption().getValue()) {
-                processCountQuery(eSetTarget, uriInfo, connTargetDb, eCollection);
+                processCountQuery(entitySet, uriInfo, connTargetDb, eCollection);
             }
 
             // 実際のデータ取得処理を実行。
-            processCollectionQuery(eSetTarget, uriInfo, connTargetDb, eCollection);
+            processCollectionQuery(entitySet, uriInfo, connTargetDb, eCollection);
 
             return eCollection;
         } catch (SQLException ex) {
@@ -126,11 +125,11 @@ public class BasicJdbcEntityCollectionBuilder {
         }
     }
 
-    private static void processCountQuery(OiyokanCsdlEntitySet eSetTarget, UriInfo uriInfo, Connection connTargetDb,
+    private static void processCountQuery(OiyokanCsdlEntitySet entitySet, UriInfo uriInfo, Connection connTargetDb,
             EntityCollection eCollection) throws ODataApplicationException {
         // 件数をカウントして設定。
-        BasicSqlBuilder tinySql = new BasicSqlBuilder(eSetTarget.getSettingsDatabase());
-        tinySql.getSqlInfo().setEntitySet((OiyokanCsdlEntitySet) eSetTarget);
+        BasicSqlBuilder tinySql = new BasicSqlBuilder(entitySet.getSettingsDatabase());
+        tinySql.getSqlInfo().setEntitySet((OiyokanCsdlEntitySet) entitySet);
         tinySql.getSelectCountQuery(uriInfo);
         final String sql = tinySql.getSqlInfo().getSqlBuilder().toString();
 
@@ -141,7 +140,7 @@ public class BasicJdbcEntityCollectionBuilder {
         try (var stmt = connTargetDb.prepareStatement(sql)) {
             int column = 1;
             for (Object look : tinySql.getSqlInfo().getSqlParamList()) {
-                BasicDbUtil.bindPreparedParameter(stmt, column++, look);
+                BasicJdbcUtil.bindPreparedParameter(stmt, column++, look);
             }
 
             stmt.executeQuery();
@@ -157,12 +156,12 @@ public class BasicJdbcEntityCollectionBuilder {
         eCollection.setCount(countWithWhere);
     }
 
-    private static void processCollectionQuery(OiyokanCsdlEntitySet eSetTarget, UriInfo uriInfo,
-            Connection connTargetDb, EntityCollection eCollection) throws ODataApplicationException {
-        BasicSqlBuilder tinySql = new BasicSqlBuilder(eSetTarget.getSettingsDatabase());
-        tinySql.getSqlInfo().setEntitySet((OiyokanCsdlEntitySet) eSetTarget);
+    private static void processCollectionQuery(OiyokanCsdlEntitySet entitySet, UriInfo uriInfo, Connection connTargetDb,
+            EntityCollection eCollection) throws ODataApplicationException {
+        BasicSqlBuilder tinySql = new BasicSqlBuilder(entitySet.getSettingsDatabase());
+        tinySql.getSqlInfo().setEntitySet((OiyokanCsdlEntitySet) entitySet);
 
-        tinySql.getSelectQuery(uriInfo, eSetTarget.getSettingsDatabase());
+        tinySql.getSelectQuery(uriInfo, entitySet.getSettingsDatabase());
         final String sql = tinySql.getSqlInfo().getSqlBuilder().toString();
 
         if (OiyokanConstants.IS_TRACE_ODATA_V4)
@@ -171,7 +170,7 @@ public class BasicJdbcEntityCollectionBuilder {
         try (var stmt = connTargetDb.prepareStatement(sql)) {
             int idxColumn = 1;
             for (Object look : tinySql.getSqlInfo().getSqlParamList()) {
-                BasicDbUtil.bindPreparedParameter(stmt, idxColumn++, look);
+                BasicJdbcUtil.bindPreparedParameter(stmt, idxColumn++, look);
             }
 
             stmt.executeQuery();
@@ -183,16 +182,16 @@ public class BasicJdbcEntityCollectionBuilder {
                 }
                 final Entity ent = new Entity();
                 for (int column = 1; column <= rsmeta.getColumnCount(); column++) {
-                    Property prop = BasicDbUtil.resultSet2Property(rset, rsmeta, column, eSetTarget);
+                    Property prop = BasicJdbcUtil.resultSet2Property(rset, rsmeta, column, entitySet);
                     ent.addProperty(prop);
                 }
 
-                if (eSetTarget.getEntityType().getKey().size() == 0) {
+                if (entitySet.getEntityType().getKey().size() == 0) {
                     // キーが存在しないのは OData としてはまずい。
                     // 別の箇所にて標準エラー出力にて報告済み。O
                 } else {
                     // キーが存在する場合は、IDとして設定。
-                    OiyokanCsdlEntitySet iyoEntitySet = (OiyokanCsdlEntitySet) eSetTarget;
+                    OiyokanCsdlEntitySet iyoEntitySet = (OiyokanCsdlEntitySet) entitySet;
                     String keyValue = "";
                     for (CsdlPropertyRef look : iyoEntitySet.getEntityType().getKey()) {
                         if (keyValue.length() > 0) {
@@ -205,7 +204,7 @@ public class BasicJdbcEntityCollectionBuilder {
                         idVal = idVal.replaceAll("[' '|':']", "_");
                         keyValue += idVal;
                     }
-                    ent.setId(createId(eSetTarget.getName(), keyValue));
+                    ent.setId(createId(entitySet.getName(), keyValue));
                 }
 
                 eCollection.getEntities().add(ent);

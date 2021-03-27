@@ -43,12 +43,12 @@ import jp.oiyokan.settings.OiyokanNamingUtil;
 /**
  * Oiyokan 関連のDBまわりユーティリティクラス.
  */
-public class BasicDbUtil {
-    private BasicDbUtil() {
+public class BasicJdbcUtil {
+    private BasicJdbcUtil() {
     }
 
     /**
-     * 内部データベースへのDB接続を取得します。
+     * 指定データベースへのDB接続を取得します。
      * 
      * @param settingsDatabase データベース設定情報.
      * @return データベース接続.
@@ -64,8 +64,10 @@ public class BasicDbUtil {
 
         try {
             if (settingsDatabase.getJdbcUser() == null || settingsDatabase.getJdbcUser().trim().length() == 0) {
+                // User が指定ない場合はURLで接続.
                 conn = DriverManager.getConnection(settingsDatabase.getJdbcUrl());
             } else {
+                // User が指定ある場合は user と pass を利用.
                 conn = DriverManager.getConnection(settingsDatabase.getJdbcUrl(), settingsDatabase.getJdbcUser(),
                         settingsDatabase.getJdbcPass());
             }

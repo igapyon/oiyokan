@@ -15,6 +15,9 @@
  */
 package jp.oiyokan;
 
+/**
+ * Messages of Oiyokan.
+ */
 public class OiyokanMessages {
     public static final String M001 = "[M001] Can't decode specified decodec url";
     public static final String M002 = "[M002] UNEXPECTED: Illegal data type in database settings";
