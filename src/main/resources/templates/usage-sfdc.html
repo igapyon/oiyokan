@@ -12,7 +12,7 @@
 
   <title>Usage - Salesforce</title>
   <meta property="og:title" content="Usage - Salesforce" />
-  <meta name="description" content="How to connect to Oiyokan from Salesforce.">
+  <meta name="description" content="How to connect to Oiyokan OData server from Salesforce.">
   <meta property="og:description" content="How to connect to Oiyokan from Salesforce." />
   <meta property="og:url" content="https://oiyokan.herokuapp.com/usage-sfdc.html" />
   <meta property="og:type" content="article" />
@@ -103,10 +103,10 @@
   </div>
 
   <div class="slds-p-top_medium slds-p-left_medium">
-    <div class="slds-panel slds-size_medium slds-is-open" aria-hidden="false">
+    <div class="slds-panel slds-size_x-large slds-is-open" aria-hidden="false">
       <div class="slds-panel__header">
-        <h2 class="slds-panel__header-title slds-text-heading_small slds-truncate" title="Panel Header">Find External
-          Datasource</h2>
+        <h2 class="slds-panel__header-title slds-text-heading_small slds-truncate" title="Panel Header">How to use
+          Oiyokan OData server from Salesforce</h2>
         <button class="slds-button slds-button_icon slds-button_icon-small slds-panel__close"
           title="Collapse Panel Header">
           <svg class="slds-button__icon" aria-hidden="true">
@@ -114,7 +114,24 @@
           </svg>
         </button>
       </div>
-      <div class="slds-panel__body">Find External Datasource using Quick Find, and click it.</div>
+      <div class="slds-panel__body">This article describes how to connect to the Oiyokan OData server from Salesforce.
+      </div>
+    </div>
+  </div>
+
+  <div class="slds-p-top_medium slds-p-left_medium">
+    <div class="slds-panel slds-size_medium slds-is-open" aria-hidden="false">
+      <div class="slds-panel__header">
+        <h2 class="slds-panel__header-title slds-text-heading_small slds-truncate" title="Panel Header">Find External
+          Data Source</h2>
+        <button class="slds-button slds-button_icon slds-button_icon-small slds-panel__close"
+          title="Collapse Panel Header">
+          <svg class="slds-button__icon" aria-hidden="true">
+            <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+          </svg>
+        </button>
+      </div>
+      <div class="slds-panel__body">Find External Data Source using Quick Find, and click it.</div>
       <div class="slds-var-p-around_medium">
         <img src="./usage/sfdc/usage-sfdc-ext01.png" />
       </div>
@@ -124,7 +141,8 @@
   <div class="slds-p-top_medium slds-p-left_medium">
     <div class="slds-panel slds-size_large slds-is-open" aria-hidden="false">
       <div class="slds-panel__header">
-        <h2 class="slds-panel__header-title slds-text-heading_small slds-truncate" title="Panel Header">Create New External Data Source</h2>
+        <h2 class="slds-panel__header-title slds-text-heading_small slds-truncate" title="Panel Header">Create New
+          External Data Source</h2>
         <button class="slds-button slds-button_icon slds-button_icon-small slds-panel__close"
           title="Collapse Panel Header">
           <svg class="slds-button__icon" aria-hidden="true">
@@ -142,7 +160,8 @@
   <div class="slds-p-top_medium slds-p-left_medium">
     <div class="slds-panel slds-size_x-large slds-is-open" aria-hidden="false">
       <div class="slds-panel__header">
-        <h2 class="slds-panel__header-title slds-text-heading_small slds-truncate" title="Panel Header">Setup New External Data Source</h2>
+        <h2 class="slds-panel__header-title slds-text-heading_small slds-truncate" title="Panel Header">Setup New
+          External Data Source</h2>
         <button class="slds-button slds-button_icon slds-button_icon-small slds-panel__close"
           title="Collapse Panel Header">
           <svg class="slds-button__icon" aria-hidden="true">
@@ -150,7 +169,8 @@
           </svg>
         </button>
       </div>
-      <div class="slds-panel__body">Fill input field like below. Type should be Salesforce Connect: OData 4.0. URL should be https://oiyokan.herokuapp.com/odata4.svc/. And click Save.</div>
+      <div class="slds-panel__body">Fill input field like below. Type should be Salesforce Connect: OData 4.0. URL
+        should be https://oiyokan.herokuapp.com/odata4.svc/. And click Save.</div>
       <div class="slds-var-p-around_medium">
         <img src="./usage/sfdc/usage-sfdc-ext03.png" />
       </div>
@@ -160,7 +180,8 @@
   <div class="slds-p-top_medium slds-p-left_medium">
     <div class="slds-panel slds-size_large slds-is-open" aria-hidden="false">
       <div class="slds-panel__header">
-        <h2 class="slds-panel__header-title slds-text-heading_small slds-truncate" title="Panel Header">Click Validate and Sync</h2>
+        <h2 class="slds-panel__header-title slds-text-heading_small slds-truncate" title="Panel Header">Click Validate
+          and Sync</h2>
         <button class="slds-button slds-button_icon slds-button_icon-small slds-panel__close"
           title="Collapse Panel Header">
           <svg class="slds-button__icon" aria-hidden="true">
@@ -168,7 +189,8 @@
           </svg>
         </button>
       </div>
-      <div class="slds-panel__body">Click Validate and Sync to validate odata settings.</div>
+      <div class="slds-panel__body">Click Validate and Sync button to validate odata settings. If you see a timeout
+        message, try again later. It may be resolved.</div>
       <div class="slds-var-p-around_medium">
         <img src="./usage/sfdc/usage-sfdc-ext04.png" />
       </div>
@@ -178,7 +200,8 @@
   <div class="slds-p-top_medium slds-p-left_medium">
     <div class="slds-panel slds-size_large slds-is-open" aria-hidden="false">
       <div class="slds-panel__header">
-        <h2 class="slds-panel__header-title slds-text-heading_small slds-truncate" title="Panel Header">Select EntitySet (Table)</h2>
+        <h2 class="slds-panel__header-title slds-text-heading_small slds-truncate" title="Panel Header">Select EntitySet
+          (Table)</h2>
         <button class="slds-button slds-button_icon slds-button_icon-small slds-panel__close"
           title="Collapse Panel Header">
           <svg class="slds-button__icon" aria-hidden="true">
@@ -186,17 +209,19 @@
           </svg>
         </button>
       </div>
-      <div class="slds-panel__body">Select some EntitySet (Table) from list want to connect and check them. And click Sync.</div>
+      <div class="slds-panel__body">Select some EntitySet (Table) from list want to connect and check them. And click
+        Sync.</div>
       <div class="slds-var-p-around_medium">
         <img src="./usage/sfdc/usage-sfdc-ext05.png" />
       </div>
     </div>
-  </div>  
+  </div>
 
   <div class="slds-p-top_medium slds-p-left_medium">
     <div class="slds-panel slds-size_x-large slds-is-open" aria-hidden="false">
       <div class="slds-panel__header">
-        <h2 class="slds-panel__header-title slds-text-heading_small slds-truncate" title="Panel Header">Validate EntitySet (Table)</h2>
+        <h2 class="slds-panel__header-title slds-text-heading_small slds-truncate" title="Panel Header">Validate
+          EntitySet (Table)</h2>
         <button class="slds-button slds-button_icon slds-button_icon-small slds-panel__close"
           title="Collapse Panel Header">
           <svg class="slds-button__icon" aria-hidden="true">
@@ -214,7 +239,8 @@
   <div class="slds-p-top_medium slds-p-left_medium">
     <div class="slds-panel slds-size_large slds-is-open" aria-hidden="false">
       <div class="slds-panel__header">
-        <h2 class="slds-panel__header-title slds-text-heading_small slds-truncate" title="Panel Header">Click Run Queries</h2>
+        <h2 class="slds-panel__header-title slds-text-heading_small slds-truncate" title="Panel Header">Click Run
+          Queries</h2>
         <button class="slds-button slds-button_icon slds-button_icon-small slds-panel__close"
           title="Collapse Panel Header">
           <svg class="slds-button__icon" aria-hidden="true">
@@ -232,7 +258,8 @@
   <div class="slds-p-top_medium slds-p-left_medium">
     <div class="slds-panel slds-size_x-large slds-is-open" aria-hidden="false">
       <div class="slds-panel__header">
-        <h2 class="slds-panel__header-title slds-text-heading_small slds-truncate" title="Panel Header">Check result of validation</h2>
+        <h2 class="slds-panel__header-title slds-text-heading_small slds-truncate" title="Panel Header">Check result of
+          validation</h2>
         <button class="slds-button slds-button_icon slds-button_icon-small slds-panel__close"
           title="Collapse Panel Header">
           <svg class="slds-button__icon" aria-hidden="true">
@@ -250,7 +277,8 @@
   <div class="slds-p-top_medium slds-p-left_medium">
     <div class="slds-panel slds-size_x-large slds-is-open" aria-hidden="false">
       <div class="slds-panel__header">
-        <h2 class="slds-panel__header-title slds-text-heading_small slds-truncate" title="Panel Header">Fields and Relationships at Object Manager</h2>
+        <h2 class="slds-panel__header-title slds-text-heading_small slds-truncate" title="Panel Header">Fields and
+          Relationships at Object Manager</h2>
         <button class="slds-button slds-button_icon slds-button_icon-small slds-panel__close"
           title="Collapse Panel Header">
           <svg class="slds-button__icon" aria-hidden="true">
@@ -262,6 +290,21 @@
       <div class="slds-var-p-around_medium">
         <img src="./usage/sfdc/usage-sfdc-ext09.png" />
       </div>
+    </div>
+  </div>
+
+  <div class="slds-p-top_medium slds-p-left_medium">
+    <div class="slds-panel slds-size_x-large slds-is-open" aria-hidden="false">
+      <div class="slds-panel__header">
+        <h2 class="slds-panel__header-title slds-text-heading_small slds-truncate" title="Panel Header">End of this article</h2>
+        <button class="slds-button slds-button_icon slds-button_icon-small slds-panel__close"
+          title="Collapse Panel Header">
+          <svg class="slds-button__icon" aria-hidden="true">
+            <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+          </svg>
+        </button>
+      </div>
+      <div class="slds-panel__body">With the above steps, you can use Oiyokan as a read-only external object from Salesforc. Here is the end of this article. Thank you very much reading this article.</div>
     </div>
   </div>
 
