@@ -78,6 +78,7 @@ oiyokan プロジェクトは、OData v4 server のシンプルなサンプル(h
 
 ## TODO
 
+- favicon.ico ファイルの配置。
 - 入力パラメータのバリエーション試験を実施。
 - NorthWindサンプルの組み込みを検討する。
 - OData のサイトに掲載する
