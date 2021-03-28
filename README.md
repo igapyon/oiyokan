@@ -78,8 +78,9 @@ oiyokan プロジェクトは、OData v4 server のシンプルなサンプル(h
 
 ## TODO
 
+- テストDBに BigInt などの列を追加。型チェックの漏れチェック。
+- ODataからの入力パラメータのバリエーション試験を実施。
 - favicon.ico ファイルの配置。
-- 入力パラメータのバリエーション試験を実施。
 - NorthWindサンプルの組み込みを検討する。
 - OData のサイトに掲載する
 - README に oiyokan-naming-settings.json の記述についての記載を追記.
