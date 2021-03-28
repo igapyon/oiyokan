@@ -78,10 +78,12 @@ oiyokan プロジェクトは、OData v4 server のシンプルなサンプル(h
 
 ## TODO
 
-- Sakila のサンプルアクセスの $filter や $orderby などをもう少し良いものにする。
+- 入力パラメータのバリエーション試験を実施。
+- NorthWindサンプルの組み込みを検討する。
 - OData のサイトに掲載する
 - README に oiyokan-naming-settings.json の記述についての記載を追記.
 - サンプル EntitySet の html説明について Card 型に変更したい
+- モバイルデバイスから Web サイトにアクセスすると画面が崩れる。
 - BasicSqlExprExpander の通過していない箇所のテスト.
 - Sakila DVDレンタルのサンプル (SklActors 等)、ODataTests1 を ON/OFFする手順またはプログラム実装を記述.
 - 認証の各種実験。
