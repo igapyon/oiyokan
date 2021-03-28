@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/design-system/2.14.3/styles/salesforce-lightning-design-system.min.css"
+    rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta charset="UTF-8" />
+
+  <title>Usage - Salesforce</title>
+  <meta property="og:title" content="Usage - Salesforce" />
+  <meta name="description" content="How to connect to Oiyokan from Salesforce.">
+  <meta property="og:description" content="How to connect to Oiyokan from Salesforce." />
+  <meta property="og:url" content="https://oiyokan.herokuapp.com/usage-sfdc.html" />
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="Oiyokan v4 Server SDK" />
+  <meta property="og:image" content="https://www.nuget.org/profiles/OData/avatar?imageSize=256" />
+</head>
+
+<body>
+  <div class="slds-context-bar">
+    <div class="slds-context-bar__primary">
+      <div
+        class="slds-context-bar__item slds-context-bar__dropdown-trigger slds-dropdown-trigger slds-dropdown-trigger_click slds-no-hover">
+        <div class="slds-context-bar__icon-action">
+          <button class="slds-button slds-icon-waffle_container slds-context-bar__button"
+            title="No application at this moment.">
+            <span class="slds-icon-waffle">
+              <span class="slds-r1"></span>
+              <span class="slds-r2"></span>
+              <span class="slds-r3"></span>
+              <span class="slds-r4"></span>
+              <span class="slds-r5"></span>
+              <span class="slds-r6"></span>
+              <span class="slds-r7"></span>
+              <span class="slds-r8"></span>
+              <span class="slds-r9"></span>
+            </span>
+            <span class="slds-assistive-text">Open App Launcher</span>
+          </button>
+        </div>
+        <span class="slds-context-bar__label-action slds-context-bar__app-name">
+          <span class="slds-truncate" title="Oiyokan OData v4">Oiyokan OData v4</span>
+        </span>
+      </div>
+    </div>
+    <nav class="slds-context-bar__secondary" role="navigation">
+      <ul class="slds-grid">
+        <li class="slds-context-bar__item">
+          <a href="index.html" class="slds-context-bar__label-action" title="Home">
+            <span class="slds-truncate" title="Home">Home</span>
+          </a>
+        </li>
+        <li class="slds-context-bar__item">
+          <a href="#" class="slds-context-bar__label-action" title="Dvd Rental">
+            <span class="slds-truncate" title="Dvd Rental">Sakila DVD Rental</span>
+          </a>
+        </li>
+        <li class="slds-context-bar__item">
+          <a href="unittest.html" class="slds-context-bar__label-action" title="Oiyokan Basic Test">
+            <span class="slds-truncate" title="Oiyokan Basic Test">Oiyokan Unit Test</span>
+          </a>
+        </li>
+        <li class="slds-context-bar__item slds-is-active">
+          <a href="usage-sfdc.html" class="slds-context-bar__label-action" title="Usage">
+            <span class="slds-assistive-text">Current Page:</span>
+            <span class="slds-truncate" title="Usage">Usage</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+
+  <div class="slds-page-header">
+    <div class="slds-page-header__row">
+      <div class="slds-page-header__col-title">
+        <div class="slds-media">
+          <div class="slds-media__figure">
+            <span class="slds-icon_container slds-icon-standard-account" title="account">
+              <svg class="slds-icon slds-page-header__icon" aria-hidden="true">
+                <use xlink:href="/assets/icons/standard-sprite/svg/symbols.svg#account"></use>
+              </svg>
+              <span class="slds-assistive-text">Usage - Salesforce</span>
+            </span>
+          </div>
+          <div class="slds-media__body">
+            <div class="slds-page-header__name">
+              <div class="slds-page-header__name-title">
+                <h1>
+                  <span class="slds-page-header__title slds-truncate" title="Usage - Salesforce">Usage -
+                    Salesforce</span>
+                </h1>
+              </div>
+            </div>
+            <p class="slds-page-header__name-meta">How to connect to Oiyokan from Salesforce.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slds-p-top_medium slds-p-left_medium">
+    <div class="slds-panel slds-size_medium slds-is-open" aria-hidden="false">
+      <div class="slds-panel__header">
+        <h2 class="slds-panel__header-title slds-text-heading_small slds-truncate" title="Panel Header">Find External
+          Datasource</h2>
+        <button class="slds-button slds-button_icon slds-button_icon-small slds-panel__close"
+          title="Collapse Panel Header">
+          <svg class="slds-button__icon" aria-hidden="true">
+            <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+          </svg>
+        </button>
+      </div>
+      <div class="slds-panel__body">Find External Datasource using Quick Find, and click it.</div>
+      <div class="slds-var-p-around_medium">
+        <img src="./usage/sfdc/usage-sfdc-ext01.png" />
+      </div>
+    </div>
+  </div>
+
+  <div class="slds-p-top_medium slds-p-left_medium">
+    <div class="slds-panel slds-size_large slds-is-open" aria-hidden="false">
+      <div class="slds-panel__header">
+        <h2 class="slds-panel__header-title slds-text-heading_small slds-truncate" title="Panel Header">Create New External Data Source</h2>
+        <button class="slds-button slds-button_icon slds-button_icon-small slds-panel__close"
+          title="Collapse Panel Header">
+          <svg class="slds-button__icon" aria-hidden="true">
+            <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+          </svg>
+        </button>
+      </div>
+      <div class="slds-panel__body">Click New External Data Source to create new External Data Source.</div>
+      <div class="slds-var-p-around_medium">
+        <img src="./usage/sfdc/usage-sfdc-ext02.png" />
+      </div>
+    </div>
+  </div>
+
+  <div class="slds-p-top_medium slds-p-left_medium">
+    <div class="slds-panel slds-size_x-large slds-is-open" aria-hidden="false">
+      <div class="slds-panel__header">
+        <h2 class="slds-panel__header-title slds-text-heading_small slds-truncate" title="Panel Header">Setup New External Data Source</h2>
+        <button class="slds-button slds-button_icon slds-button_icon-small slds-panel__close"
+          title="Collapse Panel Header">
+          <svg class="slds-button__icon" aria-hidden="true">
+            <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+          </svg>
+        </button>
+      </div>
+      <div class="slds-panel__body">Fill input field like below. Type should be Salesforce Connect: OData 4.0. URL should be https://oiyokan.herokuapp.com/odata4.svc/. And click Save.</div>
+      <div class="slds-var-p-around_medium">
+        <img src="./usage/sfdc/usage-sfdc-ext03.png" />
+      </div>
+    </div>
+  </div>
+
+  <div class="slds-p-top_medium slds-p-left_medium">
+    <div class="slds-panel slds-size_large slds-is-open" aria-hidden="false">
+      <div class="slds-panel__header">
+        <h2 class="slds-panel__header-title slds-text-heading_small slds-truncate" title="Panel Header">Click Validate and Sync</h2>
+        <button class="slds-button slds-button_icon slds-button_icon-small slds-panel__close"
+          title="Collapse Panel Header">
+          <svg class="slds-button__icon" aria-hidden="true">
+            <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+          </svg>
+        </button>
+      </div>
+      <div class="slds-panel__body">Click Validate and Sync to validate odata settings.</div>
+      <div class="slds-var-p-around_medium">
+        <img src="./usage/sfdc/usage-sfdc-ext04.png" />
+      </div>
+    </div>
+  </div>
+
+  <div class="slds-p-top_medium slds-p-left_medium">
+    <div class="slds-panel slds-size_large slds-is-open" aria-hidden="false">
+      <div class="slds-panel__header">
+        <h2 class="slds-panel__header-title slds-text-heading_small slds-truncate" title="Panel Header">Select EntitySet (Table)</h2>
+        <button class="slds-button slds-button_icon slds-button_icon-small slds-panel__close"
+          title="Collapse Panel Header">
+          <svg class="slds-button__icon" aria-hidden="true">
+            <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+          </svg>
+        </button>
+      </div>
+      <div class="slds-panel__body">Select some EntitySet (Table) from list want to connect and check them. And click Sync.</div>
+      <div class="slds-var-p-around_medium">
+        <img src="./usage/sfdc/usage-sfdc-ext05.png" />
+      </div>
+    </div>
+  </div>  
+
+  <div class="slds-p-top_medium slds-p-left_medium">
+    <div class="slds-panel slds-size_x-large slds-is-open" aria-hidden="false">
+      <div class="slds-panel__header">
+        <h2 class="slds-panel__header-title slds-text-heading_small slds-truncate" title="Panel Header">Validate EntitySet (Table)</h2>
+        <button class="slds-button slds-button_icon slds-button_icon-small slds-panel__close"
+          title="Collapse Panel Header">
+          <svg class="slds-button__icon" aria-hidden="true">
+            <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+          </svg>
+        </button>
+      </div>
+      <div class="slds-panel__body">Click Validate link to validate it.</div>
+      <div class="slds-var-p-around_medium">
+        <img src="./usage/sfdc/usage-sfdc-ext06.png" />
+      </div>
+    </div>
+  </div>
+
+  <div class="slds-p-top_medium slds-p-left_medium">
+    <div class="slds-panel slds-size_large slds-is-open" aria-hidden="false">
+      <div class="slds-panel__header">
+        <h2 class="slds-panel__header-title slds-text-heading_small slds-truncate" title="Panel Header">Click Run Queries</h2>
+        <button class="slds-button slds-button_icon slds-button_icon-small slds-panel__close"
+          title="Collapse Panel Header">
+          <svg class="slds-button__icon" aria-hidden="true">
+            <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+          </svg>
+        </button>
+      </div>
+      <div class="slds-panel__body">Click Run Queries to execute validation.</div>
+      <div class="slds-var-p-around_medium">
+        <img src="./usage/sfdc/usage-sfdc-ext07.png" />
+      </div>
+    </div>
+  </div>
+
+  <div class="slds-p-top_medium slds-p-left_medium">
+    <div class="slds-panel slds-size_x-large slds-is-open" aria-hidden="false">
+      <div class="slds-panel__header">
+        <h2 class="slds-panel__header-title slds-text-heading_small slds-truncate" title="Panel Header">Check result of validation</h2>
+        <button class="slds-button slds-button_icon slds-button_icon-small slds-panel__close"
+          title="Collapse Panel Header">
+          <svg class="slds-button__icon" aria-hidden="true">
+            <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+          </svg>
+        </button>
+      </div>
+      <div class="slds-panel__body">Check result of validation.</div>
+      <div class="slds-var-p-around_medium">
+        <img src="./usage/sfdc/usage-sfdc-ext08.png" />
+      </div>
+    </div>
+  </div>
+
+  <div class="slds-p-top_medium slds-p-left_medium">
+    <div class="slds-panel slds-size_x-large slds-is-open" aria-hidden="false">
+      <div class="slds-panel__header">
+        <h2 class="slds-panel__header-title slds-text-heading_small slds-truncate" title="Panel Header">Fields and Relationships at Object Manager</h2>
+        <button class="slds-button slds-button_icon slds-button_icon-small slds-panel__close"
+          title="Collapse Panel Header">
+          <svg class="slds-button__icon" aria-hidden="true">
+            <use xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+          </svg>
+        </button>
+      </div>
+      <div class="slds-panel__body">Open object manager to check Fields and Relationships added by OData.</div>
+      <div class="slds-var-p-around_medium">
+        <img src="./usage/sfdc/usage-sfdc-ext09.png" />
+      </div>
+    </div>
+  </div>
+
+</body>
+
+</html>
