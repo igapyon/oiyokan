@@ -34,7 +34,7 @@
 			"type": "MSSQL",
 			"description": "サンプル の SQL Server DB設定記述(2008想定) 環境情報にあわせて変更利用。",
 			"jdbcDriver": "com.microsoft.sqlserver.jdbc.SQLServerDriver",
-			"jdbcUrl": "jdbc:sqlserver://localhost\\SQLEXPRESS;",
+			"jdbcUrl": "jdbc:sqlserver://localhost\\SQLExpress;",
 			"jdbcUser": "sa",
 			"jdbcPass": "passwd123"
 		}
