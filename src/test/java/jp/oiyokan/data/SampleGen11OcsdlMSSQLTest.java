@@ -30,7 +30,7 @@ import jp.oiyokan.settings.OiyokanSettingsUtil;
  */
 class SampleGen11OcsdlMSSQLTest {
 	/**
-	 * postgres 接続環境が適切に存在する場合にのみ実行可能。
+	 * SQL Server 接続環境が適切に存在する場合にのみ実行可能。
 	 * 
 	 * Ocsdlテーブルのスキーマを取得したい場合にのみ JUnit を実行する。
 	 */
@@ -50,7 +50,7 @@ class SampleGen11OcsdlMSSQLTest {
 		}
 	}
 
-	@Test
+	// @Test
 	void test02() throws Exception {
 		final OiyokanSettings settingsOiyokan = OiyokanSettingsUtil.loadOiyokanSettings();
 		OiyokanSettingsDatabase settingsDatabase = null;
