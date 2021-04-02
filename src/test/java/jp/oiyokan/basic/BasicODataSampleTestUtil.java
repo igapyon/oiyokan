@@ -16,6 +16,9 @@ import org.apache.olingo.server.api.ServiceMetadata;
 import jp.oiyokan.OiyokanEdmProvider;
 import jp.oiyokan.OiyokanEntityCollectionProcessor;
 
+/**
+ * Utility class for OData test
+ */
 public class BasicODataSampleTestUtil {
     public static ODataResponse callRequestGetResponse(String rawODataPath, String rawQueryPath) throws Exception {
         final ODataHttpHandler handler = BasicODataSampleTestUtil.getHandler();
