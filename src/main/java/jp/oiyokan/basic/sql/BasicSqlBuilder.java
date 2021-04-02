@@ -92,22 +92,16 @@ public class BasicSqlBuilder {
         // 現状の実装では指定があろうがなかろうが件数はカウントする実装となっている.
         // TODO FIXME 現状でも常にカウントしているかどうか確認すること。
 
-        if (uriInfo.getFilterOption() != null) {
-            FilterOptionImpl filterOpt = (FilterOptionImpl) uriInfo.getFilterOption();
-            // WHERE部分についてはパラメータクエリで処理するのを基本とする.
+        if (OiyokanConstants.DatabaseType.MSSQL == sqlInfo.getEntitySet().getDatabaseType()) {
             sqlInfo.getSqlBuilder().append(" WHERE ");
-            if (OiyokanConstants.DatabaseType.MSSQL == sqlInfo.getEntitySet().getDatabaseType()) {
-                expandMSSQLBetween(uriInfo);
-                sqlInfo.getSqlBuilder().append(" AND ");
-            }
-
-            new BasicSqlExprExpander(sqlInfo).expand(filterOpt.getExpression());
+            expandMSSQLBetween(uriInfo);
+            // SQL Server検索は WHERE絞り込みは既にサブクエリにて適用済み.
         } else {
-            if (OiyokanConstants.DatabaseType.MSSQL == sqlInfo.getEntitySet().getDatabaseType()) {
+            if (uriInfo.getFilterOption() != null) {
+                FilterOptionImpl filterOpt = (FilterOptionImpl) uriInfo.getFilterOption();
+                // WHERE部分についてはパラメータクエリで処理するのを基本とする.
                 sqlInfo.getSqlBuilder().append(" WHERE ");
-                if (OiyokanConstants.DatabaseType.MSSQL == sqlInfo.getEntitySet().getDatabaseType()) {
-                    expandMSSQLBetween(uriInfo);
-                }
+                new BasicSqlExprExpander(sqlInfo).expand(filterOpt.getExpression());
             }
         }
 
@@ -207,6 +201,7 @@ public class BasicSqlBuilder {
             sqlInfo.getSqlBuilder().append("AS [rownum], * from " + sqlInfo.getEntitySet().getDbTableNameTargetIyo());
             if (uriInfo.getFilterOption() != null) {
                 sqlInfo.getSqlBuilder().append(" WHERE ");
+                // データ絞り込みはここで実現.
                 new BasicSqlExprExpander(sqlInfo).expand(uriInfo.getFilterOption().getExpression());
             }
             sqlInfo.getSqlBuilder().append(") AS [subquery]");
