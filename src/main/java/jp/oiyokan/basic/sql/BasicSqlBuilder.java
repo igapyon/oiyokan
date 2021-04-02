@@ -80,11 +80,7 @@ public class BasicSqlBuilder {
     public void getSelectQuery(UriInfo uriInfo) throws ODataApplicationException {
         sqlInfo.getSqlBuilder().append("SELECT ");
 
-        if (uriInfo.getSelectOption() == null) {
-            expandSelectWild(uriInfo);
-        } else {
-            expandSelectEach(uriInfo);
-        }
+        expandSelect(uriInfo);
 
         expandFrom(uriInfo);
 
@@ -127,6 +123,14 @@ public class BasicSqlBuilder {
         }
 
         sqlInfo.getSqlBuilder().append("[rownum] BETWEEN " + start + " AND " + (start + count - 1));
+    }
+
+    private void expandSelect(UriInfo uriInfo) throws ODataApplicationException {
+        if (uriInfo.getSelectOption() == null) {
+            expandSelectWild(uriInfo);
+        } else {
+            expandSelectEach(uriInfo);
+        }
     }
 
     private void expandSelectWild(UriInfo uriInfo) throws ODataApplicationException {
@@ -179,6 +183,7 @@ public class BasicSqlBuilder {
             sqlInfo.getSqlBuilder().append(" FROM " + sqlInfo.getEntitySet().getDbTableNameTargetIyo());
             break;
         case MSSQL: {
+            // SQL Serverの場合は無条件にサブクエリ展開
             sqlInfo.getSqlBuilder().append(" FROM (SELECT ROW_NUMBER()");
             if (uriInfo.getOrderByOption() != null) {
                 sqlInfo.getSqlBuilder().append(" OVER (");
@@ -186,6 +191,7 @@ public class BasicSqlBuilder {
                 sqlInfo.getSqlBuilder().append(") ");
             } else {
                 sqlInfo.getSqlBuilder().append(" OVER (ORDER BY ");
+                // 無指定の場合はプライマリキーにてソート.
                 boolean isFirst = true;
                 for (CsdlPropertyRef look : sqlInfo.getEntitySet().getEntityType().getKey()) {
                     if (isFirst) {
@@ -198,7 +204,11 @@ public class BasicSqlBuilder {
                 }
                 sqlInfo.getSqlBuilder().append(") ");
             }
-            sqlInfo.getSqlBuilder().append("AS [rownum], * from " + sqlInfo.getEntitySet().getDbTableNameTargetIyo());
+
+            sqlInfo.getSqlBuilder().append("AS [rownum],");
+            // 必要な分だけ項目展開.
+            expandSelect(uriInfo);
+            sqlInfo.getSqlBuilder().append(" FROM " + sqlInfo.getEntitySet().getDbTableNameTargetIyo());
             if (uriInfo.getFilterOption() != null) {
                 sqlInfo.getSqlBuilder().append(" WHERE ");
                 // データ絞り込みはここで実現.
