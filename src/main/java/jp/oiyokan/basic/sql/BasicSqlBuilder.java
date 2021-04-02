@@ -102,6 +102,7 @@ public class BasicSqlBuilder {
         }
 
         if (uriInfo.getOrderByOption() != null) {
+            sqlInfo.getSqlBuilder().append(" ");
             expandOrderBy(uriInfo);
         }
 
@@ -114,7 +115,8 @@ public class BasicSqlBuilder {
         if (uriInfo.getTopOption() != null) {
             count = uriInfo.getTopOption().getValue();
         } else {
-            count = 10000;
+            // とても大きな数.
+            count = 1000000;
         }
         if (uriInfo.getSkipOption() != null) {
             start = uriInfo.getSkipOption().getValue();
@@ -225,7 +227,7 @@ public class BasicSqlBuilder {
         for (int index = 0; index < orderByItemList.size(); index++) {
             OrderByItem orderByItem = orderByItemList.get(index);
             if (index == 0) {
-                sqlInfo.getSqlBuilder().append(" ORDER BY ");
+                sqlInfo.getSqlBuilder().append("ORDER BY ");
             } else {
                 sqlInfo.getSqlBuilder().append(",");
             }

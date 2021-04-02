@@ -72,6 +72,8 @@ public class BasicJdbcUtil {
                 conn = DriverManager.getConnection(settingsDatabase.getJdbcUrl(), settingsDatabase.getJdbcUser(),
                         settingsDatabase.getJdbcPass());
             }
+            // TRANSACTION_READ_COMMITTED を設定.
+            conn.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
         } catch (SQLException ex) {
             // [M005] UNEXPECTED: データベースの接続に失敗:
             // しばらく待って再度トライしてください。しばらく経っても改善しない場合はIT部門に連絡してください
