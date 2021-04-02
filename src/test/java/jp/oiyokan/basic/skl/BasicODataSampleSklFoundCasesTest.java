@@ -29,7 +29,8 @@ class BasicODataSampleSklFoundCasesTest {
     @Test
     void test01() throws Exception {
         final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/SklFilmActors",
-                "$top=2001&$filter=%20actor_id%20eq%201%20and%20film_id%20eq%20140&$count=true&$select=actor_id,film_id,last_update");
+                OiyokanTestUtil.encodeUrlQuery(
+                        "$top=2001 &$filter=actor_id eq 1 and film_id eq 140 &$count=true &$select=actor_id,film_id,last_update"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         // System.err.println("result: " + result);
