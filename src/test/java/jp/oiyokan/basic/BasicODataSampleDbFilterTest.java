@@ -17,9 +17,6 @@ package jp.oiyokan.basic;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.apache.olingo.commons.api.http.HttpMethod;
-import org.apache.olingo.server.api.ODataHttpHandler;
-import org.apache.olingo.server.api.ODataRequest;
 import org.apache.olingo.server.api.ODataResponse;
 import org.junit.jupiter.api.Test;
 
@@ -76,92 +73,63 @@ class BasicODataSampleDbFilterTest {
 
     @Test
     void testInt16a() throws Exception {
-        final ODataHttpHandler handler = BasicODataSampleTestUtil.getHandler();
-        final ODataRequest req = new ODataRequest();
-        req.setMethod(HttpMethod.GET);
-        req.setRawBaseUri("http://localhost:8080/odata4.svc");
-        req.setRawODataPath("/ODataTests1");
-        req.setRawQueryPath("$top=1&$filter=Int16a eq 32767&$orderby=ID&$select=ID");
-        req.setRawRequestUri(req.getRawBaseUri() + req.getRawODataPath() + "?" + req.getRawQueryPath());
-
-        final ODataResponse resp = handler.process(req);
-        assertEquals(200, resp.getStatusCode());
+        final ODataResponse resp = BasicODataSampleTestUtil.callRequestGetResponse("/ODataTests1",
+                "$top=1&$filter=Int16a eq 32767&$orderby=ID&$select=ID");
         final String result = BasicODataSampleTestUtil.stream2String(resp.getContent());
+
         // System.err.println("result: " + result);
         assertEquals("{\"@odata.context\":\"$metadata#ODataTests1\",\"value\":[{\"ID\":1}]}", result);
+        assertEquals(200, resp.getStatusCode());
     }
 
     @Test
     void testInt32a() throws Exception {
-        final ODataHttpHandler handler = BasicODataSampleTestUtil.getHandler();
-        final ODataRequest req = new ODataRequest();
-        req.setMethod(HttpMethod.GET);
-        req.setRawBaseUri("http://localhost:8080/odata4.svc");
-        req.setRawODataPath("/ODataTests1");
-        req.setRawQueryPath("$top=2&$filter=Int32a eq 2147483647&$orderby=ID&$count=true&$select=ID");
-        req.setRawRequestUri(req.getRawBaseUri() + req.getRawODataPath() + "?" + req.getRawQueryPath());
-
-        final ODataResponse resp = handler.process(req);
-        assertEquals(200, resp.getStatusCode());
+        final ODataResponse resp = BasicODataSampleTestUtil.callRequestGetResponse("/ODataTests1",
+                "$top=2&$filter=Int32a eq 2147483647&$orderby=ID&$count=true&$select=ID");
         final String result = BasicODataSampleTestUtil.stream2String(resp.getContent());
+
         // System.err.println("result: " + result);
         assertEquals(
                 "{\"@odata.context\":\"$metadata#ODataTests1\",\"@odata.count\":203,\"value\":[{\"ID\":1},{\"ID\":2}]}",
                 result);
+        assertEquals(200, resp.getStatusCode());
     }
 
     // Int64はスキップ.
+    // TODO いつか Int64テストして
 
     @Test
     void testSbyte1() throws Exception {
-        final ODataHttpHandler handler = BasicODataSampleTestUtil.getHandler();
-        final ODataRequest req = new ODataRequest();
-        req.setMethod(HttpMethod.GET);
-        req.setRawBaseUri("http://localhost:8080/odata4.svc");
-        req.setRawODataPath("/ODataTests1");
-        req.setRawQueryPath("$top=1&$filter=Sbyte1 eq 127&$orderby=ID&$count=true&$select=ID");
-        req.setRawRequestUri(req.getRawBaseUri() + req.getRawODataPath() + "?" + req.getRawQueryPath());
-
-        final ODataResponse resp = handler.process(req);
-        assertEquals(200, resp.getStatusCode());
+        final ODataResponse resp = BasicODataSampleTestUtil.callRequestGetResponse("/ODataTests1",
+                "$top=1&$filter=Sbyte1 eq 127&$orderby=ID&$count=true&$select=ID");
         final String result = BasicODataSampleTestUtil.stream2String(resp.getContent());
+
         // System.err.println("result: " + result);
         assertEquals("{\"@odata.context\":\"$metadata#ODataTests1\",\"@odata.count\":203,\"value\":[{\"ID\":1}]}",
                 result);
+        assertEquals(200, resp.getStatusCode());
     }
 
     @Test
     void testSingle1() throws Exception {
-        final ODataHttpHandler handler = BasicODataSampleTestUtil.getHandler();
-        final ODataRequest req = new ODataRequest();
-        req.setMethod(HttpMethod.GET);
-        req.setRawBaseUri("http://localhost:8080/odata4.svc");
-        req.setRawODataPath("/ODataTests1");
-        req.setRawQueryPath("$top=1&$filter=Single1 eq 123.45678711&$orderby=ID&$count=true&$select=ID");
-        req.setRawRequestUri(req.getRawBaseUri() + req.getRawODataPath() + "?" + req.getRawQueryPath());
-
-        final ODataResponse resp = handler.process(req);
-        assertEquals(200, resp.getStatusCode());
+        final ODataResponse resp = BasicODataSampleTestUtil.callRequestGetResponse("/ODataTests1",
+                "$top=1&$filter=Single1 eq 123.45678711&$orderby=ID&$count=true&$select=ID");
         final String result = BasicODataSampleTestUtil.stream2String(resp.getContent());
+
         // System.err.println("result: " + result);
         assertEquals("{\"@odata.context\":\"$metadata#ODataTests1\",\"@odata.count\":203,\"value\":[{\"ID\":1}]}",
                 result);
+        assertEquals(200, resp.getStatusCode());
     }
 
     @Test
     void testDouble1() throws Exception {
-        final ODataHttpHandler handler = BasicODataSampleTestUtil.getHandler();
-        final ODataRequest req = new ODataRequest();
-        req.setMethod(HttpMethod.GET);
-        req.setRawBaseUri("http://localhost:8080/odata4.svc");
-        req.setRawODataPath("/ODataTests1");
-        req.setRawQueryPath("$top=51&$filter=Double1 lt 123.456789&$orderby=ID&$count=true&$select=ID");
-        req.setRawRequestUri(req.getRawBaseUri() + req.getRawODataPath() + "?" + req.getRawQueryPath());
-
-        final ODataResponse resp = handler.process(req);
-        assertEquals(200, resp.getStatusCode());
+        final ODataResponse resp = BasicODataSampleTestUtil.callRequestGetResponse("/ODataTests1",
+                "$top=51&$filter=Double1 lt 123.456789&$orderby=ID&$count=true&$select=ID");
         final String result = BasicODataSampleTestUtil.stream2String(resp.getContent());
+
         // System.err.println("result: " + result);
         assertEquals("{\"@odata.context\":\"$metadata#ODataTests1\",\"@odata.count\":0,\"value\":[]}", result);
+        assertEquals(200, resp.getStatusCode());
     }
 }
