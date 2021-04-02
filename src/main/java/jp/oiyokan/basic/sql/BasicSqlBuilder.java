@@ -29,6 +29,7 @@ import org.apache.olingo.server.api.uri.queryoption.SelectItem;
 import org.apache.olingo.server.core.uri.queryoption.FilterOptionImpl;
 import org.apache.olingo.server.core.uri.queryoption.expression.MemberImpl;
 
+import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanCsdlEntitySet;
 import jp.oiyokan.basic.BasicJdbcUtil;
 import jp.oiyokan.settings.OiyokanNamingUtil;
@@ -95,7 +96,19 @@ public class BasicSqlBuilder {
             FilterOptionImpl filterOpt = (FilterOptionImpl) uriInfo.getFilterOption();
             // WHERE部分についてはパラメータクエリで処理するのを基本とする.
             sqlInfo.getSqlBuilder().append(" WHERE ");
+            if (OiyokanConstants.DatabaseType.MSSQL == sqlInfo.getEntitySet().getDatabaseType()) {
+                expandMSSQLBetween(uriInfo);
+                sqlInfo.getSqlBuilder().append(" AND ");
+            }
+
             new BasicSqlExprExpander(sqlInfo).expand(filterOpt.getExpression());
+        } else {
+            if (OiyokanConstants.DatabaseType.MSSQL == sqlInfo.getEntitySet().getDatabaseType()) {
+                sqlInfo.getSqlBuilder().append(" WHERE ");
+                if (OiyokanConstants.DatabaseType.MSSQL == sqlInfo.getEntitySet().getDatabaseType()) {
+                    expandMSSQLBetween(uriInfo);
+                }
+            }
         }
 
         if (uriInfo.getOrderByOption() != null) {
@@ -103,6 +116,23 @@ public class BasicSqlBuilder {
         }
 
         expandTopSkip(uriInfo);
+    }
+
+    private void expandMSSQLBetween(UriInfo uriInfo) throws ODataApplicationException {
+        int start = -1;
+        int count = -1;
+        if (uriInfo.getTopOption() != null) {
+            count = uriInfo.getTopOption().getValue();
+        } else {
+            count = 10000;
+        }
+        if (uriInfo.getSkipOption() != null) {
+            start = uriInfo.getSkipOption().getValue();
+        } else {
+            start = 1;
+        }
+
+        sqlInfo.getSqlBuilder().append("[rownum] BETWEEN " + start + " AND " + (start + count - 1));
     }
 
     private void expandSelectWild(UriInfo uriInfo) throws ODataApplicationException {
@@ -150,7 +180,39 @@ public class BasicSqlBuilder {
 
     private void expandFrom(UriInfo uriInfo) throws ODataApplicationException {
         // 取得元のテーブル.
-        sqlInfo.getSqlBuilder().append(" FROM " + sqlInfo.getEntitySet().getDbTableNameTargetIyo());
+        switch (sqlInfo.getEntitySet().getDatabaseType()) {
+        default:
+            sqlInfo.getSqlBuilder().append(" FROM " + sqlInfo.getEntitySet().getDbTableNameTargetIyo());
+            break;
+        case MSSQL: {
+            sqlInfo.getSqlBuilder().append(" FROM (SELECT ROW_NUMBER()");
+            if (uriInfo.getOrderByOption() != null) {
+                sqlInfo.getSqlBuilder().append(" OVER (");
+                expandOrderBy(uriInfo);
+                sqlInfo.getSqlBuilder().append(") ");
+            } else {
+                sqlInfo.getSqlBuilder().append(" OVER (ORDER BY ");
+                boolean isFirst = true;
+                for (CsdlPropertyRef look : sqlInfo.getEntitySet().getEntityType().getKey()) {
+                    if (isFirst) {
+                        isFirst = false;
+                    } else {
+                        sqlInfo.getSqlBuilder().append(",");
+                    }
+                    sqlInfo.getSqlBuilder().append(BasicJdbcUtil.escapeKakkoFieldName(sqlInfo,
+                            OiyokanNamingUtil.entity2Db(BasicJdbcUtil.unescapeKakkoFieldName(look.getName()))));
+                }
+                sqlInfo.getSqlBuilder().append(") ");
+            }
+            sqlInfo.getSqlBuilder().append("AS [rownum], * from " + sqlInfo.getEntitySet().getDbTableNameTargetIyo());
+            if (uriInfo.getFilterOption() != null) {
+                sqlInfo.getSqlBuilder().append(" WHERE ");
+                new BasicSqlExprExpander(sqlInfo).expand(uriInfo.getFilterOption().getExpression());
+            }
+            sqlInfo.getSqlBuilder().append(") AS [subquery]");
+        }
+            break;
+        }
     }
 
     private void expandOrderBy(UriInfo uriInfo) throws ODataApplicationException {
@@ -173,14 +235,16 @@ public class BasicSqlBuilder {
     }
 
     private void expandTopSkip(UriInfo uriInfo) {
-        if (uriInfo.getTopOption() != null) {
-            sqlInfo.getSqlBuilder().append(" LIMIT ");
-            sqlInfo.getSqlBuilder().append(uriInfo.getTopOption().getValue());
-        }
+        if (sqlInfo.getEntitySet().getDatabaseType() != OiyokanConstants.DatabaseType.MSSQL) {
+            if (uriInfo.getTopOption() != null) {
+                sqlInfo.getSqlBuilder().append(" LIMIT ");
+                sqlInfo.getSqlBuilder().append(uriInfo.getTopOption().getValue());
+            }
 
-        if (uriInfo.getSkipOption() != null) {
-            sqlInfo.getSqlBuilder().append(" OFFSET ");
-            sqlInfo.getSqlBuilder().append(uriInfo.getSkipOption().getValue());
+            if (uriInfo.getSkipOption() != null) {
+                sqlInfo.getSqlBuilder().append(" OFFSET ");
+                sqlInfo.getSqlBuilder().append(uriInfo.getSkipOption().getValue());
+            }
         }
     }
 }

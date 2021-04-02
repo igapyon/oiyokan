@@ -284,8 +284,19 @@ public class BasicJdbcUtil {
             }
         } else if ("Edm.Guid".equals(csdlProp.getType())) {
             // Guid については UUID として読み込む。
-            java.util.UUID look = (UUID) rset.getObject(column);
-            return new Property(null, propName, ValueType.PRIMITIVE, look);
+            final Object obj = rset.getObject(column);
+            if (obj instanceof java.util.UUID) {
+                return new Property(null, propName, ValueType.PRIMITIVE, (java.util.UUID) obj);
+            } else if (obj instanceof String) {
+                java.util.UUID look = UUID.fromString((String) obj);
+                return new Property(null, propName, ValueType.PRIMITIVE, look);
+            } else {
+                // [M033] NOT SUPPORTED: unknown UUID object given
+                System.err.println(OiyokanMessages.M033 + ": type[" + csdlProp.getType() + "], "
+                        + obj.getClass().getCanonicalName());
+                throw new ODataApplicationException(OiyokanMessages.M033 + ": type[" + csdlProp.getType() + "], "
+                        + obj.getClass().getCanonicalName(), 500, Locale.ENGLISH);
+            }
         } else {
             // ARRAY と OTHER には対応しない。そもそもここ通過しないのじゃないの?
             // [M009] UNEXPECTED: missing impl

@@ -10,7 +10,7 @@
 
 	<groupId>jp.oiyokan</groupId>
 	<artifactId>oiyokan</artifactId>
-	<version>1.0.20210328</version>
+	<version>1.0.20210402</version>
 	<name>oiyokan</name>
 	<description>Oiyokan is a simple OData v4 Server. (based on Apache Olingo / Spring Boot / h2 database)</description>
 
