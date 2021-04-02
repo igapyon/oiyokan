@@ -37,56 +37,36 @@ import jp.oiyokan.basic.sql.BasicSqlInfo;
 class TinyH2SqlExprExpanderTest {
     final OiyokanCsdlEntityContainer localTemplateEntityContainer = new OiyokanCsdlEntityContainer();
 
-    @Test
-    void test01() throws Exception {
+    private String getExprString(String rawODataPath, String rawQueryPath) throws Exception {
         OData odata = OData.newInstance();
         ServiceMetadata edm = odata.createServiceMetadata(new OiyokanEdmProvider(), new ArrayList<>());
 
         localTemplateEntityContainer.ensureBuild();
+        // アプリ情報が入っている内部DBをベースに処理。つまり h2 database 前提としての振る舞いをおこなう。
         final OiyokanCsdlEntitySet entitySet = (OiyokanCsdlEntitySet) localTemplateEntityContainer
                 .getEntitySet("ODataAppInfos");
 
         final Parser parser = new Parser(edm.getEdm(), odata);
-        final UriInfo uriInfo = parser.parseUri("/ODataTests1", "$filter=ID eq 1.0", "",
-                "http://localhost:8080/odata4.svc/");
+        final UriInfo uriInfo = parser.parseUri(rawODataPath, rawQueryPath, "", "http://localhost:8080/odata4.svc/");
         BasicSqlInfo sqlInfo = new BasicSqlInfo(entitySet);
         new BasicSqlExprExpander(sqlInfo).expand(uriInfo.getFilterOption().getExpression());
-        // System.err.println("Result: " + sqlInfo.getSqlBuilder().toString());
-        assertEquals("(ID = 1.0)", sqlInfo.getSqlBuilder().toString());
+        return sqlInfo.getSqlBuilder().toString();
+    }
+
+    @Test
+    void test01() throws Exception {
+        assertEquals("(ID = 1.0)", getExprString("/ODataTests1", "$filter=ID eq 1.0"));
     }
 
     @Test
     void test02() throws Exception {
-        OData odata = OData.newInstance();
-        ServiceMetadata edm = odata.createServiceMetadata(new OiyokanEdmProvider(), new ArrayList<>());
-
-        localTemplateEntityContainer.ensureBuild();
-        final OiyokanCsdlEntitySet entitySet = (OiyokanCsdlEntitySet) localTemplateEntityContainer
-                .getEntitySet("ODataAppInfos");
-
-        final Parser parser = new Parser(edm.getEdm(), odata);
-        final UriInfo uriInfo = parser.parseUri("/ODataTests1", "$filter=Description eq 'Mac' and ID eq 2.0", "",
-                "http://localhost:8080/odata4.svc/");
-        BasicSqlInfo sqlInfo = new BasicSqlInfo(entitySet);
-        new BasicSqlExprExpander(sqlInfo).expand(uriInfo.getFilterOption().getExpression());
-        assertEquals("((Description = ?) AND (ID = 2.0))", sqlInfo.getSqlBuilder().toString());
+        assertEquals("((Description = ?) AND (ID = 2.0))",
+                getExprString("/ODataTests1", "$filter=Description eq 'Mac' and ID eq 2.0"));
     }
 
     @Test
     void test03() throws Exception {
-        OData odata = OData.newInstance();
-        ServiceMetadata edm = odata.createServiceMetadata(new OiyokanEdmProvider(), new ArrayList<>());
-
-        localTemplateEntityContainer.ensureBuild();
-        final OiyokanCsdlEntitySet entitySet = (OiyokanCsdlEntitySet) localTemplateEntityContainer
-                .getEntitySet("ODataAppInfos");
-
-        final Parser parser = new Parser(edm.getEdm(), odata);
-        final UriInfo uriInfo = parser.parseUri("/ODataTests1",
-                "%24top=51&%24filter=%20indexof%28Description%2C%27%E5%A2%97%E6%AE%96%E3%82%BF%E3%83%96%E3%83%AC%E3%83%83%E3%83%887%27%29%20ne%20-1&%24orderby=ID&%24count=true&%24select=Description%2CID%2CName",
-                "", "http://localhost:8080/odata4.svc/");
-        BasicSqlInfo sqlInfo = new BasicSqlInfo(entitySet);
-        new BasicSqlExprExpander(sqlInfo).expand(uriInfo.getFilterOption().getExpression());
-        assertEquals("((POSITION(?,Description) - 1) <> ?)", sqlInfo.getSqlBuilder().toString());
+        assertEquals("((POSITION(?,Description) - 1) <> ?)", getExprString("/ODataTests1",
+                "%24top=51&%24filter=%20indexof%28Description%2C%27%E5%A2%97%E6%AE%96%E3%82%BF%E3%83%96%E3%83%AC%E3%83%83%E3%83%887%27%29%20ne%20-1&%24orderby=ID&%24count=true&%24select=Description%2CID%2CName"));
     }
 }
