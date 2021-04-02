@@ -29,49 +29,67 @@ import jp.oiyokan.settings.OiyokanSettingsUtil;
  * 内部データベース用のCSDL用内部テーブルのDDLをコマンドライン生成.
  */
 class SampleGen11OcsdlMSSQLTest {
-	/**
-	 * postgres 接続環境が適切に存在する場合にのみ実行可能。
-	 * 
-	 * Ocsdlテーブルのスキーマを取得したい場合にのみ JUnit を実行する。
-	 */
-	// @Test
-	void test01() throws Exception {
-		final OiyokanSettings settingsOiyokan = OiyokanSettingsUtil.loadOiyokanSettings();
-		OiyokanSettingsDatabase settingsDatabase = null;
-		for (OiyokanSettingsDatabase look : settingsOiyokan.getDatabaseList()) {
-			if ("mssql1".equals(look.getName())) {
-				settingsDatabase = look;
-			}
-		}
+    /**
+     * SQL Server 接続環境が適切に存在する場合にのみ実行可能。
+     * 
+     * Ocsdlテーブルのスキーマを取得したい場合にのみ JUnit を実行する。
+     */
+    // @Test
+    void test01() throws Exception {
+        final OiyokanSettings settingsOiyokan = OiyokanSettingsUtil.loadOiyokanSettings();
+        OiyokanSettingsDatabase settingsDatabase = null;
+        for (OiyokanSettingsDatabase look : settingsOiyokan.getDatabaseList()) {
+            if ("mssql1".equals(look.getName())) {
+                settingsDatabase = look;
+            }
+        }
 
-		try (Connection connTargetDb = BasicJdbcUtil.getConnection(settingsDatabase)) {
-			System.err.println(OiyokanInternalDatabase.generateCreateOcsdlDdl(connTargetDb, "actor"));
+        try (Connection connTargetDb = BasicJdbcUtil.getConnection(settingsDatabase)) {
+            System.err.println(OiyokanInternalDatabase.generateCreateOcsdlDdl(connTargetDb, "actor"));
 
-		}
-	}
+        }
+    }
 
-	@Test
-	void test02() throws Exception {
-		final OiyokanSettings settingsOiyokan = OiyokanSettingsUtil.loadOiyokanSettings();
-		OiyokanSettingsDatabase settingsDatabase = null;
-		for (OiyokanSettingsDatabase look : settingsOiyokan.getDatabaseList()) {
-			if ("mssql1".equals(look.getName())) {
-				settingsDatabase = look;
-			}
-		}
+    // @Test
+    void test02() throws Exception {
+        final OiyokanSettings settingsOiyokan = OiyokanSettingsUtil.loadOiyokanSettings();
+        OiyokanSettingsDatabase settingsDatabase = null;
+        for (OiyokanSettingsDatabase look : settingsOiyokan.getDatabaseList()) {
+            if ("mssql1".equals(look.getName())) {
+                settingsDatabase = look;
+            }
+        }
 
-		try (Connection connTargetDb = BasicJdbcUtil.getConnection(settingsDatabase)) {
-			String[] sqls = OiyokanResourceSqlUtil
-					.loadOiyokanResourceSql("oiyokan/sql/" + "sample-sakila-db-MSSQL.sql");
-			for (String sql : sqls) {
-				try (var stmt = connTargetDb.prepareStatement(sql)) {
-					System.err.println(sql);
-					stmt.executeUpdate();
-				} catch (SQLException ex) {
-					System.err.println(ex.toString());
-					throw ex;
-				}
-			}
-		}
-	}
+        try (Connection connTargetDb = BasicJdbcUtil.getConnection(settingsDatabase)) {
+            String[] sqls = OiyokanResourceSqlUtil
+                    .loadOiyokanResourceSql("oiyokan/sql/" + "sample-sakila-db-MSSQL.sql");
+            for (String sql : sqls) {
+                try (var stmt = connTargetDb.prepareStatement(sql)) {
+                    System.err.println(sql);
+                    stmt.executeUpdate();
+                } catch (SQLException ex) {
+                    System.err.println(ex.toString());
+                    throw ex;
+                }
+            }
+        }
+    }
+
+    // @Test
+    void test03() throws Exception {
+        OiyokanSettingsDatabase settingsDatabase = OiyokanSettingsUtil.getOiyokanDatabase("mssql1");
+
+        try (Connection connTargetDb = BasicJdbcUtil.getConnection(settingsDatabase)) {
+            String[] sqls = OiyokanResourceSqlUtil.loadOiyokanResourceSql("oiyokan/sql/" + "oiyokan-test-db-MSSQL.sql");
+            for (String sql : sqls) {
+                try (var stmt = connTargetDb.prepareStatement(sql)) {
+                    System.err.println(sql);
+                    stmt.executeUpdate();
+                } catch (SQLException ex) {
+                    System.err.println(ex.toString());
+                    throw ex;
+                }
+            }
+        }
+    }
 }

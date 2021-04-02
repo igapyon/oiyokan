@@ -60,10 +60,10 @@ class BasicODataTestDbTest {
         req.setRawRequestUri(req.getRawBaseUri() + req.getRawODataPath() + "?" + req.getRawQueryPath());
 
         final ODataResponse resp = handler.process(req);
-        assertEquals(200, resp.getStatusCode());
         assertEquals(
                 "{\"@odata.context\":\"$metadata#ODataTests1\",\"value\":[{\"ID\":1,\"Name\":\"MacBookPro16,2\",\"Description\":\"MacBook Pro (13-inch, 2020, Thunderbolt 3ポートx 4)\"}]}",
                 BasicODataSampleTestUtil.stream2String(resp.getContent()));
+        assertEquals(200, resp.getStatusCode());
     }
 
     @Test
@@ -77,9 +77,9 @@ class BasicODataTestDbTest {
         req.setRawRequestUri(req.getRawBaseUri() + req.getRawODataPath() + "?" + req.getRawQueryPath());
 
         final ODataResponse resp = handler.process(req);
-        assertEquals(200, resp.getStatusCode());
         // コンテンツ内容は確認なし.
         // System.err.println(BasicODataSampleTestUtil.stream2String(resp.getContent()));
+        assertEquals(200, resp.getStatusCode());
     }
 
     @Test
@@ -93,10 +93,10 @@ class BasicODataTestDbTest {
         req.setRawRequestUri(req.getRawBaseUri() + req.getRawODataPath() + "?" + req.getRawQueryPath());
 
         final ODataResponse resp = handler.process(req);
-        assertEquals(200, resp.getStatusCode());
         assertEquals(
                 "{\"@odata.context\":\"$metadata#ODataTests1\",\"@odata.count\":1,\"value\":[{\"ID\":5,\"Name\":\"PopTablet1\"}]}",
                 BasicODataSampleTestUtil.stream2String(resp.getContent()));
+        assertEquals(200, resp.getStatusCode());
     }
 
     @Test

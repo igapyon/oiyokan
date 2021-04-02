@@ -51,6 +51,7 @@ public class OiyokanMessages {
     public static final String M030 = "[M030] UNEXPECTED: Fail to execute SQL for local internal table(2)";
     public static final String M031 = "[M031] UNEXPECTED: Fail to execute Dabaase";
     public static final String M032 = "[M032] NOT SUPPORTED: URI: $search";
+    public static final String M033 = "[M033] NOT SUPPORTED: unknown UUID object given";
 
     ///////////////////
     // Expression

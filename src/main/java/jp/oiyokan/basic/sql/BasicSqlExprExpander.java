@@ -385,11 +385,22 @@ public class BasicSqlExprExpander {
         // CONTAINS
         if (impl.getMethod() == MethodKind.CONTAINS) {
             // h2 database の POSITION は 1 オリジンで発見せずが0 なので 1 を減らしています。
-            sqlInfo.getSqlBuilder().append("(POSITION(");
-            expand(impl.getParameters().get(1));
-            sqlInfo.getSqlBuilder().append(",");
-            expand(impl.getParameters().get(0));
-            sqlInfo.getSqlBuilder().append(") > 0)");
+            switch (sqlInfo.getEntitySet().getDatabaseType()) {
+            default:
+                sqlInfo.getSqlBuilder().append("(POSITION(");
+                expand(impl.getParameters().get(1));
+                sqlInfo.getSqlBuilder().append(",");
+                expand(impl.getParameters().get(0));
+                sqlInfo.getSqlBuilder().append(") > 0)");
+                break;
+            case MSSQL:
+                sqlInfo.getSqlBuilder().append("(CHARINDEX(");
+                expand(impl.getParameters().get(1));
+                sqlInfo.getSqlBuilder().append(",");
+                expand(impl.getParameters().get(0));
+                sqlInfo.getSqlBuilder().append(") > 0)");
+                break;
+            }
             return;
         }
 
