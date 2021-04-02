@@ -101,9 +101,19 @@ public class BasicSqlBuilder {
             }
         }
 
-        if (uriInfo.getOrderByOption() != null) {
-            sqlInfo.getSqlBuilder().append(" ");
-            expandOrderBy(uriInfo);
+        if (OiyokanConstants.DatabaseType.MSSQL == sqlInfo.getEntitySet().getDatabaseType()) {
+            // 必ず rownum4between 順でソート.
+            sqlInfo.getSqlBuilder().append(" ORDER BY [rownum4between]");
+        } else {
+            if (uriInfo.getOrderByOption() != null) {
+                sqlInfo.getSqlBuilder().append(" ORDER BY ");
+                expandOrderBy(uriInfo);
+            } else {
+                // 無指定の場合は primary key でソート.
+                // これをしないとページング処理で困る.
+                sqlInfo.getSqlBuilder().append(" ORDER BY ");
+                expandOrderByWithPrimary();
+            }
         }
 
         expandTopSkip(uriInfo);
@@ -189,21 +199,12 @@ public class BasicSqlBuilder {
             sqlInfo.getSqlBuilder().append(" FROM (SELECT ROW_NUMBER()");
             if (uriInfo.getOrderByOption() != null) {
                 sqlInfo.getSqlBuilder().append(" OVER (");
+                sqlInfo.getSqlBuilder().append("ORDER BY ");
                 expandOrderBy(uriInfo);
                 sqlInfo.getSqlBuilder().append(") ");
             } else {
                 sqlInfo.getSqlBuilder().append(" OVER (ORDER BY ");
-                // 無指定の場合はプライマリキーにてソート.
-                boolean isFirst = true;
-                for (CsdlPropertyRef look : sqlInfo.getEntitySet().getEntityType().getKey()) {
-                    if (isFirst) {
-                        isFirst = false;
-                    } else {
-                        sqlInfo.getSqlBuilder().append(",");
-                    }
-                    sqlInfo.getSqlBuilder().append(BasicJdbcUtil.escapeKakkoFieldName(sqlInfo,
-                            OiyokanNamingUtil.entity2Db(BasicJdbcUtil.unescapeKakkoFieldName(look.getName()))));
-                }
+                expandOrderByWithPrimary();
                 sqlInfo.getSqlBuilder().append(") ");
             }
 
@@ -227,7 +228,6 @@ public class BasicSqlBuilder {
         for (int index = 0; index < orderByItemList.size(); index++) {
             OrderByItem orderByItem = orderByItemList.get(index);
             if (index == 0) {
-                sqlInfo.getSqlBuilder().append("ORDER BY ");
             } else {
                 sqlInfo.getSqlBuilder().append(",");
             }
@@ -241,8 +241,22 @@ public class BasicSqlBuilder {
         }
     }
 
+    private void expandOrderByWithPrimary() throws ODataApplicationException {
+        // 無指定の場合はプライマリキーにてソート.
+        boolean isFirst = true;
+        for (CsdlPropertyRef look : sqlInfo.getEntitySet().getEntityType().getKey()) {
+            if (isFirst) {
+                isFirst = false;
+            } else {
+                sqlInfo.getSqlBuilder().append(",");
+            }
+            sqlInfo.getSqlBuilder().append(BasicJdbcUtil.escapeKakkoFieldName(sqlInfo,
+                    OiyokanNamingUtil.entity2Db(BasicJdbcUtil.unescapeKakkoFieldName(look.getName()))));
+        }
+    }
+
     private void expandTopSkip(UriInfo uriInfo) {
-        if (sqlInfo.getEntitySet().getDatabaseType() != OiyokanConstants.DatabaseType.MSSQL) {
+        if (OiyokanConstants.DatabaseType.MSSQL != sqlInfo.getEntitySet().getDatabaseType()) {
             if (uriInfo.getTopOption() != null) {
                 sqlInfo.getSqlBuilder().append(" LIMIT ");
                 sqlInfo.getSqlBuilder().append(uriInfo.getTopOption().getValue());

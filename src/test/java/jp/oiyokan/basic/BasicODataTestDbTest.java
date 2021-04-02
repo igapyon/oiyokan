@@ -36,7 +36,7 @@ class BasicODataTestDbTest {
         req.setMethod(HttpMethod.GET);
         req.setRawBaseUri("http://localhost:8080/odata4.svc");
         req.setRawODataPath("/ODataAppInfos");
-        req.setRawQueryPath("$top=1");
+        req.setRawQueryPath("$top=1&$skip=1");
         req.setRawRequestUri(req.getRawBaseUri() + req.getRawODataPath() + "?" + req.getRawQueryPath());
 
         final ODataResponse resp = handler.process(req);
