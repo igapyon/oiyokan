@@ -78,17 +78,18 @@ oiyokan プロジェクトは、OData v4 server のシンプルなサンプル(h
 
 ## TODO
 
-- テストDBに BigInt などの列を追加。型チェックの漏れチェック。
+- MySQL のテスト実施
+- Oracleのテスト実施
+- テストDBに BigInt などの列を追加。
 - ODataからの入力パラメータのバリエーション試験を実施。
 - favicon.ico ファイルの配置。
-- NorthWindサンプルの組み込みを検討する。
 - OData のサイトに掲載する
 - README に oiyokan-naming-settings.json の記述についての記載を追記.
 - サンプル EntitySet の html説明について Card 型に変更したい
 - モバイルデバイスから Web サイトにアクセスすると画面が崩れる。
 - BasicSqlExprExpander の通過していない箇所のテスト.
+- そもそもカバレッジのテスト。
 - Sakila DVDレンタルのサンプル (SklActors 等)、ODataTests1 を ON/OFFする手順またはプログラム実装を記述.
 - 認証の各種実験。
 - TimeOfDay がテスト不十分.
 - Maven Repository にアップしたい.
-- ($search対応の後続となるため、しばらく対応できない) TODO Null (nullable) の対応。現在はコメントアウト.
