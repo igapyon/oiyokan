@@ -1,11 +1,14 @@
-package jp.oiyokan.basic;
+package jp.oiyokan.util;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.BitSet;
 
+import org.apache.commons.codec.net.URLCodec;
 import org.apache.olingo.commons.api.http.HttpMethod;
 import org.apache.olingo.server.api.OData;
 import org.apache.olingo.server.api.ODataHttpHandler;
@@ -19,9 +22,9 @@ import jp.oiyokan.OiyokanEntityCollectionProcessor;
 /**
  * Utility class for OData test
  */
-public class BasicODataSampleTestUtil {
+public class OiyokanTestUtil {
     public static ODataResponse callRequestGetResponse(String rawODataPath, String rawQueryPath) throws Exception {
-        final ODataHttpHandler handler = BasicODataSampleTestUtil.getHandler();
+        final ODataHttpHandler handler = OiyokanTestUtil.getHandler();
         final ODataRequest req = new ODataRequest();
         req.setMethod(HttpMethod.GET);
         req.setRawBaseUri("http://localhost:8080/odata4.svc");
@@ -45,6 +48,28 @@ public class BasicODataSampleTestUtil {
     }
 
     /**
+     * 与えられた文字列を URL クエリとしてエンコード.
+     * 
+     * @param inputString URLクエリ.
+     * @return エンコード済みURLクエリ.
+     */
+    public static String encodeUrlQuery(String inputString) {
+        BitSet urlSafe = new BitSet();
+        urlSafe.set('0', '9' + 1);
+        urlSafe.set('-');
+        urlSafe.set('=');
+        urlSafe.set('&');
+        urlSafe.set('%');
+        urlSafe.set('A', 'Z' + 1);
+        urlSafe.set('a', 'z' + 1);
+        try {
+            return new String(URLCodec.encodeUrl(urlSafe, inputString.getBytes("UTF-8")));
+        } catch (UnsupportedEncodingException ex) {
+            throw new IllegalArgumentException(ex);
+        }
+    }
+
+    /**
      * InputStream を String に変換.
      * 
      * @param inStream 入力ストリーム.
@@ -63,5 +88,4 @@ public class BasicODataSampleTestUtil {
         }
         return builder.toString();
     }
-
 }

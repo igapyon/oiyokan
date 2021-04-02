@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.apache.olingo.server.api.ODataResponse;
 import org.junit.jupiter.api.Test;
 
-import jp.oiyokan.basic.BasicODataSampleTestUtil;
+import jp.oiyokan.util.OiyokanTestUtil;
 
 /**
  * OData サーバについて、おおざっぱな通過によるデグレードを検知.
@@ -35,9 +35,9 @@ class BasicODataSampleSklNullTest {
      */
     @Test
     void test01() throws Exception {
-        final ODataResponse resp = BasicODataSampleTestUtil.callRequestGetResponse("/SklAddresses",
+        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/SklAddresses",
                 "$top=1&$count=true&$filter=address2%20eq%20null&$select=address_id&$orderby=address_id");
-        final String result = BasicODataSampleTestUtil.stream2String(resp.getContent());
+        final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         // 検索結果が存在するべき。
         assertEquals(
@@ -54,9 +54,9 @@ class BasicODataSampleSklNullTest {
     @Test
     void test02() throws Exception {
         // NULLの件数をカウント.
-        final ODataResponse resp = BasicODataSampleTestUtil.callRequestGetResponse("/SklAddresses",
+        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/SklAddresses",
                 "$top=1&$count=true&$filter=null%20eq%20address2&$select=address_id&$orderby=address_id");
-        final String result = BasicODataSampleTestUtil.stream2String(resp.getContent());
+        final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         // 検索結果が存在するべき。
         assertEquals(
@@ -73,9 +73,9 @@ class BasicODataSampleSklNullTest {
     @Test
     void test03() throws Exception {
         // NULLの件数をカウント.
-        final ODataResponse resp = BasicODataSampleTestUtil.callRequestGetResponse("/SklAddresses",
+        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/SklAddresses",
                 "$top=1&$count=true&$filter=address2%20ne%20null&$select=address_id&$orderby=address_id");
-        final String result = BasicODataSampleTestUtil.stream2String(resp.getContent());
+        final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         // 検索結果が存在するべき。
         assertEquals(

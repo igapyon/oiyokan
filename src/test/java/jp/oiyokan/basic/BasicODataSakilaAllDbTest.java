@@ -22,6 +22,7 @@ import org.junit.jupiter.api.Test;
 
 import jp.app.ctrl.ThSakilaCtrl;
 import jp.oiyokan.OiyokanConstants;
+import jp.oiyokan.util.OiyokanTestUtil;
 
 /**
  * OData サーバについて、おおざっぱな通過によるデグレードを検知.
@@ -39,8 +40,8 @@ class BasicODataSakilaAllDbTest {
 
             String[] entry = entrys[1].split("['?']");
 
-            final ODataResponse resp = BasicODataSampleTestUtil.callRequestGetResponse(entry[0], entry[1]);
-            final String result = BasicODataSampleTestUtil.stream2String(resp.getContent());
+            final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse(entry[0], entry[1]);
+            final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
             // System.err.println("[" + entrys[0] + "], [" + entrys[1] + "], result: " +
             // result);

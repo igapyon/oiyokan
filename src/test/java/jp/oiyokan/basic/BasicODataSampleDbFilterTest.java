@@ -20,6 +20,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.apache.olingo.server.api.ODataResponse;
 import org.junit.jupiter.api.Test;
 
+import jp.oiyokan.util.OiyokanTestUtil;
+
 /**
  * OData サーバについて、おおざっぱな通過によるデグレードを検知.
  */
@@ -27,9 +29,9 @@ class BasicODataSampleDbFilterTest {
 
     @Test
     void testTimestamp() throws Exception {
-        final ODataResponse resp = BasicODataSampleTestUtil.callRequestGetResponse("/ODataTests1",
+        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1",
                 "$top=51&$filter=DateTimeOffset1 lt 2020-12-31T21:53:00Z&$orderby=ID&$count=true&$select=ID");
-        final String result = BasicODataSampleTestUtil.stream2String(resp.getContent());
+        final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         // System.err.println("result: " + result);
         assertEquals("{\"@odata.context\":\"$metadata#ODataTests1\",\"@odata.count\":0,\"value\":[]}", result);
@@ -38,9 +40,9 @@ class BasicODataSampleDbFilterTest {
 
     @Test
     void testDate() throws Exception {
-        final ODataResponse resp = BasicODataSampleTestUtil.callRequestGetResponse("/ODataTests1",
+        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1",
                 "$top=51&$filter=Date1 lt 2021-01-01&$orderby=ID&$count=true&$select=ID");
-        final String result = BasicODataSampleTestUtil.stream2String(resp.getContent());
+        final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         // System.err.println("result: " + result);
         assertEquals("{\"@odata.context\":\"$metadata#ODataTests1\",\"@odata.count\":0,\"value\":[]}", result);
@@ -49,9 +51,9 @@ class BasicODataSampleDbFilterTest {
 
     @Test
     void testBoolean() throws Exception {
-        final ODataResponse resp = BasicODataSampleTestUtil.callRequestGetResponse("/ODataTests1",
+        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1",
                 "$filter=Boolean1 eq false&$orderby=ID&$select=ID&$top=1");
-        final String result = BasicODataSampleTestUtil.stream2String(resp.getContent());
+        final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         // System.err.println("result: " + result);
         assertEquals("{\"@odata.context\":\"$metadata#ODataTests1\",\"value\":[{\"ID\":1}]}", result);
@@ -60,9 +62,9 @@ class BasicODataSampleDbFilterTest {
 
     @Test
     void testString() throws Exception {
-        final ODataResponse resp = BasicODataSampleTestUtil.callRequestGetResponse("/ODataAppInfos",
+        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataAppInfos",
                 "$filter=KeyName%20eq%20%27Provider%27");
-        final String result = BasicODataSampleTestUtil.stream2String(resp.getContent());
+        final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         // System.err.println("result: " + result);
         assertEquals(
@@ -73,9 +75,9 @@ class BasicODataSampleDbFilterTest {
 
     @Test
     void testInt16a() throws Exception {
-        final ODataResponse resp = BasicODataSampleTestUtil.callRequestGetResponse("/ODataTests1",
+        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1",
                 "$top=1&$filter=Int16a eq 32767&$orderby=ID&$select=ID");
-        final String result = BasicODataSampleTestUtil.stream2String(resp.getContent());
+        final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         // System.err.println("result: " + result);
         assertEquals("{\"@odata.context\":\"$metadata#ODataTests1\",\"value\":[{\"ID\":1}]}", result);
@@ -84,9 +86,9 @@ class BasicODataSampleDbFilterTest {
 
     @Test
     void testInt32a() throws Exception {
-        final ODataResponse resp = BasicODataSampleTestUtil.callRequestGetResponse("/ODataTests1",
+        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1",
                 "$top=2&$filter=Int32a eq 2147483647&$orderby=ID&$count=true&$select=ID");
-        final String result = BasicODataSampleTestUtil.stream2String(resp.getContent());
+        final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         // System.err.println("result: " + result);
         assertEquals(
@@ -100,9 +102,9 @@ class BasicODataSampleDbFilterTest {
 
     @Test
     void testSbyte1() throws Exception {
-        final ODataResponse resp = BasicODataSampleTestUtil.callRequestGetResponse("/ODataTests1",
+        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1",
                 "$top=1&$filter=Sbyte1 eq 127&$orderby=ID&$count=true&$select=ID");
-        final String result = BasicODataSampleTestUtil.stream2String(resp.getContent());
+        final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         // System.err.println("result: " + result);
         assertEquals("{\"@odata.context\":\"$metadata#ODataTests1\",\"@odata.count\":203,\"value\":[{\"ID\":1}]}",
@@ -112,9 +114,9 @@ class BasicODataSampleDbFilterTest {
 
     @Test
     void testSingle1() throws Exception {
-        final ODataResponse resp = BasicODataSampleTestUtil.callRequestGetResponse("/ODataTests1",
+        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1",
                 "$top=1&$filter=Single1 eq 123.45678711&$orderby=ID&$count=true&$select=ID");
-        final String result = BasicODataSampleTestUtil.stream2String(resp.getContent());
+        final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         // System.err.println("result: " + result);
         assertEquals("{\"@odata.context\":\"$metadata#ODataTests1\",\"@odata.count\":203,\"value\":[{\"ID\":1}]}",
@@ -124,9 +126,9 @@ class BasicODataSampleDbFilterTest {
 
     @Test
     void testDouble1() throws Exception {
-        final ODataResponse resp = BasicODataSampleTestUtil.callRequestGetResponse("/ODataTests1",
+        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1",
                 "$top=51&$filter=Double1 lt 123.456789&$orderby=ID&$count=true&$select=ID");
-        final String result = BasicODataSampleTestUtil.stream2String(resp.getContent());
+        final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         // System.err.println("result: " + result);
         assertEquals("{\"@odata.context\":\"$metadata#ODataTests1\",\"@odata.count\":0,\"value\":[]}", result);

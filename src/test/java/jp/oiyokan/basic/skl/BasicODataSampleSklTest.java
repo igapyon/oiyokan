@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.apache.olingo.server.api.ODataResponse;
 import org.junit.jupiter.api.Test;
 
-import jp.oiyokan.basic.BasicODataSampleTestUtil;
+import jp.oiyokan.util.OiyokanTestUtil;
 
 /**
  * OData サーバについて、おおざっぱな通過によるデグレードを検知.
@@ -31,9 +31,9 @@ class BasicODataSampleSklTest {
      */
     @Test
     void test02() throws Exception {
-        final ODataResponse resp = BasicODataSampleTestUtil.callRequestGetResponse("/SklStaffLists",
+        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/SklStaffLists",
                 "$count=true&$top=20&$select=zip_code&$orderby=zip_code&$filter=zip_code%20eq%20%2700000%27");
-        final String result = BasicODataSampleTestUtil.stream2String(resp.getContent());
+        final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         // System.err.println("result: " + result);
         assertEquals("{\"@odata.context\":\"$metadata#SklStaffLists\",\"@odata.count\":0,\"value\":[]}", result);
