@@ -17,14 +17,12 @@ package jp.oiyokan.basic;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.apache.olingo.commons.api.http.HttpMethod;
-import org.apache.olingo.server.api.ODataHttpHandler;
-import org.apache.olingo.server.api.ODataRequest;
 import org.apache.olingo.server.api.ODataResponse;
 import org.junit.jupiter.api.Test;
 
 import jp.app.ctrl.ThSakilaCtrl;
 import jp.oiyokan.OiyokanConstants;
+import jp.oiyokan.util.OiyokanTestUtil;
 
 /**
  * OData サーバについて、おおざっぱな通過によるデグレードを検知.
@@ -32,7 +30,6 @@ import jp.oiyokan.OiyokanConstants;
 class BasicODataSakilaAllDbTest {
     @Test
     void test01() throws Exception {
-        final ODataHttpHandler handler = BasicODataSampleTestUtil.getHandler();
         for (String[] entrys : ThSakilaCtrl.ODATA_ENTRY_INFOS) {
             if (entrys[0].indexOf("$search") >= 0) {
                 if (!OiyokanConstants.IS_EXPERIMENTAL_SEARCH_ENABLED) {
@@ -43,15 +40,9 @@ class BasicODataSakilaAllDbTest {
 
             String[] entry = entrys[1].split("['?']");
 
-            final ODataRequest req = new ODataRequest();
-            req.setMethod(HttpMethod.GET);
-            req.setRawBaseUri("http://localhost:8080/odata4.svc");
-            req.setRawODataPath(entry[0]);
-            req.setRawQueryPath(entry[1]);
-            req.setRawRequestUri(req.getRawBaseUri() + req.getRawODataPath() + "?" + req.getRawQueryPath());
+            final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse(entry[0], entry[1]);
+            final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
-            final ODataResponse resp = handler.process(req);
-            final String result = BasicODataSampleTestUtil.stream2String(resp.getContent());
             // System.err.println("[" + entrys[0] + "], [" + entrys[1] + "], result: " +
             // result);
             assertEquals(200, resp.getStatusCode());

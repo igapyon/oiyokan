@@ -18,7 +18,6 @@ package jp.oiyokan.data;
 import java.sql.Connection;
 
 import jp.oiyokan.basic.BasicJdbcUtil;
-import jp.oiyokan.dto.OiyokanSettings;
 import jp.oiyokan.dto.OiyokanSettingsDatabase;
 import jp.oiyokan.settings.OiyokanSettingsUtil;
 
@@ -33,13 +32,7 @@ class SampleGen11OcsdlPgTest {
      */
     // @Test
     void test01() throws Exception {
-        final OiyokanSettings settingsOiyokan = OiyokanSettingsUtil.loadOiyokanSettings();
-        OiyokanSettingsDatabase settingsDatabase = null;
-        for (OiyokanSettingsDatabase look : settingsOiyokan.getDatabaseList()) {
-            if ("postgres1".equals(look.getName())) {
-                settingsDatabase = look;
-            }
-        }
+        OiyokanSettingsDatabase settingsDatabase = OiyokanSettingsUtil.getOiyokanDatabase("postgres1");
 
         try (Connection connTargetDb = BasicJdbcUtil.getConnection(settingsDatabase)) {
             System.err.println(OiyokanInternalDatabase.generateCreateOcsdlDdl(connTargetDb, "actor"));

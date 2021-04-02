@@ -17,13 +17,10 @@ package jp.oiyokan.basic.skl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.apache.olingo.commons.api.http.HttpMethod;
-import org.apache.olingo.server.api.ODataHttpHandler;
-import org.apache.olingo.server.api.ODataRequest;
 import org.apache.olingo.server.api.ODataResponse;
 import org.junit.jupiter.api.Test;
 
-import jp.oiyokan.basic.BasicODataSampleTestUtil;
+import jp.oiyokan.util.OiyokanTestUtil;
 
 /**
  * OData サーバについて、おおざっぱな通過によるデグレードを検知.
@@ -34,17 +31,10 @@ class BasicODataSampleSklTest {
      */
     @Test
     void test02() throws Exception {
-        final ODataHttpHandler handler = BasicODataSampleTestUtil.getHandler();
-        final ODataRequest req = new ODataRequest();
-        req.setMethod(HttpMethod.GET);
-        req.setRawBaseUri("http://localhost:8080/odata4.svc");
-        req.setRawODataPath("/SklStaffLists");
-        req.setRawQueryPath(
+        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/SklStaffLists",
                 "$count=true&$top=20&$select=zip_code&$orderby=zip_code&$filter=zip_code%20eq%20%2700000%27");
-        req.setRawRequestUri(req.getRawBaseUri() + req.getRawODataPath() + "?" + req.getRawQueryPath());
+        final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
-        final ODataResponse resp = handler.process(req);
-        final String result = BasicODataSampleTestUtil.stream2String(resp.getContent());
         // System.err.println("result: " + result);
         assertEquals("{\"@odata.context\":\"$metadata#SklStaffLists\",\"@odata.count\":0,\"value\":[]}", result);
         assertEquals(200, resp.getStatusCode());

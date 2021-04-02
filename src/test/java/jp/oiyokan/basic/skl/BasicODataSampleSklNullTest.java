@@ -17,13 +17,10 @@ package jp.oiyokan.basic.skl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.apache.olingo.commons.api.http.HttpMethod;
-import org.apache.olingo.server.api.ODataHttpHandler;
-import org.apache.olingo.server.api.ODataRequest;
 import org.apache.olingo.server.api.ODataResponse;
 import org.junit.jupiter.api.Test;
 
-import jp.oiyokan.basic.BasicODataSampleTestUtil;
+import jp.oiyokan.util.OiyokanTestUtil;
 
 /**
  * OData サーバについて、おおざっぱな通過によるデグレードを検知.
@@ -38,16 +35,10 @@ class BasicODataSampleSklNullTest {
      */
     @Test
     void test01() throws Exception {
-        final ODataHttpHandler handler = BasicODataSampleTestUtil.getHandler();
-        final ODataRequest req = new ODataRequest();
-        req.setMethod(HttpMethod.GET);
-        req.setRawBaseUri("http://localhost:8080/odata4.svc");
-        req.setRawODataPath("/SklAddresses");
-        req.setRawQueryPath("$top=1&$count=true&$filter=address2%20eq%20null&$select=address_id&$orderby=address_id"); // NULLの件数をカウント.
-        req.setRawRequestUri(req.getRawBaseUri() + req.getRawODataPath() + "?" + req.getRawQueryPath());
+        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/SklAddresses",
+                "$top=1&$count=true&$filter=address2%20eq%20null&$select=address_id&$orderby=address_id");
+        final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
-        final ODataResponse resp = handler.process(req);
-        final String result = BasicODataSampleTestUtil.stream2String(resp.getContent());
         // 検索結果が存在するべき。
         assertEquals(
                 "{\"@odata.context\":\"$metadata#SklAddresses\",\"@odata.count\":4,\"value\":[{\"address_id\":1}]}",
@@ -62,16 +53,11 @@ class BasicODataSampleSklNullTest {
      */
     @Test
     void test02() throws Exception {
-        final ODataHttpHandler handler = BasicODataSampleTestUtil.getHandler();
-        final ODataRequest req = new ODataRequest();
-        req.setMethod(HttpMethod.GET);
-        req.setRawBaseUri("http://localhost:8080/odata4.svc");
-        req.setRawODataPath("/SklAddresses");
-        req.setRawQueryPath("$top=1&$count=true&$filter=null%20eq%20address2&$select=address_id&$orderby=address_id"); // NULLの件数をカウント.
-        req.setRawRequestUri(req.getRawBaseUri() + req.getRawODataPath() + "?" + req.getRawQueryPath());
+        // NULLの件数をカウント.
+        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/SklAddresses",
+                "$top=1&$count=true&$filter=null%20eq%20address2&$select=address_id&$orderby=address_id");
+        final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
-        final ODataResponse resp = handler.process(req);
-        final String result = BasicODataSampleTestUtil.stream2String(resp.getContent());
         // 検索結果が存在するべき。
         assertEquals(
                 "{\"@odata.context\":\"$metadata#SklAddresses\",\"@odata.count\":4,\"value\":[{\"address_id\":1}]}",
@@ -86,16 +72,11 @@ class BasicODataSampleSklNullTest {
      */
     @Test
     void test03() throws Exception {
-        final ODataHttpHandler handler = BasicODataSampleTestUtil.getHandler();
-        final ODataRequest req = new ODataRequest();
-        req.setMethod(HttpMethod.GET);
-        req.setRawBaseUri("http://localhost:8080/odata4.svc");
-        req.setRawODataPath("/SklAddresses");
-        req.setRawQueryPath("$top=1&$count=true&$filter=address2%20ne%20null&$select=address_id&$orderby=address_id"); // NULLの件数をカウント.
-        req.setRawRequestUri(req.getRawBaseUri() + req.getRawODataPath() + "?" + req.getRawQueryPath());
+        // NULLの件数をカウント.
+        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/SklAddresses",
+                "$top=1&$count=true&$filter=address2%20ne%20null&$select=address_id&$orderby=address_id");
+        final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
-        final ODataResponse resp = handler.process(req);
-        final String result = BasicODataSampleTestUtil.stream2String(resp.getContent());
         // 検索結果が存在するべき。
         assertEquals(
                 "{\"@odata.context\":\"$metadata#SklAddresses\",\"@odata.count\":599,\"value\":[{\"address_id\":5}]}",
