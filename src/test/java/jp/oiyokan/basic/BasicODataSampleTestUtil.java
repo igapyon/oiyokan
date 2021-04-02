@@ -6,14 +6,29 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
+import org.apache.olingo.commons.api.http.HttpMethod;
 import org.apache.olingo.server.api.OData;
 import org.apache.olingo.server.api.ODataHttpHandler;
+import org.apache.olingo.server.api.ODataRequest;
+import org.apache.olingo.server.api.ODataResponse;
 import org.apache.olingo.server.api.ServiceMetadata;
 
 import jp.oiyokan.OiyokanEdmProvider;
 import jp.oiyokan.OiyokanEntityCollectionProcessor;
 
 public class BasicODataSampleTestUtil {
+    public static ODataResponse callRequestGetResponse(String rawODataPath, String rawQueryPath) throws Exception {
+        final ODataHttpHandler handler = BasicODataSampleTestUtil.getHandler();
+        final ODataRequest req = new ODataRequest();
+        req.setMethod(HttpMethod.GET);
+        req.setRawBaseUri("http://localhost:8080/odata4.svc");
+        req.setRawODataPath(rawODataPath);
+        req.setRawQueryPath(rawQueryPath);
+        req.setRawRequestUri(req.getRawBaseUri() + req.getRawODataPath() + "?" + req.getRawQueryPath());
+
+        return handler.process(req);
+    }
+
     public static ODataHttpHandler getHandler() throws Exception {
         final OData odata = OData.newInstance();
 
