@@ -124,7 +124,7 @@ public class BasicSqlBuilder {
             start = 1;
         }
 
-        sqlInfo.getSqlBuilder().append("[rownum] BETWEEN " + start + " AND " + (start + count - 1));
+        sqlInfo.getSqlBuilder().append("[rownum4between] BETWEEN " + start + " AND " + (start + count - 1));
     }
 
     private void expandSelect(UriInfo uriInfo) throws ODataApplicationException {
@@ -207,7 +207,7 @@ public class BasicSqlBuilder {
                 sqlInfo.getSqlBuilder().append(") ");
             }
 
-            sqlInfo.getSqlBuilder().append("AS [rownum],");
+            sqlInfo.getSqlBuilder().append("AS [rownum4between],");
             // 必要な分だけ項目展開.
             expandSelect(uriInfo);
             sqlInfo.getSqlBuilder().append(" FROM " + sqlInfo.getEntitySet().getDbTableNameTargetIyo());
@@ -216,7 +216,7 @@ public class BasicSqlBuilder {
                 // データ絞り込みはここで実現.
                 new BasicSqlExprExpander(sqlInfo).expand(uriInfo.getFilterOption().getExpression());
             }
-            sqlInfo.getSqlBuilder().append(") AS [subquery]");
+            sqlInfo.getSqlBuilder().append(") AS [sub4between]");
         }
             break;
         }
