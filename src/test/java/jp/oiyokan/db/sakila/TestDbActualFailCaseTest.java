@@ -23,25 +23,20 @@ import org.junit.jupiter.api.Test;
 import jp.oiyokan.util.OiyokanTestUtil;
 
 /**
- * OData サーバについて、おおざっぱな通過によるデグレードを検知.
+ * 実際に発生した事象のテストケース.
  */
-class BasicODataSampleSklTest {
-    /**
-     * zip code 対応
-     */
+class TestDbActualFailCaseTest {
     @Test
-    void test02() throws Exception {
-        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/SklStaffLists",
+    void test01() throws Exception {
+        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/SklFilmActors",
                 OiyokanTestUtil.encodeUrlQuery(
-                        "$count=true &$top=20 &$select=zip_code &$orderby=zip_code &$filter=zip_code eq '00000'"));
+                        "$top=2001 &$filter=actor_id eq 1 and film_id eq 140 &$count=true &$select=actor_id,film_id,last_update"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
-        // System.err.println("dec: " + OiyokanTestUtil.decodeUrlQuery(
-        // "$count=true&$top=20&$select=zip_code&$orderby=zip_code&$filter=zip_code%20eq%20%2700000%27"));
-
         // System.err.println("result: " + result);
-        assertEquals("{\"@odata.context\":\"$metadata#SklStaffLists\",\"@odata.count\":0,\"value\":[]}", result,
-                "DB上で空白を含む項目名を処理できることの確認。");
+        assertEquals(
+                "{\"@odata.context\":\"$metadata#SklFilmActors\",\"@odata.count\":1,\"value\":[{\"actor_id\":1,\"film_id\":140,\"last_update\":\"2006-02-15T01:05:03Z\"}]}",
+                result);
         assertEquals(200, resp.getStatusCode());
     }
 }

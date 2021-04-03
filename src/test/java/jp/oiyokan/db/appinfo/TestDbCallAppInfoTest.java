@@ -24,7 +24,7 @@ import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.util.OiyokanTestUtil;
 
 /**
- * OData サーバについて、おおざっぱな通過によるデグレードを検知.
+ * ODataAppInfos についての Simple な Call Test.
  */
 class TestDbCallAppInfoTest {
     @Test

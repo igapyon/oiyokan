@@ -27,7 +27,7 @@ import jp.oiyokan.util.OiyokanTestUtil;
  * 
  * IS NULL 関連
  */
-class BasicODataSampleSklNullTest {
+class TestDbCheckNullBehaviorTest {
     /**
      * リテラルの null 対応
      * 

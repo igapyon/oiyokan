@@ -24,9 +24,9 @@ import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.util.OiyokanTestUtil;
 
 /**
- * OData サーバについて、おおざっぱな通過によるデグレードを検知.
+ * ごく基本的な OData の挙動を確認.
  */
-class BasicODataTestDbTest {
+class TestODataBasicAtTestDbTest {
     @Test
     void testSimpleOrderBy() throws Exception {
         final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1",

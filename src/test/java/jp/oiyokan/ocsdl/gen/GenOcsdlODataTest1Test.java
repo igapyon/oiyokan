@@ -13,9 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jp.oiyokan.db.simplejdbc;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
+package jp.oiyokan.ocsdl.gen;
 
 import java.sql.Connection;
 
@@ -24,33 +22,29 @@ import org.junit.jupiter.api.Test;
 import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.basic.BasicJdbcUtil;
 import jp.oiyokan.data.OiyokanInternalDatabase;
+import jp.oiyokan.dto.OiyokanSettingsDatabase;
 import jp.oiyokan.settings.OiyokanSettingsUtil;
 
 /**
- * そもそも内部 h2 database への接続性を確認
+ * 内部データベース用のCSDL用内部テーブルのDDLをコマンドライン生成.
  */
-class H2SimpleClientTest {
+class GenOcsdlODataTest1Test {
+    /**
+     * ODataTest1 のための Ocsdl DDL を生成.
+     * 
+     * カバレッジ目的で、以下のテストは常に動作させる。
+     */
     @Test
     void test01() throws Exception {
-        try (Connection conn = BasicJdbcUtil
-                .getConnection(OiyokanSettingsUtil.getOiyokanDatabase(OiyokanConstants.OIYOKAN_INTERNAL_DB))) {
+        OiyokanSettingsDatabase settingsDatabase = OiyokanSettingsUtil
+                .getOiyokanDatabase(OiyokanConstants.OIYOKAN_INTERNAL_TARGET_DB);
+
+        try (Connection connTargetDb = BasicJdbcUtil.getConnection(settingsDatabase)) {
             // 内部データベースのテーブルをセットアップ.
             OiyokanInternalDatabase.setupInternalDatabase();
-        }
 
-        try (Connection conn = BasicJdbcUtil
-                .getConnection(OiyokanSettingsUtil.getOiyokanDatabase(OiyokanConstants.OIYOKAN_INTERNAL_TARGET_DB))) {
+            System.err.println(OiyokanInternalDatabase.generateCreateOcsdlDdl(connTargetDb, "ODataTest1"));
 
-            try (var stmt = conn.prepareStatement(
-                    "SELECT address_id FROM address WHERE ((address2 IS NULL) AND (address = ?)) LIMIT 2001")) {
-                int column = 1;
-                stmt.setString(column++, "47 MySakila Drive");
-                stmt.executeQuery();
-                var rset = stmt.getResultSet();
-                if (rset.next()) {
-                    assertEquals("1", rset.getString(1));
-                }
-            }
         }
     }
 }

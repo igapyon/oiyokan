@@ -26,7 +26,7 @@ import jp.oiyokan.settings.OiyokanSettingsUtil;
 /**
  * 内部データベース用のCSDL用内部テーブルのDDLをコマンドライン生成.
  */
-class SampleGen01Ocsdlh2ODataTests1Test {
+class GenOcsdlODataTestFulls1Test {
     /**
      * Ocsdlテーブルのスキーマを取得したい場合にのみ JUnit を実行する。
      */
@@ -39,7 +39,7 @@ class SampleGen01Ocsdlh2ODataTests1Test {
             // 内部データベースのテーブルをセットアップ.
             OiyokanInternalDatabase.setupInternalDatabase();
 
-            System.err.println(OiyokanInternalDatabase.generateCreateOcsdlDdl(connTargetDb, "ODataTest1"));
+            System.err.println(OiyokanInternalDatabase.generateCreateOcsdlDdl(connTargetDb, "ODataTestFulls1"));
 
         }
     }

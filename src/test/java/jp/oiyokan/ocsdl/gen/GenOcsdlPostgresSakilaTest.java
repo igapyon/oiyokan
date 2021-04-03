@@ -25,7 +25,7 @@ import jp.oiyokan.settings.OiyokanSettingsUtil;
 /**
  * 内部データベース用のCSDL用内部テーブルのDDLをコマンドライン生成.
  */
-class SampleGen11OcsdlPgTest {
+class GenOcsdlPostgresSakilaTest {
     /**
      * postgres 接続環境が適切に存在する場合にのみ実行可能。
      * 
