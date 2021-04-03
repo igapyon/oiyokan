@@ -21,8 +21,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.junit.jupiter.api.Test;
-
 import jp.oiyokan.basic.BasicJdbcUtil;
 import jp.oiyokan.data.OiyokanInternalDatabase;
 import jp.oiyokan.dto.OiyokanSettingsDatabase;
@@ -32,16 +30,18 @@ import jp.oiyokan.settings.OiyokanSettingsUtil;
  * 内部データベース用のCSDL用内部テーブルのDDLをコマンドライン生成.
  */
 class GenOcsdlGenericAllTest {
-    private static final boolean SHOW_JDBCINFO = false;
+    private static final String TARGET_SETTINGS_DATABASE = "oiyokanInternalTarget";
+
+    private static final boolean SHOW_JDBCINFO = true;
 
     /**
      * 全テーブルを取得.
      * 
      * Ocsdlテーブルのスキーマを取得したい場合にのみ JUnit を実行する。
      */
-    @Test
+    // @Test
     void test01() throws Exception {
-        OiyokanSettingsDatabase settingsDatabase = OiyokanSettingsUtil.getOiyokanDatabase("mysql2");
+        OiyokanSettingsDatabase settingsDatabase = OiyokanSettingsUtil.getOiyokanDatabase(TARGET_SETTINGS_DATABASE);
 
         try (Connection connTargetDb = BasicJdbcUtil.getConnection(settingsDatabase)) {
             final List<String> tableNameList = new ArrayList<>();
@@ -58,12 +58,25 @@ class GenOcsdlGenericAllTest {
                     // System.err.println(" TABLE_SCHEM : " + rset.getString("TABLE_SCHEM"));
                 }
 
+                // for h2 database
+                if ("IGNORELIST".equals(tableName) //
+                        || "INDEXES".equals(tableName)//
+                        || "MAP".equals(tableName)//
+                        || "ROWS".equals(tableName)//
+                        || "SETTINGS".equals(tableName)//
+                        || "WORDS".equals(tableName)) {
+                    System.err.println("    skip.");
+                    continue;
+                }
+
+                // for MySQL.
                 if ("sys".equals(tableCat)) {
                     if (SHOW_JDBCINFO) {
                         System.err.println("    skip.");
                     }
                     continue;
                 }
+
                 tableNameList.add(tableName);
 
                 if (SHOW_JDBCINFO) {
@@ -73,6 +86,9 @@ class GenOcsdlGenericAllTest {
             }
 
             Collections.sort(tableNameList);
+
+            System.err.println("Ocsdl 候補: " + settingsDatabase.getName());
+            System.err.println("");
 
             for (String tableName : tableNameList) {
                 System.err.println(OiyokanInternalDatabase.generateCreateOcsdlDdl(connTargetDb, tableName));
