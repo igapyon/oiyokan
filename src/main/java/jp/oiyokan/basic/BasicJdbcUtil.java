@@ -148,7 +148,7 @@ public class BasicJdbcUtil {
             csdlProp.setType(EdmPrimitiveTypeKind.Boolean.getFullQualifiedName());
             break;
         case Types.BIT:
-            // postgres で発生.
+            // postgres / SQL Server で発生.
             csdlProp.setType(EdmPrimitiveTypeKind.Boolean.getFullQualifiedName());
             break;
         case Types.REAL:

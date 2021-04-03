@@ -78,10 +78,10 @@ oiyokan プロジェクトは、OData v4 server のシンプルなサンプル(h
 
 ## TODO
 
+- ODataからの入力パラメータのバリエーション試験を実施。(カバレッジを見ながら)
+- テストDBに BigInt などの列を追加。
 - MySQL のテスト実施
 - Oracleのテスト実施
-- テストDBに BigInt などの列を追加。
-- ODataからの入力パラメータのバリエーション試験を実施。
 - favicon.ico ファイルの配置。
 - OData のサイトに掲載する
 - README に oiyokan-naming-settings.json の記述についての記載を追記.

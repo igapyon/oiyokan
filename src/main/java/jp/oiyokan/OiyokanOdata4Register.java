@@ -45,7 +45,7 @@ public class OiyokanOdata4Register {
      * @throws ServletException サーブレット例外.
      */
     @RequestMapping(OiyokanConstants.ODATA_ROOTPATH + "/*")
-    private void serv(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException {
+    public void serv(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException {
         String uri = req.getRequestURI();
         if (req.getQueryString() != null) {
             try {
