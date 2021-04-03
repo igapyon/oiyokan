@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jp.oiyokan.basic;
+package jp.oiyokan.db.testdb;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -23,9 +23,9 @@ import org.junit.jupiter.api.Test;
 import jp.oiyokan.util.OiyokanTestUtil;
 
 /**
- * OData サーバについて、おおざっぱな通過によるデグレードを検知.
+ * フィルタの型に着眼したテスト.
  */
-class BasicODataSampleDbFilterTest {
+class TestODataFilterTypeAtTestDbTest {
 
     @Test
     void testTimestamp() throws Exception {
@@ -34,6 +34,7 @@ class BasicODataSampleDbFilterTest {
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         // System.err.println("result: " + result);
+        // TODO FIXME 結果が存在するテストパターンが欲しい。
         assertEquals("{\"@odata.context\":\"$metadata#ODataTests1\",\"@odata.count\":0,\"value\":[]}", result);
         assertEquals(200, resp.getStatusCode());
     }
@@ -45,6 +46,7 @@ class BasicODataSampleDbFilterTest {
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         // System.err.println("result: " + result);
+        // TODO FIXME 結果が存在するテストパターンが欲しい。
         assertEquals("{\"@odata.context\":\"$metadata#ODataTests1\",\"@odata.count\":0,\"value\":[]}", result);
         assertEquals(200, resp.getStatusCode());
     }
@@ -154,6 +156,7 @@ class BasicODataSampleDbFilterTest {
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         // System.err.println("result: " + result);
+        // TODO FIXME 結果が存在するテストパターンが欲しい。
         assertEquals("{\"@odata.context\":\"$metadata#ODataTests1\",\"@odata.count\":0,\"value\":[]}", result);
         assertEquals(200, resp.getStatusCode());
     }

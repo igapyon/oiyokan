@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jp.oiyokan.h2.data;
+package jp.oiyokan.db.simplejdbc;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -28,7 +28,7 @@ import jp.oiyokan.data.OiyokanInternalDatabase;
 import jp.oiyokan.settings.OiyokanSettingsUtil;
 
 /**
- * そもそも内部 h2 database への接続性を確認
+ * ごく基本的で大雑把な JDBC + h2 database 挙動の確認.
  */
 class H2DatabaseTest {
     @Test
@@ -65,6 +65,35 @@ class H2DatabaseTest {
                 for (int column = 1; column <= rsmeta.getColumnCount(); column++) {
                     // System.err.println(rsmeta.getColumnName(column) + ", class=" +
                     // rsmeta.getColumnClassName(column));
+                }
+            }
+        }
+    }
+
+    /**
+     * h2 database の null に関する挙動の確認.
+     * 
+     * @throws Exception
+     */
+    @Test
+    void test03() throws Exception {
+        try (Connection conn = BasicJdbcUtil
+                .getConnection(OiyokanSettingsUtil.getOiyokanDatabase(OiyokanConstants.OIYOKAN_INTERNAL_DB))) {
+            // 内部データベースのテーブルをセットアップ.
+            OiyokanInternalDatabase.setupInternalDatabase();
+        }
+
+        try (Connection conn = BasicJdbcUtil
+                .getConnection(OiyokanSettingsUtil.getOiyokanDatabase(OiyokanConstants.OIYOKAN_INTERNAL_TARGET_DB))) {
+
+            try (var stmt = conn.prepareStatement(
+                    "SELECT address_id FROM address WHERE ((address2 IS NULL) AND (address = ?)) LIMIT 2001")) {
+                int column = 1;
+                stmt.setString(column++, "47 MySakila Drive");
+                stmt.executeQuery();
+                var rset = stmt.getResultSet();
+                if (rset.next()) {
+                    assertEquals("1", rset.getString(1));
                 }
             }
         }

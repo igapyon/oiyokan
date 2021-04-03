@@ -13,18 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jp.oiyokan.data;
+package jp.oiyokan.ocsdl.gen;
 
 import java.sql.Connection;
 
 import jp.oiyokan.basic.BasicJdbcUtil;
+import jp.oiyokan.data.OiyokanInternalDatabase;
 import jp.oiyokan.dto.OiyokanSettingsDatabase;
 import jp.oiyokan.settings.OiyokanSettingsUtil;
 
 /**
  * 内部データベース用のCSDL用内部テーブルのDDLをコマンドライン生成.
  */
-class SampleGen11OcsdlPgTest {
+class GenOcsdlPostgresSakilaTest {
     /**
      * postgres 接続環境が適切に存在する場合にのみ実行可能。
      * 

@@ -28,8 +28,6 @@ import org.junit.jupiter.api.Test;
 import jp.oiyokan.OiyokanCsdlEntityContainer;
 import jp.oiyokan.OiyokanCsdlEntitySet;
 import jp.oiyokan.OiyokanEdmProvider;
-import jp.oiyokan.basic.sql.BasicSqlExprExpander;
-import jp.oiyokan.basic.sql.BasicSqlInfo;
 import jp.oiyokan.util.OiyokanTestUtil;
 
 /**

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jp.oiyokan.basic;
+package jp.oiyokan.db.sakila;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -27,7 +27,7 @@ import jp.oiyokan.util.OiyokanTestUtil;
 /**
  * OData サーバについて、おおざっぱな通過によるデグレードを検知.
  */
-class BasicODataSakilaAllDbTest {
+class TestDbCallSakilaAllQueryTest {
     @Test
     void test01() throws Exception {
         for (String[] entrys : ThSakilaCtrl.ODATA_ENTRY_INFOS) {

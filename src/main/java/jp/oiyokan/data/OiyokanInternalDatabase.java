@@ -310,6 +310,7 @@ public class OiyokanInternalDatabase {
                     break;
                 case Types.BINARY:
                     if ("UUID".equalsIgnoreCase(rsmeta.getColumnTypeName(column))) {
+                        // 型名が UUID の時だけ特殊な挙動をする.
                         sqlBuilder.append("UUID");
                     } else {
                         if (rsmeta.getColumnDisplaySize(column) > 0

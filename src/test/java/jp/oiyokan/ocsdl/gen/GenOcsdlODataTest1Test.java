@@ -13,23 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jp.oiyokan.data;
+package jp.oiyokan.ocsdl.gen;
 
 import java.sql.Connection;
 
+import org.junit.jupiter.api.Test;
+
 import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.basic.BasicJdbcUtil;
+import jp.oiyokan.data.OiyokanInternalDatabase;
 import jp.oiyokan.dto.OiyokanSettingsDatabase;
 import jp.oiyokan.settings.OiyokanSettingsUtil;
 
 /**
  * 内部データベース用のCSDL用内部テーブルのDDLをコマンドライン生成.
  */
-class SampleGen01Ocsdlh2ODataTests1Test {
+class GenOcsdlODataTest1Test {
     /**
-     * Ocsdlテーブルのスキーマを取得したい場合にのみ JUnit を実行する。
+     * ODataTest1 のための Ocsdl DDL を生成.
+     * 
+     * カバレッジ目的で、以下のテストは常に動作させる。
      */
-    // @Test
+    @Test
     void test01() throws Exception {
         OiyokanSettingsDatabase settingsDatabase = OiyokanSettingsUtil
                 .getOiyokanDatabase(OiyokanConstants.OIYOKAN_INTERNAL_TARGET_DB);

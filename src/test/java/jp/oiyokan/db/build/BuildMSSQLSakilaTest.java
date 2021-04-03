@@ -13,41 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jp.oiyokan.data;
+package jp.oiyokan.db.build;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 
 import jp.oiyokan.basic.BasicJdbcUtil;
+import jp.oiyokan.data.OiyokanResourceSqlUtil;
 import jp.oiyokan.dto.OiyokanSettingsDatabase;
 import jp.oiyokan.settings.OiyokanSettingsUtil;
 
 /**
  * 内部データベース用のCSDL用内部テーブルのDDLをコマンドライン生成.
  */
-class SampleGen11OcsdlMSSQLTest {
-    /**
-     * SQL Server 接続環境が適切に存在する場合にのみ実行可能。
-     * 
-     * Ocsdlテーブルのスキーマを取得したい場合にのみ JUnit を実行する。
-     */
+class BuildMSSQLSakilaTest {
     // @Test
     void test01() throws Exception {
         OiyokanSettingsDatabase settingsDatabase = OiyokanSettingsUtil.getOiyokanDatabase("mssql1");
 
         try (Connection connTargetDb = BasicJdbcUtil.getConnection(settingsDatabase)) {
-            System.err.println(OiyokanInternalDatabase.generateCreateOcsdlDdl(connTargetDb, "actor"));
-
-        }
-    }
-
-    // @Test
-    void test02() throws Exception {
-        OiyokanSettingsDatabase settingsDatabase = OiyokanSettingsUtil.getOiyokanDatabase("mssql1");
-
-        try (Connection connTargetDb = BasicJdbcUtil.getConnection(settingsDatabase)) {
-            String[] sqls = OiyokanResourceSqlUtil
-                    .loadOiyokanResourceSql("oiyokan/sql/" + "sample-sakila-db-MSSQL.sql");
+            String[] sqls = OiyokanResourceSqlUtil.loadOiyokanResourceSql("oiyokan/sql/" + "oiyokan-test-db-MSSQL.sql");
             for (String sql : sqls) {
                 try (var stmt = connTargetDb.prepareStatement(sql)) {
                     System.err.println(sql);
@@ -61,11 +46,12 @@ class SampleGen11OcsdlMSSQLTest {
     }
 
     // @Test
-    void test03() throws Exception {
+    void test02() throws Exception {
         OiyokanSettingsDatabase settingsDatabase = OiyokanSettingsUtil.getOiyokanDatabase("mssql1");
 
         try (Connection connTargetDb = BasicJdbcUtil.getConnection(settingsDatabase)) {
-            String[] sqls = OiyokanResourceSqlUtil.loadOiyokanResourceSql("oiyokan/sql/" + "oiyokan-test-db-MSSQL.sql");
+            String[] sqls = OiyokanResourceSqlUtil
+                    .loadOiyokanResourceSql("oiyokan/sql/" + "sample-sakila-db-MSSQL.sql");
             for (String sql : sqls) {
                 try (var stmt = connTargetDb.prepareStatement(sql)) {
                     System.err.println(sql);

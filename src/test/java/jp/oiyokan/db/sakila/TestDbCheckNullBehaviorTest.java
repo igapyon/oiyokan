@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jp.oiyokan.basic.skl;
+package jp.oiyokan.db.sakila;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -27,7 +27,7 @@ import jp.oiyokan.util.OiyokanTestUtil;
  * 
  * IS NULL 関連
  */
-class BasicODataSampleSklNullTest {
+class TestDbCheckNullBehaviorTest {
     /**
      * リテラルの null 対応
      * 

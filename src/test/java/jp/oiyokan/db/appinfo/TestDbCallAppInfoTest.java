@@ -13,29 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jp.oiyokan.basic.skl;
+package jp.oiyokan.db.appinfo;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.apache.olingo.server.api.ODataResponse;
 import org.junit.jupiter.api.Test;
 
+import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.util.OiyokanTestUtil;
 
 /**
- * 実際に発生した事象のテストケース.
+ * ODataAppInfos についての Simple な Call Test.
  */
-class BasicODataSampleSklFoundCasesTest {
+class TestDbCallAppInfoTest {
     @Test
-    void test01() throws Exception {
-        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/SklFilmActors",
-                OiyokanTestUtil.encodeUrlQuery(
-                        "$top=2001 &$filter=actor_id eq 1 and film_id eq 140 &$count=true &$select=actor_id,film_id,last_update"));
+    void testSimpleVersion() throws Exception {
+        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataAppInfos", "$top=1&$skip=1");
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         // System.err.println("result: " + result);
         assertEquals(
-                "{\"@odata.context\":\"$metadata#SklFilmActors\",\"@odata.count\":1,\"value\":[{\"actor_id\":1,\"film_id\":140,\"last_update\":\"2006-02-15T01:05:03Z\"}]}",
+                "{\"@odata.context\":\"$metadata#ODataAppInfos\",\"value\":[{\"KeyName\":\"Version\",\"KeyValue\":\""
+                        + OiyokanConstants.VERSION + "\"}]}",
                 result);
         assertEquals(200, resp.getStatusCode());
     }
