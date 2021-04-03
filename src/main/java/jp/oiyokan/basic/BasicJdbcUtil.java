@@ -148,7 +148,7 @@ public class BasicJdbcUtil {
             csdlProp.setType(EdmPrimitiveTypeKind.Boolean.getFullQualifiedName());
             break;
         case Types.BIT:
-            // postgres で発生.
+            // postgres / SQL Server で発生.
             csdlProp.setType(EdmPrimitiveTypeKind.Boolean.getFullQualifiedName());
             break;
         case Types.REAL:
@@ -235,6 +235,7 @@ public class BasicJdbcUtil {
         if ("Edm.SByte".equals(csdlProp.getType())) {
             return new Property(null, propName, ValueType.PRIMITIVE, rset.getByte(column));
         } else if ("Edm.Byte".equals(csdlProp.getType())) {
+            // 符号なしのバイト. h2 database には該当なし.
             // Edm.Byteに相当する型がJavaにないので Shortで代替.
             return new Property(null, propName, ValueType.PRIMITIVE, rset.getShort(column));
         } else if ("Edm.Int16".equals(csdlProp.getType())) {
@@ -288,8 +289,10 @@ public class BasicJdbcUtil {
             // Guid については UUID として読み込む。
             final Object obj = rset.getObject(column);
             if (obj instanceof java.util.UUID) {
+                // h2 database で通過
                 return new Property(null, propName, ValueType.PRIMITIVE, (java.util.UUID) obj);
             } else if (obj instanceof String) {
+                // SQL Server 2008 で通過
                 java.util.UUID look = UUID.fromString((String) obj);
                 return new Property(null, propName, ValueType.PRIMITIVE, look);
             } else {
@@ -330,12 +333,15 @@ public class BasicJdbcUtil {
         } else if (value instanceof Long) {
             stmt.setLong(column, (Long) value);
         } else if (value instanceof BigDecimal) {
+            // Oiyokan では 小数点は基本的にリテラルのまま残すため、このコードは通過しない.
             stmt.setBigDecimal(column, (BigDecimal) value);
         } else if (value instanceof Boolean) {
             stmt.setBoolean(column, (Boolean) value);
         } else if (value instanceof Float) {
+            // Oiyokan では 小数点は基本的にリテラルのまま残すため、このコードは通過しない.
             stmt.setFloat(column, (Float) value);
         } else if (value instanceof Double) {
+            // Oiyokan では 小数点は基本的にリテラルのまま残すため、このコードは通過しない.
             stmt.setDouble(column, (Double) value);
         } else if (value instanceof java.util.Date) {
             // java.sql.Timestampはここを通過.
@@ -356,7 +362,7 @@ public class BasicJdbcUtil {
     // 項目名に関するユーティリティ
 
     /**
-     * かっこつき項目名のかっこを除去.
+     * かっこつき項目名のかっこを除去. これは OData API からの引き渡しの値にて発生.
      * 
      * @param escapedFieldName かっこ付き項目名.
      * @return かっこなし項目名.
@@ -394,6 +400,7 @@ public class BasicJdbcUtil {
             }
             return "\"" + fieldName + "\"";
 
+        case MySQL:
         case BigQuery:
             if (fieldName.indexOf(" ") <= 0 && fieldName.indexOf(".") <= 0) {
                 // 空白やピリオドのない場合はエスケープしない.

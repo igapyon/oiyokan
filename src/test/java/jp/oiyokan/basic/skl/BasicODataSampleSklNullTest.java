@@ -31,37 +31,39 @@ class BasicODataSampleSklNullTest {
     /**
      * リテラルの null 対応
      * 
-     * IS NULL 展開の確認。
+     * IS NULL で右辺が null の展開の確認。
      */
     @Test
     void test01() throws Exception {
         final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/SklAddresses",
-                "$top=1&$count=true&$filter=address2%20eq%20null&$select=address_id&$orderby=address_id");
+                OiyokanTestUtil.encodeUrlQuery(
+                        "$top=1 &$count=true &$filter=address2 eq null &$select=address_id &$orderby=address_id"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         // 検索結果が存在するべき。
         assertEquals(
                 "{\"@odata.context\":\"$metadata#SklAddresses\",\"@odata.count\":4,\"value\":[{\"address_id\":1}]}",
-                result);
+                result, "eq で右辺が null リテラルの処理");
         assertEquals(200, resp.getStatusCode());
     }
 
     /**
      * リテラルの null 対応
      * 
-     * IS NULL 展開の確認。
+     * IS NULL で左辺が null 展開の確認。
      */
     @Test
     void test02() throws Exception {
         // NULLの件数をカウント.
         final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/SklAddresses",
-                "$top=1&$count=true&$filter=null%20eq%20address2&$select=address_id&$orderby=address_id");
+                OiyokanTestUtil.encodeUrlQuery(
+                        "$top=1 &$count=true &$filter=null eq address2 &$select=address_id &$orderby=address_id"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         // 検索結果が存在するべき。
         assertEquals(
                 "{\"@odata.context\":\"$metadata#SklAddresses\",\"@odata.count\":4,\"value\":[{\"address_id\":1}]}",
-                result);
+                result, "eq で左辺が null リテラルの処理");
         assertEquals(200, resp.getStatusCode());
     }
 
@@ -72,15 +74,19 @@ class BasicODataSampleSklNullTest {
      */
     @Test
     void test03() throws Exception {
-        // NULLの件数をカウント.
+        // NOT EQUAL NULL の件数をカウント.
         final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/SklAddresses",
-                "$top=1&$count=true&$filter=address2%20ne%20null&$select=address_id&$orderby=address_id");
+                OiyokanTestUtil.encodeUrlQuery(
+                        "$top=1 &$count=true &$filter=address2 ne null &$select=address_id &$orderby=address_id"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
+
+        // System.err.println("dec: " + OiyokanTestUtil.decodeUrlQuery(
+        // "$top=1&$count=true&$filter=address2%20ne%20null&$select=address_id&$orderby=address_id"));
 
         // 検索結果が存在するべき。
         assertEquals(
                 "{\"@odata.context\":\"$metadata#SklAddresses\",\"@odata.count\":599,\"value\":[{\"address_id\":5}]}",
-                result);
+                result, "ne で右辺が null リテラルの処理 (ne で左辺は null にはできない)");
         assertEquals(200, resp.getStatusCode());
     }
 }

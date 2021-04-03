@@ -132,8 +132,8 @@
             </div>
           </td>
           <td data-label="Request">
-            <div class="slds-truncate" title="${'./odata4.svc' + urlEntry.path}"><a
-                th:href="${'./odata4.svc' + urlEntry.path}" target="_blank">Request</a></div>
+            <div class="slds-truncate" title="${odataRootpath + urlEntry.path}"><a
+                th:href="${odataRootpath + urlEntry.path}" target="_blank">Request</a></div>
           </td>
           <td data-label="Note">
             <div class="slds-truncate" title="Note"><span th:text="${urlEntry.note}" th:remove="tag" /></div>

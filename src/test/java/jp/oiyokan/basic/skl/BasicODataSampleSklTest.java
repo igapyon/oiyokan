@@ -32,11 +32,16 @@ class BasicODataSampleSklTest {
     @Test
     void test02() throws Exception {
         final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/SklStaffLists",
-                "$count=true&$top=20&$select=zip_code&$orderby=zip_code&$filter=zip_code%20eq%20%2700000%27");
+                OiyokanTestUtil.encodeUrlQuery(
+                        "$count=true &$top=20 &$select=zip_code &$orderby=zip_code &$filter=zip_code eq '00000'"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
+        // System.err.println("dec: " + OiyokanTestUtil.decodeUrlQuery(
+        // "$count=true&$top=20&$select=zip_code&$orderby=zip_code&$filter=zip_code%20eq%20%2700000%27"));
+
         // System.err.println("result: " + result);
-        assertEquals("{\"@odata.context\":\"$metadata#SklStaffLists\",\"@odata.count\":0,\"value\":[]}", result);
+        assertEquals("{\"@odata.context\":\"$metadata#SklStaffLists\",\"@odata.count\":0,\"value\":[]}", result,
+                "DB上で空白を含む項目名を処理できることの確認。");
         assertEquals(200, resp.getStatusCode());
     }
 }

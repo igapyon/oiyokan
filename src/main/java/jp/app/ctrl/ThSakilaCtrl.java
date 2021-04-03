@@ -8,6 +8,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import jp.oiyokan.OiyokanConstants;
+
 @Controller
 public class ThSakilaCtrl {
     public static final String[][] ODATA_ENTRY_INFOS = new String[][] { //
@@ -69,6 +71,7 @@ public class ThSakilaCtrl {
 
     @RequestMapping("/sakila.html")
     public String oiyokanUnittest(Model model) throws IOException {
+        model.addAttribute("odataRootpath", OiyokanConstants.ODATA_ROOTPATH);
 
         final List<UrlEntryBean> urlEntryList = new ArrayList<>();
         model.addAttribute("UrlEntryList", urlEntryList);
