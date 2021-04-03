@@ -48,22 +48,6 @@ class BuildMySQLSakilaDbTest {
         }
     }
 
-    // @Test
-    void test02() throws Exception {
-        OiyokanSettingsDatabase settingsDatabase = OiyokanSettingsUtil.getOiyokanDatabase("mysql1");
-
-        try (Connection connTargetDb = BasicJdbcUtil.getConnection(settingsDatabase)) {
-            String[] sqls = OiyokanResourceSqlUtil
-                    .loadOiyokanResourceSql("oiyokan/sql/" + "sample-sakila-db-MySQL.sql");
-            for (String sql : sqls) {
-                try (var stmt = connTargetDb.prepareStatement(sql)) {
-                    System.err.println(sql);
-                    stmt.executeUpdate();
-                } catch (SQLException ex) {
-                    System.err.println(ex.toString());
-                    throw ex;
-                }
-            }
-        }
-    }
+    ////////////////////////////////////////////////////
+    // Sakila DB については MySQL 公式のものを利用。
 }
