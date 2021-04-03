@@ -88,7 +88,7 @@ public class BasicSqlBuilder {
         // 現状の実装では指定があろうがなかろうが件数はカウントする実装となっている.
         // TODO FIXME 現状でも常にカウントしているかどうか確認すること。
 
-        if (OiyokanConstants.DatabaseType.MSSQL == sqlInfo.getEntitySet().getDatabaseType()) {
+        if (OiyokanConstants.DatabaseType.MSSQL2008 == sqlInfo.getEntitySet().getDatabaseType()) {
             sqlInfo.getSqlBuilder().append(" WHERE ");
             expandMSSQLBetween(uriInfo);
             // SQL Server検索は WHERE絞り込みは既にサブクエリにて適用済み.
@@ -101,7 +101,7 @@ public class BasicSqlBuilder {
             }
         }
 
-        if (OiyokanConstants.DatabaseType.MSSQL == sqlInfo.getEntitySet().getDatabaseType()) {
+        if (OiyokanConstants.DatabaseType.MSSQL2008 == sqlInfo.getEntitySet().getDatabaseType()) {
             // 必ず rownum4between 順でソート.
             sqlInfo.getSqlBuilder().append(" ORDER BY [rownum4between]");
         } else {
@@ -194,7 +194,7 @@ public class BasicSqlBuilder {
         default:
             sqlInfo.getSqlBuilder().append(" FROM " + sqlInfo.getEntitySet().getDbTableNameTargetIyo());
             break;
-        case MSSQL: {
+        case MSSQL2008: {
             //////////////////////////////
             // SQL Server 用特殊記述
             // SQL Serverの場合は無条件にサブクエリ展開
@@ -260,7 +260,7 @@ public class BasicSqlBuilder {
     }
 
     private void expandTopSkip(UriInfo uriInfo) {
-        if (OiyokanConstants.DatabaseType.MSSQL != sqlInfo.getEntitySet().getDatabaseType()) {
+        if (OiyokanConstants.DatabaseType.MSSQL2008 != sqlInfo.getEntitySet().getDatabaseType()) {
             if (uriInfo.getTopOption() != null) {
                 sqlInfo.getSqlBuilder().append(" LIMIT ");
                 sqlInfo.getSqlBuilder().append(uriInfo.getTopOption().getValue());

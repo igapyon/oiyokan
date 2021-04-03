@@ -385,7 +385,7 @@ public class BasicJdbcUtil {
     public static String escapeKakkoFieldName(BasicSqlInfo sqlInfo, String fieldName) throws ODataApplicationException {
         switch (sqlInfo.getEntitySet().getDatabaseType()) {
         case h2:
-        case MSSQL:
+        case MSSQL2008:
             if (fieldName.indexOf(" ") <= 0 && fieldName.indexOf(".") <= 0) {
                 // 空白のない場合はエスケープしない.
                 return fieldName;

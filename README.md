@@ -78,19 +78,19 @@ oiyokan プロジェクトは、OData v4 server のシンプルなサンプル(h
 
 ## TODO
 
-- BasicSqlExprExpander.java のカバレッジ.
-- ODataからの入力パラメータのバリエーション試験を実施。(カバレッジを見ながら)
-- テストDBに BigInt などの列を追加。
 - MySQL のテスト実施
 - Oracleのテスト実施
-- favicon.ico ファイルの配置。
-- OData のサイトに掲載する
-- README に oiyokan-naming-settings.json の記述についての記載を追記.
-- サンプル EntitySet の html説明について Card 型に変更したい
-- モバイルデバイスから Web サイトにアクセスすると画面が崩れる。
-- BasicSqlExprExpander の通過していない箇所のテスト.
-- そもそもカバレッジのテスト。
+- 設定XMLファイルを重ねがけできるようにしたい。
 - Sakila DVDレンタルのサンプル (SklActors 等)、ODataTests1 を ON/OFFする手順またはプログラム実装を記述.
 - 認証の各種実験。
 - TimeOfDay がテスト不十分.
 - Maven Repository にアップしたい.
+
+## TODO サイトデザイン
+
+- favicon.ico ファイルの配置。
+- OData のサイトに掲載する
+- モバイルデバイスから Web サイトにアクセスすると画面が崩れるのを修正。
+- サンプル EntitySet の html説明について Card 型に変更したい
+- README に oiyokan-naming-settings.json の記述についての記載を追記.
+
