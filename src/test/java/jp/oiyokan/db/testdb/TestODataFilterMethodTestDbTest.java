@@ -157,4 +157,21 @@ class TestODataFilterMethodTestDbTest {
                 result);
         assertEquals(200, resp.getStatusCode());
     }
+
+    // SUBSTRINGOF
+    @Test
+    void testSubstringofA() throws Exception {
+        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1",
+                OiyokanTestUtil.encodeUrlQuery("&$filter=substringof(StringVar255, 'EFG') &$count=true &$select=ID"));
+        final String result = OiyokanTestUtil.stream2String(resp.getContent());
+
+        // System.err.println("result: " + result);
+        assertEquals("{\"@odata.context\":\"$metadata#ODataTests1\",\"@odata.count\":1,\"value\":[{\"ID\":204}]}",
+                result);
+        assertEquals(200, resp.getStatusCode());
+    }
+
+    // NOT
+
+    // MINUS
 }

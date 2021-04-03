@@ -430,11 +430,6 @@ public class BasicSqlExprExpander {
             expand(impl.getParameters().get(1));
             sqlInfo.getSqlBuilder().append(")");
             return;
-
-            // [M123] NOT SUPPORTED: MethodKind.ENDSWITH
-            // System.err.println(OiyokanMessages.M123);
-            // throw new ODataApplicationException(OiyokanMessages.M123, 500,
-            // Locale.ENGLISH);
         }
 
         // LENGTH
@@ -684,7 +679,7 @@ public class BasicSqlExprExpander {
 
         // SUBSTRINGOF
         if (impl.getMethod() == MethodKind.SUBSTRINGOF) {
-            sqlInfo.getSqlBuilder().append("(POSITION(");
+            sqlInfo.getSqlBuilder().append("(INSTR(");
             expand(impl.getParameters().get(0));
             sqlInfo.getSqlBuilder().append(",");
             expand(impl.getParameters().get(1));
