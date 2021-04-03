@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jp.oiyokan.h2.sql;
+package jp.oiyokan.basic.sql;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -35,9 +35,17 @@ import jp.oiyokan.util.OiyokanTestUtil;
 /**
  * TinyH2SqlExprExpanderのテスト.
  */
-class TinyH2SqlExprExpanderTest {
+class BasicSqlExprExpanderTest {
     final OiyokanCsdlEntityContainer localTemplateEntityContainer = new OiyokanCsdlEntityContainer();
 
+    /**
+     * クラス内の共通関数
+     * 
+     * @param rawODataPath データパス.
+     * @param rawQueryPath クエリパス.
+     * @return SQL条件文.
+     * @throws Exception 例外が発生した場合.
+     */
     private String getExprString(String rawODataPath, String rawQueryPath) throws Exception {
         OData odata = OData.newInstance();
         ServiceMetadata edm = odata.createServiceMetadata(new OiyokanEdmProvider(), new ArrayList<>());
@@ -53,6 +61,9 @@ class TinyH2SqlExprExpanderTest {
         new BasicSqlExprExpander(sqlInfo).expand(uriInfo.getFilterOption().getExpression());
         return sqlInfo.getSqlBuilder().toString();
     }
+
+    /////////////////////
+    // Test Body
 
     @Test
     void test01() throws Exception {
@@ -70,6 +81,6 @@ class TinyH2SqlExprExpanderTest {
     void test03() throws Exception {
         assertEquals("((POSITION(?,Description) - 1) <> ?)", getExprString("/ODataTests1", //
                 OiyokanTestUtil.encodeUrlQuery(
-                        "$top=51&$filter= indexof(Description,'増殖タブレット7') ne -1&$orderby=ID&$count=true&$select=Description,ID,Name")));
+                        "$top=51&$filter= indexof(Description,'増殖タブレット7') ne -1 &$orderby=ID &$count=true &$select=Description,ID,Name")));
     }
 }
