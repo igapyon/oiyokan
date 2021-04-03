@@ -35,13 +35,9 @@ class H2DatabaseTest {
     @Test
     void test01() throws Exception {
         try (Connection conn = BasicJdbcUtil
-                .getConnection(OiyokanSettingsUtil.getOiyokanDatabase(OiyokanConstants.OIYOKAN_INTERNAL_DB))) {
+                .getConnection(OiyokanSettingsUtil.getOiyokanDatabase(OiyokanConstants.OIYOKAN_INTERNAL_TARGET_DB))) {
 
-            // 内部データベースのテーブルをセットアップ.
-            OiyokanInternalDatabase.setupInternalDatabase();
-
-            try (var stmt = conn
-                    .prepareStatement("SELECT ID, Name, Description FROM OcsdlODataTest1 ORDER BY ID LIMIT 3")) {
+            try (var stmt = conn.prepareStatement("SELECT ID, Name, Description FROM ODataTest1 ORDER BY ID LIMIT 3")) {
                 stmt.executeQuery();
                 var rset = stmt.getResultSet();
                 assertEquals(true, rset.next());
@@ -52,13 +48,11 @@ class H2DatabaseTest {
     @Test
     void testo2() throws Exception {
         try (Connection conn = BasicJdbcUtil
-                .getConnection(OiyokanSettingsUtil.getOiyokanDatabase(OiyokanConstants.OIYOKAN_INTERNAL_DB))) {
-            // 内部データベースのテーブルをセットアップ.
-            OiyokanInternalDatabase.setupInternalDatabase();
+                .getConnection(OiyokanSettingsUtil.getOiyokanDatabase(OiyokanConstants.OIYOKAN_INTERNAL_TARGET_DB))) {
 
             try (var stmt = conn.prepareStatement("SELECT ID, Name, Description" //
                     + ",Sbyte1,Int16a,Int32a,Int64a,Decimal1,StringChar2,StringVar255,StringVar65535,Boolean1,Single1,Double1,DateTimeOffset1,TimeOfDay1" //
-                    + " FROM OcsdlODataTest1 ORDER BY ID LIMIT 1")) {
+                    + " FROM ODataTest1 ORDER BY ID LIMIT 1")) {
                 stmt.executeQuery();
                 var rset = stmt.getResultSet();
                 assertEquals(true, rset.next());
