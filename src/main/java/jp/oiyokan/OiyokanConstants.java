@@ -27,7 +27,7 @@ public class OiyokanConstants {
     /**
      * Oiyokan のバージョン番号
      */
-    public static final String VERSION = "1.0.20210402b";
+    public static final String VERSION = "1.0.20210403a";
 
     /**
      * OData のルートパス.
@@ -40,7 +40,7 @@ public class OiyokanConstants {
     public static final boolean IS_TRACE_ODATA_V4 = true;
 
     /**
-     * 実験的な $search が有効化されているかどうか。
+     * 実験的な $search 機能(全文検索)が有効化されているかどうか。
      * 
      * 当面、リリース時には false.
      */

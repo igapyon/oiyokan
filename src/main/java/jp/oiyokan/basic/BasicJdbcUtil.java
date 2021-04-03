@@ -288,8 +288,10 @@ public class BasicJdbcUtil {
             // Guid については UUID として読み込む。
             final Object obj = rset.getObject(column);
             if (obj instanceof java.util.UUID) {
+                // h2 database で通過
                 return new Property(null, propName, ValueType.PRIMITIVE, (java.util.UUID) obj);
             } else if (obj instanceof String) {
+                // SQL Server 2008 で通過
                 java.util.UUID look = UUID.fromString((String) obj);
                 return new Property(null, propName, ValueType.PRIMITIVE, look);
             } else {
