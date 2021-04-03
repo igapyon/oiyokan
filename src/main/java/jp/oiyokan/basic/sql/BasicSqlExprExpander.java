@@ -519,12 +519,24 @@ public class BasicSqlExprExpander {
 
         // CONCAT
         if (impl.getMethod() == MethodKind.CONCAT) {
-            sqlInfo.getSqlBuilder().append("CONCAT(");
-            expand(impl.getParameters().get(0));
-            sqlInfo.getSqlBuilder().append(",");
-            expand(impl.getParameters().get(1));
-            sqlInfo.getSqlBuilder().append(")");
-            return;
+            switch (sqlInfo.getEntitySet().getDatabaseType()) {
+            default:
+                sqlInfo.getSqlBuilder().append("CONCAT(");
+                expand(impl.getParameters().get(0));
+                sqlInfo.getSqlBuilder().append(",");
+                expand(impl.getParameters().get(1));
+                sqlInfo.getSqlBuilder().append(")");
+                return;
+            case MSSQL2008:
+                sqlInfo.getSqlBuilder().append("(CAST(");
+                expand(impl.getParameters().get(0));
+                sqlInfo.getSqlBuilder().append(" AS VARCHAR)");
+                sqlInfo.getSqlBuilder().append(" + ");
+                sqlInfo.getSqlBuilder().append("CAST(");
+                expand(impl.getParameters().get(1));
+                sqlInfo.getSqlBuilder().append(" AS VARCHAR))");
+                return;
+            }
         }
 
         // YEAR
