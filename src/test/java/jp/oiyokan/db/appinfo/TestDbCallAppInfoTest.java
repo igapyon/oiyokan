@@ -39,4 +39,17 @@ class TestDbCallAppInfoTest {
                 result);
         assertEquals(200, resp.getStatusCode());
     }
+
+    @Test
+    void testString() throws Exception {
+        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataAppInfos",
+                "$filter=KeyName%20eq%20%27Provider%27");
+        final String result = OiyokanTestUtil.stream2String(resp.getContent());
+
+        // System.err.println("result: " + result);
+        assertEquals(
+                "{\"@odata.context\":\"$metadata#ODataAppInfos\",\"value\":[{\"KeyName\":\"Provider\",\"KeyValue\":\"Oiyokan\"}]}",
+                result);
+        assertEquals(200, resp.getStatusCode());
+    }
 }
