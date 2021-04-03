@@ -95,7 +95,7 @@ CREATE TABLE IF NOT EXISTS
     , rental_rate DECIMAL(4,2) DEFAULT 4.99 NOT NULL
     , length SMALLINT
     , replacement_cost DECIMAL(5,2) DEFAULT 19.99 NOT NULL
-    , rating CHAR(5) DEFAULT G
+    , rating CHAR(5) DEFAULT 'G'
     , special_features CHAR(54)
     , last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
     , PRIMARY KEY(film_id)
@@ -119,13 +119,13 @@ CREATE TABLE IF NOT EXISTS
 
 CREATE TABLE IF NOT EXISTS
   Ocsdlfilm_list (
-    FID SMALLINT DEFAULT 0
+    FID SMALLINT DEFAULT 0 NOT NULL
     , title VARCHAR(128)
     , description LONGVARCHAR(65535)
     , category VARCHAR(25) NOT NULL
     , price DECIMAL(4,2) DEFAULT 4.99
     , length SMALLINT
-    , rating CHAR(5) DEFAULT G
+    , rating CHAR(5) DEFAULT 'G'
     , actors LONGVARCHAR(4096)
     , PRIMARY KEY(fid)
   );
@@ -149,13 +149,13 @@ CREATE TABLE IF NOT EXISTS
 
 CREATE TABLE IF NOT EXISTS
   Ocsdlnicer_but_slower_film_list (
-    FID SMALLINT DEFAULT 0
+    FID SMALLINT DEFAULT 0 NOT NULL
     , title VARCHAR(128)
     , description LONGVARCHAR(65535)
     , category VARCHAR(25) NOT NULL
     , price DECIMAL(4,2) DEFAULT 4.99
     , length SMALLINT
-    , rating CHAR(5) DEFAULT G
+    , rating CHAR(5) DEFAULT 'G'
     , actors LONGVARCHAR(4096)
     , PRIMARY KEY(fid)
   );
