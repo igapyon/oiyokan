@@ -97,8 +97,31 @@ class BasicODataSampleDbFilterTest {
         assertEquals(200, resp.getStatusCode());
     }
 
-    // Int64はスキップ.
-    // TODO いつか Int64テストして
+    @Test
+    void testInt64a() throws Exception {
+        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1",
+                "$top=2 &$skip=2 &$filter=Int64a eq 2147483647 &$orderby=ID &$count=true &$select=ID");
+        final String result = OiyokanTestUtil.stream2String(resp.getContent());
+
+        // System.err.println("result: " + result);
+        assertEquals(
+                "{\"@odata.context\":\"$metadata#ODataTests1\",\"@odata.count\":203,\"value\":[{\"ID\":3},{\"ID\":4}]}",
+                result);
+        assertEquals(200, resp.getStatusCode());
+    }
+
+    @Test
+    void testIntBigDecimal() throws Exception {
+        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1",
+                "$top=2 &$skip=2 &$filter=Decimal1 eq 1234.56 &$orderby=ID &$count=true &$select=ID");
+        final String result = OiyokanTestUtil.stream2String(resp.getContent());
+
+        // System.err.println("result: " + result);
+        assertEquals(
+                "{\"@odata.context\":\"$metadata#ODataTests1\",\"@odata.count\":203,\"value\":[{\"ID\":3},{\"ID\":4}]}",
+                result);
+        assertEquals(200, resp.getStatusCode());
+    }
 
     @Test
     void testSbyte1() throws Exception {
