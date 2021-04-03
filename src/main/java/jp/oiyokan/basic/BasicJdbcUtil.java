@@ -234,22 +234,20 @@ public class BasicJdbcUtil {
         // 基本的に CSDL で処理するが、やむを得ない場所のみ ResultSetMetaData を利用する
         final String propName = OiyokanNamingUtil.db2Entity(rsmeta.getColumnName(column));
 
-        CsdlProperty csdlProp = iyoEntitySet.getEntityType().getProperty(propName);
+        final CsdlProperty csdlProp = iyoEntitySet.getEntityType().getProperty(propName);
         if (csdlProp == null) {
+            // [M034] ERROR: An unknown field name was specified. The field names are case
+            // sensitive. Make sure the Ocsdl field name matches the target field name.
+            System.err.println(OiyokanMessages.M034 + ": colname:" + rsmeta.getColumnName(column)
+                    + ", propname(should):" + propName);
+
+            System.err.println("TRACE: EntityName: " + iyoEntitySet.getEntityType().getName());
             for (CsdlProperty look : iyoEntitySet.getEntityType().getProperties()) {
-                if (look.getName().toUpperCase().equals(propName.toUpperCase())) {
-                    csdlProp = look;
-                    break;
-                }
+                System.err.println("  PropName: " + look.getName());
             }
-            if (csdlProp == null) {
-                // それでも null の場合はエラーやむなし.
-                // [M034] ERROR: unknown field given
-                System.err.println(OiyokanMessages.M034 + ": colname:" + rsmeta.getColumnName(column)
-                        + ", propname(maybe):" + propName);
-                throw new ODataApplicationException(OiyokanMessages.M034 + ": colname:" + rsmeta.getColumnName(column)
-                        + ", propname(maybe):" + propName, 500, Locale.ENGLISH);
-            }
+
+            throw new ODataApplicationException(OiyokanMessages.M034 + ": colname:" + rsmeta.getColumnName(column)
+                    + ", propname(should):" + propName, 500, Locale.ENGLISH);
         }
         if ("Edm.SByte".equals(csdlProp.getType())) {
             return new Property("Edm.SByte", propName, ValueType.PRIMITIVE, rset.getByte(column));

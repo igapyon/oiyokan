@@ -52,7 +52,7 @@ public class OiyokanMessages {
     public static final String M031 = "[M031] UNEXPECTED: Fail to execute Dabaase";
     public static final String M032 = "[M032] NOT SUPPORTED: URI: $search";
     public static final String M033 = "[M033] NOT SUPPORTED: unknown UUID object given";
-    public static final String M034 = "[M034] ERROR: unknown field given";
+    public static final String M034 = "[M034] ERROR: An unknown field name was specified. The field names are case sensitive. Make sure the Ocsdl field name matches the target field name.";
 
     ///////////////////
     // Expression
