@@ -195,6 +195,8 @@ public class BasicSqlBuilder {
             sqlInfo.getSqlBuilder().append(" FROM " + sqlInfo.getEntitySet().getDbTableNameTargetIyo());
             break;
         case MSSQL: {
+            //////////////////////////////
+            // SQL Server 用特殊記述
             // SQL Serverの場合は無条件にサブクエリ展開
             sqlInfo.getSqlBuilder().append(" FROM (SELECT ROW_NUMBER()");
             if (uriInfo.getOrderByOption() != null) {
@@ -218,6 +220,8 @@ public class BasicSqlBuilder {
                 new BasicSqlExprExpander(sqlInfo).expand(uriInfo.getFilterOption().getExpression());
             }
             sqlInfo.getSqlBuilder().append(") AS [sub4between]");
+            // SQL Server 用特殊記述
+            //////////////////////////////
         }
             break;
         }

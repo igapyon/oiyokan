@@ -380,6 +380,12 @@ public class BasicSqlExprExpander {
                 OiyokanNamingUtil.entity2Db(BasicJdbcUtil.unescapeKakkoFieldName(impl.toString()))));
     }
 
+    /**
+     * method を expand.
+     * 
+     * @param impl MethodImpl
+     * @throws ODataApplicationException ODataアプリ例外が発生.
+     */
     private void expandMethod(MethodImpl impl) throws ODataApplicationException {
         // CONTAINS
         if (impl.getMethod() == MethodKind.CONTAINS) {
@@ -483,7 +489,6 @@ public class BasicSqlExprExpander {
             sqlInfo.getSqlBuilder().append(")");
             return;
         }
-        // TODO 未テスト.
 
         // CONCAT
         if (impl.getMethod() == MethodKind.CONCAT) {
@@ -494,7 +499,6 @@ public class BasicSqlExprExpander {
             sqlInfo.getSqlBuilder().append(")");
             return;
         }
-        // TODO 未テスト.
 
         // YEAR
         if (impl.getMethod() == MethodKind.YEAR) {
