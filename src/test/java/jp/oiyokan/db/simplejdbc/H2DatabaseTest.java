@@ -18,6 +18,7 @@ package jp.oiyokan.db.simplejdbc;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 
 import org.junit.jupiter.api.Test;
@@ -95,6 +96,21 @@ class H2DatabaseTest {
                 if (rset.next()) {
                     assertEquals("1", rset.getString(1));
                 }
+            }
+        }
+    }
+
+    /**
+     * 対象データベースのテーブル一覧をゲット.
+     */
+    // @Test
+    void testListTables() throws Exception {
+        try (Connection conn = BasicJdbcUtil.getConnection(OiyokanSettingsUtil.getOiyokanDatabase("mysql1"))) {
+
+            ResultSet rset = conn.getMetaData().getTables(null, "%", "%", new String[] { "TABLE", "VIEW" });
+            for (; rset.next();) {
+                System.err.println(
+                        "tablist: " + rset.getString("TABLE_NAME") + " (" + rset.getString("TABLE_TYPE") + ")");
             }
         }
     }
