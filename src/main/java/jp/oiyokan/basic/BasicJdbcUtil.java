@@ -362,7 +362,7 @@ public class BasicJdbcUtil {
     // 項目名に関するユーティリティ
 
     /**
-     * かっこつき項目名のかっこを除去.
+     * かっこつき項目名のかっこを除去. これは OData API からの引き渡しの値にて発生.
      * 
      * @param escapedFieldName かっこ付き項目名.
      * @return かっこなし項目名.
@@ -400,6 +400,7 @@ public class BasicJdbcUtil {
             }
             return "\"" + fieldName + "\"";
 
+        case MySQL:
         case BigQuery:
             if (fieldName.indexOf(" ") <= 0 && fieldName.indexOf(".") <= 0) {
                 // 空白やピリオドのない場合はエスケープしない.

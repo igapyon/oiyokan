@@ -78,7 +78,7 @@ oiyokan プロジェクトは、OData v4 server のシンプルなサンプル(h
 
 ## TODO
 
-- BasicSqlExprExpander.java, BasicJdbcUtil.java のカバレッジ.
+- BasicSqlExprExpander.java のカバレッジ.
 - ODataからの入力パラメータのバリエーション試験を実施。(カバレッジを見ながら)
 - テストDBに BigInt などの列を追加。
 - MySQL のテスト実施
