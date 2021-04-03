@@ -78,7 +78,6 @@ oiyokan プロジェクトは、OData v4 server のシンプルなサンプル(h
 
 ## TODO
 
-- MySQL のテスト実施
 - Oracleのテスト実施
 - 設定XMLファイルを重ねがけできるようにしたい。
 - Sakila DVDレンタルのサンプル (SklActors 等)、ODataTests1 を ON/OFFする手順またはプログラム実装を記述.
