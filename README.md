@@ -6,6 +6,12 @@ Oiyokan is an OData v4 server SDK.
 - Oiyokan provides read-only OData v4 access to resources.
 - Source code at github, license : Apache License.
 
+## Supported target RDBMS
+
+- PostgreSQL (13)
+- MySQL (8.0.23)
+- SQL Server (2008)
+
 ## Sample implementation using Oiyokan
 
 - Oiyokan provides OData server sample of Sakila DVD rental.
