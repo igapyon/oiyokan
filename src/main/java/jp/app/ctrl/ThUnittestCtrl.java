@@ -26,6 +26,7 @@ public class ThUnittestCtrl {
 
     @RequestMapping("/unittest.html")
     public String oiyokanUnittest(Model model) throws IOException {
+        model.addAttribute("odataRootpath", OiyokanConstants.ODATA_ROOTPATH);
 
         final List<UrlEntryBean> urlEntryList = new ArrayList<>();
         model.addAttribute("UrlEntryList", urlEntryList);
