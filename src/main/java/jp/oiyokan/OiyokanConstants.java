@@ -30,6 +30,11 @@ public class OiyokanConstants {
     public static final String VERSION = "1.0.20210402b";
 
     /**
+     * OData のルートパス.
+     */
+    public static final String ODATA_ROOTPATH = "/odata4.svc";
+
+    /**
      * Oiyokan がリクエストを処理する際の 'OData v4' からはじまるトレースを出力するかどうか。
      */
     public static final boolean IS_TRACE_ODATA_V4 = true;
