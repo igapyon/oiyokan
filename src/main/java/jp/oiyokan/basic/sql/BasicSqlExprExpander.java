@@ -511,10 +511,19 @@ public class BasicSqlExprExpander {
 
         // TRIM
         if (impl.getMethod() == MethodKind.TRIM) {
-            sqlInfo.getSqlBuilder().append("TRIM(");
-            expand(impl.getParameters().get(0));
-            sqlInfo.getSqlBuilder().append(")");
-            return;
+            switch (sqlInfo.getEntitySet().getDatabaseType()) {
+            default:
+                sqlInfo.getSqlBuilder().append("TRIM(");
+                expand(impl.getParameters().get(0));
+                sqlInfo.getSqlBuilder().append(")");
+                return;
+            case MSSQL2008:
+                // SQL Server 2008 には TRIM がない
+                sqlInfo.getSqlBuilder().append("LTRIM(RTRIM(");
+                expand(impl.getParameters().get(0));
+                sqlInfo.getSqlBuilder().append("))");
+                return;
+            }
         }
 
         // CONCAT
