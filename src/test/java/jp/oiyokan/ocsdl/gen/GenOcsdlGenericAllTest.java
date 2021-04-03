@@ -17,6 +17,9 @@ package jp.oiyokan.ocsdl.gen;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -41,6 +44,8 @@ class GenOcsdlGenericAllTest {
         OiyokanSettingsDatabase settingsDatabase = OiyokanSettingsUtil.getOiyokanDatabase("mysql2");
 
         try (Connection connTargetDb = BasicJdbcUtil.getConnection(settingsDatabase)) {
+            final List<String> tableNameList = new ArrayList<>();
+
             ResultSet rset = connTargetDb.getMetaData().getTables(null, "%", "%", new String[] { "TABLE", "VIEW" });
             for (; rset.next();) {
                 final String tableName = rset.getString("TABLE_NAME");
@@ -59,11 +64,17 @@ class GenOcsdlGenericAllTest {
                     }
                     continue;
                 }
+                tableNameList.add(tableName);
 
                 if (SHOW_JDBCINFO) {
                     System.err.println("");
                 }
 
+            }
+
+            Collections.sort(tableNameList);
+
+            for (String tableName : tableNameList) {
                 System.err.println(OiyokanInternalDatabase.generateCreateOcsdlDdl(connTargetDb, tableName));
             }
         }
