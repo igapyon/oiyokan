@@ -92,8 +92,58 @@ class TestODataFilterMethodTestDbTest {
     }
 
     // TOLOWER
-    // TOUPPER
-    // TRIM
-    // CONCAT
+    @Test
+    void testTolowerA() throws Exception {
+        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1",
+                OiyokanTestUtil.encodeUrlQuery(
+                        "&$filter=tolower(StringVar255) eq 'abcdefghijklmnopqrstuvwxyz' &$count=true &$select=ID"));
+        final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
+        // System.err.println("result: " + result);
+        assertEquals("{\"@odata.context\":\"$metadata#ODataTests1\",\"@odata.count\":1,\"value\":[{\"ID\":204}]}",
+                result);
+        assertEquals(200, resp.getStatusCode());
+    }
+
+    // TOUPPER
+    @Test
+    void testToupperA() throws Exception {
+        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1",
+                OiyokanTestUtil.encodeUrlQuery(
+                        "&$filter=toupper(tolower(StringVar255)) eq 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' &$count=true &$select=ID"));
+        final String result = OiyokanTestUtil.stream2String(resp.getContent());
+
+        // System.err.println("result: " + result);
+        assertEquals("{\"@odata.context\":\"$metadata#ODataTests1\",\"@odata.count\":1,\"value\":[{\"ID\":204}]}",
+                result);
+        assertEquals(200, resp.getStatusCode());
+    }
+
+    // TRIM
+    @Test
+    void testTrimA() throws Exception {
+        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1",
+                OiyokanTestUtil.encodeUrlQuery(
+                        "&$filter=trim(concat(' ', StringVar255)) eq 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' &$count=true &$select=ID"));
+        final String result = OiyokanTestUtil.stream2String(resp.getContent());
+
+        // System.err.println("result: " + result);
+        assertEquals("{\"@odata.context\":\"$metadata#ODataTests1\",\"@odata.count\":1,\"value\":[{\"ID\":204}]}",
+                result);
+        assertEquals(200, resp.getStatusCode());
+    }
+
+    // CONCAT
+    @Test
+    void testConcatA() throws Exception {
+        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1",
+                OiyokanTestUtil.encodeUrlQuery(
+                        "&$filter=concat(' ', StringVar255) eq ' ABCDEFGHIJKLMNOPQRSTUVWXYZ' &$count=true &$select=ID"));
+        final String result = OiyokanTestUtil.stream2String(resp.getContent());
+
+        // System.err.println("result: " + result);
+        assertEquals("{\"@odata.context\":\"$metadata#ODataTests1\",\"@odata.count\":1,\"value\":[{\"ID\":204}]}",
+                result);
+        assertEquals(200, resp.getStatusCode());
+    }
 }
