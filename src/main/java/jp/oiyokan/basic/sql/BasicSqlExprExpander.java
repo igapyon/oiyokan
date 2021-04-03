@@ -411,13 +411,23 @@ public class BasicSqlExprExpander {
 
         // STARTSWITH
         if (impl.getMethod() == MethodKind.STARTSWITH) {
-            // h2 database の POSITION/INSTR は 1 オリジンで発見せずが0 なので 1 を減らしています。
-            sqlInfo.getSqlBuilder().append("(INSTR(");
-            expand(impl.getParameters().get(0));
-            sqlInfo.getSqlBuilder().append(",");
-            expand(impl.getParameters().get(1));
-            sqlInfo.getSqlBuilder().append(") = 1)");
-            return;
+            switch (sqlInfo.getEntitySet().getDatabaseType()) {
+            default:
+                // h2 database の POSITION/INSTR は 1 オリジンで発見せずが0 なので 1 を減らしています。
+                sqlInfo.getSqlBuilder().append("(INSTR(");
+                expand(impl.getParameters().get(0));
+                sqlInfo.getSqlBuilder().append(",");
+                expand(impl.getParameters().get(1));
+                sqlInfo.getSqlBuilder().append(") = 1)");
+                return;
+            case MSSQL2008:
+                sqlInfo.getSqlBuilder().append("(CHARINDEX(");
+                expand(impl.getParameters().get(1));
+                sqlInfo.getSqlBuilder().append(",");
+                expand(impl.getParameters().get(0));
+                sqlInfo.getSqlBuilder().append(") = 1)");
+                return;
+            }
         }
 
         // ENDSWITH
