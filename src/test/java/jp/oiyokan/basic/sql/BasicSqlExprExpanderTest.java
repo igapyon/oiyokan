@@ -77,7 +77,7 @@ class BasicSqlExprExpanderTest {
 
     @Test
     void test03() throws Exception {
-        assertEquals("((POSITION(?,Description) - 1) <> ?)", getExprString("/ODataTests1", //
+        assertEquals("((INSTR(Description,?) - 1) <> ?)", getExprString("/ODataTests1", //
                 OiyokanTestUtil.encodeUrlQuery(
                         "$top=51&$filter= indexof(Description,'増殖タブレット7') ne -1 &$orderby=ID &$count=true &$select=Description,ID,Name")));
     }
