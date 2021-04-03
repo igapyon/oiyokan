@@ -234,7 +234,23 @@ public class BasicJdbcUtil {
         // 基本的に CSDL で処理するが、やむを得ない場所のみ ResultSetMetaData を利用する
         final String propName = OiyokanNamingUtil.db2Entity(rsmeta.getColumnName(column));
 
-        final CsdlProperty csdlProp = iyoEntitySet.getEntityType().getProperty(propName);
+        CsdlProperty csdlProp = iyoEntitySet.getEntityType().getProperty(propName);
+        if (csdlProp == null) {
+            for (CsdlProperty look : iyoEntitySet.getEntityType().getProperties()) {
+                if (look.getName().toUpperCase().equals(propName.toUpperCase())) {
+                    csdlProp = look;
+                    break;
+                }
+            }
+            if (csdlProp == null) {
+                // それでも null の場合はエラーやむなし.
+                // [M034] ERROR: unknown field given
+                System.err.println(OiyokanMessages.M034 + ": colname:" + rsmeta.getColumnName(column)
+                        + ", propname(maybe):" + propName);
+                throw new ODataApplicationException(OiyokanMessages.M034 + ": colname:" + rsmeta.getColumnName(column)
+                        + ", propname(maybe):" + propName, 500, Locale.ENGLISH);
+            }
+        }
         if ("Edm.SByte".equals(csdlProp.getType())) {
             return new Property("Edm.SByte", propName, ValueType.PRIMITIVE, rset.getByte(column));
         } else if ("Edm.Byte".equals(csdlProp.getType())) {

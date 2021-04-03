@@ -19,11 +19,11 @@ package jp.oiyokan;
  * Messages of Oiyokan.
  */
 public class OiyokanMessages {
-    public static final String M001 = "[M001] Can't decode specified decodec url";
+    public static final String M001 = "[M001] ERROR: Can't decode specified decodec url";
     public static final String M002 = "[M002] UNEXPECTED: Illegal data type in database settings";
     public static final String M003 = "[M003] UNEXPECTED: Fail to load JDBC driver. Check JDBC Driver classname or JDBC Driver is on classpath.";
     public static final String M004 = "[M004] UNEXPECTED: Database error in setup internal database.";
-    public static final String M005 = "[M005] UNEXPECTED: Fail to connect database. Please wait minutes and retry again.: データベースの接続に失敗しました。しばらく待って再度トライしてください。しばらく経っても改善しない場合はIT部門などに連絡してください。";
+    public static final String M005 = "[M005] ERROR: Fail to connect database. Please wait minutes and retry again.: データベースの接続に失敗しました。しばらく待って再度トライしてください。しばらく経っても改善しない場合はIT部門などに連絡してください。";
     public static final String M006 = "[M006] NOT SUPPORTED: CSDL: JDBC Type";
     public static final String M007 = "[M007] UNEXPECTED: fail to read from CLOB";
     public static final String M008 = "[M008] UNEXPECTED: fail to read from binary";
@@ -52,6 +52,7 @@ public class OiyokanMessages {
     public static final String M031 = "[M031] UNEXPECTED: Fail to execute Dabaase";
     public static final String M032 = "[M032] NOT SUPPORTED: URI: $search";
     public static final String M033 = "[M033] NOT SUPPORTED: unknown UUID object given";
+    public static final String M034 = "[M034] ERROR: unknown field given";
 
     ///////////////////
     // Expression
