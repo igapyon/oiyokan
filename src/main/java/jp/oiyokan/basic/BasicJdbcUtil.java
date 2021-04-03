@@ -235,6 +235,20 @@ public class BasicJdbcUtil {
         final String propName = OiyokanNamingUtil.db2Entity(rsmeta.getColumnName(column));
 
         final CsdlProperty csdlProp = iyoEntitySet.getEntityType().getProperty(propName);
+        if (csdlProp == null) {
+            // [M034] ERROR: An unknown field name was specified. The field names are case
+            // sensitive. Make sure the Ocsdl field name matches the target field name.
+            System.err.println(OiyokanMessages.M034 + ": colname:" + rsmeta.getColumnName(column)
+                    + ", propname(should):" + propName);
+
+            System.err.println("TRACE: EntityName: " + iyoEntitySet.getEntityType().getName());
+            for (CsdlProperty look : iyoEntitySet.getEntityType().getProperties()) {
+                System.err.println("  PropName: " + look.getName());
+            }
+
+            throw new ODataApplicationException(OiyokanMessages.M034 + ": colname:" + rsmeta.getColumnName(column)
+                    + ", propname(should):" + propName, 500, Locale.ENGLISH);
+        }
         if ("Edm.SByte".equals(csdlProp.getType())) {
             return new Property("Edm.SByte", propName, ValueType.PRIMITIVE, rset.getByte(column));
         } else if ("Edm.Byte".equals(csdlProp.getType())) {

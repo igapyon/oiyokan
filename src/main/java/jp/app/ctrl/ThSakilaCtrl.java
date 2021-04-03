@@ -30,7 +30,7 @@ public class ThSakilaCtrl {
                     "/SklCountries?$filter=country%20ge%20%27Japan%27%20and%20country_id%20lt%2054&$count=true&$top=20&$orderby=country",
                     "TABLE: country" },
             { "SklCustomers",
-                    "/SklCustomers?$filter=create_date%20le%202006-02-14%20and%20contains(first_name,%27Do%27)%20and%20activebool%20eq%20true&$orderby=store_id,last_name&$count=true&$top=20",
+                    "/SklCustomers?$filter=create_date%20le%202006-02-14%20and%20contains(first_name,%27Do%27)%20&$orderby=store_id,last_name&$count=true&$top=20&$select=customer_id,store_id,first_name,last_name,email,address_id,create_date,last_update,active",
                     "TABLE: customer" },
             { "SklCustomerLists",
                     "/SklCustomerLists?$filter=country%20eq%20%27Taiwan%27%20and%20zip_code%20ge%20%2795000%27&$orderby=sid&$count=true&$top=20",
