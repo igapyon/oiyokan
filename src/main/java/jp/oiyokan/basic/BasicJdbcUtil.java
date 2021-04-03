@@ -212,6 +212,8 @@ public class BasicJdbcUtil {
 
         // TODO デフォルト値の取得???
 
+       // System.err.println("TRACE: " + csdlProp.getName() + ": " + csdlProp.getType());
+
         return csdlProp;
     }
 
@@ -288,7 +290,10 @@ public class BasicJdbcUtil {
         } else if ("Edm.Guid".equals(csdlProp.getType())) {
             // Guid については UUID として読み込む。
             final Object obj = rset.getObject(column);
-            if (obj instanceof java.util.UUID) {
+            if (obj == null) {
+                // UUID に null が与えられた場合、そのままnullをセット. (null対応)
+                return new Property(null, propName, ValueType.PRIMITIVE, null);
+            } else if (obj instanceof java.util.UUID) {
                 // h2 database で通過
                 return new Property(null, propName, ValueType.PRIMITIVE, (java.util.UUID) obj);
             } else if (obj instanceof String) {

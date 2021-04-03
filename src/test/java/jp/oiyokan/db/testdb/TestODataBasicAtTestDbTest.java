@@ -45,7 +45,7 @@ class TestODataBasicAtTestDbTest {
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         // コンテンツ内容は確認なし.
-        // System.err.println(BasicODataSampleTestUtil.stream2String(resp.getContent()));
+        // System.err.println(result);
         assertEquals(200, resp.getStatusCode());
     }
 
