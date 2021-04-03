@@ -5,7 +5,7 @@
 		{
 			"name": "oiyokanInternal",
 			"type": "h2",
-			"description": "Oiyokan Internal DB. Do not change this def.",
+			"description": "Oiyokan internal DB. Do not change.",
 			"jdbcDriver": "org.h2.Driver",
 			"jdbcUrl": "jdbc:h2:mem:oiyokan;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=FALSE;CASE_INSENSITIVE_IDENTIFIERS=TRUE;MODE=MSSQLServer",
 			"jdbcUser": "sa",
@@ -14,7 +14,7 @@
 		{
 			"name": "oiyokanInternalTarget",
 			"type": "h2",
-			"description": "Oiyokan Internal Target Test DB. Do not change this def.",
+			"description": "Oiyokan internal Target Test DB. Used for build unit test.",
 			"jdbcDriver": "org.h2.Driver",
 			"jdbcUrl": "jdbc:h2:file:./src/main/resources/db/oiyokan-internal;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=FALSE;CASE_INSENSITIVE_IDENTIFIERS=TRUE;MODE=MSSQLServer",
 			"jdbcUser": "sa",
@@ -23,7 +23,7 @@
 		{
 			"name": "postgres1",
 			"type": "postgres",
-			"description": "サンプル の Postgres DB設定記述。環境情報にあわせて変更利用。",
+			"description": "Sample postgres settings. Change the settings to suit your environment.",
 			"jdbcDriver": "org.postgresql.Driver",
 			"jdbcUrl": "jdbc:postgresql://localhost:5432/dvdrental",
 			"jdbcUser": "",
@@ -32,16 +32,25 @@
 		{
 			"name": "mysql1",
 			"type": "MySQL",
-			"description": "サンプル の mysql DB設定記述。環境情報にあわせて変更利用。",
+			"description": "Sample MySQL settings. Change the settings to suit your environment.",
 			"jdbcDriver": "com.mysql.jdbc.Driver",
 			"jdbcUrl": "jdbc:mysql://localhost/mysql?useUnicode=true&characterEncoding=UTF-8&characterSetResults=UTF-8&useCursorFetch=true&defaultFetchSize=128&useServerPrepStmts=true&emulateUnsupportedPstmts=false",
 			"jdbcUser": "root",
 			"jdbcPass": "passwd123"
 		},
 		{
+			"name": "mysql2",
+			"type": "MySQL",
+			"description": "Sample MySQL settings for Sakila. Change the settings to suit your environment.",
+			"jdbcDriver": "com.mysql.jdbc.Driver",
+			"jdbcUrl": "jdbc:mysql://localhost/sakila?useUnicode=true&characterEncoding=UTF-8&characterSetResults=UTF-8&useCursorFetch=true&defaultFetchSize=128&useServerPrepStmts=true&emulateUnsupportedPstmts=false",
+			"jdbcUser": "root",
+			"jdbcPass": "passwd123"
+		},
+		{
 			"name": "mssql1",
 			"type": "MSSQL2008",
-			"description": "サンプル の SQL Server DB設定記述(2008想定) 環境情報にあわせて変更利用。",
+			"description": "Sample MS SQL Server 2008 settings. Change the settings to suit your environment.",
 			"jdbcDriver": "com.microsoft.sqlserver.jdbc.SQLServerDriver",
 			"jdbcUrl": "jdbc:sqlserver://localhost\\SQLExpress;SelectMethod=cursor",
 			"jdbcUser": "sa",
@@ -51,7 +60,7 @@
 	"entitySet": [
 		{
 			"name": "oiyokan-app-info",
-			"description": "Oiyokanが内部的に利用するエンティティセット。この設定は基本的に変更できない。",
+			"description": "Oiyokan internal App Info. Do not change.",
 			"entitySetName": "ODataAppInfos",
 			"entityName": "ODataAppInfo",
 			"databaseName": "oiyokanInternal",
@@ -60,7 +69,7 @@
 		},
 		{
 			"name": "oiyokan-test-database",
-			"description": "Oiyokan単体テスト用エンティティセット。ODataTests1。この設定を不用意に変更するとビルドが失敗する。",
+			"description": "Oiyokan internal Target Test Entity. Used for build unit test.",
 			"entitySetName": "ODataTests1",
 			"entityName": "ODataTest1",
 			"databaseName": "oiyokanInternalTarget",
@@ -69,7 +78,7 @@
 		},
 		{
 			"name": "oiyokan-test-product-fulltext",
-			"description": "Oiyokan単体テスト用エンティティセット。ODataTestFulls1。この設定を不用意に変更するとビルドが失敗する。",
+			"description": "Oiyokan internal Target Test Entity (Fulltext - Experimental). Used for build unit test.",
 			"entitySetName": "ODataTestFulls1",
 			"entityName": "ODataTestFull1",
 			"databaseName": "oiyokanInternalTarget",
