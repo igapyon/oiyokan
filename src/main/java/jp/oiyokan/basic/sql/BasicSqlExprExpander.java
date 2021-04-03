@@ -398,7 +398,7 @@ public class BasicSqlExprExpander {
                 expand(impl.getParameters().get(1));
                 sqlInfo.getSqlBuilder().append(") > 0)");
                 break;
-            case MSSQL:
+            case MSSQL2008:
                 sqlInfo.getSqlBuilder().append("(CHARINDEX(");
                 expand(impl.getParameters().get(1));
                 sqlInfo.getSqlBuilder().append(",");

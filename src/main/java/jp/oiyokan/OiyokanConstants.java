@@ -54,11 +54,11 @@ public class OiyokanConstants {
         h2,
         /** Postgres */
         postgres,
-        /** MySQL */
+        /** MySQL : not tested */
         MySQL,
-        /** MSSQL : placeholder, not tested */
-        MSSQL,
-        /** Oracle : placeholder, not supported, not tested */
+        /** MSSQL 2008 */
+        MSSQL2008,
+        /** Oracle : placeholder, not tested */
         ORACLE,
         /** BigQuery : placeholder, not supported, not tested */
         BigQuery,
