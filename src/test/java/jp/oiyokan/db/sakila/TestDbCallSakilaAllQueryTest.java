@@ -43,6 +43,7 @@ class TestDbCallSakilaAllQueryTest {
             final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse(entry[0], entry[1]);
             final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
+            // System.err.println("TRACE: " + OiyokanTestUtil.decodeUrlQuery(entrys[1]));
             // System.err.println("[" + entrys[0] + "], [" + entrys[1] + "], result: " +
             // result);
             assertEquals(200, resp.getStatusCode());

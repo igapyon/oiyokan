@@ -85,8 +85,9 @@ oiyokan プロジェクトは、OData v4 server のシンプルなサンプル(h
 ## TODO
 
 - Oracleのテスト実施
-- 設定XMLファイルを重ねがけできるようにしたい。
+- 設定XMLファイルを分割+重ねがけできるようにしたい。
 - Sakila DVDレンタルのサンプル (SklActors 等)、ODataTests1 を ON/OFFする手順またはプログラム実装を記述.
+- 時間が9時間ずれる件. タイムゾーンなしDB項目由来。何かの方法にて補正したい.
 - 認証の各種実験。
 - TimeOfDay がテスト不十分.
 - Maven Repository にアップしたい.
@@ -98,4 +99,9 @@ oiyokan プロジェクトは、OData v4 server のシンプルなサンプル(h
 - モバイルデバイスから Web サイトにアクセスすると画面が崩れるのを修正。
 - サンプル EntitySet の html説明について Card 型に変更したい
 - README に oiyokan-naming-settings.json の記述についての記載を追記.
+
+## その他メモ
+
+- create_date が Postgres版と MySQL 版とで型が違う.
+    これにより、"The types 'Edm.DateTimeOffset' and 'Edm.Date' are not compatible. が発生する。
 
