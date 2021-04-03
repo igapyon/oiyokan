@@ -30,6 +30,15 @@
 			"jdbcPass": ""
 		},
 		{
+			"name": "mysql1",
+			"type": "MySQL",
+			"description": "サンプル の mysql DB設定記述。環境情報にあわせて変更利用。",
+			"jdbcDriver": "com.mysql.jdbc.Driver",
+			"jdbcUrl": "jdbc:mysql://localhost/mysql?useUnicode=true&characterEncoding=UTF-8&characterSetResults=UTF-8&useCursorFetch=true&defaultFetchSize=128&useServerPrepStmts=true&emulateUnsupportedPstmts=false",
+			"jdbcUser": "root",
+			"jdbcPass": "passwd123"
+		},
+		{
 			"name": "mssql1",
 			"type": "MSSQL2008",
 			"description": "サンプル の SQL Server DB設定記述(2008想定) 環境情報にあわせて変更利用。",
