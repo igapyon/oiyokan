@@ -389,13 +389,13 @@ public class BasicSqlExprExpander {
     private void expandMethod(MethodImpl impl) throws ODataApplicationException {
         // CONTAINS
         if (impl.getMethod() == MethodKind.CONTAINS) {
-            // h2 database の POSITION は 1 オリジンで発見せずが0 なので 1 を減らしています。
+            // h2 database の POSITION/INSTR は 1 オリジンで発見せずが0 なので 1 を減らしています。
             switch (sqlInfo.getEntitySet().getDatabaseType()) {
             default:
-                sqlInfo.getSqlBuilder().append("(POSITION(");
-                expand(impl.getParameters().get(1));
-                sqlInfo.getSqlBuilder().append(",");
+                sqlInfo.getSqlBuilder().append("(INSTR(");
                 expand(impl.getParameters().get(0));
+                sqlInfo.getSqlBuilder().append(",");
+                expand(impl.getParameters().get(1));
                 sqlInfo.getSqlBuilder().append(") > 0)");
                 break;
             case MSSQL:
@@ -411,11 +411,11 @@ public class BasicSqlExprExpander {
 
         // STARTSWITH
         if (impl.getMethod() == MethodKind.STARTSWITH) {
-            // h2 database の POSITION は 1 オリジンで発見せずが0 なので 1 を減らしています。
-            sqlInfo.getSqlBuilder().append("(POSITION(");
-            expand(impl.getParameters().get(1));
-            sqlInfo.getSqlBuilder().append(",");
+            // h2 database の POSITION/INSTR は 1 オリジンで発見せずが0 なので 1 を減らしています。
+            sqlInfo.getSqlBuilder().append("(INSTR(");
             expand(impl.getParameters().get(0));
+            sqlInfo.getSqlBuilder().append(",");
+            expand(impl.getParameters().get(1));
             sqlInfo.getSqlBuilder().append(") = 1)");
             return;
         }
@@ -443,11 +443,11 @@ public class BasicSqlExprExpander {
 
         // INDEXOF
         if (impl.getMethod() == MethodKind.INDEXOF) {
-            // h2 database の POSITION は 1 オリジンで発見せずが0 なので 1 を減らしています。
-            sqlInfo.getSqlBuilder().append("(POSITION(");
-            expand(impl.getParameters().get(1));
-            sqlInfo.getSqlBuilder().append(",");
+            // h2 database の POSITION/INSTR は 1 オリジンで発見せずが0 なので 1 を減らしています。
+            sqlInfo.getSqlBuilder().append("(INSTR(");
             expand(impl.getParameters().get(0));
+            sqlInfo.getSqlBuilder().append(",");
+            expand(impl.getParameters().get(1));
             sqlInfo.getSqlBuilder().append(") - 1)");
             return;
         }
