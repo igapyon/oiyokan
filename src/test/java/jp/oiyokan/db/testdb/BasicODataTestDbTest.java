@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jp.oiyokan.basic;
+package jp.oiyokan.db.testdb;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -28,19 +28,6 @@ import jp.oiyokan.util.OiyokanTestUtil;
  */
 class BasicODataTestDbTest {
     @Test
-    void testSimpleVersion() throws Exception {
-        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataAppInfos", "$top=1&$skip=1");
-        final String result = OiyokanTestUtil.stream2String(resp.getContent());
-
-        // System.err.println("result: " + result);
-        assertEquals(
-                "{\"@odata.context\":\"$metadata#ODataAppInfos\",\"value\":[{\"KeyName\":\"Version\",\"KeyValue\":\""
-                        + OiyokanConstants.VERSION + "\"}]}",
-                result);
-        assertEquals(200, resp.getStatusCode());
-    }
-
-    @Test
     void testSimpleOrderBy() throws Exception {
         final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1",
                 "$orderby=ID&$top=1&$select=ID,Name,Description");
@@ -54,8 +41,7 @@ class BasicODataTestDbTest {
 
     @Test
     void testSimpleAllWithoutSelect() throws Exception {
-        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1",
-                "$orderby=ID&$top=2");
+        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1", "$orderby=ID&$top=2");
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         // コンテンツ内容は確認なし.
@@ -74,6 +60,9 @@ class BasicODataTestDbTest {
                 result);
         assertEquals(200, resp.getStatusCode());
     }
+
+    /////////////////////////////////
+    // Fulltext Search / 全文検索
 
     @Test
     void testSimpleSearch() throws Exception {

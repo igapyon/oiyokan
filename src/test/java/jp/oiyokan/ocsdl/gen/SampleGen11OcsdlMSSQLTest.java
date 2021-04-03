@@ -13,12 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jp.oiyokan.data;
+package jp.oiyokan.ocsdl.gen;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 
 import jp.oiyokan.basic.BasicJdbcUtil;
+import jp.oiyokan.data.OiyokanInternalDatabase;
+import jp.oiyokan.data.OiyokanResourceSqlUtil;
 import jp.oiyokan.dto.OiyokanSettingsDatabase;
 import jp.oiyokan.settings.OiyokanSettingsUtil;
 

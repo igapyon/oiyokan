@@ -308,8 +308,7 @@ public class BasicSqlExprExpander {
         if (EdmDecimal.getInstance() == impl.getType()) {
             if (IS_DEBUG_EXPAND_LITERAL)
                 System.err.println("TRACE: EdmDecimal: " + impl.getText());
-            // そのまま連結.
-            // 2.0などをDecimalにするデメリットが読みきれず。そのまま連結でDB処理に判断をO委ねる。
+            // 小数点付きの数値はパラメータとしては処理せずにそのまま文字列として連結.
             sqlInfo.getSqlBuilder().append(impl.getText());
             return;
         }
@@ -323,14 +322,14 @@ public class BasicSqlExprExpander {
         if (EdmSingle.getInstance() == impl.getType()) {
             if (IS_DEBUG_EXPAND_LITERAL)
                 System.err.println("TRACE: EdmSingle: " + impl.getText());
-            // そのまま連結.
+            // 小数点付きの数値はパラメータとしては処理せずにそのまま文字列として連結.
             sqlInfo.getSqlBuilder().append(impl.getText());
             return;
         }
         if (EdmDouble.getInstance() == impl.getType()) {
             if (IS_DEBUG_EXPAND_LITERAL)
                 System.err.println("TRACE: EdmDouble: " + impl.getText());
-            // そのまま連結.
+            // 小数点付きの数値はパラメータとしては処理せずにそのまま文字列として連結.
             sqlInfo.getSqlBuilder().append(impl.getText());
             return;
         }

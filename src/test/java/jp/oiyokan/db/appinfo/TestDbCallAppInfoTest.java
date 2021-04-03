@@ -13,35 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jp.oiyokan.basic.skl;
+package jp.oiyokan.db.appinfo;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.apache.olingo.server.api.ODataResponse;
 import org.junit.jupiter.api.Test;
 
+import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.util.OiyokanTestUtil;
 
 /**
  * OData サーバについて、おおざっぱな通過によるデグレードを検知.
  */
-class BasicODataSampleSklTest {
-    /**
-     * zip code 対応
-     */
+class TestDbCallAppInfoTest {
     @Test
-    void test02() throws Exception {
-        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/SklStaffLists",
-                OiyokanTestUtil.encodeUrlQuery(
-                        "$count=true &$top=20 &$select=zip_code &$orderby=zip_code &$filter=zip_code eq '00000'"));
+    void testSimpleVersion() throws Exception {
+        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataAppInfos", "$top=1&$skip=1");
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
-        // System.err.println("dec: " + OiyokanTestUtil.decodeUrlQuery(
-        // "$count=true&$top=20&$select=zip_code&$orderby=zip_code&$filter=zip_code%20eq%20%2700000%27"));
-
         // System.err.println("result: " + result);
-        assertEquals("{\"@odata.context\":\"$metadata#SklStaffLists\",\"@odata.count\":0,\"value\":[]}", result,
-                "DB上で空白を含む項目名を処理できることの確認。");
+        assertEquals(
+                "{\"@odata.context\":\"$metadata#ODataAppInfos\",\"value\":[{\"KeyName\":\"Version\",\"KeyValue\":\""
+                        + OiyokanConstants.VERSION + "\"}]}",
+                result);
         assertEquals(200, resp.getStatusCode());
     }
 }
