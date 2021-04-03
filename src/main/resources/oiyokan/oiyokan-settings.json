@@ -28,6 +28,15 @@
 			"jdbcUrl": "jdbc:postgresql://localhost:5432/dvdrental",
 			"jdbcUser": "",
 			"jdbcPass": ""
+		},
+		{
+			"name": "mssql1",
+			"type": "MSSQL2008",
+			"description": "サンプル の SQL Server DB設定記述(2008想定) 環境情報にあわせて変更利用。",
+			"jdbcDriver": "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+			"jdbcUrl": "jdbc:sqlserver://localhost\\SQLExpress;SelectMethod=cursor",
+			"jdbcUser": "sa",
+			"jdbcPass": "passwd123"
 		}
 	],
 	"entitySet": [

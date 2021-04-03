@@ -78,13 +78,19 @@ oiyokan プロジェクトは、OData v4 server のシンプルなサンプル(h
 
 ## TODO
 
-- Sakila のサンプルアクセスの $filter や $orderby などをもう少し良いものにする。
-- OData のサイトに掲載する
-- README に oiyokan-naming-settings.json の記述についての記載を追記.
-- サンプル EntitySet の html説明について Card 型に変更したい
-- BasicSqlExprExpander の通過していない箇所のテスト.
+- MySQL のテスト実施
+- Oracleのテスト実施
+- 設定XMLファイルを重ねがけできるようにしたい。
 - Sakila DVDレンタルのサンプル (SklActors 等)、ODataTests1 を ON/OFFする手順またはプログラム実装を記述.
 - 認証の各種実験。
 - TimeOfDay がテスト不十分.
 - Maven Repository にアップしたい.
-- ($search対応の後続となるため、しばらく対応できない) TODO Null (nullable) の対応。現在はコメントアウト.
+
+## TODO サイトデザイン
+
+- favicon.ico ファイルの配置。
+- OData のサイトに掲載する
+- モバイルデバイスから Web サイトにアクセスすると画面が崩れるのを修正。
+- サンプル EntitySet の html説明について Card 型に変更したい
+- README に oiyokan-naming-settings.json の記述についての記載を追記.
+

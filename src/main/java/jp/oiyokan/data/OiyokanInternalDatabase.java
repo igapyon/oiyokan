@@ -180,6 +180,8 @@ public class OiyokanInternalDatabase {
     /**
      * Ocsdl 用の DDL 文字列を取得.
      * 
+     * 注意: このメソッドは内部的に全件検索します。内部用 DDL生成の場合以外このメソッドは呼ばないこと。
+     * 
      * @param connTargetDb ターゲットDBへのDB接続.
      * @param tableName    テーブル名.
      * @return 作表のためのDDL.
@@ -196,7 +198,7 @@ public class OiyokanInternalDatabase {
             }
         }
 
-        final String sql = "SELECT * FROM " + tableName + " LIMIT 1";
+        final String sql = "SELECT * FROM " + tableName;
         final StringBuilder sqlBuilder = new StringBuilder();
         sqlBuilder.append("CREATE TABLE IF NOT EXISTS\n");
         sqlBuilder.append("  Ocsdl" + tableName + " (\n");
@@ -308,6 +310,7 @@ public class OiyokanInternalDatabase {
                     break;
                 case Types.BINARY:
                     if ("UUID".equalsIgnoreCase(rsmeta.getColumnTypeName(column))) {
+                        // 型名が UUID の時だけ特殊な挙動をする.
                         sqlBuilder.append("UUID");
                     } else {
                         if (rsmeta.getColumnDisplaySize(column) > 0

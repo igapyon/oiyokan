@@ -463,6 +463,8 @@ INSERT INTO ODataTest1 (ID, Name, Description) VALUES (
   202, 'DummyPC98', 'ダミーなPC98');
 INSERT INTO ODataTest1 (ID, Name, Description) VALUES (
   203, 'DummyPC99', 'ダミーなPC99');
+INSERT INTO ODataTest1 (ID, Name, Description, StringVar255, StringVar65535, StringLongVar1, Clob1) VALUES (
+  204, 'StringTests', '文字列検索確認', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ');
 
 INSERT INTO ODataTestFulls1 (ID, Name, Description) VALUES (
   1, 'MacBookPro16,2', 'MacBook Pro (13-inch, 2020, Thunderbolt 3ポートx 4)');

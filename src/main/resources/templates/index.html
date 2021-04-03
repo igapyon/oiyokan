@@ -9,8 +9,17 @@
 
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta charset="UTF-8" />
-  <meta name="description" content="">
-  <title>index</title>
+  <title>Oiyokan OData v4 Server SDK</title>
+  <meta property="og:title" content="Oiyokan OData v4 Server SDK" />
+  <meta name="description"
+    content="Oiyokan is an OData v4 server SDK. Based on Apache Olingo. Build with Spring Boot, Java, h2. Oiyokan provides read-only OData v4 access to resources.">
+  <meta property="og:description"
+    content="Oiyokan is an OData v4 server SDK. Based on Apache Olingo. Build with Spring Boot, Java, h2. Oiyokan provides read-only OData v4 access to resources." />
+  <meta property="og:url" content="https://oiyokan.herokuapp.com/index.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Oiyokan v4 Server SDK" />
+  <meta property="og:image" content="https://www.nuget.org/profiles/OData/avatar?imageSize=256" />
+  <meta name="google-site-verification" content="BDhI_W_YvhLMkf47CGsA2C7UOMVyj4OBvcqhoajA2R8" />
 </head>
 
 <body>
@@ -54,8 +63,13 @@
           </a>
         </li>
         <li class="slds-context-bar__item">
-          <a href="unittest.html" class="slds-context-bar__label-action" title="Oiyokan Unit Test">
-            <span class="slds-truncate" title="Oiyokan Unit Test">Oiyokan Unit Test</span>
+          <a href="usage-sfdc.html" class="slds-context-bar__label-action" title="Usage">
+            <span class="slds-truncate" title="Usage">Usage</span>
+          </a>
+        </li>
+        <li class="slds-context-bar__item">
+          <a href="unittest.html" class="slds-context-bar__label-action" title="Unit Test">
+            <span class="slds-truncate" title="Unit Test">Unit Test</span>
           </a>
         </li>
       </ul>
@@ -342,7 +356,7 @@
         <ul class="slds-list_dotted">
           <li>Sample OData v4 Server of <a href="https://www.jooq.org/sakila" target="_blank">Sakila DVD
               rental</a>.</li>
-          <li>Metadata of OData v4 is provided at <a href="/odata4.svc/$metadata" target="_blank">$metadata</a>.
+          <li>Metadata of OData v4 is provided at <a th:href="${odataRootpath + '/$metadata'}" target="_blank">$metadata</a>.
           </li>
         </ul>
       </dd>

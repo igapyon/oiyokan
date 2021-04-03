@@ -12,6 +12,7 @@ import jp.oiyokan.OiyokanConstants;
 public class ThIndexCtrl {
     @RequestMapping(value = { "/", "/index.html" })
     public String oiyokanUnittest(Model model) throws IOException {
+        model.addAttribute("odataRootpath", OiyokanConstants.ODATA_ROOTPATH);
 
         IndexBean index = new IndexBean();
         model.addAttribute("indexBean", index);

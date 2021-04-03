@@ -308,8 +308,7 @@ public class BasicSqlExprExpander {
         if (EdmDecimal.getInstance() == impl.getType()) {
             if (IS_DEBUG_EXPAND_LITERAL)
                 System.err.println("TRACE: EdmDecimal: " + impl.getText());
-            // そのまま連結.
-            // 2.0などをDecimalにするデメリットが読みきれず。そのまま連結でDB処理に判断をO委ねる。
+            // 小数点付きの数値はパラメータとしては処理せずにそのまま文字列として連結.
             sqlInfo.getSqlBuilder().append(impl.getText());
             return;
         }
@@ -323,14 +322,14 @@ public class BasicSqlExprExpander {
         if (EdmSingle.getInstance() == impl.getType()) {
             if (IS_DEBUG_EXPAND_LITERAL)
                 System.err.println("TRACE: EdmSingle: " + impl.getText());
-            // そのまま連結.
+            // 小数点付きの数値はパラメータとしては処理せずにそのまま文字列として連結.
             sqlInfo.getSqlBuilder().append(impl.getText());
             return;
         }
         if (EdmDouble.getInstance() == impl.getType()) {
             if (IS_DEBUG_EXPAND_LITERAL)
                 System.err.println("TRACE: EdmDouble: " + impl.getText());
-            // そのまま連結.
+            // 小数点付きの数値はパラメータとしては処理せずにそのまま文字列として連結.
             sqlInfo.getSqlBuilder().append(impl.getText());
             return;
         }
@@ -381,34 +380,56 @@ public class BasicSqlExprExpander {
                 OiyokanNamingUtil.entity2Db(BasicJdbcUtil.unescapeKakkoFieldName(impl.toString()))));
     }
 
+    /**
+     * method を expand.
+     * 
+     * @param impl MethodImpl
+     * @throws ODataApplicationException ODataアプリ例外が発生.
+     */
     private void expandMethod(MethodImpl impl) throws ODataApplicationException {
         // CONTAINS
         if (impl.getMethod() == MethodKind.CONTAINS) {
-            // h2 database の POSITION は 1 オリジンで発見せずが0 なので 1 を減らしています。
-            sqlInfo.getSqlBuilder().append("(POSITION(");
-            expand(impl.getParameters().get(1));
-            sqlInfo.getSqlBuilder().append(",");
-            expand(impl.getParameters().get(0));
-            sqlInfo.getSqlBuilder().append(") > 0)");
+            // h2 database の POSITION/INSTR は 1 オリジンで発見せずが0 なので 1 を減らしています。
+            switch (sqlInfo.getEntitySet().getDatabaseType()) {
+            default:
+                sqlInfo.getSqlBuilder().append("(INSTR(");
+                expand(impl.getParameters().get(0));
+                sqlInfo.getSqlBuilder().append(",");
+                expand(impl.getParameters().get(1));
+                sqlInfo.getSqlBuilder().append(") > 0)");
+                break;
+            case MSSQL2008:
+                sqlInfo.getSqlBuilder().append("(CHARINDEX(");
+                expand(impl.getParameters().get(1));
+                sqlInfo.getSqlBuilder().append(",");
+                expand(impl.getParameters().get(0));
+                sqlInfo.getSqlBuilder().append(") > 0)");
+                break;
+            }
             return;
         }
 
         // STARTSWITH
         if (impl.getMethod() == MethodKind.STARTSWITH) {
-            // h2 database の POSITION は 1 オリジンで発見せずが0 なので 1 を減らしています。
-            sqlInfo.getSqlBuilder().append("(POSITION(");
-            expand(impl.getParameters().get(1));
-            sqlInfo.getSqlBuilder().append(",");
+            // h2 database の POSITION/INSTR は 1 オリジンで発見せずが0 なので 1 を減らしています。
+            sqlInfo.getSqlBuilder().append("(INSTR(");
             expand(impl.getParameters().get(0));
+            sqlInfo.getSqlBuilder().append(",");
+            expand(impl.getParameters().get(1));
             sqlInfo.getSqlBuilder().append(") = 1)");
             return;
         }
 
         // ENDSWITH
         if (impl.getMethod() == MethodKind.ENDSWITH) {
-            // [M123] NOT SUPPORTED: MethodKind.ENDSWITH
-            System.err.println(OiyokanMessages.M123);
-            throw new ODataApplicationException(OiyokanMessages.M123, 500, Locale.ENGLISH);
+            sqlInfo.getSqlBuilder().append("(RIGHT(");
+            expand(impl.getParameters().get(0));
+            sqlInfo.getSqlBuilder().append(",LENGTH(");
+            expand(impl.getParameters().get(1));
+            sqlInfo.getSqlBuilder().append(")) = ");
+            expand(impl.getParameters().get(1));
+            sqlInfo.getSqlBuilder().append(")");
+            return;
         }
 
         // LENGTH
@@ -422,11 +443,11 @@ public class BasicSqlExprExpander {
 
         // INDEXOF
         if (impl.getMethod() == MethodKind.INDEXOF) {
-            // h2 database の POSITION は 1 オリジンで発見せずが0 なので 1 を減らしています。
-            sqlInfo.getSqlBuilder().append("(POSITION(");
-            expand(impl.getParameters().get(1));
-            sqlInfo.getSqlBuilder().append(",");
+            // h2 database の POSITION/INSTR は 1 オリジンで発見せずが0 なので 1 を減らしています。
+            sqlInfo.getSqlBuilder().append("(INSTR(");
             expand(impl.getParameters().get(0));
+            sqlInfo.getSqlBuilder().append(",");
+            expand(impl.getParameters().get(1));
             sqlInfo.getSqlBuilder().append(") - 1)");
             return;
         }
@@ -473,7 +494,6 @@ public class BasicSqlExprExpander {
             sqlInfo.getSqlBuilder().append(")");
             return;
         }
-        // TODO 未テスト.
 
         // CONCAT
         if (impl.getMethod() == MethodKind.CONCAT) {
@@ -484,7 +504,6 @@ public class BasicSqlExprExpander {
             sqlInfo.getSqlBuilder().append(")");
             return;
         }
-        // TODO 未テスト.
 
         // YEAR
         if (impl.getMethod() == MethodKind.YEAR) {
@@ -660,7 +679,7 @@ public class BasicSqlExprExpander {
 
         // SUBSTRINGOF
         if (impl.getMethod() == MethodKind.SUBSTRINGOF) {
-            sqlInfo.getSqlBuilder().append("(POSITION(");
+            sqlInfo.getSqlBuilder().append("(INSTR(");
             expand(impl.getParameters().get(0));
             sqlInfo.getSqlBuilder().append(",");
             expand(impl.getParameters().get(1));
@@ -681,10 +700,9 @@ public class BasicSqlExprExpander {
             sqlInfo.getSqlBuilder().append("))");
             return;
         } else if (impl.getOperator() == UnaryOperatorKind.MINUS) {
-            sqlInfo.getSqlBuilder().append("(-(");
-            expand(impl.getOperand());
-            sqlInfo.getSqlBuilder().append("))");
-            return;
+            // [M131] NOT SUPPORTED: UnaryOperatorKind.MINUS
+            System.err.println(OiyokanMessages.M131 + ": " + impl.toString());
+            throw new ODataApplicationException(OiyokanMessages.M131, 500, Locale.ENGLISH);
         }
 
         // [M122] UNEXPECTED: Unsupported UnaryOperatorKind

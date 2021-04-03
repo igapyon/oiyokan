@@ -9,8 +9,16 @@
 
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta charset="UTF-8" />
-  <meta name="description" content="">
+
   <title>Oiyokan Unit Test</title>
+  <meta property="og:title" content="Oiyokan Unit Test" />
+  <meta name="description" content="Oiyokan unit test page. It shows the basic OData v4 information and queries.">
+  <meta property="og:description"
+    content="Oiyokan unit test page. It shows the basic OData v4 information and queries." />
+  <meta property="og:url" content="https://oiyokan.herokuapp.com/unittest.html" />
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="Oiyokan v4 Server SDK" />
+  <meta property="og:image" content="https://www.nuget.org/profiles/OData/avatar?imageSize=256" />
 </head>
 
 <body data-page-initialized="true">
@@ -54,10 +62,15 @@
                 <span class="slds-truncate" title="Dvd Rental">Sakila DVD Rental</span>
               </a>
             </li>
+            <li class="slds-context-bar__item">
+              <a href="usage-sfdc.html" class="slds-context-bar__label-action" title="Usage">
+                <span class="slds-truncate" title="Usage">Usage</span>
+              </a>
+            </li>
             <li class="slds-context-bar__item slds-is-active">
-              <a href="#" class="slds-context-bar__label-action" title="Oiyokan Unit Test">
+              <a href="#" class="slds-context-bar__label-action" title="Unit Test">
                 <span class="slds-assistive-text">Current Page:</span>
-                <span class="slds-truncate" title="Oiyokan Unit Test">Oiyokan Unit Test</span>
+                <span class="slds-truncate" title="Unit Test">Unit Test</span>
               </a>
             </li>
           </ul>
@@ -122,8 +135,8 @@
                 </div>
               </td>
               <td data-label="Request">
-                <div class="slds-truncate" th:title="${'./odata4.svc' + urlEntry.path}"><a
-                    th:href="${'./odata4.svc' + urlEntry.path}" target="_blank">Request</a></div>
+                <div class="slds-truncate" th:title="${odataRootpath + urlEntry.path}"><a
+                    th:href="${odataRootpath + urlEntry.path}" target="_blank">Request</a></div>
               </td>
               <td data-label="Note">
                 <div class="slds-truncate" title="Note"><span th:text="${urlEntry.note}" th:remove="tag" /></div>

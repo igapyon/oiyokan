@@ -27,7 +27,12 @@ public class OiyokanConstants {
     /**
      * Oiyokan のバージョン番号
      */
-    public static final String VERSION = "20210327g";
+    public static final String VERSION = "1.0.20210403b";
+
+    /**
+     * OData のルートパス.
+     */
+    public static final String ODATA_ROOTPATH = "/odata4.svc";
 
     /**
      * Oiyokan がリクエストを処理する際の 'OData v4' からはじまるトレースを出力するかどうか。
@@ -35,7 +40,7 @@ public class OiyokanConstants {
     public static final boolean IS_TRACE_ODATA_V4 = true;
 
     /**
-     * 実験的な $search が有効化されているかどうか。
+     * 実験的な $search 機能(全文検索)が有効化されているかどうか。
      * 
      * 当面、リリース時には false.
      */
@@ -49,11 +54,11 @@ public class OiyokanConstants {
         h2,
         /** Postgres */
         postgres,
-        /** MySQL */
+        /** MySQL : not tested */
         MySQL,
-        /** MSSQL : placeholder, not tested */
-        MSSQL,
-        /** Oracle : placeholder, not supported, not tested */
+        /** MSSQL 2008 */
+        MSSQL2008,
+        /** Oracle : placeholder, not tested */
         ORACLE,
         /** BigQuery : placeholder, not supported, not tested */
         BigQuery,
