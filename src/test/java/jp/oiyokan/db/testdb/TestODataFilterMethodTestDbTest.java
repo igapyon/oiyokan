@@ -25,7 +25,7 @@ import jp.oiyokan.util.OiyokanTestUtil;
 /**
  * フィルタの型に着眼したテスト.
  */
-class TestODataFilterNotTestDbTest {
+class TestODataFilterMethodTestDbTest {
     @Test
     void testStartsWithA() throws Exception {
         final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1", OiyokanTestUtil
@@ -62,4 +62,38 @@ class TestODataFilterNotTestDbTest {
                 result);
         assertEquals(200, resp.getStatusCode());
     }
+
+    // ENDSWITH
+
+    // LENGTH
+    @Test
+    void testLengthA() throws Exception {
+        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1",
+                OiyokanTestUtil.encodeUrlQuery("&$filter=length(StringVar255) eq 26 &$count=true &$select=ID"));
+        final String result = OiyokanTestUtil.stream2String(resp.getContent());
+
+        // System.err.println("result: " + result);
+        assertEquals("{\"@odata.context\":\"$metadata#ODataTests1\",\"@odata.count\":1,\"value\":[{\"ID\":204}]}",
+                result);
+        assertEquals(200, resp.getStatusCode());
+    }
+
+    // SUBSTRING
+    @Test
+    void testSubstringA() throws Exception {
+        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1", OiyokanTestUtil
+                .encodeUrlQuery("&$filter=substring(StringVar255,3,2) eq 'CD' &$count=true &$select=ID"));
+        final String result = OiyokanTestUtil.stream2String(resp.getContent());
+
+        // System.err.println("result: " + result);
+        assertEquals("{\"@odata.context\":\"$metadata#ODataTests1\",\"@odata.count\":1,\"value\":[{\"ID\":204}]}",
+                result);
+        assertEquals(200, resp.getStatusCode());
+    }
+
+    // TOLOWER
+    // TOUPPER
+    // TRIM
+    // CONCAT
+
 }
