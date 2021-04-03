@@ -700,10 +700,9 @@ public class BasicSqlExprExpander {
             sqlInfo.getSqlBuilder().append("))");
             return;
         } else if (impl.getOperator() == UnaryOperatorKind.MINUS) {
-            sqlInfo.getSqlBuilder().append("(-(");
-            expand(impl.getOperand());
-            sqlInfo.getSqlBuilder().append("))");
-            return;
+            // [M131] NOT SUPPORTED: UnaryOperatorKind.MINUS
+            System.err.println(OiyokanMessages.M131 + ": " + impl.toString());
+            throw new ODataApplicationException(OiyokanMessages.M131, 500, Locale.ENGLISH);
         }
 
         // [M122] UNEXPECTED: Unsupported UnaryOperatorKind

@@ -87,6 +87,7 @@ public class OiyokanMessages {
     public static final String M128 = "[M128] NOT SUPPORTED: BinaryOperatorKind.MOD";
     public static final String M129 = "[M129] NOT SUPPORTED: BinaryOperatorKind.ADD";
     public static final String M130 = "[M130] NOT SUPPORTED: BinaryOperatorKind.SUB";
+    public static final String M131 = "[M131] NOT SUPPORTED: UnaryOperatorKind.MINUS";
 
     /**
      * 手早く未実装マークをつけるためのテンポラリなメッセージ.
