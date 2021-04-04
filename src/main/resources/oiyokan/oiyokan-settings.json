@@ -73,7 +73,7 @@
 			"entitySetName": "ODataTests1",
 			"entityName": "ODataTest1",
 			"databaseName": "oiyokanInternalTarget",
-			"dbTableNameLocal": "OcsdlODataTest1",
+			"dbTableNameLocal": "OiyoODataTest1",
 			"dbTableNameTarget": "ODataTest1"
 		},
 		{
@@ -82,7 +82,7 @@
 			"entitySetName": "ODataTestFulls1",
 			"entityName": "ODataTestFull1",
 			"databaseName": "oiyokanInternalTarget",
-			"dbTableNameLocal": "OcsdlODataTestFulls1",
+			"dbTableNameLocal": "OiyoODataTestFulls1",
 			"dbTableNameTarget": "ODataTestFulls1"
 		},
 		{
@@ -91,7 +91,7 @@
 			"entitySetName": "SklActors",
 			"entityName": "SklActor",
 			"databaseName": "oiyokanInternalTarget",
-			"dbTableNameLocal": "Ocsdlactor",
+			"dbTableNameLocal": "Oiyoactor",
 			"dbTableNameTarget": "actor"
 		},
 		{
@@ -100,7 +100,7 @@
 			"entitySetName": "SklActorInfos",
 			"entityName": "SklActoInfor",
 			"databaseName": "oiyokanInternalTarget",
-			"dbTableNameLocal": "Ocsdlactor_info",
+			"dbTableNameLocal": "Oiyoactor_info",
 			"dbTableNameTarget": "actor_info"
 		},
 		{
@@ -109,7 +109,7 @@
 			"entitySetName": "SklAddresses",
 			"entityName": "SklAddress",
 			"databaseName": "oiyokanInternalTarget",
-			"dbTableNameLocal": "Ocsdladdress",
+			"dbTableNameLocal": "Oiyoaddress",
 			"dbTableNameTarget": "address"
 		},
 		{
@@ -118,7 +118,7 @@
 			"entitySetName": "SklCategories",
 			"entityName": "SklCategory",
 			"databaseName": "oiyokanInternalTarget",
-			"dbTableNameLocal": "Ocsdlcategory",
+			"dbTableNameLocal": "Oiyocategory",
 			"dbTableNameTarget": "category"
 		},
 		{
@@ -127,7 +127,7 @@
 			"entitySetName": "SklCities",
 			"entityName": "SklCity",
 			"databaseName": "oiyokanInternalTarget",
-			"dbTableNameLocal": "Ocsdlcity",
+			"dbTableNameLocal": "Oiyocity",
 			"dbTableNameTarget": "city"
 		},
 		{
@@ -136,7 +136,7 @@
 			"entitySetName": "SklCountries",
 			"entityName": "SklCountry",
 			"databaseName": "oiyokanInternalTarget",
-			"dbTableNameLocal": "Ocsdlcountry",
+			"dbTableNameLocal": "Oiyocountry",
 			"dbTableNameTarget": "country"
 		},
 		{
@@ -145,7 +145,7 @@
 			"entitySetName": "SklCustomers",
 			"entityName": "SklCustomer",
 			"databaseName": "oiyokanInternalTarget",
-			"dbTableNameLocal": "Ocsdlcustomer",
+			"dbTableNameLocal": "Oiyocustomer",
 			"dbTableNameTarget": "customer"
 		},
 		{
@@ -154,7 +154,7 @@
 			"entitySetName": "SklCustomerLists",
 			"entityName": "SklCustomerList",
 			"databaseName": "oiyokanInternalTarget",
-			"dbTableNameLocal": "Ocsdlcustomer_list",
+			"dbTableNameLocal": "Oiyocustomer_list",
 			"dbTableNameTarget": "customer_list"
 		},
 		{
@@ -163,7 +163,7 @@
 			"entitySetName": "SklFilms",
 			"entityName": "SklFilm",
 			"databaseName": "oiyokanInternalTarget",
-			"dbTableNameLocal": "Ocsdlfilm",
+			"dbTableNameLocal": "Oiyofilm",
 			"dbTableNameTarget": "film"
 		},
 		{
@@ -172,7 +172,7 @@
 			"entitySetName": "SklFilmActors",
 			"entityName": "SklFilmActor",
 			"databaseName": "oiyokanInternalTarget",
-			"dbTableNameLocal": "Ocsdlfilm_actor",
+			"dbTableNameLocal": "Oiyofilm_actor",
 			"dbTableNameTarget": "film_actor"
 		},
 		{
@@ -181,7 +181,7 @@
 			"entitySetName": "SklFilmCategories",
 			"entityName": "SklFilmCategory",
 			"databaseName": "oiyokanInternalTarget",
-			"dbTableNameLocal": "Ocsdlfilm_category",
+			"dbTableNameLocal": "Oiyofilm_category",
 			"dbTableNameTarget": "film_category"
 		},
 		{
@@ -190,7 +190,7 @@
 			"entitySetName": "SklFilmLists",
 			"entityName": "SklFilmList",
 			"databaseName": "oiyokanInternalTarget",
-			"dbTableNameLocal": "Ocsdlfilm_list",
+			"dbTableNameLocal": "Oiyofilm_list",
 			"dbTableNameTarget": "film_list"
 		},
 		{
@@ -199,7 +199,7 @@
 			"entitySetName": "SklInventories",
 			"entityName": "SklInventory",
 			"databaseName": "oiyokanInternalTarget",
-			"dbTableNameLocal": "Ocsdlinventory",
+			"dbTableNameLocal": "Oiyoinventory",
 			"dbTableNameTarget": "inventory"
 		},
 		{
@@ -208,7 +208,7 @@
 			"entitySetName": "SklLanguages",
 			"entityName": "SklLanguage",
 			"databaseName": "oiyokanInternalTarget",
-			"dbTableNameLocal": "Ocsdllanguage",
+			"dbTableNameLocal": "Oiyolanguage",
 			"dbTableNameTarget": "language"
 		},
 		{
@@ -217,7 +217,7 @@
 			"entitySetName": "SklNicerButSlowerFilmLists",
 			"entityName": "SklNicerButSlowerFilmList",
 			"databaseName": "oiyokanInternalTarget",
-			"dbTableNameLocal": "Ocsdlnicer_but_slower_film_list",
+			"dbTableNameLocal": "Oiyonicer_but_slower_film_list",
 			"dbTableNameTarget": "nicer_but_slower_film_list"
 		},
 		{
@@ -226,7 +226,7 @@
 			"entitySetName": "SklPayments",
 			"entityName": "SklPayment",
 			"databaseName": "oiyokanInternalTarget",
-			"dbTableNameLocal": "Ocsdlpayment",
+			"dbTableNameLocal": "Oiyopayment",
 			"dbTableNameTarget": "payment"
 		},
 		{
@@ -235,7 +235,7 @@
 			"entitySetName": "SklRentals",
 			"entityName": "SklRental",
 			"databaseName": "oiyokanInternalTarget",
-			"dbTableNameLocal": "Ocsdlrental",
+			"dbTableNameLocal": "Oiyorental",
 			"dbTableNameTarget": "rental"
 		},
 		{
@@ -244,7 +244,7 @@
 			"entitySetName": "SklSalesByFilmCategories",
 			"entityName": "SklSalesByFilmCategory",
 			"databaseName": "oiyokanInternalTarget",
-			"dbTableNameLocal": "Ocsdlsales_by_film_category",
+			"dbTableNameLocal": "Oiyosales_by_film_category",
 			"dbTableNameTarget": "sales_by_film_category"
 		},
 		{
@@ -253,7 +253,7 @@
 			"entitySetName": "SklSalesByStores",
 			"entityName": "SklSalesByStore",
 			"databaseName": "oiyokanInternalTarget",
-			"dbTableNameLocal": "Ocsdlsales_by_store",
+			"dbTableNameLocal": "Oiyosales_by_store",
 			"dbTableNameTarget": "sales_by_store"
 		},
 		{
@@ -262,7 +262,7 @@
 			"entitySetName": "SklStaffs",
 			"entityName": "SklStaff",
 			"databaseName": "oiyokanInternalTarget",
-			"dbTableNameLocal": "Ocsdlstaff",
+			"dbTableNameLocal": "Oiyostaff",
 			"dbTableNameTarget": "staff"
 		},
 		{
@@ -271,7 +271,7 @@
 			"entitySetName": "SklStaffLists",
 			"entityName": "SklStaffList",
 			"databaseName": "oiyokanInternalTarget",
-			"dbTableNameLocal": "Ocsdlstaff_list",
+			"dbTableNameLocal": "Oiyostaff_list",
 			"dbTableNameTarget": "staff_list"
 		},
 		{
@@ -280,7 +280,7 @@
 			"entitySetName": "SklStores",
 			"entityName": "SklStore",
 			"databaseName": "oiyokanInternalTarget",
-			"dbTableNameLocal": "Ocsdlstore",
+			"dbTableNameLocal": "Oiyostore",
 			"dbTableNameTarget": "store"
 		}
 	]

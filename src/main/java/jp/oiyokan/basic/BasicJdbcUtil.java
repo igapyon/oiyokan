@@ -237,7 +237,7 @@ public class BasicJdbcUtil {
         final CsdlProperty csdlProp = iyoEntitySet.getEntityType().getProperty(propName);
         if (csdlProp == null) {
             // [M034] ERROR: An unknown field name was specified. The field names are case
-            // sensitive. Make sure the Ocsdl field name matches the target field name.
+            // sensitive. Make sure the Oiyo field name matches the target field name.
             System.err.println(OiyokanMessages.M034 + ": colname:" + rsmeta.getColumnName(column)
                     + ", propname(should):" + propName);
 

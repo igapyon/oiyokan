@@ -145,11 +145,11 @@ public class OiyokanCsdlEntitySet extends CsdlEntitySet {
     }
 
     /**
-     * ローカル上のテーブル名.
+     * ローカル上の Oiyo テーブル名.
      * 
-     * @return ローカルのDBテーブル名.
+     * @return ローカルの Oiyoテーブル名.
      */
-    public String getDbTableNameLocalIyo() {
+    public String getDbTableNameLocalOiyo() {
         return settingsEntitySet.getDbTableNameLocal();
     }
 

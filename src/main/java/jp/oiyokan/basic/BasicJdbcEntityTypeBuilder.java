@@ -39,7 +39,7 @@ import jp.oiyokan.settings.OiyokanSettingsUtil;
 /**
  * 典型的で基本的な JDBC処理を利用した EntityType を構築。
  * 
- * 内部データベースをもとにした Ocsdl 形式での処理であるため接続先のリソースの種類によらず Oiyokan ではこのクラスを利用.
+ * 内部データベースをもとにした Oiyo 形式での処理であるため接続先のリソースの種類によらず Oiyokan ではこのクラスを利用.
  */
 public class BasicJdbcEntityTypeBuilder {
     /**
@@ -76,13 +76,13 @@ public class BasicJdbcEntityTypeBuilder {
             final CsdlEntityType entityType = new CsdlEntityType();
             entityType.setName(entitySet.getEntityNameIyo());
 
-            // 基本的な動作: 内部データベースである h2 データベースから該当する Ocsdl による情報取得.
+            // 基本的な動作: 内部データベースである h2 データベースから該当する Oiyo による情報取得.
             final List<CsdlProperty> propertyList = new ArrayList<>();
             entityType.setProperties(propertyList);
 
             // SELECT * について、この箇所のみ記述を許容。
             // DatabaseMetaData では情報を取りづらい場合があるためこちら ResultSetMetaData を使用。
-            final String sql = "SELECT * FROM " + entitySet.getDbTableNameLocalIyo() + " LIMIT 1";
+            final String sql = "SELECT * FROM " + entitySet.getDbTableNameLocalOiyo() + " LIMIT 1";
             if (OiyokanConstants.IS_TRACE_ODATA_V4)
                 System.err.println("OData v4: TRACE: Entity: SQL: " + sql);
             try (PreparedStatement stmt = connInterDb.prepareStatement(sql)) {
@@ -95,7 +95,7 @@ public class BasicJdbcEntityTypeBuilder {
                 // テーブルのキー情報
                 final List<CsdlPropertyRef> keyRefList = new ArrayList<>();
                 final DatabaseMetaData dbmeta = connInterDb.getMetaData();
-                final ResultSet rsKey = dbmeta.getPrimaryKeys(null, null, entitySet.getDbTableNameLocalIyo());
+                final ResultSet rsKey = dbmeta.getPrimaryKeys(null, null, entitySet.getDbTableNameLocalOiyo());
                 for (; rsKey.next();) {
                     // キー名はここでは利用する必要がない: rsKey.getString("PK_NAME");
                     String colName = rsKey.getString("COLUMN_NAME");
@@ -109,8 +109,8 @@ public class BasicJdbcEntityTypeBuilder {
                     // キーがないものは OData 的に不都合があるため警告する。
                     if (OiyokanConstants.IS_TRACE_ODATA_V4) {
                         System.err.println("OData v4: WARNING: No ID: " + entitySet.getName());
-                        System.err.println("OData v4: WARNING: Set primary key on Ocsdl table: "
-                                + entitySet.getDbTableNameLocalIyo());
+                        System.err.println("OData v4: WARNING: Set primary key on Oiyo table: "
+                                + entitySet.getDbTableNameLocalOiyo());
                     }
                 }
 

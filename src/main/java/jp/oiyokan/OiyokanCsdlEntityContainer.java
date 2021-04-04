@@ -114,7 +114,7 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
                 }
             }
 
-            // Oiyokan が動作する際に必要になる内部データベースのバージョン情報および Ocsdl info をセットアップ.
+            // Oiyokan が動作する際に必要になる内部データベースのバージョン情報および Oiyo info をセットアップ.
             OiyokanInternalDatabase.setupInternalDatabase();
 
             for (OiyokanSettingsEntitySet entitySetCnof : getSettingsInstance().getEntitySetList()) {
@@ -185,7 +185,7 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
         }
 
         // 処理したことのない EntityType。これから型情報を構築。
-        // 内部データベースをもとに Ocsdl 形式を構築するため、リソースの型によらず常に以下のクラスで処理.
+        // 内部データベースをもとに Oiyo形式を構築するため、リソースの型によらず常に以下のクラスで処理.
         BasicJdbcEntityTypeBuilder entityTypeBuilder = new BasicJdbcEntityTypeBuilder(
                 getEntitySetByEntityNameFqnIyo(entityTypeName));
 

@@ -48,13 +48,13 @@ src/main/resources/oiyokan/oiyokan-settings.json
 
 ## oiyokan-targetdb.sql を設定
 
-oiyokan-targetdb.sql ファイルに ターゲットDBの Ocsdl情報をあらわす SQL/DDL文を記述.
+oiyokan-targetdb.sql ファイルに ターゲットDBの Oiyo情報をあらわす SQL/DDL文を記述.
 
 ```sh
 src/main/resources/oiyokan/sql/oiyokan-targetdb.sql
 ```
 
-記述内容については sample-ocsdl-pg-dvdrental.sql を参考にする。
+記述内容については sample-oiyo-pg-dvdrental.sql を参考にする。
 
 ## 設定変更後は Spring Boot を再起動
 

@@ -59,8 +59,7 @@ class BuildInternalDbTest {
 
         for (String[] sqlFileDef : OIYOKAN_FILE_SQLS) {
             if (OiyokanConstants.IS_TRACE_ODATA_V4)
-                System.err.println(
-                        "OData v4adfadfdasfadsfdasfdsa: load: db:" + sqlFileDef[0] + ", sql: " + sqlFileDef[1]);
+                System.err.println("OData: load: internal db:" + sqlFileDef[0] + ", sql: " + sqlFileDef[1]);
 
             OiyokanSettingsDatabase lookDatabase = OiyokanSettingsUtil.getOiyokanDatabase(sqlFileDef[0]);
 
