@@ -84,7 +84,7 @@ oiyokan プロジェクトは、OData v4 server のシンプルなサンプル(h
 
 ## TODO
 
-- ここで一旦 MySQL, SQL Server 2008 でテスト.
+- ここで一旦 SQL Server 2008 でテスト.
 - Oracleのテスト実施
 - 設定XMLファイルを分割+重ねがけできるようにしたい。
 - Sakila DVDレンタルのサンプル (SklActors 等)、ODataTests1 を ON/OFFする手順またはプログラム実装を記述.
