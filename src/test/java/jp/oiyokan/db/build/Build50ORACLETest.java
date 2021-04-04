@@ -39,7 +39,6 @@ class Build50ORACLETest {
 			} catch (SQLException ex) {
 				System.err.println(ex.toString());
 			}
-//  grant unlimited tablespace to orauser;
 			
 			String[] sqls = OiyokanResourceSqlUtil
 					.loadOiyokanResourceSql("oiyokan/sql/" + "oiyokan-test-db-ORACLE.sql");
