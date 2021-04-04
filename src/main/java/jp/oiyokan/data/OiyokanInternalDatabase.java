@@ -35,7 +35,7 @@ import jp.oiyokan.dto.OiyokanSettingsDatabase;
 import jp.oiyokan.settings.OiyokanSettingsUtil;
 
 /**
- * Oiyokan (OData v4 server) が動作する際に必要になる内部データベースのバージョン情報および Ocsdl info をセットアップ.
+ * Oiyokan (OData v4 server) が動作する際に必要になる内部データベースのバージョン情報および Oiyo info をセットアップ.
  */
 public class OiyokanInternalDatabase {
     /**
@@ -51,7 +51,7 @@ public class OiyokanInternalDatabase {
             /*
              * Oiyokan の基本機能を確認およびビルド時の JUnitテストで利用. 変更するとビルドが動作しなくなる場合あり.
              */
-            { OiyokanConstants.OIYOKAN_INTERNAL_DB, "oiyokan-test-ocsdl.sql" },
+            { OiyokanConstants.OIYOKAN_INTERNAL_DB, "oiyokan-test-oiyo.sql" },
 
             /*
              * Sakila dvdrental サンプルDB の内容そのもの. この内容は BuildInternalDbTest.java により別途生成.
@@ -59,13 +59,13 @@ public class OiyokanInternalDatabase {
             // { OiyokanConstants.OIYOKAN_INTERNAL_TARGET_DB, "sample-sakila-db.sql" }, //
 
             /*
-             * Sakila dvdrental サンプルDB に接続するためのOCSDL情報.
+             * Sakila dvdrental サンプルDB に接続するための Oiyo 情報.
              */
-            { OiyokanConstants.OIYOKAN_INTERNAL_DB, "sample-sakila-ocsdl.sql" },
+            { OiyokanConstants.OIYOKAN_INTERNAL_DB, "sample-sakila-oiyo.sql" },
             /*
-             * Oiyokan のターゲットデータベースのOCSDL情報を記述。github上では空白ファイルとする.
+             * Oiyokan のターゲットデータベースの Oiyo情報を記述。github上では空白ファイルとする.
              */
-            { OiyokanConstants.OIYOKAN_INTERNAL_DB, "oiyokan-ocsdl.sql" }, };
+            { OiyokanConstants.OIYOKAN_INTERNAL_DB, "oiyokan-oiyo.sql" }, };
 
     private OiyokanInternalDatabase() {
     }
@@ -85,7 +85,7 @@ public class OiyokanInternalDatabase {
                 .getOiyokanDatabase(OiyokanConstants.OIYOKAN_INTERNAL_DB);
 
         try (Connection connInterDb = BasicJdbcUtil.getConnection(settingsInterDatabase)) {
-            // Internal Database の バージョン情報および Ocsdl テーブルを setup.
+            // Internal Database の バージョン情報および Oiyokanテーブルを setup.
 
             // Oiyokan が動作する上で必要なテーブルのセットアップ.
             try (var stmt = connInterDb.prepareStatement("CREATE TABLE IF NOT EXISTS " //
@@ -178,7 +178,7 @@ public class OiyokanInternalDatabase {
     }
 
     /**
-     * Ocsdl 用の DDL 文字列を取得.
+     * Oiyo 用の DDL 文字列を取得.
      * 
      * 注意: このメソッドは内部的に全件検索します。内部用 DDL生成の場合以外このメソッドは呼ばないこと。
      * 
@@ -187,7 +187,7 @@ public class OiyokanInternalDatabase {
      * @return 作表のためのDDL.
      * @throws SQLException SQL例外が発生した場合.
      */
-    public static String generateCreateOcsdlDdl(Connection connTargetDb, String tableName) throws SQLException {
+    public static String generateCreateOiyoDdl(Connection connTargetDb, String tableName) throws SQLException {
         final Map<String, String> defaultValueMap = new HashMap<>();
         {
             final ResultSet rsdbmetacolumns = connTargetDb.getMetaData().getColumns(null, null, tableName, "%");
@@ -201,7 +201,7 @@ public class OiyokanInternalDatabase {
         final String sql = "SELECT * FROM " + tableName;
         final StringBuilder sqlBuilder = new StringBuilder();
         sqlBuilder.append("CREATE TABLE IF NOT EXISTS\n");
-        sqlBuilder.append("  Ocsdl" + tableName + " (\n");
+        sqlBuilder.append("  Oiyo" + tableName + " (\n");
         try (PreparedStatement stmt = connTargetDb.prepareStatement(sql)) {
             ResultSetMetaData rsmeta = stmt.getMetaData();
             final int columnCount = rsmeta.getColumnCount();
