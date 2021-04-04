@@ -722,12 +722,22 @@ public class BasicSqlExprExpander {
 
         // SUBSTRINGOF
         if (impl.getMethod() == MethodKind.SUBSTRINGOF) {
-            sqlInfo.getSqlBuilder().append("(INSTR(");
-            expand(impl.getParameters().get(0));
-            sqlInfo.getSqlBuilder().append(",");
-            expand(impl.getParameters().get(1));
-            sqlInfo.getSqlBuilder().append(") > 0)");
-            return;
+            switch (sqlInfo.getEntitySet().getDatabaseType()) {
+            default:
+                sqlInfo.getSqlBuilder().append("(INSTR(");
+                expand(impl.getParameters().get(0));
+                sqlInfo.getSqlBuilder().append(",");
+                expand(impl.getParameters().get(1));
+                sqlInfo.getSqlBuilder().append(") > 0)");
+                return;
+            case MSSQL2008:
+                sqlInfo.getSqlBuilder().append("(CHARINDEX(");
+                expand(impl.getParameters().get(1));
+                sqlInfo.getSqlBuilder().append(",");
+                expand(impl.getParameters().get(0));
+                sqlInfo.getSqlBuilder().append(") > 0)");
+                return;
+            }
         }
 
         // [M121] UNEXPECTED: NOT SUPPORTED MethodKind
