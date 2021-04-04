@@ -340,15 +340,24 @@
 
   <div class="slds-align_absolute-center slds-m-left_medium slds-m-right_medium">
     <dl>
-      <dt>Oiyokan is an OData v4 server SDK.</dt>
+      <dt>Oiyokan is an OData v4 server (provider) SDK for RDB</dt>
       <dd>
         <ul class="slds-list_dotted">
+          <li>You can use Oiyokan to turn PostgreSQL, MySQL, and SQL Server 2008 into read-only OData v4 services.</li>
+          <li>Oiyokan uses JDBC to provide read-only OData v4 access to the RDB.</li>
           <li>Based on <a href="https://olingo.apache.org/" target="_blank">Apache Olingo</a>. Build with <a
               href="https://spring.io/projects/spring-boot" target="_blank">Spring Boot</a>, Java, <a
               href="https://www.h2database.com/" target="_blank">h2</a>.</li>
-          <li>Oiyokan provides read-only OData v4 access to resources.</li>
           <li><a href="https://github.com/igapyon/oiyokan" target="_blank">Source code at github</a>, license : <a
               href="https://www.apache.org/licenses/LICENSE-2.0" target="_blank">Apache License</a>.</li>
+        </ul>
+      </dd>
+      <dt>Supported target RDBMS</dt>
+      <dd>
+        <ul class="slds-list_dotted">
+          <li>PostgreSQL (13)</li>
+          <li>MySQL (8.0.23)</li>
+          <li>SQL Server (2008)</li>
         </ul>
       </dd>
       <dt>Oiyokan includes sample OData v4 server implementation.</dt>

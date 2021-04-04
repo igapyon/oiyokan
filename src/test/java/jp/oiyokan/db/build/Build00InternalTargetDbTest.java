@@ -32,7 +32,7 @@ import jp.oiyokan.settings.OiyokanSettingsUtil;
 /**
  * テスト用の内部データベースを作成します。この内部データベースは動作の上で必要です。
  */
-class BuildOiyokanKanDbTest {
+class Build00InternalTargetDbTest {
     private static final String[][] OIYOKAN_FILE_SQLS = new String[][] { //
             /*
              * Oiyokan の基本機能を確認およびビルド時の JUnitテストで利用. 変更するとビルドが動作しなくなる場合あり.
@@ -52,8 +52,8 @@ class BuildOiyokanKanDbTest {
     void test01() throws Exception {
         if (new File("./src/main/resources/db/oiyokan-internal.mv.db").exists()) {
             // すでにファイルが存在する場合は処理スキップ。
-            System.err.println("テスト用内部データベースファイルはすでに存在するので作成をスキップ。");
-            System.err.println("テスト用内部データベースの内容を更新する場合には、データベースファイルを削除して再度テスト実行してください。");
+            System.err.println("TRACE: InternalTarget (テスト用内部データベース) ファイルはすでに存在するので作成をスキップ。");
+            System.err.println("TRACE: InternalTarget (テスト用内部データベース) テスト用内部データベースの内容を更新する場合には、データベースファイルを削除して再度テスト実行してください。");
             return;
         }
 

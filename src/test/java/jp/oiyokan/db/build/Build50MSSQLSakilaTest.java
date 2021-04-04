@@ -26,7 +26,7 @@ import jp.oiyokan.settings.OiyokanSettingsUtil;
 /**
  * 内部データベース用のCSDL用内部テーブルのDDLをコマンドライン生成.
  */
-class BuildMSSQLSakilaTest {
+class Build50MSSQLSakilaTest {
     // @Test
     void test01() throws Exception {
         OiyokanSettingsDatabase settingsDatabase = OiyokanSettingsUtil.getOiyokanDatabase("mssql1");

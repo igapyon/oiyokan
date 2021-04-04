@@ -85,7 +85,7 @@ oiyokan プロジェクトは、OData v4 server のシンプルなサンプル(h
 
 ## TODO
 
-- Oracleのテスト実施
+- Oracle XE のテスト
 - 設定XMLファイルを分割+重ねがけできるようにしたい。
 - Sakila DVDレンタルのサンプル (SklActors 等)、ODataTests1 を ON/OFFする手順またはプログラム実装を記述.
 - 時間が9時間ずれる件. タイムゾーンなしDB項目由来。何かの方法にて補正したい.
