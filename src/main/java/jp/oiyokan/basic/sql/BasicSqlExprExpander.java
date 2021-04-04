@@ -411,44 +411,86 @@ public class BasicSqlExprExpander {
 
         // STARTSWITH
         if (impl.getMethod() == MethodKind.STARTSWITH) {
-            // h2 database の POSITION/INSTR は 1 オリジンで発見せずが0 なので 1 を減らしています。
-            sqlInfo.getSqlBuilder().append("(INSTR(");
-            expand(impl.getParameters().get(0));
-            sqlInfo.getSqlBuilder().append(",");
-            expand(impl.getParameters().get(1));
-            sqlInfo.getSqlBuilder().append(") = 1)");
-            return;
+            switch (sqlInfo.getEntitySet().getDatabaseType()) {
+            default:
+                // h2 database の POSITION/INSTR は 1 オリジンで発見せずが0 なので 1 を減らしています。
+                sqlInfo.getSqlBuilder().append("(INSTR(");
+                expand(impl.getParameters().get(0));
+                sqlInfo.getSqlBuilder().append(",");
+                expand(impl.getParameters().get(1));
+                sqlInfo.getSqlBuilder().append(") = 1)");
+                return;
+            case MSSQL2008:
+                sqlInfo.getSqlBuilder().append("(CHARINDEX(");
+                expand(impl.getParameters().get(1));
+                sqlInfo.getSqlBuilder().append(",");
+                expand(impl.getParameters().get(0));
+                sqlInfo.getSqlBuilder().append(") = 1)");
+                return;
+            }
         }
 
         // ENDSWITH
         if (impl.getMethod() == MethodKind.ENDSWITH) {
-            sqlInfo.getSqlBuilder().append("(RIGHT(");
-            expand(impl.getParameters().get(0));
-            sqlInfo.getSqlBuilder().append(",LENGTH(");
-            expand(impl.getParameters().get(1));
-            sqlInfo.getSqlBuilder().append(")) = ");
-            expand(impl.getParameters().get(1));
-            sqlInfo.getSqlBuilder().append(")");
-            return;
+            switch (sqlInfo.getEntitySet().getDatabaseType()) {
+            default:
+                sqlInfo.getSqlBuilder().append("(RIGHT(");
+                expand(impl.getParameters().get(0));
+                sqlInfo.getSqlBuilder().append(",LENGTH(");
+                expand(impl.getParameters().get(1));
+                sqlInfo.getSqlBuilder().append(")) = ");
+                expand(impl.getParameters().get(1));
+                sqlInfo.getSqlBuilder().append(")");
+                return;
+            case MSSQL2008:
+                sqlInfo.getSqlBuilder().append("(RIGHT(");
+                expand(impl.getParameters().get(0));
+                sqlInfo.getSqlBuilder().append(",LEN(");
+                expand(impl.getParameters().get(1));
+                sqlInfo.getSqlBuilder().append(")) = ");
+                expand(impl.getParameters().get(1));
+                sqlInfo.getSqlBuilder().append(")");
+                return;
+            }
         }
 
         // LENGTH
         if (impl.getMethod() == MethodKind.LENGTH) {
-            sqlInfo.getSqlBuilder().append("(LENGTH(");
-            expand(impl.getParameters().get(0));
-            sqlInfo.getSqlBuilder().append("))");
-            return;
+            switch (sqlInfo.getEntitySet().getDatabaseType()) {
+            default:
+                sqlInfo.getSqlBuilder().append("(LENGTH(");
+                expand(impl.getParameters().get(0));
+                sqlInfo.getSqlBuilder().append("))");
+                return;
+            case MSSQL2008:
+                sqlInfo.getSqlBuilder().append("(LEN(");
+                expand(impl.getParameters().get(0));
+                sqlInfo.getSqlBuilder().append("))");
+                return;
+            }
         }
         // $top=20&$filter=(length(Description) gt 3)
 
         // INDEXOF
         if (impl.getMethod() == MethodKind.INDEXOF) {
-            // h2 database の POSITION/INSTR は 1 オリジンで発見せずが0 なので 1 を減らしています。
-            sqlInfo.getSqlBuilder().append("(INSTR(");
-            expand(impl.getParameters().get(0));
-            sqlInfo.getSqlBuilder().append(",");
-            expand(impl.getParameters().get(1));
-            sqlInfo.getSqlBuilder().append(") - 1)");
+            switch (sqlInfo.getEntitySet().getDatabaseType()) {
+            default:
+                // h2 database の POSITION/INSTR は 1 オリジンで発見せずが0 なので 1 を減らしています。
+                // postgresにINSTRがあるか確認
+                sqlInfo.getSqlBuilder().append("(INSTR(");
+                expand(impl.getParameters().get(0));
+                sqlInfo.getSqlBuilder().append(",");
+                expand(impl.getParameters().get(1));
+                sqlInfo.getSqlBuilder().append(") - 1)");
+                break;
+            case MSSQL2008:
+                sqlInfo.getSqlBuilder().append("(CHARINDEX(");
+                expand(impl.getParameters().get(1));
+                sqlInfo.getSqlBuilder().append(",");
+                expand(impl.getParameters().get(0));
+                sqlInfo.getSqlBuilder().append(") - 1)");
+                break;
+            }
             return;
         }
 
@@ -489,20 +531,41 @@ public class BasicSqlExprExpander {
 
         // TRIM
         if (impl.getMethod() == MethodKind.TRIM) {
-            sqlInfo.getSqlBuilder().append("TRIM(");
-            expand(impl.getParameters().get(0));
-            sqlInfo.getSqlBuilder().append(")");
-            return;
+            switch (sqlInfo.getEntitySet().getDatabaseType()) {
+            default:
+                sqlInfo.getSqlBuilder().append("TRIM(");
+                expand(impl.getParameters().get(0));
+                sqlInfo.getSqlBuilder().append(")");
+                return;
+            case MSSQL2008:
+                // SQL Server 2008 には TRIM がない
+                sqlInfo.getSqlBuilder().append("LTRIM(RTRIM(");
+                expand(impl.getParameters().get(0));
+                sqlInfo.getSqlBuilder().append("))");
+                return;
+            }
         }
 
         // CONCAT
         if (impl.getMethod() == MethodKind.CONCAT) {
-            sqlInfo.getSqlBuilder().append("CONCAT(");
-            expand(impl.getParameters().get(0));
-            sqlInfo.getSqlBuilder().append(",");
-            expand(impl.getParameters().get(1));
-            sqlInfo.getSqlBuilder().append(")");
-            return;
+            switch (sqlInfo.getEntitySet().getDatabaseType()) {
+            default:
+                sqlInfo.getSqlBuilder().append("CONCAT(");
+                expand(impl.getParameters().get(0));
+                sqlInfo.getSqlBuilder().append(",");
+                expand(impl.getParameters().get(1));
+                sqlInfo.getSqlBuilder().append(")");
+                return;
+            case MSSQL2008:
+                sqlInfo.getSqlBuilder().append("(CAST(");
+                expand(impl.getParameters().get(0));
+                sqlInfo.getSqlBuilder().append(" AS VARCHAR)");
+                sqlInfo.getSqlBuilder().append(" + ");
+                sqlInfo.getSqlBuilder().append("CAST(");
+                expand(impl.getParameters().get(1));
+                sqlInfo.getSqlBuilder().append(" AS VARCHAR))");
+                return;
+            }
         }
 
         // YEAR
@@ -679,12 +742,22 @@ public class BasicSqlExprExpander {
 
         // SUBSTRINGOF
         if (impl.getMethod() == MethodKind.SUBSTRINGOF) {
-            sqlInfo.getSqlBuilder().append("(INSTR(");
-            expand(impl.getParameters().get(0));
-            sqlInfo.getSqlBuilder().append(",");
-            expand(impl.getParameters().get(1));
-            sqlInfo.getSqlBuilder().append(") > 0)");
-            return;
+            switch (sqlInfo.getEntitySet().getDatabaseType()) {
+            default:
+                sqlInfo.getSqlBuilder().append("(INSTR(");
+                expand(impl.getParameters().get(0));
+                sqlInfo.getSqlBuilder().append(",");
+                expand(impl.getParameters().get(1));
+                sqlInfo.getSqlBuilder().append(") > 0)");
+                return;
+            case MSSQL2008:
+                sqlInfo.getSqlBuilder().append("(CHARINDEX(");
+                expand(impl.getParameters().get(1));
+                sqlInfo.getSqlBuilder().append(",");
+                expand(impl.getParameters().get(0));
+                sqlInfo.getSqlBuilder().append(") > 0)");
+                return;
+            }
         }
 
         // [M121] UNEXPECTED: NOT SUPPORTED MethodKind

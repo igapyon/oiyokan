@@ -33,7 +33,7 @@ public class OiyokanMessages {
     public static final String M012 = "[M012] NOT SUPPORTED: URI: customQuery";
     public static final String M013 = "[M013] NOT SUPPORTED: URI: deltaToken";
     public static final String M014 = "[M014] NOT SUPPORTED: URI: $expand";
-    public static final String M015 = "[M015] UNEXPECTED: Fail on database connection SQL";
+    public static final String M015 = "[M015] UNEXPECTED: An error occurred in SQL that counts the number of search results.";
     public static final String M016 = "[M016] Fail to execute count SQL";
     public static final String M017 = "[M017] Fail to execute SQL";
     public static final String M018 = "[M018] UNEXPECTED: Fail to create ID EntitySet name";

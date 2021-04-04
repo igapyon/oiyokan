@@ -129,7 +129,7 @@ public class BasicSqlBuilder {
             count = 1000000;
         }
         if (uriInfo.getSkipOption() != null) {
-            start = uriInfo.getSkipOption().getValue();
+            start = 1 + uriInfo.getSkipOption().getValue();
         } else {
             start = 1;
         }
