@@ -84,7 +84,7 @@ oiyokan プロジェクトは、OData v4 server のシンプルなサンプル(h
 
 ## TODO
 
-- ここで一旦 Postgres, MySQL, SQL Server 2008 でテスト.
+- ここで一旦 MySQL, SQL Server 2008 でテスト.
 - Oracleのテスト実施
 - 設定XMLファイルを分割+重ねがけできるようにしたい。
 - Sakila DVDレンタルのサンプル (SklActors 等)、ODataTests1 を ON/OFFする手順またはプログラム実装を記述.
@@ -105,4 +105,6 @@ oiyokan プロジェクトは、OData v4 server のシンプルなサンプル(h
 
 - create_date が Postgres版と MySQL 版とで型が違う.
     これにより、"The types 'Edm.DateTimeOffset' and 'Edm.Date' are not compatible. が発生する。
+- Postgres は項目名が小文字に変わってしまうので、対応表の利用が必要.
+- いつの日か、Singleの検索を横展開で調査したい.
 
