@@ -26,7 +26,7 @@ import jp.oiyokan.settings.OiyokanSettingsUtil;
 /**
  * テスト用の内部データベースを作成します。この内部データベースは動作の上で必要です。
  */
-class BuildMySQLSakilaDbTest {
+class Build50MySQLSakilaDbTest {
     // @Test
     void test01() throws Exception {
         OiyokanSettingsDatabase settingsDatabase = OiyokanSettingsUtil.getOiyokanDatabase("mysql1");
