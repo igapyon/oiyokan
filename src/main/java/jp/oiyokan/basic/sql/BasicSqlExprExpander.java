@@ -517,16 +517,30 @@ public class BasicSqlExprExpander {
 
         // SUBSTRING
         if (impl.getMethod() == MethodKind.SUBSTRING) {
-            sqlInfo.getSqlBuilder().append("(SUBSTRING(");
-            expand(impl.getParameters().get(0));
-            sqlInfo.getSqlBuilder().append(",");
-            expand(impl.getParameters().get(1));
-            if (impl.getParameters().size() > 1) {
+            switch (sqlInfo.getEntitySet().getDatabaseType()) {
+            default:
+                sqlInfo.getSqlBuilder().append("(SUBSTRING(");
+                expand(impl.getParameters().get(0));
                 sqlInfo.getSqlBuilder().append(",");
-                expand(impl.getParameters().get(2));
+                expand(impl.getParameters().get(1));
+                if (impl.getParameters().size() > 1) {
+                    sqlInfo.getSqlBuilder().append(",");
+                    expand(impl.getParameters().get(2));
+                }
+                sqlInfo.getSqlBuilder().append("))");
+                return;
+            case ORACLE:
+                sqlInfo.getSqlBuilder().append("(SUBSTR(");
+                expand(impl.getParameters().get(0));
+                sqlInfo.getSqlBuilder().append(",");
+                expand(impl.getParameters().get(1));
+                if (impl.getParameters().size() > 1) {
+                    sqlInfo.getSqlBuilder().append(",");
+                    expand(impl.getParameters().get(2));
+                }
+                sqlInfo.getSqlBuilder().append("))");
+                return;
             }
-            sqlInfo.getSqlBuilder().append("))");
-            return;
         }
         // $top=20&$filter=(substring(Description,1,2) eq '増殖')
 

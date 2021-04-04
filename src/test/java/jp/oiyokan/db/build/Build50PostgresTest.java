@@ -26,7 +26,7 @@ import jp.oiyokan.settings.OiyokanSettingsUtil;
 /**
  * テスト用の内部データベースを作成します。この内部データベースは動作の上で必要です。
  */
-class Build50PostgresSakilaDbTest {
+class Build50PostgresTest {
     // @Test
     void test01() throws Exception {
         OiyokanSettingsDatabase settingsDatabase = OiyokanSettingsUtil.getOiyokanDatabase("postgres1");

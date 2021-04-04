@@ -64,8 +64,7 @@ class GenOiyoPostgresSakilaTest {
 
             System.err.println(OiyokanKanDatabase.generateCreateOiyoDdl(connTargetDb, "language"));
 
-            System.err.println(
-                    OiyokanKanDatabase.generateCreateOiyoDdl(connTargetDb, "nicer_but_slower_film_list"));
+            System.err.println(OiyokanKanDatabase.generateCreateOiyoDdl(connTargetDb, "nicer_but_slower_film_list"));
 
             System.err.println(OiyokanKanDatabase.generateCreateOiyoDdl(connTargetDb, "payment"));
 
