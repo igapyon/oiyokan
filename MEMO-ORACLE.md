@@ -27,7 +27,9 @@ temporary tablespace TESTTEMP;
 ```sh
 grant connect to orauser;
 grant resource to orauser;
+grant unlimited tablespace to orauser;
 ```
+
 
 
 
