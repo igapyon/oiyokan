@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS
-  Ocsdlactor (
+  Oiyoactor (
     actor_id SMALLINT NOT NULL
     , first_name VARCHAR(45) NOT NULL
     , last_name VARCHAR(45) NOT NULL
@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS
   );
 
 CREATE TABLE IF NOT EXISTS
-  Ocsdlactor_info (
+  Oiyoactor_info (
     actor_id SMALLINT DEFAULT 0 NOT NULL
     , first_name VARCHAR(45) NOT NULL
     , last_name VARCHAR(45) NOT NULL
@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS
   );
 
 CREATE TABLE IF NOT EXISTS
-  Ocsdladdress (
+  Oiyoaddress (
     address_id SMALLINT NOT NULL
     , address VARCHAR(50) NOT NULL
     , address2 VARCHAR(50)
@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS
   );
 
 CREATE TABLE IF NOT EXISTS
-  Ocsdlcategory (
+  Oiyocategory (
     category_id TINYINT NOT NULL
     , name VARCHAR(25) NOT NULL
     , last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS
   );
 
 CREATE TABLE IF NOT EXISTS
-  Ocsdlcity (
+  Oiyocity (
     city_id SMALLINT NOT NULL
     , city VARCHAR(50) NOT NULL
     , country_id SMALLINT NOT NULL
@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS
   );
 
 CREATE TABLE IF NOT EXISTS
-  Ocsdlcountry (
+  Oiyocountry (
     country_id SMALLINT NOT NULL
     , country VARCHAR(50) NOT NULL
     , last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
@@ -56,7 +56,7 @@ CREATE TABLE IF NOT EXISTS
   );
 
 CREATE TABLE IF NOT EXISTS
-  Ocsdlcustomer (
+  Oiyocustomer (
     customer_id SMALLINT NOT NULL
     , store_id TINYINT NOT NULL
     , first_name VARCHAR(45) NOT NULL
@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS
   );
 
 CREATE TABLE IF NOT EXISTS
-  Ocsdlcustomer_list (
+  Oiyocustomer_list (
     ID SMALLINT DEFAULT 0 NOT NULL
     , name VARCHAR(91)
     , address VARCHAR(50) NOT NULL
@@ -84,7 +84,7 @@ CREATE TABLE IF NOT EXISTS
   );
 
 CREATE TABLE IF NOT EXISTS
-  Ocsdlfilm (
+  Oiyofilm (
     film_id SMALLINT NOT NULL
     , title VARCHAR(128) NOT NULL
     , description LONGVARCHAR(65535)
@@ -102,7 +102,7 @@ CREATE TABLE IF NOT EXISTS
   );
 
 CREATE TABLE IF NOT EXISTS
-  Ocsdlfilm_actor (
+  Oiyofilm_actor (
     actor_id SMALLINT NOT NULL
     , film_id SMALLINT NOT NULL
     , last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
@@ -110,7 +110,7 @@ CREATE TABLE IF NOT EXISTS
   );
 
 CREATE TABLE IF NOT EXISTS
-  Ocsdlfilm_category (
+  Oiyofilm_category (
     film_id SMALLINT NOT NULL
     , category_id TINYINT NOT NULL
     , last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
@@ -118,7 +118,7 @@ CREATE TABLE IF NOT EXISTS
   );
 
 CREATE TABLE IF NOT EXISTS
-  Ocsdlfilm_list (
+  Oiyofilm_list (
     FID SMALLINT DEFAULT 0 NOT NULL
     , title VARCHAR(128)
     , description LONGVARCHAR(65535)
@@ -131,7 +131,7 @@ CREATE TABLE IF NOT EXISTS
   );
 
 CREATE TABLE IF NOT EXISTS
-  Ocsdlinventory (
+  Oiyoinventory (
     inventory_id INT NOT NULL
     , film_id SMALLINT NOT NULL
     , store_id TINYINT NOT NULL
@@ -140,7 +140,7 @@ CREATE TABLE IF NOT EXISTS
   );
 
 CREATE TABLE IF NOT EXISTS
-  Ocsdllanguage (
+  Oiyolanguage (
     language_id TINYINT NOT NULL
     , name CHAR(20) NOT NULL
     , last_update TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
@@ -148,7 +148,7 @@ CREATE TABLE IF NOT EXISTS
   );
 
 CREATE TABLE IF NOT EXISTS
-  Ocsdlnicer_but_slower_film_list (
+  Oiyonicer_but_slower_film_list (
     FID SMALLINT DEFAULT 0 NOT NULL
     , title VARCHAR(128)
     , description LONGVARCHAR(65535)
@@ -161,7 +161,7 @@ CREATE TABLE IF NOT EXISTS
   );
 
 CREATE TABLE IF NOT EXISTS
-  Ocsdlpayment (
+  Oiyopayment (
     payment_id SMALLINT NOT NULL
     , customer_id SMALLINT NOT NULL
     , staff_id TINYINT NOT NULL
@@ -173,7 +173,7 @@ CREATE TABLE IF NOT EXISTS
   );
 
 CREATE TABLE IF NOT EXISTS
-  Ocsdlrental (
+  Oiyorental (
     rental_id INT NOT NULL
     , rental_date TIMESTAMP NOT NULL
     , inventory_id INT NOT NULL
@@ -185,14 +185,14 @@ CREATE TABLE IF NOT EXISTS
   );
 
 CREATE TABLE IF NOT EXISTS
-  Ocsdlsales_by_film_category (
+  Oiyosales_by_film_category (
     category VARCHAR(25) NOT NULL
     , total_sales DECIMAL(27,2)
     , PRIMARY KEY(category)
   );
 
 CREATE TABLE IF NOT EXISTS
-  Ocsdlsales_by_store (
+  Oiyosales_by_store (
     store VARCHAR(101)
     , manager VARCHAR(91)
     , total_sales DECIMAL(27,2)
@@ -200,7 +200,7 @@ CREATE TABLE IF NOT EXISTS
   );
 
 CREATE TABLE IF NOT EXISTS
-  Ocsdlstaff (
+  Oiyostaff (
     staff_id TINYINT NOT NULL
     , first_name VARCHAR(45) NOT NULL
     , last_name VARCHAR(45) NOT NULL
@@ -216,7 +216,7 @@ CREATE TABLE IF NOT EXISTS
   );
 
 CREATE TABLE IF NOT EXISTS
-  Ocsdlstaff_list (
+  Oiyostaff_list (
     ID TINYINT DEFAULT 0 NOT NULL
     , name VARCHAR(91)
     , address VARCHAR(50) NOT NULL
@@ -229,7 +229,7 @@ CREATE TABLE IF NOT EXISTS
   );
 
 CREATE TABLE IF NOT EXISTS
-  Ocsdlstore (
+  Oiyostore (
     store_id TINYINT NOT NULL
     , manager_staff_id TINYINT NOT NULL
     , address_id SMALLINT NOT NULL

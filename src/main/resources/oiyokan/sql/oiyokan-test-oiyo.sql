@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS
-  OcsdlODataTest1 (
+  OiyoODataTest1 (
     ID INT NOT NULL
     , Name VARCHAR(80) NOT NULL
     , Description VARCHAR(250)
@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS
   );
 
 CREATE TABLE IF NOT EXISTS
-  OcsdlODataTestFulls1 (
+  OiyoODataTestFulls1 (
     ID INT NOT NULL
     , Name VARCHAR(80) NOT NULL
     , Description VARCHAR(250)
