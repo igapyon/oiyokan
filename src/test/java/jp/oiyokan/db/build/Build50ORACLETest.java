@@ -26,14 +26,14 @@ import jp.oiyokan.settings.OiyokanSettingsUtil;
 /**
  * テスト用の内部データベースを作成します。この内部データベースは動作の上で必要です。
  */
-class Build50PostgresSakilaDbTest {
+class Build50ORACLETest {
     // @Test
     void test01() throws Exception {
-        OiyokanSettingsDatabase settingsDatabase = OiyokanSettingsUtil.getOiyokanDatabase("postgres1");
+        OiyokanSettingsDatabase settingsDatabase = OiyokanSettingsUtil.getOiyokanDatabase("oracle1");
 
         try (Connection connTargetDb = BasicJdbcUtil.getConnection(settingsDatabase)) {
             String[] sqls = OiyokanResourceSqlUtil
-                    .loadOiyokanResourceSql("oiyokan/sql/" + "oiyokan-test-db-postgres.sql");
+                    .loadOiyokanResourceSql("oiyokan/sql/" + "oiyokan-test-db-ORACLE.sql");
             for (String sql : sqls) {
                 if (sql.trim().length() == 0) {
                     continue;
@@ -50,5 +50,5 @@ class Build50PostgresSakilaDbTest {
     }
 
     ////////////////////////////////////////////////////
-    // Sakila DB については Postgres のものを利用。
+    // Sakila DB については 見実装。
 }

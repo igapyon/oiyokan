@@ -24,35 +24,20 @@ import jp.oiyokan.dto.OiyokanSettingsDatabase;
 import jp.oiyokan.settings.OiyokanSettingsUtil;
 
 /**
- * 内部データベース用のCSDL用内部テーブルのDDLをコマンドライン生成.
+ * テスト用の内部データベースを作成します。この内部データベースは動作の上で必要です。
  */
-class Build50MSSQLSakilaTest {
+class Build50PostgresTest {
     // @Test
     void test01() throws Exception {
-        OiyokanSettingsDatabase settingsDatabase = OiyokanSettingsUtil.getOiyokanDatabase("mssql1");
-
-        try (Connection connTargetDb = BasicJdbcUtil.getConnection(settingsDatabase)) {
-            String[] sqls = OiyokanResourceSqlUtil.loadOiyokanResourceSql("oiyokan/sql/" + "oiyokan-test-db-MSSQL.sql");
-            for (String sql : sqls) {
-                try (var stmt = connTargetDb.prepareStatement(sql)) {
-                    System.err.println(sql);
-                    stmt.executeUpdate();
-                } catch (SQLException ex) {
-                    System.err.println(ex.toString());
-                    throw ex;
-                }
-            }
-        }
-    }
-
-    // @Test
-    void test02() throws Exception {
-        OiyokanSettingsDatabase settingsDatabase = OiyokanSettingsUtil.getOiyokanDatabase("mssql1");
+        OiyokanSettingsDatabase settingsDatabase = OiyokanSettingsUtil.getOiyokanDatabase("postgres1");
 
         try (Connection connTargetDb = BasicJdbcUtil.getConnection(settingsDatabase)) {
             String[] sqls = OiyokanResourceSqlUtil
-                    .loadOiyokanResourceSql("oiyokan/sql/" + "sample-sakila-db-MSSQL.sql");
+                    .loadOiyokanResourceSql("oiyokan/sql/" + "oiyokan-test-db-postgres.sql");
             for (String sql : sqls) {
+                if (sql.trim().length() == 0) {
+                    continue;
+                }
                 try (var stmt = connTargetDb.prepareStatement(sql)) {
                     System.err.println(sql);
                     stmt.executeUpdate();
@@ -63,4 +48,7 @@ class Build50MSSQLSakilaTest {
             }
         }
     }
+
+    ////////////////////////////////////////////////////
+    // Sakila DB については Postgres のものを利用。
 }
