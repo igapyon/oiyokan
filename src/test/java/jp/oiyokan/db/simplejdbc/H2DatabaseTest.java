@@ -18,13 +18,14 @@ package jp.oiyokan.db.simplejdbc;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 
 import org.junit.jupiter.api.Test;
 
 import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.basic.BasicJdbcUtil;
-import jp.oiyokan.data.OiyokanInternalDatabase;
+import jp.oiyokan.data.OiyokanKanDatabase;
 import jp.oiyokan.settings.OiyokanSettingsUtil;
 
 /**
@@ -34,13 +35,9 @@ class H2DatabaseTest {
     @Test
     void test01() throws Exception {
         try (Connection conn = BasicJdbcUtil
-                .getConnection(OiyokanSettingsUtil.getOiyokanDatabase(OiyokanConstants.OIYOKAN_INTERNAL_DB))) {
+                .getConnection(OiyokanSettingsUtil.getOiyokanDatabase(OiyokanConstants.OIYOKAN_INTERNAL_TARGET_DB))) {
 
-            // 内部データベースのテーブルをセットアップ.
-            OiyokanInternalDatabase.setupInternalDatabase();
-
-            try (var stmt = conn
-                    .prepareStatement("SELECT ID, Name, Description FROM OcsdlODataTest1 ORDER BY ID LIMIT 3")) {
+            try (var stmt = conn.prepareStatement("SELECT ID, Name, Description FROM ODataTest1 ORDER BY ID LIMIT 3")) {
                 stmt.executeQuery();
                 var rset = stmt.getResultSet();
                 assertEquals(true, rset.next());
@@ -51,13 +48,11 @@ class H2DatabaseTest {
     @Test
     void testo2() throws Exception {
         try (Connection conn = BasicJdbcUtil
-                .getConnection(OiyokanSettingsUtil.getOiyokanDatabase(OiyokanConstants.OIYOKAN_INTERNAL_DB))) {
-            // 内部データベースのテーブルをセットアップ.
-            OiyokanInternalDatabase.setupInternalDatabase();
+                .getConnection(OiyokanSettingsUtil.getOiyokanDatabase(OiyokanConstants.OIYOKAN_INTERNAL_TARGET_DB))) {
 
             try (var stmt = conn.prepareStatement("SELECT ID, Name, Description" //
                     + ",Sbyte1,Int16a,Int32a,Int64a,Decimal1,StringChar2,StringVar255,StringVar65535,Boolean1,Single1,Double1,DateTimeOffset1,TimeOfDay1" //
-                    + " FROM OcsdlODataTest1 ORDER BY ID LIMIT 1")) {
+                    + " FROM ODataTest1 ORDER BY ID LIMIT 1")) {
                 stmt.executeQuery();
                 var rset = stmt.getResultSet();
                 assertEquals(true, rset.next());
@@ -80,7 +75,7 @@ class H2DatabaseTest {
         try (Connection conn = BasicJdbcUtil
                 .getConnection(OiyokanSettingsUtil.getOiyokanDatabase(OiyokanConstants.OIYOKAN_INTERNAL_DB))) {
             // 内部データベースのテーブルをセットアップ.
-            OiyokanInternalDatabase.setupInternalDatabase();
+            OiyokanKanDatabase.setupKanDatabase();
         }
 
         try (Connection conn = BasicJdbcUtil
@@ -95,6 +90,21 @@ class H2DatabaseTest {
                 if (rset.next()) {
                     assertEquals("1", rset.getString(1));
                 }
+            }
+        }
+    }
+
+    /**
+     * 対象データベースのテーブル一覧をゲット.
+     */
+    // @Test
+    void testListTables() throws Exception {
+        try (Connection conn = BasicJdbcUtil.getConnection(OiyokanSettingsUtil.getOiyokanDatabase("mysql1"))) {
+
+            ResultSet rset = conn.getMetaData().getTables(null, "%", "%", new String[] { "TABLE", "VIEW" });
+            for (; rset.next();) {
+                System.err.println(
+                        "tablist: " + rset.getString("TABLE_NAME") + " (" + rset.getString("TABLE_TYPE") + ")");
             }
         }
     }

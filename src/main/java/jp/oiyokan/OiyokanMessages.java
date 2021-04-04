@@ -19,11 +19,11 @@ package jp.oiyokan;
  * Messages of Oiyokan.
  */
 public class OiyokanMessages {
-    public static final String M001 = "[M001] Can't decode specified decodec url";
+    public static final String M001 = "[M001] ERROR: Can't decode specified decodec url";
     public static final String M002 = "[M002] UNEXPECTED: Illegal data type in database settings";
     public static final String M003 = "[M003] UNEXPECTED: Fail to load JDBC driver. Check JDBC Driver classname or JDBC Driver is on classpath.";
     public static final String M004 = "[M004] UNEXPECTED: Database error in setup internal database.";
-    public static final String M005 = "[M005] UNEXPECTED: Fail to connect database. Please wait minutes and retry again.: データベースの接続に失敗しました。しばらく待って再度トライしてください。しばらく経っても改善しない場合はIT部門などに連絡してください。";
+    public static final String M005 = "[M005] ERROR: Fail to connect database. Please wait minutes and retry again.: データベースの接続に失敗しました。しばらく待って再度トライしてください。しばらく経っても改善しない場合はIT部門などに連絡してください。";
     public static final String M006 = "[M006] NOT SUPPORTED: CSDL: JDBC Type";
     public static final String M007 = "[M007] UNEXPECTED: fail to read from CLOB";
     public static final String M008 = "[M008] UNEXPECTED: fail to read from binary";
@@ -33,7 +33,7 @@ public class OiyokanMessages {
     public static final String M012 = "[M012] NOT SUPPORTED: URI: customQuery";
     public static final String M013 = "[M013] NOT SUPPORTED: URI: deltaToken";
     public static final String M014 = "[M014] NOT SUPPORTED: URI: $expand";
-    public static final String M015 = "[M015] UNEXPECTED: Fail on database connection SQL";
+    public static final String M015 = "[M015] UNEXPECTED: An error occurred in SQL that counts the number of search results.";
     public static final String M016 = "[M016] Fail to execute count SQL";
     public static final String M017 = "[M017] Fail to execute SQL";
     public static final String M018 = "[M018] UNEXPECTED: Fail to create ID EntitySet name";
@@ -45,13 +45,14 @@ public class OiyokanMessages {
     public static final String M024 = "[M024] UNEXPECTED: Fail to load Oiyokan settings";
     public static final String M025 = "[M025] UNEXPECTED: Database settings NOT found";
     public static final String M026 = "[M026] UNEXPECTED: Database settings NOT found";
-    public static final String M027 = "[M027] UNEXPECTED: Fail to create local table: ODataAppInfos";
-    public static final String M028 = "[M028] UNEXPECTED: Fail to check local table exists: ODataAppInfos";
+    public static final String M027 = "[M027] UNEXPECTED: Fail to create local table: Oiyokan";
+    public static final String M028 = "[M028] UNEXPECTED: Fail to check local table exists: Oiyokan";
     public static final String M029 = "[M029] UNEXPECTED: Fail to execute SQL for local internal table";
     public static final String M030 = "[M030] UNEXPECTED: Fail to execute SQL for local internal table(2)";
     public static final String M031 = "[M031] UNEXPECTED: Fail to execute Dabaase";
     public static final String M032 = "[M032] NOT SUPPORTED: URI: $search";
     public static final String M033 = "[M033] NOT SUPPORTED: unknown UUID object given";
+    public static final String M034 = "[M034] ERROR: An unknown field name was specified. The field names are case sensitive. Make sure the Oiyo field name matches the target field name.";
 
     ///////////////////
     // Expression

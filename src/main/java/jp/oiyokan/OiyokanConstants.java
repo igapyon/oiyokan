@@ -27,7 +27,7 @@ public class OiyokanConstants {
     /**
      * Oiyokan のバージョン番号
      */
-    public static final String VERSION = "1.0.20210403b";
+    public static final String VERSION = "1.0.20210404f";
 
     /**
      * OData のルートパス.
@@ -65,9 +65,9 @@ public class OiyokanConstants {
     };
 
     /**
-     * 内部DBへの定義名. この DBはアプリ起動都度初期化される揮発的なもの. OCSDL およびバージョン番号を格納.
+     * 内部DBへの定義名. この DBはアプリ起動都度初期化される揮発的なもの. Oiyo および Oiyokan 設定及びバージョン番号を格納.
      */
-    public static final String OIYOKAN_INTERNAL_DB = "oiyokanInternal";
+    public static final String OIYOKAN_INTERNAL_DB = "oiyokanKan";
 
     /**
      * 内部DBへの定義名. ほぼビルドテスト用途.

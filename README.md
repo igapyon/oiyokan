@@ -1,10 +1,18 @@
 # Oiyokan
 
-Oiyokan is an OData v4 server SDK.
+Oiyokan is an OData v4 server (provider) SDK for RDB.
+You can use Oiyokan to turn PostgreSQL, MySQL, and SQL Server 2008 into read-only OData v4 services.
 
 - Based on Apache Olingo. Build with Spring Boot, Java, h2.
-- Oiyokan provides read-only OData v4 access to resources.
+- Oiyokan uses JDBC to provide read-only OData v4 access to the RDB.
 - Source code at github, license : Apache License.
+
+## Supported target RDBMS
+
+- PostgreSQL (13)
+- MySQL (8.0.23)
+- SQL Server (2008)
+- Oracle XE (18c) : In development
 
 ## Sample implementation using Oiyokan
 
@@ -40,15 +48,15 @@ mvn clean install spring-boot:run
 src/main/resources/oiyokan/oiyokan-settings.json
 ```
 
-## oiyokan-targetdb.sql を設定
+## oiyokan-oiyo.sql を設定
 
-oiyokan-targetdb.sql ファイルに ターゲットDBの Ocsdl情報をあらわす SQL/DDL文を記述.
+oiyokan-oiyo.sql ファイルに ターゲットDBの Oiyo情報をあらわす SQL/DDL文を記述.
 
 ```sh
-src/main/resources/oiyokan/sql/oiyokan-targetdb.sql
+src/main/resources/oiyokan/sql/oiyokan-oiyo.sql
 ```
 
-記述内容については sample-ocsdl-pg-dvdrental.sql を参考にする。
+記述内容については oiyokan-test-oiyo-postgres.sql を参考にする。
 
 ## 設定変更後は Spring Boot を再起動
 
@@ -78,19 +86,29 @@ oiyokan プロジェクトは、OData v4 server のシンプルなサンプル(h
 
 ## TODO
 
-- MySQL のテスト実施
-- Oracleのテスト実施
-- 設定XMLファイルを重ねがけできるようにしたい。
+- Oracle XE のテスト: さしあたり top と skip の対応が必要.
+- 設定XMLファイルを分割+重ねがけできるようにしたい。
 - Sakila DVDレンタルのサンプル (SklActors 等)、ODataTests1 を ON/OFFする手順またはプログラム実装を記述.
+- 時間が9時間ずれる件. タイムゾーンなしDB項目由来。何かの方法にて補正したい.
 - 認証の各種実験。
 - TimeOfDay がテスト不十分.
 - Maven Repository にアップしたい.
 
 ## TODO サイトデザイン
 
+- Oiyokan の画像およびその icon 画像が欲しい。
 - favicon.ico ファイルの配置。
 - OData のサイトに掲載する
 - モバイルデバイスから Web サイトにアクセスすると画面が崩れるのを修正。
 - サンプル EntitySet の html説明について Card 型に変更したい
 - README に oiyokan-naming-settings.json の記述についての記載を追記.
+
+## その他メモ
+
+- SQL Server 2008 では $filter で TEXT 型の項目を検索できません。
+- Oracle 12c には TIME 型が無い模様。
+- create_date が Postgres版と MySQL 版とで型が違う.
+    これにより、"The types 'Edm.DateTimeOffset' and 'Edm.Date' are not compatible. が発生する。
+- Postgres は項目名が小文字に変わってしまうので、対応表の利用が必要.
+- いつの日か、Singleの検索を横展開で調査したい.
 

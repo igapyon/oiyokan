@@ -127,7 +127,7 @@ class TestODataFilterTypeAtTestDbTest {
     @Test
     void testSingle1() throws Exception {
         final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1", OiyokanTestUtil
-                .encodeUrlQuery("$top=1 &$filter=Single1 eq 123.45678711 &$orderby=ID &$count=true &$select=ID"));
+                .encodeUrlQuery("$top=1 &$filter=Single1 eq 123.456789 &$orderby=ID &$count=true &$select=ID"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         // System.err.println("result: " + result);

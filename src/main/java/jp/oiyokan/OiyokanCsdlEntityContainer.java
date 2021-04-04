@@ -27,7 +27,7 @@ import org.apache.olingo.commons.api.edm.provider.CsdlEntityType;
 import org.apache.olingo.server.api.ODataApplicationException;
 
 import jp.oiyokan.basic.BasicJdbcEntityTypeBuilder;
-import jp.oiyokan.data.OiyokanInternalDatabase;
+import jp.oiyokan.data.OiyokanKanDatabase;
 import jp.oiyokan.dto.OiyokanSettings;
 import jp.oiyokan.dto.OiyokanSettingsDatabase;
 import jp.oiyokan.dto.OiyokanSettingsEntitySet;
@@ -114,10 +114,14 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
                 }
             }
 
-            // Oiyokan が動作する際に必要になる内部データベースのバージョン情報および Ocsdl info をセットアップ.
-            OiyokanInternalDatabase.setupInternalDatabase();
+            // Oiyokan が動作する際に必要になる内部データベースのバージョン情報および Oiyo info をセットアップ.
+            OiyokanKanDatabase.setupKanDatabase();
 
             for (OiyokanSettingsEntitySet entitySetCnof : getSettingsInstance().getEntitySetList()) {
+                // System.err.println("TRACE: entitySet: " + entitySetCnof.getEntitySetName() +
+                // ", dbname: "
+                // + entitySetCnof.getDatabaseName());
+
                 // EntitySet の初期セットを実施。
                 getEntitySets().add(new OiyokanCsdlEntitySet(this, entitySetCnof));
             }
@@ -181,7 +185,7 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
         }
 
         // 処理したことのない EntityType。これから型情報を構築。
-        // 内部データベースをもとに Ocsdl 形式を構築するため、リソースの型によらず常に以下のクラスで処理.
+        // 内部データベースをもとに Oiyo形式を構築するため、リソースの型によらず常に以下のクラスで処理.
         BasicJdbcEntityTypeBuilder entityTypeBuilder = new BasicJdbcEntityTypeBuilder(
                 getEntitySetByEntityNameFqnIyo(entityTypeName));
 

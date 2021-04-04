@@ -123,7 +123,8 @@ public class BasicJdbcEntityCollectionBuilder implements OiyokanEntityCollection
 
             return eCollection;
         } catch (SQLException ex) {
-            // [M015] UNEXPECTED: Fail on database connection SQL
+            // [M015] UNEXPECTED: An error occurred in SQL that counts the number of search
+            // results.
             System.err.println(OiyokanMessages.M015 + ": " + ex.toString());
             throw new ODataApplicationException(OiyokanMessages.M015, 500, Locale.ENGLISH);
         }
@@ -151,7 +152,8 @@ public class BasicJdbcEntityCollectionBuilder implements OiyokanEntityCollection
             rset.next();
             countWithWhere = rset.getInt(1);
         } catch (SQLException ex) {
-            // [M015] UNEXPECTED: Fail on database connection SQL
+            // [M015] UNEXPECTED: An error occurred in SQL that counts the number of search
+            // results.
             System.err.println(OiyokanMessages.M015 + ": " + sql + ", " + ex.toString());
             throw new ODataApplicationException(OiyokanMessages.M015 + ": " + sql, 500, Locale.ENGLISH);
         }

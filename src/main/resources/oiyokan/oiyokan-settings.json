@@ -3,9 +3,9 @@
 	"containerName": "Container",
 	"database": [
 		{
-			"name": "oiyokanInternal",
+			"name": "oiyokanKan",
 			"type": "h2",
-			"description": "Oiyokan Internal DB. Do not change this def.",
+			"description": "Oiyokan internal DB. Do not change.",
 			"jdbcDriver": "org.h2.Driver",
 			"jdbcUrl": "jdbc:h2:mem:oiyokan;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=FALSE;CASE_INSENSITIVE_IDENTIFIERS=TRUE;MODE=MSSQLServer",
 			"jdbcUser": "sa",
@@ -14,7 +14,7 @@
 		{
 			"name": "oiyokanInternalTarget",
 			"type": "h2",
-			"description": "Oiyokan Internal Target Test DB. Do not change this def.",
+			"description": "Oiyokan internal Target Test DB. Used for build unit test.",
 			"jdbcDriver": "org.h2.Driver",
 			"jdbcUrl": "jdbc:h2:file:./src/main/resources/db/oiyokan-internal;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=FALSE;CASE_INSENSITIVE_IDENTIFIERS=TRUE;MODE=MSSQLServer",
 			"jdbcUser": "sa",
@@ -23,48 +23,75 @@
 		{
 			"name": "postgres1",
 			"type": "postgres",
-			"description": "サンプル の Postgres DB設定記述。環境情報にあわせて変更利用。",
+			"description": "Sample postgres settings. Change the settings to suit your environment.",
 			"jdbcDriver": "org.postgresql.Driver",
 			"jdbcUrl": "jdbc:postgresql://localhost:5432/dvdrental",
 			"jdbcUser": "",
 			"jdbcPass": ""
 		},
 		{
+			"name": "mysql1",
+			"type": "MySQL",
+			"description": "Sample MySQL settings. Change the settings to suit your environment.",
+			"jdbcDriver": "com.mysql.jdbc.Driver",
+			"jdbcUrl": "jdbc:mysql://localhost/mysql?useUnicode=true&characterEncoding=UTF-8&characterSetResults=UTF-8&useCursorFetch=true&defaultFetchSize=128&useServerPrepStmts=true&emulateUnsupportedPstmts=false",
+			"jdbcUser": "root",
+			"jdbcPass": "passwd123"
+		},
+		{
+			"name": "mysql2",
+			"type": "MySQL",
+			"description": "Sample MySQL settings for Sakila. Change the settings to suit your environment.",
+			"jdbcDriver": "com.mysql.jdbc.Driver",
+			"jdbcUrl": "jdbc:mysql://localhost/sakila?useUnicode=true&characterEncoding=UTF-8&characterSetResults=UTF-8&useCursorFetch=true&defaultFetchSize=128&useServerPrepStmts=true&emulateUnsupportedPstmts=false",
+			"jdbcUser": "root",
+			"jdbcPass": "passwd123"
+		},
+		{
 			"name": "mssql1",
 			"type": "MSSQL2008",
-			"description": "サンプル の SQL Server DB設定記述(2008想定) 環境情報にあわせて変更利用。",
+			"description": "Sample MS SQL Server 2008 settings. Change the settings to suit your environment.",
 			"jdbcDriver": "com.microsoft.sqlserver.jdbc.SQLServerDriver",
 			"jdbcUrl": "jdbc:sqlserver://localhost\\SQLExpress;SelectMethod=cursor",
 			"jdbcUser": "sa",
+			"jdbcPass": "passwd123"
+		},
+		{
+			"name": "oracle1",
+			"type": "ORACLE",
+			"description": "Sample Oracle XE (18c) settings. Change the settings to suit your environment.",
+			"jdbcDriver": "oracle.jdbc.driver.OracleDriver",
+			"jdbcUrl": "jdbc:oracle:thin:@10.0.2.15:1521/xepdb1",
+			"jdbcUser": "orauser",
 			"jdbcPass": "passwd123"
 		}
 	],
 	"entitySet": [
 		{
-			"name": "oiyokan-app-info",
-			"description": "Oiyokanが内部的に利用するエンティティセット。この設定は基本的に変更できない。",
-			"entitySetName": "ODataAppInfos",
-			"entityName": "ODataAppInfo",
-			"databaseName": "oiyokanInternal",
-			"dbTableNameLocal": "ODataAppInfos",
-			"dbTableNameTarget": "ODataAppInfos"
+			"name": "oiyokan-kan",
+			"description": "Oiyokan internal info. Do not change.",
+			"entitySetName": "Oiyokans",
+			"entityName": "Oiyokan",
+			"databaseName": "oiyokanKan",
+			"dbTableNameLocal": "Oiyokan",
+			"dbTableNameTarget": "Oiyokan"
 		},
 		{
 			"name": "oiyokan-test-database",
-			"description": "Oiyokan単体テスト用エンティティセット。ODataTests1。この設定を不用意に変更するとビルドが失敗する。",
+			"description": "Oiyokan internal Target Test Entity. Used for build unit test.",
 			"entitySetName": "ODataTests1",
 			"entityName": "ODataTest1",
 			"databaseName": "oiyokanInternalTarget",
-			"dbTableNameLocal": "OcsdlODataTest1",
+			"dbTableNameLocal": "OiyoODataTest1",
 			"dbTableNameTarget": "ODataTest1"
 		},
 		{
-			"name": "oiyokan-test-product-fulltext",
-			"description": "Oiyokan単体テスト用エンティティセット。ODataTestFulls1。この設定を不用意に変更するとビルドが失敗する。",
+			"name": "oiyokan-test-database-fulltext",
+			"description": "Oiyokan internal Target Test Entity (Fulltext - Experimental). Used for build unit test.",
 			"entitySetName": "ODataTestFulls1",
 			"entityName": "ODataTestFull1",
 			"databaseName": "oiyokanInternalTarget",
-			"dbTableNameLocal": "OcsdlODataTestFulls1",
+			"dbTableNameLocal": "OiyoODataTestFulls1",
 			"dbTableNameTarget": "ODataTestFulls1"
 		},
 		{
@@ -73,7 +100,7 @@
 			"entitySetName": "SklActors",
 			"entityName": "SklActor",
 			"databaseName": "oiyokanInternalTarget",
-			"dbTableNameLocal": "Ocsdlactor",
+			"dbTableNameLocal": "Oiyoactor",
 			"dbTableNameTarget": "actor"
 		},
 		{
@@ -82,7 +109,7 @@
 			"entitySetName": "SklActorInfos",
 			"entityName": "SklActoInfor",
 			"databaseName": "oiyokanInternalTarget",
-			"dbTableNameLocal": "Ocsdlactor_info",
+			"dbTableNameLocal": "Oiyoactor_info",
 			"dbTableNameTarget": "actor_info"
 		},
 		{
@@ -91,7 +118,7 @@
 			"entitySetName": "SklAddresses",
 			"entityName": "SklAddress",
 			"databaseName": "oiyokanInternalTarget",
-			"dbTableNameLocal": "Ocsdladdress",
+			"dbTableNameLocal": "Oiyoaddress",
 			"dbTableNameTarget": "address"
 		},
 		{
@@ -100,7 +127,7 @@
 			"entitySetName": "SklCategories",
 			"entityName": "SklCategory",
 			"databaseName": "oiyokanInternalTarget",
-			"dbTableNameLocal": "Ocsdlcategory",
+			"dbTableNameLocal": "Oiyocategory",
 			"dbTableNameTarget": "category"
 		},
 		{
@@ -109,7 +136,7 @@
 			"entitySetName": "SklCities",
 			"entityName": "SklCity",
 			"databaseName": "oiyokanInternalTarget",
-			"dbTableNameLocal": "Ocsdlcity",
+			"dbTableNameLocal": "Oiyocity",
 			"dbTableNameTarget": "city"
 		},
 		{
@@ -118,7 +145,7 @@
 			"entitySetName": "SklCountries",
 			"entityName": "SklCountry",
 			"databaseName": "oiyokanInternalTarget",
-			"dbTableNameLocal": "Ocsdlcountry",
+			"dbTableNameLocal": "Oiyocountry",
 			"dbTableNameTarget": "country"
 		},
 		{
@@ -127,7 +154,7 @@
 			"entitySetName": "SklCustomers",
 			"entityName": "SklCustomer",
 			"databaseName": "oiyokanInternalTarget",
-			"dbTableNameLocal": "Ocsdlcustomer",
+			"dbTableNameLocal": "Oiyocustomer",
 			"dbTableNameTarget": "customer"
 		},
 		{
@@ -136,7 +163,7 @@
 			"entitySetName": "SklCustomerLists",
 			"entityName": "SklCustomerList",
 			"databaseName": "oiyokanInternalTarget",
-			"dbTableNameLocal": "Ocsdlcustomer_list",
+			"dbTableNameLocal": "Oiyocustomer_list",
 			"dbTableNameTarget": "customer_list"
 		},
 		{
@@ -145,7 +172,7 @@
 			"entitySetName": "SklFilms",
 			"entityName": "SklFilm",
 			"databaseName": "oiyokanInternalTarget",
-			"dbTableNameLocal": "Ocsdlfilm",
+			"dbTableNameLocal": "Oiyofilm",
 			"dbTableNameTarget": "film"
 		},
 		{
@@ -154,7 +181,7 @@
 			"entitySetName": "SklFilmActors",
 			"entityName": "SklFilmActor",
 			"databaseName": "oiyokanInternalTarget",
-			"dbTableNameLocal": "Ocsdlfilm_actor",
+			"dbTableNameLocal": "Oiyofilm_actor",
 			"dbTableNameTarget": "film_actor"
 		},
 		{
@@ -163,7 +190,7 @@
 			"entitySetName": "SklFilmCategories",
 			"entityName": "SklFilmCategory",
 			"databaseName": "oiyokanInternalTarget",
-			"dbTableNameLocal": "Ocsdlfilm_category",
+			"dbTableNameLocal": "Oiyofilm_category",
 			"dbTableNameTarget": "film_category"
 		},
 		{
@@ -172,7 +199,7 @@
 			"entitySetName": "SklFilmLists",
 			"entityName": "SklFilmList",
 			"databaseName": "oiyokanInternalTarget",
-			"dbTableNameLocal": "Ocsdlfilm_list",
+			"dbTableNameLocal": "Oiyofilm_list",
 			"dbTableNameTarget": "film_list"
 		},
 		{
@@ -181,7 +208,7 @@
 			"entitySetName": "SklInventories",
 			"entityName": "SklInventory",
 			"databaseName": "oiyokanInternalTarget",
-			"dbTableNameLocal": "Ocsdlinventory",
+			"dbTableNameLocal": "Oiyoinventory",
 			"dbTableNameTarget": "inventory"
 		},
 		{
@@ -190,7 +217,7 @@
 			"entitySetName": "SklLanguages",
 			"entityName": "SklLanguage",
 			"databaseName": "oiyokanInternalTarget",
-			"dbTableNameLocal": "Ocsdllanguage",
+			"dbTableNameLocal": "Oiyolanguage",
 			"dbTableNameTarget": "language"
 		},
 		{
@@ -199,7 +226,7 @@
 			"entitySetName": "SklNicerButSlowerFilmLists",
 			"entityName": "SklNicerButSlowerFilmList",
 			"databaseName": "oiyokanInternalTarget",
-			"dbTableNameLocal": "Ocsdlnicer_but_slower_film_list",
+			"dbTableNameLocal": "Oiyonicer_but_slower_film_list",
 			"dbTableNameTarget": "nicer_but_slower_film_list"
 		},
 		{
@@ -208,7 +235,7 @@
 			"entitySetName": "SklPayments",
 			"entityName": "SklPayment",
 			"databaseName": "oiyokanInternalTarget",
-			"dbTableNameLocal": "Ocsdlpayment",
+			"dbTableNameLocal": "Oiyopayment",
 			"dbTableNameTarget": "payment"
 		},
 		{
@@ -217,7 +244,7 @@
 			"entitySetName": "SklRentals",
 			"entityName": "SklRental",
 			"databaseName": "oiyokanInternalTarget",
-			"dbTableNameLocal": "Ocsdlrental",
+			"dbTableNameLocal": "Oiyorental",
 			"dbTableNameTarget": "rental"
 		},
 		{
@@ -226,7 +253,7 @@
 			"entitySetName": "SklSalesByFilmCategories",
 			"entityName": "SklSalesByFilmCategory",
 			"databaseName": "oiyokanInternalTarget",
-			"dbTableNameLocal": "Ocsdlsales_by_film_category",
+			"dbTableNameLocal": "Oiyosales_by_film_category",
 			"dbTableNameTarget": "sales_by_film_category"
 		},
 		{
@@ -235,7 +262,7 @@
 			"entitySetName": "SklSalesByStores",
 			"entityName": "SklSalesByStore",
 			"databaseName": "oiyokanInternalTarget",
-			"dbTableNameLocal": "Ocsdlsales_by_store",
+			"dbTableNameLocal": "Oiyosales_by_store",
 			"dbTableNameTarget": "sales_by_store"
 		},
 		{
@@ -244,7 +271,7 @@
 			"entitySetName": "SklStaffs",
 			"entityName": "SklStaff",
 			"databaseName": "oiyokanInternalTarget",
-			"dbTableNameLocal": "Ocsdlstaff",
+			"dbTableNameLocal": "Oiyostaff",
 			"dbTableNameTarget": "staff"
 		},
 		{
@@ -253,7 +280,7 @@
 			"entitySetName": "SklStaffLists",
 			"entityName": "SklStaffList",
 			"databaseName": "oiyokanInternalTarget",
-			"dbTableNameLocal": "Ocsdlstaff_list",
+			"dbTableNameLocal": "Oiyostaff_list",
 			"dbTableNameTarget": "staff_list"
 		},
 		{
@@ -262,7 +289,7 @@
 			"entitySetName": "SklStores",
 			"entityName": "SklStore",
 			"databaseName": "oiyokanInternalTarget",
-			"dbTableNameLocal": "Ocsdlstore",
+			"dbTableNameLocal": "Oiyostore",
 			"dbTableNameTarget": "store"
 		}
 	]
