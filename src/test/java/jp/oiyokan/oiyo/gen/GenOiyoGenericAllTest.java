@@ -24,7 +24,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import jp.oiyokan.basic.BasicJdbcUtil;
-import jp.oiyokan.data.OiyokanInternalDatabase;
+import jp.oiyokan.data.OiyokanKanDatabase;
 import jp.oiyokan.dto.OiyokanSettingsDatabase;
 import jp.oiyokan.settings.OiyokanSettingsUtil;
 
@@ -93,7 +93,7 @@ class GenOiyoGenericAllTest {
             System.err.println("");
 
             for (String tableName : tableNameList) {
-                System.err.println(OiyokanInternalDatabase.generateCreateOiyoDdl(connTargetDb, tableName));
+                System.err.println(OiyokanKanDatabase.generateCreateOiyoDdl(connTargetDb, tableName));
             }
         }
     }

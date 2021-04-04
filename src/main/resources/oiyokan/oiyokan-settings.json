@@ -3,7 +3,7 @@
 	"containerName": "Container",
 	"database": [
 		{
-			"name": "oiyokanInternal",
+			"name": "oiyokanKan",
 			"type": "h2",
 			"description": "Oiyokan internal DB. Do not change.",
 			"jdbcDriver": "org.h2.Driver",
@@ -59,11 +59,11 @@
 	],
 	"entitySet": [
 		{
-			"name": "oiyokan-app-info",
-			"description": "Oiyokan internal App Info. Do not change.",
+			"name": "oiyokan-kan",
+			"description": "Oiyokan internal info. Do not change.",
 			"entitySetName": "Oiyokans",
 			"entityName": "Oiyokan",
-			"databaseName": "oiyokanInternal",
+			"databaseName": "oiyokanKan",
 			"dbTableNameLocal": "Oiyokan",
 			"dbTableNameTarget": "Oiyokan"
 		},
@@ -77,7 +77,7 @@
 			"dbTableNameTarget": "ODataTest1"
 		},
 		{
-			"name": "oiyokan-test-product-fulltext",
+			"name": "oiyokan-test-database-fulltext",
 			"description": "Oiyokan internal Target Test Entity (Fulltext - Experimental). Used for build unit test.",
 			"entitySetName": "ODataTestFulls1",
 			"entityName": "ODataTestFull1",

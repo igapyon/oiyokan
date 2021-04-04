@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test;
 
 import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.basic.BasicJdbcUtil;
-import jp.oiyokan.data.OiyokanInternalDatabase;
+import jp.oiyokan.data.OiyokanKanDatabase;
 import jp.oiyokan.dto.OiyokanSettingsDatabase;
 import jp.oiyokan.settings.OiyokanSettingsUtil;
 
@@ -41,9 +41,9 @@ class GenOiyoODataTest1Test {
 
         try (Connection connTargetDb = BasicJdbcUtil.getConnection(settingsDatabase)) {
             // 内部データベースのテーブルをセットアップ.
-            OiyokanInternalDatabase.setupInternalDatabase();
+            OiyokanKanDatabase.setupKanDatabase();
 
-            System.err.println(OiyokanInternalDatabase.generateCreateOiyoDdl(connTargetDb, "ODataTest1"));
+            System.err.println(OiyokanKanDatabase.generateCreateOiyoDdl(connTargetDb, "ODataTest1"));
 
         }
     }

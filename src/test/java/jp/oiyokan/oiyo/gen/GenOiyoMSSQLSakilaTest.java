@@ -18,7 +18,7 @@ package jp.oiyokan.oiyo.gen;
 import java.sql.Connection;
 
 import jp.oiyokan.basic.BasicJdbcUtil;
-import jp.oiyokan.data.OiyokanInternalDatabase;
+import jp.oiyokan.data.OiyokanKanDatabase;
 import jp.oiyokan.dto.OiyokanSettingsDatabase;
 import jp.oiyokan.settings.OiyokanSettingsUtil;
 
@@ -36,7 +36,7 @@ class GenOiyoMSSQLSakilaTest {
         OiyokanSettingsDatabase settingsDatabase = OiyokanSettingsUtil.getOiyokanDatabase("mssql1");
 
         try (Connection connTargetDb = BasicJdbcUtil.getConnection(settingsDatabase)) {
-            System.err.println(OiyokanInternalDatabase.generateCreateOiyoDdl(connTargetDb, "actor"));
+            System.err.println(OiyokanKanDatabase.generateCreateOiyoDdl(connTargetDb, "actor"));
 
         }
     }
