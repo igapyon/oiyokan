@@ -12,6 +12,7 @@ You can use Oiyokan to turn PostgreSQL, MySQL, and SQL Server 2008 into read-onl
 - PostgreSQL (13)
 - MySQL (8.0.23)
 - SQL Server (2008)
+- Oracle XE (18c)
 
 ## Sample implementation using Oiyokan
 

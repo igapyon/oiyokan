@@ -55,6 +55,15 @@
 			"jdbcUrl": "jdbc:sqlserver://localhost\\SQLExpress;SelectMethod=cursor",
 			"jdbcUser": "sa",
 			"jdbcPass": "passwd123"
+		},
+		{
+			"name": "oracle1",
+			"type": "ORACLE",
+			"description": "Sample Oracle XE (18c) settings. Change the settings to suit your environment.",
+			"jdbcDriver": "oracle.jdbc.driver.OracleDriver",
+			"jdbcUrl": "jdbc:oracle:thin:@localhost:1521:XE",
+			"jdbcUser": "SYS",
+			"jdbcPass": "passwd123"
 		}
 	],
 	"entitySet": [
