@@ -397,16 +397,22 @@ public class BasicSqlExprExpander {
                 sqlInfo.getSqlBuilder().append(",");
                 expand(impl.getParameters().get(1));
                 sqlInfo.getSqlBuilder().append(") > 0)");
-                break;
+                return;
+            case postgres:
+                sqlInfo.getSqlBuilder().append("(STRPOS(");
+                expand(impl.getParameters().get(0));
+                sqlInfo.getSqlBuilder().append(",");
+                expand(impl.getParameters().get(1));
+                sqlInfo.getSqlBuilder().append(") > 0)");
+                return;
             case MSSQL2008:
                 sqlInfo.getSqlBuilder().append("(CHARINDEX(");
                 expand(impl.getParameters().get(1));
                 sqlInfo.getSqlBuilder().append(",");
                 expand(impl.getParameters().get(0));
                 sqlInfo.getSqlBuilder().append(") > 0)");
-                break;
+                return;
             }
-            return;
         }
 
         // STARTSWITH
@@ -415,6 +421,13 @@ public class BasicSqlExprExpander {
             default:
                 // h2 database の POSITION/INSTR は 1 オリジンで発見せずが0 なので 1 を減らしています。
                 sqlInfo.getSqlBuilder().append("(INSTR(");
+                expand(impl.getParameters().get(0));
+                sqlInfo.getSqlBuilder().append(",");
+                expand(impl.getParameters().get(1));
+                sqlInfo.getSqlBuilder().append(") = 1)");
+                return;
+            case postgres:
+                sqlInfo.getSqlBuilder().append("(STRPOS(");
                 expand(impl.getParameters().get(0));
                 sqlInfo.getSqlBuilder().append(",");
                 expand(impl.getParameters().get(1));
@@ -433,6 +446,7 @@ public class BasicSqlExprExpander {
         // ENDSWITH
         if (impl.getMethod() == MethodKind.ENDSWITH) {
             switch (sqlInfo.getEntitySet().getDatabaseType()) {
+            case postgres:
             default:
                 sqlInfo.getSqlBuilder().append("(RIGHT(");
                 expand(impl.getParameters().get(0));
@@ -457,6 +471,7 @@ public class BasicSqlExprExpander {
         // LENGTH
         if (impl.getMethod() == MethodKind.LENGTH) {
             switch (sqlInfo.getEntitySet().getDatabaseType()) {
+            case postgres:
             default:
                 sqlInfo.getSqlBuilder().append("(LENGTH(");
                 expand(impl.getParameters().get(0));
@@ -482,16 +497,22 @@ public class BasicSqlExprExpander {
                 sqlInfo.getSqlBuilder().append(",");
                 expand(impl.getParameters().get(1));
                 sqlInfo.getSqlBuilder().append(") - 1)");
-                break;
+                return;
+            case postgres:
+                sqlInfo.getSqlBuilder().append("(STRPOS(");
+                expand(impl.getParameters().get(0));
+                sqlInfo.getSqlBuilder().append(",");
+                expand(impl.getParameters().get(1));
+                sqlInfo.getSqlBuilder().append(") - 1)");
+                return;
             case MSSQL2008:
                 sqlInfo.getSqlBuilder().append("(CHARINDEX(");
                 expand(impl.getParameters().get(1));
                 sqlInfo.getSqlBuilder().append(",");
                 expand(impl.getParameters().get(0));
                 sqlInfo.getSqlBuilder().append(") - 1)");
-                break;
+                return;
             }
-            return;
         }
 
         // SUBSTRING
@@ -532,6 +553,7 @@ public class BasicSqlExprExpander {
         // TRIM
         if (impl.getMethod() == MethodKind.TRIM) {
             switch (sqlInfo.getEntitySet().getDatabaseType()) {
+            case postgres:
             default:
                 sqlInfo.getSqlBuilder().append("TRIM(");
                 expand(impl.getParameters().get(0));
@@ -549,6 +571,7 @@ public class BasicSqlExprExpander {
         // CONCAT
         if (impl.getMethod() == MethodKind.CONCAT) {
             switch (sqlInfo.getEntitySet().getDatabaseType()) {
+            case postgres:
             default:
                 sqlInfo.getSqlBuilder().append("CONCAT(");
                 expand(impl.getParameters().get(0));
@@ -745,6 +768,13 @@ public class BasicSqlExprExpander {
             switch (sqlInfo.getEntitySet().getDatabaseType()) {
             default:
                 sqlInfo.getSqlBuilder().append("(INSTR(");
+                expand(impl.getParameters().get(0));
+                sqlInfo.getSqlBuilder().append(",");
+                expand(impl.getParameters().get(1));
+                sqlInfo.getSqlBuilder().append(") > 0)");
+                return;
+            case postgres:
+                sqlInfo.getSqlBuilder().append("(STRPOS(");
                 expand(impl.getParameters().get(0));
                 sqlInfo.getSqlBuilder().append(",");
                 expand(impl.getParameters().get(1));

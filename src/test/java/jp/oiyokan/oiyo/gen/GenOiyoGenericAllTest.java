@@ -21,8 +21,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.junit.jupiter.api.Test;
-
 import jp.oiyokan.basic.BasicJdbcUtil;
 import jp.oiyokan.data.OiyokanKanDatabase;
 import jp.oiyokan.dto.OiyokanSettingsDatabase;
@@ -32,7 +30,7 @@ import jp.oiyokan.settings.OiyokanSettingsUtil;
  * 内部データベース用のCSDL用内部テーブルのDDLをコマンドライン生成.
  */
 class GenOiyoGenericAllTest {
-    private static final String TARGET_SETTINGS_DATABASE = "oiyokanInternalTarget";
+    private static final String TARGET_SETTINGS_DATABASE = "postgres1";
 
     private static final boolean SHOW_JDBCINFO = true;
 
