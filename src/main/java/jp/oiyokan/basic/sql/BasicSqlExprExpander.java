@@ -432,22 +432,42 @@ public class BasicSqlExprExpander {
 
         // ENDSWITH
         if (impl.getMethod() == MethodKind.ENDSWITH) {
-            sqlInfo.getSqlBuilder().append("(RIGHT(");
-            expand(impl.getParameters().get(0));
-            sqlInfo.getSqlBuilder().append(",LENGTH(");
-            expand(impl.getParameters().get(1));
-            sqlInfo.getSqlBuilder().append(")) = ");
-            expand(impl.getParameters().get(1));
-            sqlInfo.getSqlBuilder().append(")");
-            return;
+            switch (sqlInfo.getEntitySet().getDatabaseType()) {
+            default:
+                sqlInfo.getSqlBuilder().append("(RIGHT(");
+                expand(impl.getParameters().get(0));
+                sqlInfo.getSqlBuilder().append(",LENGTH(");
+                expand(impl.getParameters().get(1));
+                sqlInfo.getSqlBuilder().append(")) = ");
+                expand(impl.getParameters().get(1));
+                sqlInfo.getSqlBuilder().append(")");
+                return;
+            case MSSQL2008:
+                sqlInfo.getSqlBuilder().append("(RIGHT(");
+                expand(impl.getParameters().get(0));
+                sqlInfo.getSqlBuilder().append(",LEN(");
+                expand(impl.getParameters().get(1));
+                sqlInfo.getSqlBuilder().append(")) = ");
+                expand(impl.getParameters().get(1));
+                sqlInfo.getSqlBuilder().append(")");
+                return;
+            }
         }
 
         // LENGTH
         if (impl.getMethod() == MethodKind.LENGTH) {
-            sqlInfo.getSqlBuilder().append("(LENGTH(");
-            expand(impl.getParameters().get(0));
-            sqlInfo.getSqlBuilder().append("))");
-            return;
+            switch (sqlInfo.getEntitySet().getDatabaseType()) {
+            default:
+                sqlInfo.getSqlBuilder().append("(LENGTH(");
+                expand(impl.getParameters().get(0));
+                sqlInfo.getSqlBuilder().append("))");
+                return;
+            case MSSQL2008:
+                sqlInfo.getSqlBuilder().append("(LEN(");
+                expand(impl.getParameters().get(0));
+                sqlInfo.getSqlBuilder().append("))");
+                return;
+            }
         }
         // $top=20&$filter=(length(Description) gt 3)
 
