@@ -27,7 +27,7 @@ public class OiyokanConstants {
     /**
      * Oiyokan のバージョン番号
      */
-    public static final String VERSION = "1.0.20210404d";
+    public static final String VERSION = "1.0.20210404e";
 
     /**
      * OData のルートパス.
