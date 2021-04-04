@@ -29,34 +29,34 @@ import jp.oiyokan.settings.OiyokanSettingsUtil;
  * テスト用の内部データベースを作成します。この内部データベースは動作の上で必要です。
  */
 class Build50ORACLETest {
-	// @Test
-	void test01() throws Exception {
-		OiyokanSettingsDatabase settingsDatabase = OiyokanSettingsUtil.getOiyokanDatabase("oracle1");
+    // @Test
+    void test01() throws Exception {
+        OiyokanSettingsDatabase settingsDatabase = OiyokanSettingsUtil.getOiyokanDatabase("oracle1");
 
-		try (Connection connTargetDb = BasicJdbcUtil.getConnection(settingsDatabase)) {
-			try (var stmt = connTargetDb.prepareStatement("DROP TABLE ODataTest1")) {
-				stmt.executeUpdate();
-			} catch (SQLException ex) {
-				System.err.println(ex.toString());
-			}
-			
-			String[] sqls = OiyokanResourceSqlUtil
-					.loadOiyokanResourceSql("oiyokan/sql/" + "oiyokan-test-db-ORACLE.sql");
-			for (String sql : sqls) {
-				if (sql.trim().length() == 0) {
-					continue;
-				}
-				try (var stmt = connTargetDb.prepareStatement(sql)) {
-					System.err.println(sql);
-					stmt.executeUpdate();
-				} catch (SQLException ex) {
-					System.err.println(ex.toString());
-					throw ex;
-				}
-			}
-		}
-	}
+        try (Connection connTargetDb = BasicJdbcUtil.getConnection(settingsDatabase)) {
+            try (var stmt = connTargetDb.prepareStatement("DROP TABLE ODataTest1")) {
+                stmt.executeUpdate();
+            } catch (SQLException ex) {
+                System.err.println(ex.toString());
+            }
 
-	////////////////////////////////////////////////////
-	// Sakila DB については 見実装。
+            String[] sqls = OiyokanResourceSqlUtil
+                    .loadOiyokanResourceSql("oiyokan/sql/" + "oiyokan-test-db-ORACLE.sql");
+            for (String sql : sqls) {
+                if (sql.trim().length() == 0) {
+                    continue;
+                }
+                try (var stmt = connTargetDb.prepareStatement(sql)) {
+                    System.err.println(sql);
+                    stmt.executeUpdate();
+                } catch (SQLException ex) {
+                    System.err.println(ex.toString());
+                    throw ex;
+                }
+            }
+        }
+    }
+
+    ////////////////////////////////////////////////////
+    // Sakila DB については 見実装。
 }

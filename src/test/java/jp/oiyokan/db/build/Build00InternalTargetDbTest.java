@@ -53,7 +53,8 @@ class Build00InternalTargetDbTest {
         if (new File("./src/main/resources/db/oiyokan-internal.mv.db").exists()) {
             // すでにファイルが存在する場合は処理スキップ。
             System.err.println("TRACE: InternalTarget (テスト用内部データベース) ファイルはすでに存在するので作成をスキップ。");
-            System.err.println("TRACE: InternalTarget (テスト用内部データベース) テスト用内部データベースの内容を更新する場合には、データベースファイルを削除して再度テスト実行してください。");
+            System.err.println(
+                    "TRACE: InternalTarget (テスト用内部データベース) テスト用内部データベースの内容を更新する場合には、データベースファイルを削除して再度テスト実行してください。");
             return;
         }
 
