@@ -30,6 +30,11 @@ grant resource to orauser;
 grant unlimited tablespace to orauser;
 ```
 
+# 型が足りない
+
+- boolean 型の対応が不明
+- SByte 型の対応が不明
+- TIME 型の対応が不明
 
 
 

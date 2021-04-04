@@ -12,7 +12,7 @@ You can use Oiyokan to turn PostgreSQL, MySQL, and SQL Server 2008 into read-onl
 - PostgreSQL (13)
 - MySQL (8.0.23)
 - SQL Server (2008)
-- Oracle XE (18c)
+- Oracle XE (18c) : In development
 
 ## Sample implementation using Oiyokan
 
@@ -86,7 +86,7 @@ oiyokan プロジェクトは、OData v4 server のシンプルなサンプル(h
 
 ## TODO
 
-- Oracle XE のテスト
+- Oracle XE のテスト: さしあたり top と skip の対応が必要.
 - 設定XMLファイルを分割+重ねがけできるようにしたい。
 - Sakila DVDレンタルのサンプル (SklActors 等)、ODataTests1 を ON/OFFする手順またはプログラム実装を記述.
 - 時間が9時間ずれる件. タイムゾーンなしDB項目由来。何かの方法にて補正したい.
@@ -106,6 +106,7 @@ oiyokan プロジェクトは、OData v4 server のシンプルなサンプル(h
 ## その他メモ
 
 - SQL Server 2008 では $filter で TEXT 型の項目を検索できません。
+- Oracle 12c には TIME 型が無い模様。
 - create_date が Postgres版と MySQL 版とで型が違う.
     これにより、"The types 'Edm.DateTimeOffset' and 'Edm.Date' are not compatible. が発生する。
 - Postgres は項目名が小文字に変わってしまうので、対応表の利用が必要.
