@@ -118,6 +118,10 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
             OiyokanInternalDatabase.setupInternalDatabase();
 
             for (OiyokanSettingsEntitySet entitySetCnof : getSettingsInstance().getEntitySetList()) {
+                // System.err.println("TRACE: entitySet: " + entitySetCnof.getEntitySetName() +
+                // ", dbname: "
+                // + entitySetCnof.getDatabaseName());
+
                 // EntitySet の初期セットを実施。
                 getEntitySets().add(new OiyokanCsdlEntitySet(this, entitySetCnof));
             }

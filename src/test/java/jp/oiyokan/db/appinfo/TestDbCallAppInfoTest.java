@@ -29,26 +29,24 @@ import jp.oiyokan.util.OiyokanTestUtil;
 class TestDbCallAppInfoTest {
     @Test
     void testSimpleVersion() throws Exception {
-        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataAppInfos", "$top=1&$skip=1");
+        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/Oiyokans", "$top=1&$skip=1");
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         // System.err.println("result: " + result);
-        assertEquals(
-                "{\"@odata.context\":\"$metadata#ODataAppInfos\",\"value\":[{\"KeyName\":\"Version\",\"KeyValue\":\""
-                        + OiyokanConstants.VERSION + "\"}]}",
-                result);
+        assertEquals("{\"@odata.context\":\"$metadata#Oiyokans\",\"value\":[{\"KeyName\":\"Version\",\"KeyValue\":\""
+                + OiyokanConstants.VERSION + "\"}]}", result);
         assertEquals(200, resp.getStatusCode());
     }
 
     @Test
     void testString() throws Exception {
-        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataAppInfos",
+        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/Oiyokans",
                 "$filter=KeyName%20eq%20%27Provider%27");
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         // System.err.println("result: " + result);
         assertEquals(
-                "{\"@odata.context\":\"$metadata#ODataAppInfos\",\"value\":[{\"KeyName\":\"Provider\",\"KeyValue\":\"Oiyokan\"}]}",
+                "{\"@odata.context\":\"$metadata#Oiyokans\",\"value\":[{\"KeyName\":\"Provider\",\"KeyValue\":\"Oiyokan\"}]}",
                 result);
         assertEquals(200, resp.getStatusCode());
     }

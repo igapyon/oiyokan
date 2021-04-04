@@ -18,8 +18,10 @@ package jp.oiyokan.basic.sql;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import org.apache.olingo.server.api.OData;
+import org.apache.olingo.server.api.ODataApplicationException;
 import org.apache.olingo.server.api.ServiceMetadata;
 import org.apache.olingo.server.api.uri.UriInfo;
 import org.apache.olingo.server.core.uri.parser.Parser;
@@ -51,7 +53,16 @@ class BasicSqlExprExpanderTest {
         localTemplateEntityContainer.ensureBuild();
         // アプリ情報が入っている内部DBをベースに処理。つまり h2 database 前提としての振る舞いをおこなう。
         final OiyokanCsdlEntitySet entitySet = (OiyokanCsdlEntitySet) localTemplateEntityContainer
-                .getEntitySet("ODataAppInfos");
+                .getEntitySet("Oiyokans");
+
+        // EntityType をロード済み状態にする.
+        localTemplateEntityContainer.getEntityType(entitySet.getTypeFQN());
+
+        if (entitySet == null || entitySet.getEntityType() == null) {
+            final String message = "ERROR: Fail to load Oiyokans EntitySet.";
+            System.err.println(message);
+            throw new ODataApplicationException(message, 500, Locale.ENGLISH);
+        }
 
         final Parser parser = new Parser(edm.getEdm(), odata);
         final UriInfo uriInfo = parser.parseUri(rawODataPath, rawQueryPath, "", "http://localhost:8080/odata4.svc/");

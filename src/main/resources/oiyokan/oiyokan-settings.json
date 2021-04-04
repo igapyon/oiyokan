@@ -61,11 +61,11 @@
 		{
 			"name": "oiyokan-app-info",
 			"description": "Oiyokan internal App Info. Do not change.",
-			"entitySetName": "ODataAppInfos",
-			"entityName": "ODataAppInfo",
+			"entitySetName": "Oiyokans",
+			"entityName": "Oiyokan",
 			"databaseName": "oiyokanInternal",
-			"dbTableNameLocal": "ODataAppInfos",
-			"dbTableNameTarget": "ODataAppInfos"
+			"dbTableNameLocal": "Oiyokan",
+			"dbTableNameTarget": "Oiyokan"
 		},
 		{
 			"name": "oiyokan-test-database",
