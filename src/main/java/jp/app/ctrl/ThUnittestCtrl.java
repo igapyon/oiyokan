@@ -14,7 +14,7 @@ import jp.oiyokan.OiyokanConstants;
 public class ThUnittestCtrl {
     public static final String[][] ODATA_ENTRY_INFOS = new String[][] { //
             { "root", "/", "Root of OData v4 server." },
-            { "version", "/ODataAppInfos?$format=JSON", "Show Oiyokan version." },
+            { "version", "/Oiyokans?$format=JSON", "Show Oiyokan settings and version." },
             { "$metadata", "/$metadata", "Metadata of this OData." },
             { "ODataTests1 : $orderby", "/ODataTests1?$orderby=ID&$top=20&$count=true",
                     "Sample of sort using $orderby." },

@@ -89,20 +89,20 @@ public class OiyokanInternalDatabase {
 
             // Oiyokan が動作する上で必要なテーブルのセットアップ.
             try (var stmt = connInterDb.prepareStatement("CREATE TABLE IF NOT EXISTS " //
-                    + "ODataAppInfos (" //
+                    + "Oiyokan (" //
                     + "KeyName VARCHAR(20) NOT NULL" //
                     + ",KeyValue VARCHAR(255)" //
                     + ",PRIMARY KEY(KeyName)" //
                     + ")")) {
                 stmt.executeUpdate();
             } catch (SQLException ex) {
-                // [M027] UNEXPECTED: Fail to create local table: ODataAppInfos
+                // [M027] UNEXPECTED: Fail to create local table: Oiyokan
                 System.err.println(OiyokanMessages.M027 + ": " + ex.toString());
                 throw new ODataApplicationException(OiyokanMessages.M027, 500, Locale.ENGLISH);
             }
 
             // ODataAppInfos が既に存在するかどうか確認. 存在する場合は処理中断.
-            try (var stmt = connInterDb.prepareStatement("SELECT COUNT(*) FROM ODataAppInfos")) {
+            try (var stmt = connInterDb.prepareStatement("SELECT COUNT(*) FROM Oiyokan")) {
                 stmt.executeQuery();
                 var rset = stmt.getResultSet();
                 rset.next();
@@ -111,7 +111,7 @@ public class OiyokanInternalDatabase {
                     return false;
                 }
             } catch (SQLException ex) {
-                // [M028] UNEXPECTED: Fail to check local table exists: ODataAppInfos
+                // [M028] UNEXPECTED: Fail to check local table exists: Oiyokan
                 System.err.println(OiyokanMessages.M028 + ": " + ex.toString());
                 throw new ODataApplicationException(OiyokanMessages.M028, 500, Locale.ENGLISH);
             }
@@ -124,7 +124,7 @@ public class OiyokanInternalDatabase {
 
             ///////////////////////////////////////////
             // ODataAppInfos にバージョン情報などデータの追加
-            try (var stmt = connInterDb.prepareStatement("INSERT INTO ODataAppInfos (KeyName, KeyValue) VALUES ("
+            try (var stmt = connInterDb.prepareStatement("INSERT INTO Oiyokan (KeyName, KeyValue) VALUES ("
                     + BasicJdbcUtil.getQueryPlaceholderString(2) + ")")) {
                 stmt.setString(1, "Version");
                 stmt.setString(2, OiyokanConstants.VERSION);
