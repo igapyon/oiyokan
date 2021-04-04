@@ -27,7 +27,7 @@ import org.apache.olingo.commons.api.edm.provider.CsdlEntityType;
 import org.apache.olingo.server.api.ODataApplicationException;
 
 import jp.oiyokan.basic.BasicJdbcEntityTypeBuilder;
-import jp.oiyokan.data.OiyokanInternalDatabase;
+import jp.oiyokan.data.OiyokanKanDatabase;
 import jp.oiyokan.dto.OiyokanSettings;
 import jp.oiyokan.dto.OiyokanSettingsDatabase;
 import jp.oiyokan.dto.OiyokanSettingsEntitySet;
@@ -115,7 +115,7 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
             }
 
             // Oiyokan が動作する際に必要になる内部データベースのバージョン情報および Oiyo info をセットアップ.
-            OiyokanInternalDatabase.setupInternalDatabase();
+            OiyokanKanDatabase.setupKanDatabase();
 
             for (OiyokanSettingsEntitySet entitySetCnof : getSettingsInstance().getEntitySetList()) {
                 // System.err.println("TRACE: entitySet: " + entitySetCnof.getEntitySetName() +

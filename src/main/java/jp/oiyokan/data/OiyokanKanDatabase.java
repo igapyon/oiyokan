@@ -35,39 +35,29 @@ import jp.oiyokan.dto.OiyokanSettingsDatabase;
 import jp.oiyokan.settings.OiyokanSettingsUtil;
 
 /**
- * Oiyokan (OData v4 server) が動作する際に必要になる内部データベースのバージョン情報および Oiyo info をセットアップ.
+ * Oiyokan (OData v4 server) が動作する際に必要になる内部管理データベースのバージョン情報および Oiyo情報 をセットアップ.
  */
-public class OiyokanInternalDatabase {
+public class OiyokanKanDatabase {
     /**
      * Oiyokan の設定情報を記述したファイル.
      */
     private static final String[][] OIYOKAN_FILE_SQLS = new String[][] { //
-            /*
-             * Oiyokan の基本機能を確認およびビルド時の JUnitテストで利用. 変更するとビルドが動作しなくなる場合あり. この内容は
-             * BuildInternalDbTest.java により別途生成.
-             */
-            // { OiyokanConstants.OIYOKAN_INTERNAL_TARGET_DB, "oiyokan-test-db.sql" }, //
-
             /*
              * Oiyokan の基本機能を確認およびビルド時の JUnitテストで利用. 変更するとビルドが動作しなくなる場合あり.
              */
             { OiyokanConstants.OIYOKAN_INTERNAL_DB, "oiyokan-test-oiyo.sql" },
 
             /*
-             * Sakila dvdrental サンプルDB の内容そのもの. この内容は BuildInternalDbTest.java により別途生成.
-             */
-            // { OiyokanConstants.OIYOKAN_INTERNAL_TARGET_DB, "sample-sakila-db.sql" }, //
-
-            /*
              * Sakila dvdrental サンプルDB に接続するための Oiyo 情報.
              */
             { OiyokanConstants.OIYOKAN_INTERNAL_DB, "sample-sakila-oiyo.sql" },
+
             /*
              * Oiyokan のターゲットデータベースの Oiyo情報を記述。github上では空白ファイルとする.
              */
             { OiyokanConstants.OIYOKAN_INTERNAL_DB, "oiyokan-oiyo.sql" }, };
 
-    private OiyokanInternalDatabase() {
+    private OiyokanKanDatabase() {
     }
 
     /**
@@ -76,10 +66,10 @@ public class OiyokanInternalDatabase {
      * @return true:新規作成, false:既に存在.
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
-    public static synchronized boolean setupInternalDatabase() throws ODataApplicationException {
+    public static synchronized boolean setupKanDatabase() throws ODataApplicationException {
         if (OiyokanConstants.IS_TRACE_ODATA_V4)
             System.err.println( //
-                    "OData v4: setup internal database (Oiyokan: " + OiyokanConstants.VERSION + ")");
+                    "OData v4: setup oiyokanKan database (Oiyokan: " + OiyokanConstants.VERSION + ")");
 
         OiyokanSettingsDatabase settingsInterDatabase = OiyokanSettingsUtil
                 .getOiyokanDatabase(OiyokanConstants.OIYOKAN_INTERNAL_DB);
