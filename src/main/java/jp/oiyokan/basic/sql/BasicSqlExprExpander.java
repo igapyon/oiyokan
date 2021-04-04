@@ -529,7 +529,7 @@ public class BasicSqlExprExpander {
                 }
                 sqlInfo.getSqlBuilder().append("))");
                 return;
-            case MSSQL2008:
+            case ORACLE:
                 sqlInfo.getSqlBuilder().append("(SUBSTR(");
                 expand(impl.getParameters().get(0));
                 sqlInfo.getSqlBuilder().append(",");
