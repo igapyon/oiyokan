@@ -88,9 +88,10 @@ public class BasicSqlBuilder {
         // 現状の実装では指定があろうがなかろうが件数はカウントする実装となっている.
         // TODO FIXME 現状でも常にカウントしているかどうか確認すること。
 
-        if (OiyokanConstants.DatabaseType.MSSQL2008 == sqlInfo.getEntitySet().getDatabaseType()) {
+        if (OiyokanConstants.DatabaseType.MSSQL2008 == sqlInfo.getEntitySet().getDatabaseType() //
+                || OiyokanConstants.DatabaseType.ORACLE == sqlInfo.getEntitySet().getDatabaseType()) {
             sqlInfo.getSqlBuilder().append(" WHERE ");
-            expandMSSQLBetween(uriInfo);
+            expandRowNumberBetween(uriInfo);
             // SQL Server検索は WHERE絞り込みは既にサブクエリにて適用済み.
         } else {
             if (uriInfo.getFilterOption() != null) {
@@ -101,9 +102,10 @@ public class BasicSqlBuilder {
             }
         }
 
-        if (OiyokanConstants.DatabaseType.MSSQL2008 == sqlInfo.getEntitySet().getDatabaseType()) {
+        if (OiyokanConstants.DatabaseType.MSSQL2008 == sqlInfo.getEntitySet().getDatabaseType() //
+                || OiyokanConstants.DatabaseType.ORACLE == sqlInfo.getEntitySet().getDatabaseType()) {
             // 必ず rownum4between 順でソート.
-            sqlInfo.getSqlBuilder().append(" ORDER BY [rownum4between]");
+            sqlInfo.getSqlBuilder().append(" ORDER BY rownum4between");
         } else {
             if (uriInfo.getOrderByOption() != null) {
                 sqlInfo.getSqlBuilder().append(" ORDER BY ");
@@ -119,7 +121,7 @@ public class BasicSqlBuilder {
         expandTopSkip(uriInfo);
     }
 
-    private void expandMSSQLBetween(UriInfo uriInfo) throws ODataApplicationException {
+    private void expandRowNumberBetween(UriInfo uriInfo) throws ODataApplicationException {
         int start = -1;
         int count = -1;
         if (uriInfo.getTopOption() != null) {
@@ -134,7 +136,7 @@ public class BasicSqlBuilder {
             start = 1;
         }
 
-        sqlInfo.getSqlBuilder().append("[rownum4between] BETWEEN " + start + " AND " + (start + count - 1));
+        sqlInfo.getSqlBuilder().append("rownum4between BETWEEN " + start + " AND " + (start + count - 1));
     }
 
     private void expandSelect(UriInfo uriInfo) throws ODataApplicationException {
@@ -194,7 +196,8 @@ public class BasicSqlBuilder {
         default:
             sqlInfo.getSqlBuilder().append(" FROM " + sqlInfo.getEntitySet().getDbTableNameTargetIyo());
             break;
-        case MSSQL2008: {
+        case MSSQL2008:
+        case ORACLE: {
             //////////////////////////////
             // SQL Server 用特殊記述
             // SQL Serverの場合は無条件にサブクエリ展開
@@ -210,7 +213,7 @@ public class BasicSqlBuilder {
                 sqlInfo.getSqlBuilder().append(") ");
             }
 
-            sqlInfo.getSqlBuilder().append("AS [rownum4between],");
+            sqlInfo.getSqlBuilder().append("AS rownum4between,");
             // 必要な分だけ項目展開.
             expandSelect(uriInfo);
             sqlInfo.getSqlBuilder().append(" FROM " + sqlInfo.getEntitySet().getDbTableNameTargetIyo());
@@ -219,7 +222,7 @@ public class BasicSqlBuilder {
                 // データ絞り込みはここで実現.
                 new BasicSqlExprExpander(sqlInfo).expand(uriInfo.getFilterOption().getExpression());
             }
-            sqlInfo.getSqlBuilder().append(") AS [sub4between]");
+            sqlInfo.getSqlBuilder().append(")");
             // SQL Server 用特殊記述
             //////////////////////////////
         }
@@ -260,7 +263,8 @@ public class BasicSqlBuilder {
     }
 
     private void expandTopSkip(UriInfo uriInfo) {
-        if (OiyokanConstants.DatabaseType.MSSQL2008 != sqlInfo.getEntitySet().getDatabaseType()) {
+        if (OiyokanConstants.DatabaseType.MSSQL2008 != sqlInfo.getEntitySet().getDatabaseType() //
+                && OiyokanConstants.DatabaseType.ORACLE != sqlInfo.getEntitySet().getDatabaseType()) {
             if (uriInfo.getTopOption() != null) {
                 sqlInfo.getSqlBuilder().append(" LIMIT ");
                 sqlInfo.getSqlBuilder().append(uriInfo.getTopOption().getValue());
