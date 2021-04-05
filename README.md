@@ -1,7 +1,7 @@
 # Oiyokan
 
 Oiyokan is an OData v4 server (provider) SDK for RDB.
-You can use Oiyokan to turn PostgreSQL, MySQL, and SQL Server 2008 into read-only OData v4 services.
+You can use Oiyokan to turn PostgreSQL, MySQL, SQL Server 2008, and ORACLE into read-only OData v4 services.
 
 - Based on Apache Olingo. Build with Spring Boot, Java, h2.
 - Oiyokan uses JDBC to provide read-only OData v4 access to the RDB.
@@ -12,7 +12,7 @@ You can use Oiyokan to turn PostgreSQL, MySQL, and SQL Server 2008 into read-onl
 - PostgreSQL (13)
 - MySQL (8.0.23)
 - SQL Server (2008)
-- Oracle XE (18c) : In development
+- Oracle XE (18c)
 
 ## Sample implementation using Oiyokan
 
