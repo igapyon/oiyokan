@@ -222,7 +222,7 @@ public class BasicSqlBuilder {
                 // データ絞り込みはここで実現.
                 new BasicSqlExprExpander(sqlInfo).expand(uriInfo.getFilterOption().getExpression());
             }
-            sqlInfo.getSqlBuilder().append(") AS sub4between");
+            sqlInfo.getSqlBuilder().append(")");
             // SQL Server 用特殊記述
             //////////////////////////////
         }
@@ -263,7 +263,8 @@ public class BasicSqlBuilder {
     }
 
     private void expandTopSkip(UriInfo uriInfo) {
-        if (OiyokanConstants.DatabaseType.MSSQL2008 != sqlInfo.getEntitySet().getDatabaseType()) {
+        if (OiyokanConstants.DatabaseType.MSSQL2008 != sqlInfo.getEntitySet().getDatabaseType() //
+                && OiyokanConstants.DatabaseType.ORACLE != sqlInfo.getEntitySet().getDatabaseType()) {
             if (uriInfo.getTopOption() != null) {
                 sqlInfo.getSqlBuilder().append(" LIMIT ");
                 sqlInfo.getSqlBuilder().append(uriInfo.getTopOption().getValue());
