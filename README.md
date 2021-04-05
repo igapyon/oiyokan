@@ -10,7 +10,7 @@ You can use Oiyokan to turn PostgreSQL, MySQL, SQL Server 2008, and ORACLE into 
 ## Supported target RDBMS
 
 - PostgreSQL (13)
-- MySQL (8.0.23)
+- MySQL (8)
 - SQL Server (2008)
 - Oracle XE (18c)
 
