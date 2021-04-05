@@ -225,7 +225,7 @@ public class BasicSqlBuilder {
             sqlInfo.getSqlBuilder().append(")");
             if (OiyokanConstants.DatabaseType.MSSQL2008 == sqlInfo.getEntitySet().getDatabaseType()) {
                 // 以下記述は SQL2008のみ。ORACLEではエラー。
-                sqlInfo.getSqlBuilder().append(" AS sqlsub");
+                sqlInfo.getSqlBuilder().append(" AS rownum4subquery");
             }
             // SQL Server / ORACLE 用特殊記述
             ///////////////////////////////////
