@@ -198,9 +198,9 @@ public class BasicSqlBuilder {
             break;
         case MSSQL2008:
         case ORACLE: {
-            //////////////////////////////
-            // SQL Server 用特殊記述
-            // SQL Serverの場合は無条件にサブクエリ展開
+            ///////////////////////////////////
+            // SQL Server / ORACLE 用特殊記述
+            // 現在、無条件にサブクエリ展開
             sqlInfo.getSqlBuilder().append(" FROM (SELECT ROW_NUMBER()");
             if (uriInfo.getOrderByOption() != null) {
                 sqlInfo.getSqlBuilder().append(" OVER (");
@@ -223,8 +223,12 @@ public class BasicSqlBuilder {
                 new BasicSqlExprExpander(sqlInfo).expand(uriInfo.getFilterOption().getExpression());
             }
             sqlInfo.getSqlBuilder().append(")");
-            // SQL Server 用特殊記述
-            //////////////////////////////
+            if (OiyokanConstants.DatabaseType.MSSQL2008 == sqlInfo.getEntitySet().getDatabaseType()) {
+                // 以下記述は SQL2008のみ。ORACLEではエラー。
+                sqlInfo.getSqlBuilder().append(" AS sqlsub");
+            }
+            // SQL Server / ORACLE 用特殊記述
+            ///////////////////////////////////
         }
             break;
         }
