@@ -14,6 +14,15 @@ You can use Oiyokan to turn RDBMS into read-only OData v4 services.
 - SQL Server (2008)
 - Oracle XE (18c)
 
+## Supported OData system query options
+
+- $select
+- $count
+- $filter
+- $orderby
+- $top
+- $skip
+
 ## Sample implementation using Oiyokan
 
 - Oiyokan provides OData server sample of Sakila DVD rental.
@@ -86,6 +95,7 @@ oiyokan プロジェクトは、OData v4 server のシンプルなサンプル(h
 
 ## TODO
 
+- Navigation property について調べる。
 - 項目名マッピングを 接続情報または設定情報ごとにロードできるように変更。
 - Oiyokan 設定XMLファイルを分割+重ねがけできるように変更。
 - Sakila DVDレンタルのサンプル (SklActors 等)、ODataTests1 を ON/OFFする手順またはプログラム実装を記述.
