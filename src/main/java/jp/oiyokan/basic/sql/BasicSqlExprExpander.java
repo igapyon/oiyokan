@@ -465,6 +465,15 @@ public class BasicSqlExprExpander {
                 expand(impl.getParameters().get(1));
                 sqlInfo.getSqlBuilder().append(")");
                 return;
+            case ORACLE:
+                sqlInfo.getSqlBuilder().append("(SUBSTR(");
+                expand(impl.getParameters().get(0));
+                sqlInfo.getSqlBuilder().append(",-LENGTH(");
+                expand(impl.getParameters().get(1));
+                sqlInfo.getSqlBuilder().append(")) = ");
+                expand(impl.getParameters().get(1));
+                sqlInfo.getSqlBuilder().append(")");
+                return;
             }
         }
 

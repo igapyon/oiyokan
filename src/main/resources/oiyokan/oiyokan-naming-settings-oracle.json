@@ -1,0 +1,129 @@
+{
+	"db2entity": [
+		{
+			"db": "zip code",
+			"entity": "zip_code",
+			"description": "pg dvdrental"
+		},
+		{
+			"db": "ID",
+			"entity": "ID",
+			"description": "OdataTest1"
+		},
+		{
+			"db": "NAME",
+			"entity": "Name",
+			"description": "OdataTest1"
+		},
+		{
+			"db": "DESCRIPTION",
+			"entity": "Description",
+			"description": "OdataTest1"
+		},
+		{
+			"db": "SBYTE1",
+			"entity": "Sbyte1",
+			"description": "OdataTest1"
+		},
+		{
+			"db": "INT16A",
+			"entity": "Int16a",
+			"description": "OdataTest1"
+		},
+		{
+			"db": "INT32A",
+			"entity": "Int32a",
+			"description": "OdataTest1"
+		},
+		{
+			"db": "INT64A",
+			"entity": "Int64a",
+			"description": "OdataTest1"
+		},
+		{
+			"db": "DECIMAL1",
+			"entity": "Decimal1",
+			"description": "OdataTest1"
+		},
+		{
+			"db": "STRINGCHAR2",
+			"entity": "StringChar2",
+			"description": "OdataTest1"
+		},
+		{
+			"db": "STRINGVAR255",
+			"entity": "StringVar255",
+			"description": "OdataTest1"
+		},
+		{
+			"db": "STRINGVAR65535",
+			"entity": "StringVar65535",
+			"description": "OdataTest1"
+		},
+		{
+			"db": "STRINGLONGVAR1",
+			"entity": "StringLongVar1",
+			"description": "OdataTest1"
+		},
+		{
+			"db": "CLOB1",
+			"entity": "Clob1",
+			"description": "OdataTest1"
+		},
+		{
+			"db": "BOOLEAN1",
+			"entity": "Boolean1",
+			"description": "OdataTest1"
+		},
+		{
+			"db": "SINGLE1",
+			"entity": "Single1",
+			"description": "OdataTest1"
+		},
+		{
+			"db": "DOUBLE1",
+			"entity": "Double1",
+			"description": "OdataTest1"
+		},
+		{
+			"db": "DATE1",
+			"entity": "Date1",
+			"description": "OdataTest1"
+		},
+		{
+			"db": "DATETIMEOFFSET1",
+			"entity": "DateTimeOffset1",
+			"description": "OdataTest1"
+		},
+		{
+			"db": "TIMEOFDAY1",
+			"entity": "TimeOfDay1",
+			"description": "OdataTest1"
+		},
+		{
+			"db": "BINARY1",
+			"entity": "Binary1",
+			"description": "OdataTest1"
+		},
+		{
+			"db": "VARBINARY1",
+			"entity": "VarBinary1",
+			"description": "OdataTest1"
+		},
+		{
+			"db": "LONGVARBINARY1",
+			"entity": "LongVarBinary1",
+			"description": "OdataTest1"
+		},
+		{
+			"db": "BLOB1",
+			"entity": "Blob1",
+			"description": "OdataTest1"
+		},
+		{
+			"db": "UUID1",
+			"entity": "Uuid1",
+			"description": "OdataTest1"
+		}
+	]
+}
