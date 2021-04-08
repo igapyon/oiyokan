@@ -191,7 +191,7 @@ public class OiyokanKanDatabase {
         final String sql = "SELECT * FROM " + tableName;
         final StringBuilder sqlBuilder = new StringBuilder();
         sqlBuilder.append("CREATE TABLE IF NOT EXISTS\n");
-        sqlBuilder.append("  Oiyo" + tableName + " (\n");
+        sqlBuilder.append("  Oiyo_" + tableName + " (\n");
         try (PreparedStatement stmt = connTargetDb.prepareStatement(sql)) {
             ResultSetMetaData rsmeta = stmt.getMetaData();
             final int columnCount = rsmeta.getColumnCount();

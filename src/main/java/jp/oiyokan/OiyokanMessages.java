@@ -53,6 +53,8 @@ public class OiyokanMessages {
     public static final String M032 = "[M032] NOT SUPPORTED: URI: $search";
     public static final String M033 = "[M033] NOT SUPPORTED: unknown UUID object given";
     public static final String M034 = "[M034] ERROR: An unknown field name was specified. The field names are case sensitive. Make sure the Oiyo field name matches the target field name.";
+    public static final String M035 = "[M035] SQL timeout at count";
+    public static final String M036 = "[M036] SQL timeout at execute";
 
     ///////////////////
     // Expression

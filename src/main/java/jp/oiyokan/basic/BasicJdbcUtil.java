@@ -60,8 +60,8 @@ public class BasicJdbcUtil {
         // OData server 起動シーケンスにてドライバ存在チェックは既に実施済み.
         // Class.forName(settingsDatabase.getJdbcDriver());
 
-        System.err.println(
-                "TRACE: DEBUG: DB接続開始: " + settingsDatabase.getName() + " (" + settingsDatabase.getDescription() + ")");
+        System.err.println("TRACE: DEBUG: DB connect: " + settingsDatabase.getName() + " ("
+                + settingsDatabase.getDescription() + ")");
 
         try {
             if (settingsDatabase.getJdbcUser() == null || settingsDatabase.getJdbcUser().trim().length() == 0) {

@@ -15,11 +15,15 @@
  */
 package jp.oiyokan.oiyo.gen;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import org.apache.commons.io.FileUtils;
+import org.junit.jupiter.api.Test;
 
 import jp.oiyokan.basic.BasicJdbcUtil;
 import jp.oiyokan.data.OiyokanKanDatabase;
@@ -30,7 +34,12 @@ import jp.oiyokan.settings.OiyokanSettingsUtil;
  * 内部データベース用のCSDL用内部テーブルのDDLをコマンドライン生成.
  */
 class GenOiyoGenericAllTest {
-    private static final String TARGET_SETTINGS_DATABASE = "oracle1";
+    private static final String TARGET_SETTINGS_DATABASE = "oiyokanInternalTarget";
+
+    /**
+     * このテストを実施するかどうか。
+     */
+    private static final boolean IS_PROCESS = false;
 
     private static final boolean SHOW_JDBCINFO = true;
 
@@ -39,8 +48,12 @@ class GenOiyoGenericAllTest {
      * 
      * Oiyoテーブルのスキーマを取得したい場合にのみ JUnit を実行する。
      */
-    // @Test
+    @Test
     void test01() throws Exception {
+        if (!IS_PROCESS) {
+            return;
+        }
+
         OiyokanSettingsDatabase settingsDatabase = OiyokanSettingsUtil.getOiyokanDatabase(TARGET_SETTINGS_DATABASE);
 
         try (Connection connTargetDb = BasicJdbcUtil.getConnection(settingsDatabase)) {
@@ -181,10 +194,17 @@ class GenOiyoGenericAllTest {
             System.err.println("Oiyo候補: " + settingsDatabase.getName());
             System.err.println("");
 
+            StringBuilder output = new StringBuilder();
             for (String tableName : tableNameList) {
                 // System.err.println("tabname: "+tableName);
-                System.err.println(OiyokanKanDatabase.generateCreateOiyoDdl(connTargetDb, tableName));
+                String sql = OiyokanKanDatabase.generateCreateOiyoDdl(connTargetDb, tableName);
+                output.append(sql);
+                System.err.println(sql);
             }
+
+            new File("./target/").mkdirs();
+            FileUtils.writeStringToFile(new File("./target/GenOiyoGenericAllTest-output.sql"), output.toString(),
+                    "UTF-8");
         }
     }
 }

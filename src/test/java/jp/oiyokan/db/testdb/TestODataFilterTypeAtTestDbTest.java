@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.apache.olingo.server.api.ODataResponse;
 import org.junit.jupiter.api.Test;
 
+import jp.oiyokan.basic.BasicUrlUtil;
 import jp.oiyokan.util.OiyokanTestUtil;
 
 /**
@@ -75,7 +76,7 @@ class TestODataFilterTypeAtTestDbTest {
 
     @Test
     void testInt32a() throws Exception {
-        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1", OiyokanTestUtil
+        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1", BasicUrlUtil
                 .encodeUrlQuery("$top=2 &$filter=Int32a eq 2147483647 &$orderby=ID &$count=true &$select=ID"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
@@ -88,7 +89,7 @@ class TestODataFilterTypeAtTestDbTest {
 
     @Test
     void testInt64a() throws Exception {
-        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1", OiyokanTestUtil
+        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1", BasicUrlUtil
                 .encodeUrlQuery("$top=2 &$skip=2 &$filter=Int64a eq 2147483647 &$orderby=ID &$count=true &$select=ID"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
@@ -126,7 +127,7 @@ class TestODataFilterTypeAtTestDbTest {
 
     @Test
     void testSingle1() throws Exception {
-        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1", OiyokanTestUtil
+        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1", BasicUrlUtil
                 .encodeUrlQuery("$top=1 &$filter=Single1 eq 123.456789 &$orderby=ID &$count=true &$select=ID"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
@@ -138,7 +139,7 @@ class TestODataFilterTypeAtTestDbTest {
 
     @Test
     void testDouble1() throws Exception {
-        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1", OiyokanTestUtil
+        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1", BasicUrlUtil
                 .encodeUrlQuery("$top=51 &$filter=Double1 lt 123.456789 &$orderby=ID &$count=true &$select=ID"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
@@ -150,7 +151,7 @@ class TestODataFilterTypeAtTestDbTest {
 
     @Test
     void testStringVar255a() throws Exception {
-        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1", OiyokanTestUtil
+        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1", BasicUrlUtil
                 .encodeUrlQuery("&$filter=StringVar255 eq 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' &$count=true &$select=ID"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
@@ -162,9 +163,8 @@ class TestODataFilterTypeAtTestDbTest {
 
     @Test
     void testStringVar255WithAndOr() throws Exception {
-        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1",
-                OiyokanTestUtil.encodeUrlQuery(
-                        "&$filter=StringVar255 eq 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' or StringVar65535 eq 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' and StringLongVar1 eq 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' or Clob1 eq 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' &$count=true &$select=ID"));
+        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1", BasicUrlUtil.encodeUrlQuery(
+                "&$filter=StringVar255 eq 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' or StringVar65535 eq 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' and StringLongVar1 eq 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' or Clob1 eq 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' &$count=true &$select=ID"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         // System.err.println("result: " + result);
@@ -175,7 +175,7 @@ class TestODataFilterTypeAtTestDbTest {
 
     @Test
     void testStringVar65535a() throws Exception {
-        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1", OiyokanTestUtil
+        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1", BasicUrlUtil
                 .encodeUrlQuery("&$filter=StringVar65535 eq 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' &$count=true &$select=ID"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
@@ -187,7 +187,7 @@ class TestODataFilterTypeAtTestDbTest {
 
     @Test
     void testStringLongVar1a() throws Exception {
-        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1", OiyokanTestUtil
+        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1", BasicUrlUtil
                 .encodeUrlQuery("&$filter=StringLongVar1 eq 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' &$count=true &$select=ID"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
@@ -199,8 +199,8 @@ class TestODataFilterTypeAtTestDbTest {
 
     @Test
     void testClob1a() throws Exception {
-        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1", OiyokanTestUtil
-                .encodeUrlQuery("&$filter=Clob1 eq 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' &$count=true &$select=ID"));
+        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1",
+                BasicUrlUtil.encodeUrlQuery("&$filter=Clob1 eq 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' &$count=true &$select=ID"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         // System.err.println("result: " + result);

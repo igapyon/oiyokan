@@ -20,6 +20,7 @@ import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.SQLTimeoutException;
 import java.util.Locale;
 
 import org.apache.olingo.commons.api.data.Entity;
@@ -138,10 +139,15 @@ public class BasicJdbcEntityCollectionBuilder implements OiyokanEntityCollection
         final String sql = basicSqlBuilder.getSqlInfo().getSqlBuilder().toString();
 
         if (OiyokanConstants.IS_TRACE_ODATA_V4)
-            System.err.println("OData v4: TRACE: SQL: " + sql);
+            System.err.println("OData v4: TRACE: COUNT: " + sql);
 
         int countWithWhere = 0;
+        final long startMillisec = System.currentTimeMillis();
         try (var stmt = connTargetDb.prepareStatement(sql)) {
+            // set query timeout
+            // TODO 待ち秒数を外部化
+            stmt.setQueryTimeout(30);
+
             int column = 1;
             for (Object look : basicSqlBuilder.getSqlInfo().getSqlParamList()) {
                 BasicJdbcUtil.bindPreparedParameter(stmt, column++, look);
@@ -151,12 +157,24 @@ public class BasicJdbcEntityCollectionBuilder implements OiyokanEntityCollection
             var rset = stmt.getResultSet();
             rset.next();
             countWithWhere = rset.getInt(1);
+        } catch (SQLTimeoutException ex) {
+            // [M035] SQL timeout at count
+            System.err.println(OiyokanMessages.M035 + ": " + sql + ", " + ex.toString());
+            throw new ODataApplicationException(OiyokanMessages.M035 + ": " + sql, 500, Locale.ENGLISH);
         } catch (SQLException ex) {
             // [M015] UNEXPECTED: An error occurred in SQL that counts the number of search
             // results.
             System.err.println(OiyokanMessages.M015 + ": " + sql + ", " + ex.toString());
             throw new ODataApplicationException(OiyokanMessages.M015 + ": " + sql, 500, Locale.ENGLISH);
         }
+
+        final long endMillisec = System.currentTimeMillis();
+        if (OiyokanConstants.IS_TRACE_ODATA_V4) {
+            final long elapsed = endMillisec - startMillisec;
+            System.err.println("OData v4: TRACE: COUNT = " + countWithWhere //
+                    + (elapsed >= 10 ? " (elapsed: " + (endMillisec - startMillisec) + ")" : ""));
+        }
+
         // 取得できたレコード件数を設定.
         eCollection.setCount(countWithWhere);
     }
@@ -171,7 +189,12 @@ public class BasicJdbcEntityCollectionBuilder implements OiyokanEntityCollection
         if (OiyokanConstants.IS_TRACE_ODATA_V4)
             System.err.println("OData v4: TRACE: SQL: " + sql);
 
+        final long startMillisec = System.currentTimeMillis();
         try (var stmt = connTargetDb.prepareStatement(sql)) {
+            // set query timeout
+            // TODO 待ち秒数を外部化
+            stmt.setQueryTimeout(30);
+
             int idxColumn = 1;
             for (Object look : basicSqlBuilder.getSqlInfo().getSqlParamList()) {
                 BasicJdbcUtil.bindPreparedParameter(stmt, idxColumn++, look);
@@ -213,6 +236,18 @@ public class BasicJdbcEntityCollectionBuilder implements OiyokanEntityCollection
 
                 eCollection.getEntities().add(ent);
             }
+
+            final long endMillisec = System.currentTimeMillis();
+            if (OiyokanConstants.IS_TRACE_ODATA_V4) {
+                final long elapsed = endMillisec - startMillisec;
+                if (elapsed >= 10) {
+                    System.err.println("OData v4: TRACE: SQL: elapsed: " + (endMillisec - startMillisec));
+                }
+            }
+        } catch (SQLTimeoutException ex) {
+            // [M036] SQL timeout at execute
+            System.err.println(OiyokanMessages.M036 + ": " + sql + ", " + ex.toString());
+            throw new ODataApplicationException(OiyokanMessages.M036 + ": " + sql, 500, Locale.ENGLISH);
         } catch (SQLException ex) {
             // [M017] Fail to execute SQL
             System.err.println(OiyokanMessages.M017 + ": " + sql + ", " + ex.toString());
@@ -229,7 +264,8 @@ public class BasicJdbcEntityCollectionBuilder implements OiyokanEntityCollection
      */
     public static URI createId(String entitySetName, Object id) {
         try {
-            return new URI(entitySetName + "(" + id + ")");
+            final String idString = BasicUrlUtil.encodeUrl4Key(String.valueOf(id));
+            return new URI(entitySetName + "(" + idString + ")");
         } catch (URISyntaxException ex) {
             // [M018] UNEXPECTED: Fail to create ID EntitySet name
             System.err.println(OiyokanMessages.M018 + ": " + entitySetName + ": " + ex.toString());
