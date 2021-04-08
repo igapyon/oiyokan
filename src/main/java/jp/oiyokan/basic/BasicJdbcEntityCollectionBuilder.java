@@ -145,8 +145,7 @@ public class BasicJdbcEntityCollectionBuilder implements OiyokanEntityCollection
         final long startMillisec = System.currentTimeMillis();
         try (var stmt = connTargetDb.prepareStatement(sql)) {
             // set query timeout
-            // TODO 待ち秒数を外部化
-            stmt.setQueryTimeout(30);
+            stmt.setQueryTimeout(OiyokanConstants.JDBC_STMT_TIMEOUT);
 
             int column = 1;
             for (Object look : basicSqlBuilder.getSqlInfo().getSqlParamList()) {
@@ -192,8 +191,7 @@ public class BasicJdbcEntityCollectionBuilder implements OiyokanEntityCollection
         final long startMillisec = System.currentTimeMillis();
         try (var stmt = connTargetDb.prepareStatement(sql)) {
             // set query timeout
-            // TODO 待ち秒数を外部化
-            stmt.setQueryTimeout(30);
+            stmt.setQueryTimeout(OiyokanConstants.JDBC_STMT_TIMEOUT);
 
             int idxColumn = 1;
             for (Object look : basicSqlBuilder.getSqlInfo().getSqlParamList()) {

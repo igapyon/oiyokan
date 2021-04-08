@@ -71,6 +71,9 @@ public class OiyokanOdata4Register {
             // EntityCollectionProcessor を登録.
             handler.register(new OiyokanEntityCollectionProcessor());
 
+            // EntityProcessor を登録.
+            handler.register(new OiyokanEntityProcessor());
+
             // Spring と Servlet の挙動を調整.
             handler.process(new HttpServletRequestWrapper(req) {
                 @Override
