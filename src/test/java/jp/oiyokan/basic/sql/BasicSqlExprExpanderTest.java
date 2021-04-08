@@ -30,7 +30,7 @@ import org.junit.jupiter.api.Test;
 import jp.oiyokan.OiyokanCsdlEntityContainer;
 import jp.oiyokan.OiyokanCsdlEntitySet;
 import jp.oiyokan.OiyokanEdmProvider;
-import jp.oiyokan.util.OiyokanTestUtil;
+import jp.oiyokan.basic.BasicUrlUtil;
 
 /**
  * TinyH2SqlExprExpanderのテスト.
@@ -77,19 +77,19 @@ class BasicSqlExprExpanderTest {
     @Test
     void test01() throws Exception {
         assertEquals("(ID = 1.0)", getExprString("/ODataTests1", //
-                OiyokanTestUtil.encodeUrlQuery("$filter=ID eq 1.0")));
+                BasicUrlUtil.encodeUrlQuery("$filter=ID eq 1.0")));
     }
 
     @Test
     void test02() throws Exception {
         assertEquals("((Description = ?) AND (ID = 2.0))", getExprString("/ODataTests1", //
-                OiyokanTestUtil.encodeUrlQuery("$filter=Description eq 'Mac' and ID eq 2.0")));
+                BasicUrlUtil.encodeUrlQuery("$filter=Description eq 'Mac' and ID eq 2.0")));
     }
 
     @Test
     void test03() throws Exception {
         assertEquals("((INSTR(Description,?) - 1) <> ?)", getExprString("/ODataTests1", //
-                OiyokanTestUtil.encodeUrlQuery(
+                BasicUrlUtil.encodeUrlQuery(
                         "$top=51&$filter= indexof(Description,'増殖タブレット7') ne -1 &$orderby=ID &$count=true &$select=Description,ID,Name")));
     }
 }

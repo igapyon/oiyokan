@@ -52,7 +52,7 @@
 			"type": "MSSQL2008",
 			"description": "Sample MS SQL Server 2008 settings. Change the settings to suit your environment.",
 			"jdbcDriver": "com.microsoft.sqlserver.jdbc.SQLServerDriver",
-			"jdbcUrl": "jdbc:sqlserver://localhost\\SQLExpress;SelectMethod=cursor",
+			"jdbcUrl": "jdbc:sqlserver://localhost:1433;databaseName=SQLExpress;SelectMethod=cursor",
 			"jdbcUser": "sa",
 			"jdbcPass": "passwd123"
 		},
