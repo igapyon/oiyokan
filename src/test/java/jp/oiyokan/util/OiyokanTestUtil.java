@@ -15,6 +15,7 @@ import org.apache.olingo.server.api.ServiceMetadata;
 
 import jp.oiyokan.OiyokanEdmProvider;
 import jp.oiyokan.OiyokanEntityCollectionProcessor;
+import jp.oiyokan.OiyokanEntityProcessor;
 
 /**
  * Utility class for OData test
@@ -27,7 +28,9 @@ public class OiyokanTestUtil {
         req.setRawBaseUri("http://localhost:8080/odata4.svc");
         req.setRawODataPath(rawODataPath);
         req.setRawQueryPath(rawQueryPath);
-        req.setRawRequestUri(req.getRawBaseUri() + req.getRawODataPath() + "?" + req.getRawQueryPath());
+        req.setRawRequestUri(req.getRawBaseUri() + req.getRawODataPath() //
+                + (rawQueryPath != null && rawQueryPath.trim().length() > 0 ? "?" : "") //
+                + req.getRawQueryPath());
 
         return handler.process(req);
     }
@@ -41,6 +44,10 @@ public class OiyokanTestUtil {
 
         // EntityCollectionProcessor を登録.
         handler.register(new OiyokanEntityCollectionProcessor());
+
+        // EntityProcessor を登録.
+        handler.register(new OiyokanEntityProcessor());
+
         return handler;
     }
 

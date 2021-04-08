@@ -39,12 +39,24 @@ class TestDbCallAppInfoTest {
     }
 
     @Test
-    void testString() throws Exception {
+    void testFilter() throws Exception {
         final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/Oiyokans",
                 "$filter=KeyName%20eq%20%27Provider%27");
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         // System.err.println("result: " + result);
+        assertEquals(
+                "{\"@odata.context\":\"$metadata#Oiyokans\",\"value\":[{\"KeyName\":\"Provider\",\"KeyValue\":\"Oiyokan\"}]}",
+                result);
+        assertEquals(200, resp.getStatusCode());
+    }
+
+    @Test
+    void testEntity() throws Exception {
+        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/Oiyokans('Provider')", null);
+        final String result = OiyokanTestUtil.stream2String(resp.getContent());
+
+        System.err.println("result: " + result);
         assertEquals(
                 "{\"@odata.context\":\"$metadata#Oiyokans\",\"value\":[{\"KeyName\":\"Provider\",\"KeyValue\":\"Oiyokan\"}]}",
                 result);

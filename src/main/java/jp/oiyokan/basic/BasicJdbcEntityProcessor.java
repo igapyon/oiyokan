@@ -49,7 +49,7 @@ public class BasicJdbcEntityProcessor {
         }
 
         for (UriParameter look : keyPredicates) {
-            System.err.println("UriParameter: " + look.toString());
+            System.err.println("UriParameter: " + look.getName());
             System.err.println("UriParameter: " + look.getText());
         }
 
