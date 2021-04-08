@@ -158,6 +158,7 @@ public class BasicJdbcEntityProcessor {
             sqlInfo.getSqlBuilder().append(param.getName());
             sqlInfo.getSqlBuilder().append(" = ");
 
+            // TODO FIXME この記述を EntityCollectionBuilderと共通化すること。
             CsdlProperty csdlProp = sqlInfo.getEntitySet().getEntityType().getProperty(param.getName());
             if ("Edm.SByte".equals(csdlProp.getType())) {
                 Byte look = Byte.valueOf(param.getText());
