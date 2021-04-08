@@ -354,6 +354,7 @@ public class BasicSqlExprExpander {
         if (EdmTimeOfDay.getInstance() == impl.getType()) {
             if (IS_DEBUG_EXPAND_LITERAL)
                 System.err.println("TRACE: EdmTimeOfDay: " + impl.getText());
+            // TODO FIXME NOT IMPLEMENTED
         }
         if (EdmString.getInstance() == impl.getType()) {
             if (IS_DEBUG_EXPAND_LITERAL)
