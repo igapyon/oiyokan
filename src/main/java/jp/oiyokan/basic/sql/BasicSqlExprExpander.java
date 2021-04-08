@@ -264,6 +264,7 @@ public class BasicSqlExprExpander {
             sqlInfo.getSqlBuilder().append("null");
             return;
         }
+        // TODO FIXME この記述を BasicJdbcUtil.buildLiteralOrPlaceholderで共通化すること。
         if (EdmSByte.getInstance() == impl.getType()) {
             if (IS_DEBUG_EXPAND_LITERAL)
                 System.err.println("TRACE: EdmSByte: " + impl.getText());
