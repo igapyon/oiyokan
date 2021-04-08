@@ -217,19 +217,34 @@ public class BasicJdbcEntityCollectionBuilder implements OiyokanEntityCollection
                 } else {
                     // キーが存在する場合は、IDとして設定。
                     OiyokanCsdlEntitySet iyoEntitySet = (OiyokanCsdlEntitySet) entitySet;
-                    String keyValue = "";
-                    for (CsdlPropertyRef look : iyoEntitySet.getEntityType().getKey()) {
-                        if (keyValue.length() > 0) {
-                            keyValue += "-";
+                    if (iyoEntitySet.getEntityType().getKey().size() == 1) {
+                        // 単一キー
+                        final Property prop = ent.getProperty(iyoEntitySet.getEntityType().getKey().get(0).getName());
+                        String idVal = prop.getValue().toString();
+                        if ("Edm.String".equals(prop.getType())) {
+                            idVal = "'" + idVal + "'";
                         }
-
-                        String idVal = rset.getString(look.getName());
-                        // 未整理の事項。キーの値をエスケープすべきかどうか.
-                        // 現状、スペースとコロンはアンダースコアに置き換え.
-                        idVal = idVal.replaceAll("[' '|':']", "_");
-                        keyValue += idVal;
+                        ent.setId(createId(entitySet.getName(), idVal));
+                    } else {
+                        // 複数キー
+                        String keyString = "";
+                        boolean isFirst = true;
+                        for (CsdlPropertyRef propRef : iyoEntitySet.getEntityType().getKey()) {
+                            if (isFirst) {
+                                isFirst = false;
+                            } else {
+                                keyString += ",";
+                            }
+                            final Property prop = ent.getProperty(propRef.getName());
+                            keyString += prop.getName() + "=";
+                            String idVal = prop.getValue().toString();
+                            if ("Edm.String".equals(prop.getType())) {
+                                idVal = "'" + idVal + "'";
+                            }
+                            keyString += idVal;
+                        }
+                        ent.setId(createId(entitySet.getName(), keyString));
                     }
-                    ent.setId(createId(entitySet.getName(), keyValue));
                 }
 
                 eCollection.getEntities().add(ent);
@@ -247,6 +262,7 @@ public class BasicJdbcEntityCollectionBuilder implements OiyokanEntityCollection
             System.err.println(OiyokanMessages.M036 + ": " + sql + ", " + ex.toString());
             throw new ODataApplicationException(OiyokanMessages.M036 + ": " + sql, 500, Locale.ENGLISH);
         } catch (SQLException ex) {
+            // ex.printStackTrace();
             // [M017] Fail to execute SQL
             System.err.println(OiyokanMessages.M017 + ": " + sql + ", " + ex.toString());
             throw new ODataApplicationException(OiyokanMessages.M017 + ": " + sql, 500, Locale.ENGLISH);
@@ -262,8 +278,9 @@ public class BasicJdbcEntityCollectionBuilder implements OiyokanEntityCollection
      */
     public static URI createId(String entitySetName, Object id) {
         try {
-            final String idString = BasicUrlUtil.encodeUrl4Key(String.valueOf(id));
-            return new URI(entitySetName + "(" + idString + ")");
+            // final String idString = BasicUrlUtil.encodeUrl4Key(String.valueOf(id));
+            // return new URI(entitySetName + "(" + idString + ")");
+            return new URI(entitySetName + "(" + id + ")");
         } catch (URISyntaxException ex) {
             // [M018] UNEXPECTED: Fail to create ID EntitySet name
             System.err.println(OiyokanMessages.M018 + ": " + entitySetName + ": " + ex.toString());

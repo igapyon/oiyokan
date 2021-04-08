@@ -95,6 +95,8 @@ oiyokan プロジェクトは、OData v4 server のシンプルなサンプル(h
 
 ## TODO
 
+- 複数列でユニークな EntitySet サンプルを追加
+- EntitySetごとに canCreate, canUpdate, canDelete のプロパティを追加。
 - Navigation property について調べる。
 - 項目名マッピングを 接続情報または設定情報ごとにロードできるように変更。
 - Oiyokan 設定XMLファイルを分割+重ねがけできるように変更。
