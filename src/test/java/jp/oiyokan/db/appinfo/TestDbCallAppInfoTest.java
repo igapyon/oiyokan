@@ -57,8 +57,7 @@ class TestDbCallAppInfoTest {
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         System.err.println("result: " + result);
-        assertEquals(
-                "{\"@odata.context\":\"$metadata#Oiyokans\",\"value\":[{\"KeyName\":\"Provider\",\"KeyValue\":\"Oiyokan\"}]}",
+        assertEquals("{\"@odata.context\":\"$metadata#Oiyokans\",\"KeyName\":\"Provider\",\"KeyValue\":\"Oiyokan\"}",
                 result);
         assertEquals(200, resp.getStatusCode());
     }

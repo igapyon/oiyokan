@@ -69,7 +69,7 @@ public class OiyokanEntityProcessor implements EntityProcessor {
 
         // 2. retrieve the data from backend
         List<UriParameter> keyPredicates = uriResourceEntitySet.getKeyPredicates();
-        Entity entity = new BasicJdbcEntityProcessor().readEntityData(edmEntitySet, keyPredicates);
+        Entity entity = new BasicJdbcEntityProcessor().readEntityData(uriInfo, edmEntitySet, keyPredicates);
 
         // 3. serialize
         EdmEntityType entityType = edmEntitySet.getEntityType();
