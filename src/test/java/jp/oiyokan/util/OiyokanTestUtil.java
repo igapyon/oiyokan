@@ -16,6 +16,7 @@
 package jp.oiyokan.util;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -85,4 +86,19 @@ public class OiyokanTestUtil {
         }
         return builder.toString();
     }
+
+    public static ODataResponse callRequestPost(String rawODataPath, String bodyJson) throws Exception {
+        final ODataHttpHandler handler = OiyokanTestUtil.getHandler();
+        final ODataRequest req = new ODataRequest();
+        req.setMethod(HttpMethod.POST);
+        req.setRawBaseUri("http://localhost:8080/odata4.svc");
+        req.setRawODataPath(rawODataPath);
+        req.setRawRequestUri(req.getRawBaseUri() + req.getRawODataPath());
+        req.addHeader("Content-type", "application/json");
+
+        req.setBody(new ByteArrayInputStream(bodyJson.getBytes("UTF-8")));
+
+        return handler.process(req);
+    }
+
 }
