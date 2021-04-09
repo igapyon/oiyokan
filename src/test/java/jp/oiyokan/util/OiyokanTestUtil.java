@@ -1,6 +1,22 @@
+/*
+ * Copyright 2021 Toshiki Iga
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package jp.oiyokan.util;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -69,5 +85,37 @@ public class OiyokanTestUtil {
             }
         }
         return builder.toString();
+    }
+
+    /////////////////
+    // INSERT
+
+    public static ODataResponse callRequestPost(String rawODataPath, String bodyJson) throws Exception {
+        final ODataHttpHandler handler = OiyokanTestUtil.getHandler();
+        final ODataRequest req = new ODataRequest();
+        req.setMethod(HttpMethod.POST);
+        req.setRawBaseUri("http://localhost:8080/odata4.svc");
+        req.setRawODataPath(rawODataPath);
+        req.setRawRequestUri(req.getRawBaseUri() + req.getRawODataPath());
+        req.addHeader("Content-type", "application/json; odata.metadata=minimal");
+
+        req.setBody(new ByteArrayInputStream(bodyJson.getBytes("UTF-8")));
+
+        return handler.process(req);
+    }
+
+    /////////////////
+    // DELETE
+
+    public static ODataResponse callRequestDelete(String rawODataPath) throws Exception {
+        final ODataHttpHandler handler = OiyokanTestUtil.getHandler();
+        final ODataRequest req = new ODataRequest();
+        req.setMethod(HttpMethod.DELETE);
+        req.setRawBaseUri("http://localhost:8080/odata4.svc");
+        req.setRawODataPath(rawODataPath);
+        req.setRawRequestUri(req.getRawBaseUri() + req.getRawODataPath());
+        req.addHeader("Content-type", "application/json; odata.metadata=minimal");
+
+        return handler.process(req);
     }
 }

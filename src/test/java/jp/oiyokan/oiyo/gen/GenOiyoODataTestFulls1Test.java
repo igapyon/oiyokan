@@ -18,6 +18,7 @@ package jp.oiyokan.oiyo.gen;
 import java.sql.Connection;
 
 import jp.oiyokan.OiyokanConstants;
+import jp.oiyokan.OiyokanTestConstants;
 import jp.oiyokan.basic.BasicJdbcUtil;
 import jp.oiyokan.data.OiyokanKanDatabase;
 import jp.oiyokan.dto.OiyokanSettingsDatabase;
@@ -32,6 +33,9 @@ class GenOiyoODataTestFulls1Test {
      */
     // @Test
     void test01() throws Exception {
+        if (!OiyokanTestConstants.IS_TEST_ODATATEST)
+            return;
+
         OiyokanSettingsDatabase settingsDatabase = OiyokanSettingsUtil
                 .getOiyokanDatabase(OiyokanConstants.OIYOKAN_INTERNAL_TARGET_DB);
 

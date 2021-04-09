@@ -21,6 +21,7 @@ import org.apache.olingo.server.api.ODataResponse;
 import org.junit.jupiter.api.Test;
 
 import jp.oiyokan.OiyokanConstants;
+import jp.oiyokan.OiyokanTestConstants;
 import jp.oiyokan.util.OiyokanTestUtil;
 
 /**
@@ -29,6 +30,9 @@ import jp.oiyokan.util.OiyokanTestUtil;
 class TestODataBasicAtTestDbTest {
     @Test
     void testSimpleOrderBy() throws Exception {
+        if (!OiyokanTestConstants.IS_TEST_ODATATEST)
+            return;
+
         final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1",
                 "$orderby=ID&$top=1&$select=ID,Name,Description");
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
@@ -41,6 +45,9 @@ class TestODataBasicAtTestDbTest {
 
     @Test
     void testSimpleAllWithoutSelect() throws Exception {
+        if (!OiyokanTestConstants.IS_TEST_ODATATEST)
+            return;
+
         final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1", "$orderby=ID&$top=2");
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
@@ -51,6 +58,9 @@ class TestODataBasicAtTestDbTest {
 
     @Test
     void testSimpleFilter() throws Exception {
+        if (!OiyokanTestConstants.IS_TEST_ODATATEST)
+            return;
+
         final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1",
                 "$top=2&$filter=ID%20eq%205.0&$count=true&$select=ID,Name");
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
@@ -66,6 +76,9 @@ class TestODataBasicAtTestDbTest {
 
     @Test
     void testSimpleSearch() throws Exception {
+        if (!OiyokanTestConstants.IS_TEST_ODATATEST)
+            return;
+
         if (!OiyokanConstants.IS_EXPERIMENTAL_SEARCH_ENABLED) {
             System.err.println("$search はサポート外: テストスキップします.");
             return;

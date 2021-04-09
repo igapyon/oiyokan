@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.apache.olingo.server.api.ODataResponse;
 import org.junit.jupiter.api.Test;
 
+import jp.oiyokan.OiyokanTestConstants;
 import jp.oiyokan.basic.BasicUrlUtil;
 import jp.oiyokan.util.OiyokanTestUtil;
 
@@ -36,9 +37,11 @@ class TestDbCheckNullBehaviorTest {
      */
     @Test
     void test01() throws Exception {
-        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/SklAddresses",
-                BasicUrlUtil.encodeUrlQuery(
-                        "$top=1 &$count=true &$filter=address2 eq null &$select=address_id &$orderby=address_id"));
+        if (!OiyokanTestConstants.IS_TEST_SAKILA)
+            return;
+
+        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/SklAddresses", BasicUrlUtil.encodeUrlQuery(
+                "$top=1 &$count=true &$filter=address2 eq null &$select=address_id &$orderby=address_id"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         // 検索結果が存在するべき。
@@ -55,10 +58,12 @@ class TestDbCheckNullBehaviorTest {
      */
     @Test
     void test02() throws Exception {
+        if (!OiyokanTestConstants.IS_TEST_SAKILA)
+            return;
+
         // NULLの件数をカウント.
-        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/SklAddresses",
-                BasicUrlUtil.encodeUrlQuery(
-                        "$top=1 &$count=true &$filter=null eq address2 &$select=address_id &$orderby=address_id"));
+        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/SklAddresses", BasicUrlUtil.encodeUrlQuery(
+                "$top=1 &$count=true &$filter=null eq address2 &$select=address_id &$orderby=address_id"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         // 検索結果が存在するべき。
@@ -75,10 +80,12 @@ class TestDbCheckNullBehaviorTest {
      */
     @Test
     void test03() throws Exception {
+        if (!OiyokanTestConstants.IS_TEST_SAKILA)
+            return;
+
         // NOT EQUAL NULL の件数をカウント.
-        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/SklAddresses",
-                BasicUrlUtil.encodeUrlQuery(
-                        "$top=1 &$count=true &$filter=address2 ne null &$select=address_id &$orderby=address_id"));
+        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/SklAddresses", BasicUrlUtil.encodeUrlQuery(
+                "$top=1 &$count=true &$filter=address2 ne null &$select=address_id &$orderby=address_id"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         // System.err.println("dec: " + OiyokanTestUtil.decodeUrlQuery(
