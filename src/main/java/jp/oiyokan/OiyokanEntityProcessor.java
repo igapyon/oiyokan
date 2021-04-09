@@ -128,11 +128,6 @@ public class OiyokanEntityProcessor implements EntityProcessor {
         response.setContent(serializedResponse.getContent());
         response.setStatusCode(HttpStatusCode.CREATED.getStatusCode());
         response.setHeader(HttpHeader.CONTENT_TYPE, responseFormat.toContentTypeString());
-
-        // TODO FIXME BigQuery用の実装が必要.
-        // [M999] NOT IMPLEMENTED: Generic NOT implemented message.
-        System.err.println(OiyokanMessages.M999);
-        throw new ODataApplicationException(OiyokanMessages.M999, 500, Locale.ENGLISH);
     }
 
     @Override

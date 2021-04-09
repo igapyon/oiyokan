@@ -16,10 +16,12 @@
 package jp.oiyokan.basic;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.SQLTimeoutException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -31,6 +33,7 @@ import org.apache.olingo.commons.api.edm.provider.CsdlProperty;
 import org.apache.olingo.server.api.ODataApplicationException;
 import org.apache.olingo.server.api.uri.UriInfo;
 import org.apache.olingo.server.api.uri.UriParameter;
+import org.apache.olingo.server.api.uri.queryoption.expression.Expression;
 
 import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanCsdlEntitySet;
@@ -173,6 +176,9 @@ public class BasicJdbcEntityProcessor {
         }
     }
 
+    /////////////////////////
+    // INSERT
+
     public Entity createEntityData(UriInfo uriInfo, EdmEntitySet edmEntitySet, Entity requestEntity)
             throws ODataApplicationException {
         OiyokanEdmProvider provider = new OiyokanEdmProvider();
@@ -197,12 +203,42 @@ public class BasicJdbcEntityProcessor {
         sqlInfo = new BasicSqlInfo(entitySet);
         getInsertIntoDml(edmEntitySet, requestEntity);
 
+        // TODO FIXME 戻り値を受け取ること。
         executeDml();
 
-        // TODO FIXME すぐにはむり return readEntityData(uriInfo, edmEntitySet,
-        // keyPredicates);
-        // TODO FIXME 修正.
-        return null;
+        // TODO FIXME 戻り値を反映させること。
+        final List<UriParameter> keyPredicates = new ArrayList<>();
+        for (Property prop : requestEntity.getProperties()) {
+            UriParameter newParam = new UriParameter() {
+                @Override
+                public String getAlias() {
+                    return null;
+                }
+
+                @Override
+                public String getText() {
+                    return prop.getValue().toString();
+                }
+
+                @Override
+                public Expression getExpression() {
+                    return null;
+                }
+
+                @Override
+                public String getName() {
+                    return prop.getName();
+                }
+
+                @Override
+                public String getReferencedProperty() {
+                    return null;
+                }
+            };
+            keyPredicates.add(newParam);
+        }
+
+        return readEntityData(uriInfo, edmEntitySet, keyPredicates);
     }
 
     private void getInsertIntoDml(EdmEntitySet edmEntitySet, Entity requestEntity) throws ODataApplicationException {
@@ -235,6 +271,11 @@ public class BasicJdbcEntityProcessor {
         sqlInfo.getSqlBuilder().append(")");
     }
 
+    /**
+     * TODO FIXME 自動採集番された項目の値をreturnすること。
+     * 
+     * @throws ODataApplicationException
+     */
     private void executeDml() throws ODataApplicationException {
         // データベースに接続.
         try (Connection connTargetDb = BasicJdbcUtil.getConnection(sqlInfo.getEntitySet().getSettingsDatabase())) {
@@ -260,6 +301,20 @@ public class BasicJdbcEntityProcessor {
                     throw new ODataApplicationException(OiyokanMessages.M036 + ": " + sql, 500, Locale.ENGLISH);
                 }
 
+                // 生成されたキーがあればそれを採用。
+                final ResultSet rsKeys = stmt.getGeneratedKeys();
+                if (rsKeys.next()) {
+                    final ResultSetMetaData rsmetaKeys = rsKeys.getMetaData();
+                    for (int column = 1; column <= rsmetaKeys.getColumnCount(); column++) {
+                        System.out.println(rsKeys.getInt(column));
+
+                        // TODO FIXME メッセージ番号取り直し
+                        // [M999] NOT IMPLEMENTED: Generic NOT implemented message.
+                        System.err.println(OiyokanMessages.M999);
+                        throw new ODataApplicationException(OiyokanMessages.M999, 500, Locale.ENGLISH);
+                    }
+                }
+
                 final long endMillisec = System.currentTimeMillis();
                 if (OiyokanConstants.IS_TRACE_ODATA_V4) {
                     final long elapsed = endMillisec - startMillisec;
@@ -268,10 +323,9 @@ public class BasicJdbcEntityProcessor {
                     }
                 }
             } catch (SQLIntegrityConstraintViolationException ex) {
-                // TODO FIXME メッセージ番号取り直し
-                // [M036] SQL timeout at execute
-                System.err.println(OiyokanMessages.M036 + ": " + sql + ", " + ex.toString());
-                throw new ODataApplicationException(OiyokanMessages.M036 + ": " + sql, 500, Locale.ENGLISH);
+                // [M038] Integrity constraint violation occured. 一位制約違反.
+                System.err.println(OiyokanMessages.M038 + ": " + sql + ", " + ex.toString());
+                throw new ODataApplicationException(OiyokanMessages.M038 + ": " + sql, 500, Locale.ENGLISH);
             } catch (SQLTimeoutException ex) {
                 // TODO FIXME メッセージ番号取り直し
                 // [M036] SQL timeout at execute
