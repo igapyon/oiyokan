@@ -271,6 +271,9 @@ public class BasicJdbcEntityProcessor {
         sqlInfo.getSqlBuilder().append(")");
     }
 
+    ////////////////////////////
+    // EXECUTE DML
+
     /**
      * TODO FIXME 自動採集番された項目の値をreturnすること。
      * 
@@ -281,7 +284,7 @@ public class BasicJdbcEntityProcessor {
         try (Connection connTargetDb = BasicJdbcUtil.getConnection(sqlInfo.getEntitySet().getSettingsDatabase())) {
             final String sql = sqlInfo.getSqlBuilder().toString();
             if (OiyokanConstants.IS_TRACE_ODATA_V4)
-                System.err.println("OData v4: TRACE: SQL insert: " + sql);
+                System.err.println("OData v4: TRACE: SQL exec: " + sql);
 
             final long startMillisec = System.currentTimeMillis();
             try (var stmt = connTargetDb.prepareStatement(sql)) {
@@ -345,6 +348,59 @@ public class BasicJdbcEntityProcessor {
             // [M999] NOT IMPLEMENTED: Generic NOT implemented message.
             System.err.println(OiyokanMessages.M999 + ": " + ex.toString());
             throw new ODataApplicationException(OiyokanMessages.M999, 500, Locale.ENGLISH);
+        }
+    }
+
+    ////////////////////////
+    // DELETE
+
+    public void deleteEntityData(UriInfo uriInfo, EdmEntitySet edmEntitySet, List<UriParameter> keyPredicates)
+            throws ODataApplicationException {
+        OiyokanEdmProvider provider = new OiyokanEdmProvider();
+        if (!edmEntitySet.getEntityContainer().getName().equals(provider.getEntityContainer().getName())) {
+            // Container 名が不一致. 処理せずに戻します.
+            // TODO FIXME 例外.
+            return;
+        }
+
+        OiyokanCsdlEntitySet entitySet = null;
+        for (CsdlEntitySet look : provider.getEntityContainer().getEntitySets()) {
+            if (edmEntitySet.getName().equals(look.getName())) {
+                entitySet = (OiyokanCsdlEntitySet) look;
+                break;
+            }
+        }
+        if (entitySet == null) {
+            // TODO FIXME 例外.
+            return;
+        }
+
+        sqlInfo = new BasicSqlInfo(entitySet);
+        getDeleteDml(edmEntitySet, keyPredicates);
+        executeDml();
+    }
+
+    private void getDeleteDml(EdmEntitySet edmEntitySet, List<UriParameter> keyPredicates)
+            throws ODataApplicationException {
+        sqlInfo.getSqlBuilder().append("DELETE FROM ");
+        // TODO FIXME テーブル名の空白を含むパターンの対応.
+        sqlInfo.getSqlBuilder().append(sqlInfo.getEntitySet().getDbTableNameTargetIyo());
+        sqlInfo.getSqlBuilder().append(" WHERE ");
+        boolean isFirst = true;
+
+        for (UriParameter param : keyPredicates) {
+            if (isFirst) {
+                isFirst = false;
+            } else {
+                sqlInfo.getSqlBuilder().append(" AND ");
+            }
+
+            CsdlProperty csdlProp = sqlInfo.getEntitySet().getEntityType().getProperty(param.getName());
+
+            // TODO 項目名の変形対応。
+            sqlInfo.getSqlBuilder().append(csdlProp.getName());
+            sqlInfo.getSqlBuilder().append(" = ");
+            BasicJdbcUtil.buildLiteralOrPlaceholder(sqlInfo, csdlProp.getType(), param.getText());
         }
     }
 }

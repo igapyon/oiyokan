@@ -87,7 +87,7 @@
 		},
 		{
 			"name": "oiyokan-test-database2",
-			"description": "Oiyokan internal Target Test Entity. Used for build unit test.",
+			"description": "Oiyokan internal Target Test Entity. 複数項目で一意のサンプル.",
 			"entitySetName": "ODataTests2",
 			"entityName": "ODataTest2",
 			"databaseName": "oiyokanInternalTarget",

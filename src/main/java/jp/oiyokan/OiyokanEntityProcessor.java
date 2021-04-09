@@ -142,9 +142,18 @@ public class OiyokanEntityProcessor implements EntityProcessor {
     @Override
     public void deleteEntity(ODataRequest request, ODataResponse response, UriInfo uriInfo)
             throws ODataApplicationException, ODataLibraryException {
-        // TODO FIXME BigQuery用の実装が必要.
-        // [M999] NOT IMPLEMENTED: Generic NOT implemented message.
-        System.err.println(OiyokanMessages.M999);
-        throw new ODataApplicationException(OiyokanMessages.M999, 500, Locale.ENGLISH);
+        // 1. Retrieve the entity set which belongs to the requested entity
+        List<UriResource> resourcePaths = uriInfo.getUriResourceParts();
+        // Note: only in our example we can assume that the first segment is the
+        // EntitySet
+        UriResourceEntitySet uriResourceEntitySet = (UriResourceEntitySet) resourcePaths.get(0);
+        EdmEntitySet edmEntitySet = uriResourceEntitySet.getEntitySet();
+
+        // 2. delete the data in backend
+        List<UriParameter> keyPredicates = uriResourceEntitySet.getKeyPredicates();
+        new BasicJdbcEntityProcessor().deleteEntityData(uriInfo, edmEntitySet, keyPredicates);
+
+        // 3. configure the response object
+        response.setStatusCode(HttpStatusCode.NO_CONTENT.getStatusCode());
     }
 }

@@ -87,6 +87,9 @@ public class OiyokanTestUtil {
         return builder.toString();
     }
 
+    /////////////////
+    // INSERT
+
     public static ODataResponse callRequestPost(String rawODataPath, String bodyJson) throws Exception {
         final ODataHttpHandler handler = OiyokanTestUtil.getHandler();
         final ODataRequest req = new ODataRequest();
@@ -94,11 +97,25 @@ public class OiyokanTestUtil {
         req.setRawBaseUri("http://localhost:8080/odata4.svc");
         req.setRawODataPath(rawODataPath);
         req.setRawRequestUri(req.getRawBaseUri() + req.getRawODataPath());
-        req.addHeader("Content-type", "application/json");
+        req.addHeader("Content-type", "application/json; odata.metadata=minimal");
 
         req.setBody(new ByteArrayInputStream(bodyJson.getBytes("UTF-8")));
 
         return handler.process(req);
     }
 
+    /////////////////
+    // DELETE
+
+    public static ODataResponse callRequestDelete(String rawODataPath) throws Exception {
+        final ODataHttpHandler handler = OiyokanTestUtil.getHandler();
+        final ODataRequest req = new ODataRequest();
+        req.setMethod(HttpMethod.DELETE);
+        req.setRawBaseUri("http://localhost:8080/odata4.svc");
+        req.setRawODataPath(rawODataPath);
+        req.setRawRequestUri(req.getRawBaseUri() + req.getRawODataPath());
+        req.addHeader("Content-type", "application/json; odata.metadata=minimal");
+
+        return handler.process(req);
+    }
 }
