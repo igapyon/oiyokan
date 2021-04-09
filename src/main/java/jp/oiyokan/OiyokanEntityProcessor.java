@@ -17,7 +17,6 @@ package jp.oiyokan;
 
 import java.io.InputStream;
 import java.util.List;
-import java.util.Locale;
 
 import org.apache.olingo.commons.api.data.ContextURL;
 import org.apache.olingo.commons.api.data.Entity;
@@ -25,6 +24,7 @@ import org.apache.olingo.commons.api.edm.EdmEntitySet;
 import org.apache.olingo.commons.api.edm.EdmEntityType;
 import org.apache.olingo.commons.api.format.ContentType;
 import org.apache.olingo.commons.api.http.HttpHeader;
+import org.apache.olingo.commons.api.http.HttpMethod;
 import org.apache.olingo.commons.api.http.HttpStatusCode;
 import org.apache.olingo.server.api.OData;
 import org.apache.olingo.server.api.ODataApplicationException;
@@ -133,10 +133,28 @@ public class OiyokanEntityProcessor implements EntityProcessor {
     @Override
     public void updateEntity(ODataRequest request, ODataResponse response, UriInfo uriInfo, ContentType requestFormat,
             ContentType responseFormat) throws ODataApplicationException, ODataLibraryException {
-        // TODO FIXME BigQuery用の実装が必要.
-        // [M999] NOT IMPLEMENTED: Generic NOT implemented message.
-        System.err.println(OiyokanMessages.M999);
-        throw new ODataApplicationException(OiyokanMessages.M999, 500, Locale.ENGLISH);
+        List<UriResource> resourcePaths = uriInfo.getUriResourceParts();
+
+        // Note: only in our example we can assume that the first segment is the
+        // EntitySet
+        UriResourceEntitySet uriResourceEntitySet = (UriResourceEntitySet) resourcePaths.get(0);
+        EdmEntitySet edmEntitySet = uriResourceEntitySet.getEntitySet();
+
+        // 2. retrieve the data from backend
+        List<UriParameter> keyPredicates = uriResourceEntitySet.getKeyPredicates();
+        // 該当レコードの存在チェック.
+        new BasicJdbcEntityProcessor().readEntityData(uriInfo, edmEntitySet, keyPredicates);
+
+        if (request.getMethod().equals(HttpMethod.PATCH)) {
+            // 指定項目のみ設定
+            // in case of PATCH, the existing property is not touched
+            new BasicJdbcEntityProcessor().updateEntityDataPatch(uriInfo, edmEntitySet, keyPredicates);
+        } else if (request.getMethod().equals(HttpMethod.PUT)) {
+            // 指定項目以外、キー以外は null 設定
+            new BasicJdbcEntityProcessor().updateEntityDataPut(uriInfo, edmEntitySet, keyPredicates);
+        } else {
+            // TODO FIXME これは例外.
+        }
     }
 
     @Override

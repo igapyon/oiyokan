@@ -32,8 +32,11 @@ class TestODataDmlTestDbTest {
      */
     private static final int TEST_ID = 10001;
 
+    /**
+     * CREATE + DELETE
+     */
     @Test
-    void testCreate1() throws Exception {
+    void test01() throws Exception {
         if (!OiyokanTestConstants.IS_TEST_ODATATEST)
             return;
 
@@ -45,6 +48,35 @@ class TestODataDmlTestDbTest {
         String result = OiyokanTestUtil.stream2String(resp.getContent());
         System.err.println(result);
         assertEquals(201, resp.getStatusCode());
+
+        // DELETE
+        resp = OiyokanTestUtil.callRequestDelete("/ODataTests1(" + TEST_ID + ")");
+        assertEquals(204, resp.getStatusCode());
+    }
+
+    /**
+     * CREATE + UPDATE + DELETE
+     */
+    @Test
+    void test02() throws Exception {
+        if (!OiyokanTestConstants.IS_TEST_ODATATEST)
+            return;
+
+        // INSERT + DELETE
+        ODataResponse resp = OiyokanTestUtil.callRequestPost("/ODataTests1", "{\n" //
+                + "  \"ID\":" + TEST_ID + ",\n" //
+                + "  \"Name\":\"Name\",\n" //
+                + "  \"Description\":\"Description\"\n" + "}");
+        String result = OiyokanTestUtil.stream2String(resp.getContent());
+        System.err.println(result);
+        assertEquals(201, resp.getStatusCode());
+
+        // UPDATE (PATCH)
+        resp = OiyokanTestUtil.callRequestPatch("/ODataTests1(" + TEST_ID + ")", "{\n" //
+                + "  \"ID\":" + TEST_ID + ",\n" //
+                + "  \"Name\":\"Name2\",\n" //
+                + "  \"Description\":\"Description2\"\n" + "}");
+        assertEquals(204, resp.getStatusCode());
 
         // DELETE
         resp = OiyokanTestUtil.callRequestDelete("/ODataTests1(" + TEST_ID + ")");

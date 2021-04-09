@@ -403,4 +403,69 @@ public class BasicJdbcEntityProcessor {
             BasicJdbcUtil.buildLiteralOrPlaceholder(sqlInfo, csdlProp.getType(), param.getText());
         }
     }
+
+    ////////////////////////
+    // UPDATE
+
+    public void updateEntityDataPatch(UriInfo uriInfo, EdmEntitySet edmEntitySet, List<UriParameter> keyPredicates)
+            throws ODataApplicationException {
+        OiyokanEdmProvider provider = new OiyokanEdmProvider();
+        if (!edmEntitySet.getEntityContainer().getName().equals(provider.getEntityContainer().getName())) {
+            // Container 名が不一致. 処理せずに戻します.
+            // TODO FIXME 例外.
+            return;
+        }
+
+        OiyokanCsdlEntitySet entitySet = null;
+        for (CsdlEntitySet look : provider.getEntityContainer().getEntitySets()) {
+            if (edmEntitySet.getName().equals(look.getName())) {
+                entitySet = (OiyokanCsdlEntitySet) look;
+                break;
+            }
+        }
+        if (entitySet == null) {
+            // TODO FIXME 例外.
+            return;
+        }
+
+        sqlInfo = new BasicSqlInfo(entitySet);
+        ///////// getDeleteDml(edmEntitySet, keyPredicates);
+        executeDml();
+
+        // TODO FIXME メッセージ番号取り直し
+        // [M999] NOT IMPLEMENTED: Generic NOT implemented message.
+        System.err.println(OiyokanMessages.M999);
+        throw new ODataApplicationException(OiyokanMessages.M999, 500, Locale.ENGLISH);
+    }
+
+    public void updateEntityDataPut(UriInfo uriInfo, EdmEntitySet edmEntitySet, List<UriParameter> keyPredicates)
+            throws ODataApplicationException {
+        OiyokanEdmProvider provider = new OiyokanEdmProvider();
+        if (!edmEntitySet.getEntityContainer().getName().equals(provider.getEntityContainer().getName())) {
+            // Container 名が不一致. 処理せずに戻します.
+            // TODO FIXME 例外.
+            return;
+        }
+
+        OiyokanCsdlEntitySet entitySet = null;
+        for (CsdlEntitySet look : provider.getEntityContainer().getEntitySets()) {
+            if (edmEntitySet.getName().equals(look.getName())) {
+                entitySet = (OiyokanCsdlEntitySet) look;
+                break;
+            }
+        }
+        if (entitySet == null) {
+            // TODO FIXME 例外.
+            return;
+        }
+
+        sqlInfo = new BasicSqlInfo(entitySet);
+        ///////// getDeleteDml(edmEntitySet, keyPredicates);
+        executeDml();
+
+        // TODO FIXME メッセージ番号取り直し
+        // [M999] NOT IMPLEMENTED: Generic NOT implemented message.
+        System.err.println(OiyokanMessages.M999);
+        throw new ODataApplicationException(OiyokanMessages.M999, 500, Locale.ENGLISH);
+    }
 }
