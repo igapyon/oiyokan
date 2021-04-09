@@ -76,7 +76,7 @@ public class BasicJdbcEntityProcessor {
 
                 int idxColumn = 1;
                 for (Object look : sqlInfo.getSqlParamList()) {
-                    System.err.println("TRACE: param: " + look.toString());
+                    // System.err.println("TRACE: param: " + look.toString());
                     BasicJdbcUtil.bindPreparedParameter(stmt, idxColumn++, look);
                 }
 
@@ -150,7 +150,7 @@ public class BasicJdbcEntityProcessor {
             if (isFirst) {
                 isFirst = false;
             } else {
-                sqlInfo.getSqlBuilder().append("AND ");
+                sqlInfo.getSqlBuilder().append(" AND ");
             }
             sqlInfo.getSqlBuilder().append(param.getName());
             sqlInfo.getSqlBuilder().append(" = ");

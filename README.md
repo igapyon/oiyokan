@@ -95,6 +95,7 @@ oiyokan プロジェクトは、OData v4 server のシンプルなサンプル(h
 
 ## TODO
 
+- CHAR固定で後方に半角空白を含むテストデータ・ケースの作成。
 - 複数列でユニークな EntitySet サンプルを追加
 - EntitySetごとに canCreate, canUpdate, canDelete のプロパティを追加。
 - Navigation property について調べる。

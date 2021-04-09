@@ -222,7 +222,7 @@ public class BasicJdbcEntityCollectionBuilder implements OiyokanEntityCollection
                         final Property prop = ent.getProperty(iyoEntitySet.getEntityType().getKey().get(0).getName());
                         String idVal = prop.getValue().toString();
                         if ("Edm.String".equals(prop.getType())) {
-                            idVal = "'" + idVal + "'";
+                            idVal = "'" + BasicUrlUtil.encodeUrl4Key(idVal) + "'";
                         }
                         ent.setId(createId(entitySet.getName(), idVal));
                     } else {
@@ -239,7 +239,7 @@ public class BasicJdbcEntityCollectionBuilder implements OiyokanEntityCollection
                             keyString += prop.getName() + "=";
                             String idVal = prop.getValue().toString();
                             if ("Edm.String".equals(prop.getType())) {
-                                idVal = "'" + idVal + "'";
+                                idVal = "'" + BasicUrlUtil.encodeUrl4Key(idVal) + "'";
                             }
                             keyString += idVal;
                         }
@@ -278,8 +278,7 @@ public class BasicJdbcEntityCollectionBuilder implements OiyokanEntityCollection
      */
     public static URI createId(String entitySetName, Object id) {
         try {
-            // final String idString = BasicUrlUtil.encodeUrl4Key(String.valueOf(id));
-            // return new URI(entitySetName + "(" + idString + ")");
+            // 事前に BasicUrlUtil.encodeUrl4Key() が実施されていること。
             return new URI(entitySetName + "(" + id + ")");
         } catch (URISyntaxException ex) {
             // [M018] UNEXPECTED: Fail to create ID EntitySet name
