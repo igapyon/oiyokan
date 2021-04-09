@@ -19,8 +19,6 @@ import java.sql.Connection;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.SQLTimeoutException;
-import java.sql.Timestamp;
-import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Locale;
 
@@ -38,7 +36,6 @@ import jp.oiyokan.OiyokanCsdlEntitySet;
 import jp.oiyokan.OiyokanEdmProvider;
 import jp.oiyokan.OiyokanMessages;
 import jp.oiyokan.basic.sql.BasicSqlInfo;
-import jp.oiyokan.fromolingo.FromApacheOlingoUtil;
 import jp.oiyokan.settings.OiyokanNamingUtil;
 
 public class BasicJdbcEntityProcessor {
@@ -79,7 +76,7 @@ public class BasicJdbcEntityProcessor {
 
                 int idxColumn = 1;
                 for (Object look : sqlInfo.getSqlParamList()) {
-                    System.err.println("TRACE: param: " + look.toString());
+                    // System.err.println("TRACE: param: " + look.toString());
                     BasicJdbcUtil.bindPreparedParameter(stmt, idxColumn++, look);
                 }
 
@@ -153,76 +150,13 @@ public class BasicJdbcEntityProcessor {
             if (isFirst) {
                 isFirst = false;
             } else {
-                sqlInfo.getSqlBuilder().append("AND ");
+                sqlInfo.getSqlBuilder().append(" AND ");
             }
             sqlInfo.getSqlBuilder().append(param.getName());
             sqlInfo.getSqlBuilder().append(" = ");
 
             CsdlProperty csdlProp = sqlInfo.getEntitySet().getEntityType().getProperty(param.getName());
-            if ("Edm.SByte".equals(csdlProp.getType())) {
-                Byte look = Byte.valueOf(param.getText());
-                sqlInfo.getSqlBuilder().append("?");
-                sqlInfo.getSqlParamList().add(look);
-                continue;
-            } else if ("Edm.Byte".equals(csdlProp.getType())) {
-                Short look = Short.valueOf(param.getText());
-                sqlInfo.getSqlBuilder().append("?");
-                sqlInfo.getSqlParamList().add(look);
-                continue;
-            } else if ("Edm.Int16".equals(csdlProp.getType())) {
-                sqlInfo.getSqlBuilder().append(param.getText());
-                continue;
-            } else if ("Edm.Int32".equals(csdlProp.getType())) {
-                sqlInfo.getSqlBuilder().append(param.getText());
-                continue;
-            } else if ("Edm.Int64".equals(csdlProp.getType())) {
-                sqlInfo.getSqlBuilder().append(param.getText());
-                continue;
-            } else if ("Edm.Decimal".equals(csdlProp.getType())) {
-                sqlInfo.getSqlBuilder().append(param.getText());
-                continue;
-            } else if ("Edm.Boolean".equals(csdlProp.getType())) {
-                sqlInfo.getSqlBuilder().append("?");
-                sqlInfo.getSqlParamList().add(Boolean.valueOf("true".equalsIgnoreCase(param.getText())));
-                continue;
-            } else if ("Edm.Single".equals(csdlProp.getType())) {
-                sqlInfo.getSqlBuilder().append(param.getText());
-                continue;
-            } else if ("Edm.Double".equals(csdlProp.getType())) {
-                sqlInfo.getSqlBuilder().append(param.getText());
-                continue;
-            } else if ("Edm.Date".equals(csdlProp.getType())) {
-                ZonedDateTime zdt = FromApacheOlingoUtil.parseDateString(param.getText());
-                sqlInfo.getSqlBuilder().append("?");
-                Timestamp tstamp = Timestamp.from(zdt.toInstant());
-                sqlInfo.getSqlParamList().add(tstamp);
-                continue;
-            } else if ("Edm.DateTimeOffset".equals(csdlProp.getType())) {
-                ZonedDateTime zdt = FromApacheOlingoUtil.parseZonedDateTime(param.getText());
-                sqlInfo.getSqlBuilder().append("?");
-                Timestamp tstamp = Timestamp.from(zdt.toInstant());
-                sqlInfo.getSqlParamList().add(tstamp);
-                continue;
-            } else if ("Edm.TimeOfDay".equals(csdlProp.getType())) {
-            } else if ("Edm.String".equals(csdlProp.getType())) {
-                String value = param.getText();
-                if (value.startsWith("'") && value.endsWith("'")) {
-                    // 文字列リテラルについては前後のクオートを除去して記憶.
-                    value = value.substring(1, value.length() - 1);
-                }
-                // 文字列リテラルとしてパラメータ化クエリで扱う.
-                sqlInfo.getSqlBuilder().append("?");
-                sqlInfo.getSqlParamList().add(value);
-                continue;
-            } else if ("Edm.Binary".equals(csdlProp.getType())) {
-            } else if ("Edm.Guid".equals(csdlProp.getType())) {
-            } else {
-                sqlInfo.getSqlBuilder().append(param.getText());
-                continue;
-            }
-
-            System.err.println(OiyokanMessages.M999);
-            throw new ODataApplicationException(OiyokanMessages.M999, 500, Locale.ENGLISH);
+            BasicJdbcUtil.buildLiteralOrPlaceholder(sqlInfo, csdlProp.getType(), param.getText());
         }
     }
 

@@ -24,7 +24,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.sql.Types;
+import java.time.ZonedDateTime;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -39,6 +41,7 @@ import jp.oiyokan.OiyokanCsdlEntitySet;
 import jp.oiyokan.OiyokanMessages;
 import jp.oiyokan.basic.sql.BasicSqlInfo;
 import jp.oiyokan.dto.OiyokanSettingsDatabase;
+import jp.oiyokan.fromolingo.FromApacheOlingoUtil;
 import jp.oiyokan.settings.OiyokanNamingUtil;
 
 /**
@@ -376,6 +379,124 @@ public class BasicJdbcUtil {
             throw new ODataApplicationException(OiyokanMessages.M010 + ": " + value.getClass().getCanonicalName(), //
                     500, Locale.ENGLISH);
         }
+    }
+
+    private static final boolean IS_DEBUG_EXPAND_LITERAL = false;
+
+    /**
+     * リテラルまたはプレースホルダーをビルド.
+     * 
+     * @param sqlInfo   SQL info.
+     * @param csdlType  CSDL type.
+     * @param paramText parameter text.
+     * @throws ODataApplicationException ODataアプリ例外が発生した場合.
+     */
+    public static void buildLiteralOrPlaceholder(final BasicSqlInfo sqlInfo, String csdlType, String paramText)
+            throws ODataApplicationException {
+        if ("Edm.SByte".equals(csdlType)) {
+            if (IS_DEBUG_EXPAND_LITERAL)
+                System.err.println("TRACE: EdmSByte: " + paramText);
+            Byte look = Byte.valueOf(paramText);
+            sqlInfo.getSqlBuilder().append("?");
+            sqlInfo.getSqlParamList().add(look);
+            return;
+        } else if ("Edm.Byte".equals(csdlType)) {
+            if (IS_DEBUG_EXPAND_LITERAL)
+                System.err.println("TRACE: EdmByte: " + paramText);
+            // 符号なしByteはJavaには該当する型がないので Shortで代用.
+            Short look = Short.valueOf(paramText);
+            sqlInfo.getSqlBuilder().append("?");
+            sqlInfo.getSqlParamList().add(look);
+            return;
+        } else if ("Edm.Int16".equals(csdlType)) {
+            if (IS_DEBUG_EXPAND_LITERAL)
+                System.err.println("TRACE: EdmInt16: " + paramText);
+            Short look = Short.valueOf(paramText);
+            sqlInfo.getSqlBuilder().append("?");
+            sqlInfo.getSqlParamList().add(look);
+            return;
+        } else if ("Edm.Int32".equals(csdlType)) {
+            if (IS_DEBUG_EXPAND_LITERAL)
+                System.err.println("TRACE: EdmInt32: " + paramText);
+            Integer look = Integer.valueOf(paramText);
+            sqlInfo.getSqlBuilder().append("?");
+            sqlInfo.getSqlParamList().add(look);
+            return;
+        } else if ("Edm.Int64".equals(csdlType)) {
+            if (IS_DEBUG_EXPAND_LITERAL)
+                System.err.println("TRACE: EdmInt64: " + paramText);
+            Long look = Long.valueOf(paramText);
+            sqlInfo.getSqlBuilder().append("?");
+            sqlInfo.getSqlParamList().add(look);
+            return;
+        } else if ("Edm.Decimal".equals(csdlType)) {
+            if (IS_DEBUG_EXPAND_LITERAL)
+                System.err.println("TRACE: EdmDecimal: " + paramText);
+            // 小数点付きの数値はパラメータとしては処理せずにそのまま文字列として連結.
+            sqlInfo.getSqlBuilder().append(paramText);
+            return;
+        } else if ("Edm.Boolean".equals(csdlType)) {
+            if (IS_DEBUG_EXPAND_LITERAL)
+                System.err.println("TRACE: EdmBoolean: " + paramText);
+            sqlInfo.getSqlBuilder().append("?");
+            sqlInfo.getSqlParamList().add(Boolean.valueOf("true".equalsIgnoreCase(paramText)));
+            return;
+        } else if ("Edm.Single".equals(csdlType)) {
+            if (IS_DEBUG_EXPAND_LITERAL)
+                System.err.println("TRACE: EdmSingle: " + paramText);
+            // 小数点付きの数値はパラメータとしては処理せずにそのまま文字列として連結.
+            sqlInfo.getSqlBuilder().append(paramText);
+            return;
+        } else if ("Edm.Double".equals(csdlType)) {
+            if (IS_DEBUG_EXPAND_LITERAL)
+                System.err.println("TRACE: EdmDouble: " + paramText);
+            // 小数点付きの数値はパラメータとしては処理せずにそのまま文字列として連結.
+            sqlInfo.getSqlBuilder().append(paramText);
+            return;
+        } else if ("Edm.Date".equals(csdlType)) {
+            if (IS_DEBUG_EXPAND_LITERAL)
+                System.err.println("TRACE: EdmDate: " + paramText);
+            ZonedDateTime zdt = FromApacheOlingoUtil.parseDateString(paramText);
+            sqlInfo.getSqlBuilder().append("?");
+            Timestamp tstamp = Timestamp.from(zdt.toInstant());
+            sqlInfo.getSqlParamList().add(tstamp);
+            return;
+        } else if ("Edm.DateTimeOffset".equals(csdlType)) {
+            if (IS_DEBUG_EXPAND_LITERAL)
+                System.err.println("TRACE: EdmDateTimeOffset: " + paramText);
+            ZonedDateTime zdt = FromApacheOlingoUtil.parseZonedDateTime(paramText);
+            sqlInfo.getSqlBuilder().append("?");
+            Timestamp tstamp = Timestamp.from(zdt.toInstant());
+            sqlInfo.getSqlParamList().add(tstamp);
+            return;
+        } else if ("Edm.TimeOfDay".equals(csdlType)) {
+            if (IS_DEBUG_EXPAND_LITERAL)
+                System.err.println("TRACE: EdmTimeOfDay: " + paramText);
+            // TODO FIXME NOT IMPLEMENTED
+        } else if ("Edm.String".equals(csdlType)) {
+            if (IS_DEBUG_EXPAND_LITERAL)
+                System.err.println("TRACE: EdmString: " + paramText);
+            String value = paramText;
+            if (value.startsWith("'") && value.endsWith("'")) {
+                // 文字列リテラルについては前後のクオートを除去して記憶.
+                value = value.substring(1, value.length() - 1);
+            }
+            // 文字列リテラルとしてパラメータ化クエリで扱う.
+            sqlInfo.getSqlBuilder().append("?");
+            sqlInfo.getSqlParamList().add(value);
+            return;
+        } else if ("Edm.Binary".equals(csdlType)) {
+        } else if ("Edm.Guid".equals(csdlType)) {
+        } else {
+            sqlInfo.getSqlBuilder().append(paramText);
+            return;
+        }
+
+        // [M037] NOT SUPPORTED: Parameter Type
+        System.err.println(OiyokanMessages.M037 + ": " + csdlType);
+        throw new ODataApplicationException(OiyokanMessages.M037 + ": " + csdlType, //
+                500, Locale.ENGLISH);
+
     }
 
     ////////////////////////////

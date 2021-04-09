@@ -55,6 +55,7 @@ public class OiyokanMessages {
     public static final String M034 = "[M034] ERROR: An unknown field name was specified. The field names are case sensitive. Make sure the Oiyo field name matches the target field name.";
     public static final String M035 = "[M035] SQL timeout at count";
     public static final String M036 = "[M036] SQL timeout at execute";
+    public static final String M037 = "[M037] NOT SUPPORTED: Parameter Type";
 
     ///////////////////
     // Expression
@@ -91,6 +92,11 @@ public class OiyokanMessages {
     public static final String M129 = "[M129] NOT SUPPORTED: BinaryOperatorKind.ADD";
     public static final String M130 = "[M130] NOT SUPPORTED: BinaryOperatorKind.SUB";
     public static final String M131 = "[M131] NOT SUPPORTED: UnaryOperatorKind.MINUS";
+
+    ///////////////////
+    // Entity
+
+    // TBD
 
     /**
      * 手早く未実装マークをつけるためのテンポラリなメッセージ.
