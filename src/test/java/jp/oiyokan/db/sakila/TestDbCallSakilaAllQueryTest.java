@@ -22,6 +22,7 @@ import org.junit.jupiter.api.Test;
 
 import jp.app.ctrl.ThSakilaCtrl;
 import jp.oiyokan.OiyokanConstants;
+import jp.oiyokan.OiyokanTestConstants;
 import jp.oiyokan.util.OiyokanTestUtil;
 
 /**
@@ -30,6 +31,9 @@ import jp.oiyokan.util.OiyokanTestUtil;
 class TestDbCallSakilaAllQueryTest {
     @Test
     void test01() throws Exception {
+        if (!OiyokanTestConstants.IS_TEST_SAKILA)
+            return;
+
         for (String[] entrys : ThSakilaCtrl.ODATA_ENTRY_INFOS) {
             if (entrys[0].indexOf("$search") >= 0) {
                 if (!OiyokanConstants.IS_EXPERIMENTAL_SEARCH_ENABLED) {

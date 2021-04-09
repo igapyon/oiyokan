@@ -24,6 +24,7 @@ import java.sql.ResultSetMetaData;
 import org.junit.jupiter.api.Test;
 
 import jp.oiyokan.OiyokanConstants;
+import jp.oiyokan.OiyokanTestConstants;
 import jp.oiyokan.basic.BasicJdbcUtil;
 import jp.oiyokan.data.OiyokanKanDatabase;
 import jp.oiyokan.settings.OiyokanSettingsUtil;
@@ -34,6 +35,9 @@ import jp.oiyokan.settings.OiyokanSettingsUtil;
 class H2DatabaseTest {
     @Test
     void test01() throws Exception {
+        if (!OiyokanTestConstants.IS_TEST_ODATATEST)
+            return;
+
         try (Connection conn = BasicJdbcUtil
                 .getConnection(OiyokanSettingsUtil.getOiyokanDatabase(OiyokanConstants.OIYOKAN_INTERNAL_TARGET_DB))) {
 
@@ -47,6 +51,9 @@ class H2DatabaseTest {
 
     @Test
     void testo2() throws Exception {
+        if (!OiyokanTestConstants.IS_TEST_ODATATEST)
+            return;
+
         try (Connection conn = BasicJdbcUtil
                 .getConnection(OiyokanSettingsUtil.getOiyokanDatabase(OiyokanConstants.OIYOKAN_INTERNAL_TARGET_DB))) {
 
@@ -72,6 +79,9 @@ class H2DatabaseTest {
      */
     @Test
     void test03() throws Exception {
+        if (!OiyokanTestConstants.IS_TEST_ODATATEST)
+            return;
+
         try (Connection conn = BasicJdbcUtil
                 .getConnection(OiyokanSettingsUtil.getOiyokanDatabase(OiyokanConstants.OIYOKAN_INTERNAL_DB))) {
             // 内部データベースのテーブルをセットアップ.
@@ -99,6 +109,9 @@ class H2DatabaseTest {
      */
     // @Test
     void testListTables() throws Exception {
+        if (!OiyokanTestConstants.IS_TEST_ODATATEST)
+            return;
+
         try (Connection conn = BasicJdbcUtil.getConnection(OiyokanSettingsUtil.getOiyokanDatabase("mysql1"))) {
 
             ResultSet rset = conn.getMetaData().getTables(null, "%", "%", new String[] { "TABLE", "VIEW" });
