@@ -91,41 +91,7 @@ oiyokan プロジェクトは、OData v4 server のシンプルなサンプル(h
 
 - http://www.h2database.com/html/functions.html
 
-# 作業メモ
-
-## TODO
-
-- キリの良いところでふたたび Coverage テストをしたい。
-- Oiyokan coreと、ホームページを駆動するものとを別のリポジトリに分割したい。
-- 文字列から日付を作る処理、タイムゾーンの考慮を再考。
-- TODO などを githubのタスクに展開すること。
-- POSTのトランザクション範囲に間違い。訂正すること。INSERTののち、SELECT絡みで失敗するとOData規約とことなる挙動をしてしまう。
-- POST や PATCH/PUT についてのバリエーションおよび項目値のテストを増やす。
-- テーブル名、項目名にに半角空白を含むテストケースの作成。
-- 自動採番された項目名のテストケースの作成。（というよりも実装がその場所に不足している）
-- CHAR固定で後方に半角空白を含むテストデータ・ケースの作成。
-- 複数列でユニークな EntitySet サンプルを追加
-- EntitySetごとに canCreate, canRead, canUpdate, canDelete のプロパティを追加。
-- Navigation property についての実装。
-- 項目名マッピングを 接続情報または設定情報ごとにロードできるように変更。
-- Oiyokan 設定XMLファイルを分割+重ねがけできるように変更。
-- Sakila DVDレンタルのサンプル (SklActors 等)、ODataTests1 を ON/OFFする手順またはプログラム実装を記述.
-- 時間が9時間ずれる件. タイムゾーンなしDB項目由来。何かの方法にて補正したい.
-- サンプル認証の各種実験。
-- TimeOfDay がテスト不十分.
-- Maven Repository にアップしたい.
-
-## TODO サイトデザイン
-
-- Oiyokan の画像が欲しい
-- Oiyokan の icon 画像が欲しい。
-- favicon.ico ファイルを配置して 404 エラーを解消。
-- OData のサイトに掲載
-- モバイルデバイスから Web サイトにアクセスすると画面が崩れるのを修正。
-- サンプル EntitySet の html説明について Card 型に変更したい (モバイル対応)
-- README に oiyokan-naming-settings.json の記述についての記載を追記.
-
-## その他メモ
+# 仕様メモ
 
 - SQL Server 2008 では $filter で TEXT 型の項目では検索できない。
 - ORACLE では $filter で CLOB 型の項目では検索できない。
