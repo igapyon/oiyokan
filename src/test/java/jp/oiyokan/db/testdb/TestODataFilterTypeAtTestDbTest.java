@@ -201,22 +201,7 @@ class TestODataFilterTypeAtTestDbTest {
             return;
 
         final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1", BasicUrlUtil.encodeUrlQuery(
-                "&$filter=StringVar255 eq 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' or StringVar65535 eq 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' and StringLongVar1 eq 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' or Clob1 eq 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' &$count=true &$select=ID"));
-        final String result = OiyokanTestUtil.stream2String(resp.getContent());
-
-        // System.err.println("result: " + result);
-        assertEquals("{\"@odata.context\":\"$metadata#ODataTests1\",\"@odata.count\":1,\"value\":[{\"ID\":204}]}",
-                result);
-        assertEquals(200, resp.getStatusCode());
-    }
-
-    @Test
-    void testStringVar65535a() throws Exception {
-        if (!OiyokanTestConstants.IS_TEST_ODATATEST)
-            return;
-
-        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1", BasicUrlUtil
-                .encodeUrlQuery("&$filter=StringVar65535 eq 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' &$count=true &$select=ID"));
+                "&$filter=StringVar255 eq 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' or StringVar255 eq 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' and StringLongVar1 eq 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' or Clob1 eq 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' &$count=true &$select=ID"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         // System.err.println("result: " + result);
