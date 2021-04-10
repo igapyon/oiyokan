@@ -422,7 +422,6 @@ public class BasicJdbcEntityProcessor {
             return null;
         }
 
-        OiyokanCsdlEntitySet entitySet = null;
         for (CsdlEntitySet look : provider.getEntityContainer().getEntitySets()) {
             if (edmEntitySet.getName().equals(look.getName())) {
                 return (OiyokanCsdlEntitySet) look;
