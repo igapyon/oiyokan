@@ -188,7 +188,13 @@ public class BasicJdbcEntityProcessor {
 
         // TODO FIXME 戻り値を反映させること。
         final List<UriParameter> keyPredicates = new ArrayList<>();
-        for (Property prop : requestEntity.getProperties()) {
+        OUTERLOOP: for (Property prop : requestEntity.getProperties()) {
+            for (CsdlPropertyRef propKey : entitySet.getEntityType().getKey()) {
+                if (!prop.getName().equals(propKey.getName())) {
+                    break OUTERLOOP;
+                }
+            }
+
             UriParameter newParam = new UriParameter() {
                 @Override
                 public String getAlias() {

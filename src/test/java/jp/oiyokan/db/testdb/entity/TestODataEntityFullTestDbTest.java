@@ -30,7 +30,7 @@ class TestODataEntityFullTestDbTest {
     /**
      * テストデータが利用する ID 範囲。
      */
-    private static final int TEST_ID = 10015;
+    private static final int TEST_ID = 10018;
 
     @Test
     void test01() throws Exception {

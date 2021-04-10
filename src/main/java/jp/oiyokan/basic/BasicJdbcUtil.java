@@ -393,6 +393,11 @@ public class BasicJdbcUtil {
             java.util.Calendar cal = (java.util.Calendar) value;
             java.sql.Date sdate = new java.sql.Date(cal.getTime().getTime());
             stmt.setDate(column, sdate);
+        } else if (value instanceof ZonedDateTime) {
+            ZonedDateTime zdt = (ZonedDateTime) value;
+            java.util.Date look = BasicDateTimeUtil.zonedDateTime2Date(zdt);
+            java.sql.Date sdate = new java.sql.Date(look.getTime());
+            stmt.setDate(column, sdate);
         } else if (value instanceof String) {
             stmt.setString(column, (String) value);
         } else if (value instanceof byte[]) {
@@ -406,7 +411,7 @@ public class BasicJdbcUtil {
         }
     }
 
-    private static final boolean IS_DEBUG_EXPAND_LITERAL = true;
+    private static final boolean IS_DEBUG_EXPAND_LITERAL = false;
 
     /**
      * リテラルまたはプレースホルダーをビルド.
