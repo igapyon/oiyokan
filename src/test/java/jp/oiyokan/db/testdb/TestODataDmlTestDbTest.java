@@ -49,9 +49,15 @@ class TestODataDmlTestDbTest {
         System.err.println(result);
         assertEquals(201, resp.getStatusCode());
 
+        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests3(" + TEST_ID + ")", null);
+        assertEquals(200, resp.getStatusCode());
+
         // DELETE
         resp = OiyokanTestUtil.callRequestDelete("/ODataTests3(" + TEST_ID + ")");
         assertEquals(204, resp.getStatusCode());
+
+        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests3(" + TEST_ID + ")", null);
+        assertEquals(404, resp.getStatusCode());
     }
 
     /**
@@ -71,11 +77,19 @@ class TestODataDmlTestDbTest {
         // System.err.println(result);
         assertEquals(201, resp.getStatusCode());
 
+        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests3(" + TEST_ID + ")", null);
+        result = OiyokanTestUtil.stream2String(resp.getContent());
+        // System.err.println(result);
+        assertEquals(200, resp.getStatusCode());
+
         // UPDATE (PATCH)
         resp = OiyokanTestUtil.callRequestPatch("/ODataTests3(" + TEST_ID + ")", "{\n" //
                 + "  \"Name\":\"Name2\",\n" //
                 + "  \"Description\":\"Description2\"\n" + "}");
         assertEquals(204, resp.getStatusCode());
+
+        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests3(" + TEST_ID + ")", null);
+        assertEquals(200, resp.getStatusCode());
 
         // UPDATE (PUT)
         resp = OiyokanTestUtil.callRequestPut("/ODataTests3(" + TEST_ID + ")", "{\n" //
@@ -83,9 +97,15 @@ class TestODataDmlTestDbTest {
                 + "  \"Description\":\"Description2\"\n" + "}");
         assertEquals(204, resp.getStatusCode());
 
+        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests3(" + TEST_ID + ")", null);
+        assertEquals(200, resp.getStatusCode());
+
         // DELETE
         resp = OiyokanTestUtil.callRequestDelete("/ODataTests3(" + TEST_ID + ")");
         assertEquals(204, resp.getStatusCode());
+
+        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests3(" + TEST_ID + ")", null);
+        assertEquals(404, resp.getStatusCode());
     }
 
     /**
