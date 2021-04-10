@@ -46,7 +46,7 @@ class TestODataEntityDmlTestDbTest {
                 + "  \"Name\":\"Name\",\n" //
                 + "  \"Description\":\"Description\"\n" + "}");
         String result = OiyokanTestUtil.stream2String(resp.getContent());
-        // System.err.println(result);
+        System.err.println("TRACE: " + result);
         assertEquals(201, resp.getStatusCode());
 
         resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests3(" + TEST_ID + ")", null);

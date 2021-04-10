@@ -560,13 +560,24 @@ public class BasicJdbcUtil {
                 sqlInfo.getSqlBuilder().append("?");
                 Timestamp tstamp = Timestamp.from(zdt.toInstant());
                 sqlInfo.getSqlParamList().add(tstamp);
-                return;
             }
+            return;
         }
         if ("Edm.TimeOfDay".equals(csdlType)) {
             if (IS_DEBUG_EXPAND_LITERAL)
                 System.err.println("TRACE: EdmTimeOfDay: " + inputParam);
-            // TODO FIXME NOT IMPLEMENTED
+            if (inputParam instanceof java.sql.Date //
+                    || inputParam instanceof java.util.Date//
+                    || inputParam instanceof java.sql.Time //
+                    || inputParam instanceof java.util.Calendar) {
+                sqlInfo.getSqlBuilder().append("?");
+                sqlInfo.getSqlParamList().add(inputParam);
+            } else {
+                final java.sql.Time look = java.sql.Time.valueOf(String.valueOf(inputParam));
+                sqlInfo.getSqlBuilder().append("?");
+                sqlInfo.getSqlParamList().add(look);
+            }
+            return;
         }
         if ("Edm.String".equals(csdlType)) {
             if (IS_DEBUG_EXPAND_LITERAL)
