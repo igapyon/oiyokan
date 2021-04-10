@@ -74,6 +74,7 @@ public class FromApacheOlingoUtil {
         try {
             date = LocalDate.parse(value);
         } catch (DateTimeParseException ex) {
+            ex.printStackTrace();
             System.err.println("UNEXPECTED: The literal '" + value + "' has illegal content.: " + ex.toString());
             throw new ODataApplicationException("UNEXPECTED: The literal '" + value + "' has illegal content.", 500,
                     Locale.ENGLISH);

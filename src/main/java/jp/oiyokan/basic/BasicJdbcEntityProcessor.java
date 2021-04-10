@@ -19,6 +19,10 @@ import java.sql.Connection;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.SQLTimeoutException;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -110,7 +114,8 @@ public class BasicJdbcEntityProcessor {
             } catch (SQLTimeoutException ex) {
                 // [M208] SQL timeout at execute (readEntity)
                 System.err.println(OiyokanMessages.M208 + ": " + sql + ", " + ex.toString());
-                throw new ODataApplicationException(OiyokanMessages.M208 + ": " + sql, 500, Locale.ENGLISH);
+                throw new ODataApplicationException(OiyokanMessages.M208 + ": " + sql,
+                        HttpStatusCode.REQUEST_TIMEOUT.getStatusCode(), Locale.ENGLISH);
             } catch (SQLException ex) {
                 // [M209] Fail to execute SQL (readEntity)
                 System.err.println(OiyokanMessages.M209 + ": " + sql + ", " + ex.toString());
@@ -192,7 +197,16 @@ public class BasicJdbcEntityProcessor {
 
                 @Override
                 public String getText() {
-                    return String.valueOf(prop.getValue());
+                    // TODO FIXME 型ごとの文字列化処理に改善が必要.
+                    // TODO 共通化
+                    if (prop.getValue() instanceof java.util.Calendar) {
+                        java.util.Calendar cal = (java.util.Calendar) prop.getValue();
+                        Instant instant = cal.toInstant();
+                        ZonedDateTime zdt = ZonedDateTime.ofInstant(instant, ZoneId.systemDefault());
+                        return zdt.format(DateTimeFormatter.ISO_INSTANT);
+                    } else {
+                        return String.valueOf(prop.getValue());
+                    }
                 }
 
                 @Override
