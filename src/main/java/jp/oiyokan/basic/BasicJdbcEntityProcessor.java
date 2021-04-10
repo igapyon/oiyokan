@@ -400,7 +400,7 @@ public class BasicJdbcEntityProcessor {
 
             // TODO 項目名の変形対応。
             sqlInfo.getSqlBuilder().append(csdlProp.getName());
-            sqlInfo.getSqlBuilder().append(" = ");
+            sqlInfo.getSqlBuilder().append("=");
             BasicJdbcUtil.buildLiteralOrPlaceholder(sqlInfo, csdlProp.getType(), param.getText());
         }
     }
@@ -449,7 +449,7 @@ public class BasicJdbcEntityProcessor {
             }
 
             sqlInfo.getSqlBuilder().append(prop.getName());
-            sqlInfo.getSqlBuilder().append(" = ");
+            sqlInfo.getSqlBuilder().append("=");
 
             BasicJdbcUtil.buildLiteralOrPlaceholder(sqlInfo, prop.getType(), prop.getValue().toString());
         }
@@ -464,7 +464,7 @@ public class BasicJdbcEntityProcessor {
                 sqlInfo.getSqlBuilder().append(" AND ");
             }
             sqlInfo.getSqlBuilder().append(param.getName());
-            sqlInfo.getSqlBuilder().append(" = ");
+            sqlInfo.getSqlBuilder().append("=");
 
             CsdlProperty csdlProp = sqlInfo.getEntitySet().getEntityType().getProperty(param.getName());
             BasicJdbcUtil.buildLiteralOrPlaceholder(sqlInfo, csdlProp.getType(), param.getText());
@@ -524,7 +524,7 @@ public class BasicJdbcEntityProcessor {
 
             sqlInfo.getSqlBuilder().append(csdlProp.getName());
 
-            sqlInfo.getSqlBuilder().append(" = ");
+            sqlInfo.getSqlBuilder().append("=");
             Property prop = requestEntity.getProperty(csdlProp.getName());
             if (prop != null) {
                 BasicJdbcUtil.buildLiteralOrPlaceholder(sqlInfo, csdlProp.getType(), prop.getValue().toString());
@@ -544,7 +544,7 @@ public class BasicJdbcEntityProcessor {
                 sqlInfo.getSqlBuilder().append(" AND ");
             }
             sqlInfo.getSqlBuilder().append(param.getName());
-            sqlInfo.getSqlBuilder().append(" = ");
+            sqlInfo.getSqlBuilder().append("=");
 
             CsdlProperty csdlProp = sqlInfo.getEntitySet().getEntityType().getProperty(param.getName());
             BasicJdbcUtil.buildLiteralOrPlaceholder(sqlInfo, csdlProp.getType(), param.getText());
