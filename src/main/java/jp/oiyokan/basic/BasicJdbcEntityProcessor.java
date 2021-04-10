@@ -52,14 +52,15 @@ public class BasicJdbcEntityProcessor {
     /**
      * Read Entity data.
      * 
+     * @param connTargetDb  コネクション.
      * @param uriInfo       URI info.
      * @param edmEntitySet  EdmEntitySet.
      * @param keyPredicates List of UriParameter.
      * @return Entity.
      * @throws ODataApplicationException OData App exception occured.
      */
-    public Entity readEntityData(UriInfo uriInfo, EdmEntitySet edmEntitySet, List<UriParameter> keyPredicates)
-            throws ODataApplicationException {
+    public Entity readEntityData(Connection connTargetDb, UriInfo uriInfo, EdmEntitySet edmEntitySet,
+            List<UriParameter> keyPredicates) throws ODataApplicationException {
         final OiyokanCsdlEntitySet entitySet = findEntitySet(edmEntitySet);
         if (entitySet == null) {
             // [M206] No such EntitySet found (readEntity)
@@ -70,61 +71,54 @@ public class BasicJdbcEntityProcessor {
         sqlInfo = new BasicSqlInfo(entitySet);
         getSelectOneQuery(edmEntitySet, keyPredicates);
 
-        // データベースに接続.
-        try (Connection connTargetDb = BasicJdbcUtil.getConnection(entitySet.getSettingsDatabase())) {
-            final String sql = sqlInfo.getSqlBuilder().toString();
-            if (OiyokanConstants.IS_TRACE_ODATA_V4)
-                System.err.println("OData v4: TRACE: SQL single: " + sql);
+        final String sql = sqlInfo.getSqlBuilder().toString();
+        if (OiyokanConstants.IS_TRACE_ODATA_V4)
+            System.err.println("OData v4: TRACE: SQL single: " + sql);
 
-            final long startMillisec = System.currentTimeMillis();
-            try (var stmt = connTargetDb.prepareStatement(sql)) {
-                // set query timeout
-                stmt.setQueryTimeout(OiyokanConstants.JDBC_STMT_TIMEOUT);
+        final long startMillisec = System.currentTimeMillis();
+        try (var stmt = connTargetDb.prepareStatement(sql)) {
+            // set query timeout
+            stmt.setQueryTimeout(OiyokanConstants.JDBC_STMT_TIMEOUT);
 
-                int idxColumn = 1;
-                for (Object look : sqlInfo.getSqlParamList()) {
-                    BasicJdbcUtil.bindPreparedParameter(stmt, idxColumn++, look);
-                }
-
-                stmt.executeQuery();
-                var rset = stmt.getResultSet();
-                if (!rset.next()) {
-                    // [M207] No such Entity data
-                    System.err.println(OiyokanMessages.M207 + ": " + sql);
-                    throw new ODataApplicationException(OiyokanMessages.M207 + ": " + sql,
-                            HttpStatusCode.NOT_FOUND.getStatusCode(), Locale.ENGLISH);
-                }
-
-                final ResultSetMetaData rsmeta = rset.getMetaData();
-                final Entity ent = new Entity();
-                for (int column = 1; column <= rsmeta.getColumnCount(); column++) {
-                    Property prop = BasicJdbcUtil.resultSet2Property(rset, rsmeta, column, entitySet);
-                    ent.addProperty(prop);
-                }
-
-                final long endMillisec = System.currentTimeMillis();
-                if (OiyokanConstants.IS_TRACE_ODATA_V4) {
-                    final long elapsed = endMillisec - startMillisec;
-                    if (elapsed >= 10) {
-                        System.err.println("OData v4: TRACE: SQL: elapsed: " + (endMillisec - startMillisec));
-                    }
-                }
-
-                return ent;
-            } catch (SQLTimeoutException ex) {
-                // [M208] SQL timeout at execute (readEntity)
-                System.err.println(OiyokanMessages.M208 + ": " + sql + ", " + ex.toString());
-                throw new ODataApplicationException(OiyokanMessages.M208 + ": " + sql,
-                        HttpStatusCode.REQUEST_TIMEOUT.getStatusCode(), Locale.ENGLISH);
-            } catch (SQLException ex) {
-                // [M209] Fail to execute SQL (readEntity)
-                System.err.println(OiyokanMessages.M209 + ": " + sql + ", " + ex.toString());
-                throw new ODataApplicationException(OiyokanMessages.M209 + ": " + sql, 500, Locale.ENGLISH);
+            int idxColumn = 1;
+            for (Object look : sqlInfo.getSqlParamList()) {
+                BasicJdbcUtil.bindPreparedParameter(stmt, idxColumn++, look);
             }
+
+            stmt.executeQuery();
+            var rset = stmt.getResultSet();
+            if (!rset.next()) {
+                // [M207] No such Entity data
+                System.err.println(OiyokanMessages.M207 + ": " + sql);
+                throw new ODataApplicationException(OiyokanMessages.M207 + ": " + sql,
+                        HttpStatusCode.NOT_FOUND.getStatusCode(), Locale.ENGLISH);
+            }
+
+            final ResultSetMetaData rsmeta = rset.getMetaData();
+            final Entity ent = new Entity();
+            for (int column = 1; column <= rsmeta.getColumnCount(); column++) {
+                Property prop = BasicJdbcUtil.resultSet2Property(rset, rsmeta, column, entitySet);
+                ent.addProperty(prop);
+            }
+
+            final long endMillisec = System.currentTimeMillis();
+            if (OiyokanConstants.IS_TRACE_ODATA_V4) {
+                final long elapsed = endMillisec - startMillisec;
+                if (elapsed >= 10) {
+                    System.err.println("OData v4: TRACE: SQL: elapsed: " + (endMillisec - startMillisec));
+                }
+            }
+
+            return ent;
+        } catch (SQLTimeoutException ex) {
+            // [M208] SQL timeout at execute (readEntity)
+            System.err.println(OiyokanMessages.M208 + ": " + sql + ", " + ex.toString());
+            throw new ODataApplicationException(OiyokanMessages.M208 + ": " + sql,
+                    HttpStatusCode.REQUEST_TIMEOUT.getStatusCode(), Locale.ENGLISH);
         } catch (SQLException ex) {
-            // [M210] Database exception occured (readEntity)
-            System.err.println(OiyokanMessages.M210 + ": " + ex.toString());
-            throw new ODataApplicationException(OiyokanMessages.M210, 500, Locale.ENGLISH);
+            // [M209] Fail to execute SQL (readEntity)
+            System.err.println(OiyokanMessages.M209 + ": " + sql + ", " + ex.toString());
+            throw new ODataApplicationException(OiyokanMessages.M209 + ": " + sql, 500, Locale.ENGLISH);
         }
     }
 
@@ -183,58 +177,82 @@ public class BasicJdbcEntityProcessor {
         sqlInfo = new BasicSqlInfo(entitySet);
         getInsertIntoDml(edmEntitySet, requestEntity);
 
-        // TODO FIXME キー自動生成の戻り値を受け取ること。
-        BasicJdbcUtil.executeDml(sqlInfo);
+        // データベースに接続.
+        boolean isTranSuccessed = false;
+        try (Connection connTargetDb = BasicJdbcUtil.getConnection(sqlInfo.getEntitySet().getSettingsDatabase())) {
+            // Set auto commit OFF.
+            connTargetDb.setAutoCommit(false);
+            try {
+                // TODO FIXME キー自動生成の戻り値を受け取ること。
+                BasicJdbcUtil.executeDml(connTargetDb, sqlInfo);
 
-        // TODO FIXME 戻り値を反映させること。
-        final List<UriParameter> keyPredicates = new ArrayList<>();
-        OUTERLOOP: for (Property prop : requestEntity.getProperties()) {
-            for (CsdlPropertyRef propKey : entitySet.getEntityType().getKey()) {
-                if (!prop.getName().equals(propKey.getName())) {
-                    break OUTERLOOP;
-                }
-            }
-
-            UriParameter newParam = new UriParameter() {
-                @Override
-                public String getAlias() {
-                    return null;
-                }
-
-                @Override
-                public String getText() {
-                    // TODO FIXME 型ごとの文字列化処理に改善が必要.
-                    // TODO 共通化
-                    if (prop.getValue() instanceof java.util.Calendar) {
-                        java.util.Calendar cal = (java.util.Calendar) prop.getValue();
-                        Instant instant = cal.toInstant();
-                        ZonedDateTime zdt = ZonedDateTime.ofInstant(instant, ZoneId.systemDefault());
-                        return zdt.format(DateTimeFormatter.ISO_INSTANT);
-                    } else {
-                        return String.valueOf(prop.getValue());
+                // TODO FIXME 戻り値を反映させること。
+                final List<UriParameter> keyPredicates = new ArrayList<>();
+                OUTERLOOP: for (Property prop : requestEntity.getProperties()) {
+                    for (CsdlPropertyRef propKey : entitySet.getEntityType().getKey()) {
+                        if (!prop.getName().equals(propKey.getName())) {
+                            break OUTERLOOP;
+                        }
                     }
+
+                    UriParameter newParam = new UriParameter() {
+                        @Override
+                        public String getAlias() {
+                            return null;
+                        }
+
+                        @Override
+                        public String getText() {
+                            // TODO FIXME 型ごとの文字列化処理に改善が必要.
+                            // TODO 共通化
+                            if (prop.getValue() instanceof java.util.Calendar) {
+                                java.util.Calendar cal = (java.util.Calendar) prop.getValue();
+                                Instant instant = cal.toInstant();
+                                ZonedDateTime zdt = ZonedDateTime.ofInstant(instant, ZoneId.systemDefault());
+                                return zdt.format(DateTimeFormatter.ISO_INSTANT);
+                            } else {
+                                return String.valueOf(prop.getValue());
+                            }
+                        }
+
+                        @Override
+                        public Expression getExpression() {
+                            return null;
+                        }
+
+                        @Override
+                        public String getName() {
+                            return prop.getName();
+                        }
+
+                        @Override
+                        public String getReferencedProperty() {
+                            return null;
+                        }
+                    };
+                    keyPredicates.add(newParam);
                 }
 
-                @Override
-                public Expression getExpression() {
-                    return null;
-                }
+                // 更新後のデータをリロード.
+                Entity result = readEntityData(connTargetDb, uriInfo, edmEntitySet, keyPredicates);
 
-                @Override
-                public String getName() {
-                    return prop.getName();
+                // トランザクションを成功としてマーク.
+                isTranSuccessed = true;
+                return result;
+            } finally {
+                if (isTranSuccessed) {
+                    connTargetDb.commit();
+                } else {
+                    connTargetDb.rollback();
                 }
-
-                @Override
-                public String getReferencedProperty() {
-                    return null;
-                }
-            };
-            keyPredicates.add(newParam);
+                // Set auto commit ON.
+                connTargetDb.setAutoCommit(true);
+            }
+        } catch (SQLException ex) {
+            // [M205] Fail to execute SQL.
+            System.err.println(OiyokanMessages.M205 + ": " + ex.toString());
+            throw new ODataApplicationException(OiyokanMessages.M205, 500, Locale.ENGLISH);
         }
-
-        // 更新後のデータをリロード.
-        return readEntityData(uriInfo, edmEntitySet, keyPredicates);
     }
 
     private void getInsertIntoDml(EdmEntitySet edmEntitySet, Entity requestEntity) throws ODataApplicationException {
@@ -280,7 +298,31 @@ public class BasicJdbcEntityProcessor {
 
         sqlInfo = new BasicSqlInfo(entitySet);
         getDeleteDml(edmEntitySet, keyPredicates);
-        BasicJdbcUtil.executeDml(sqlInfo);
+
+        // データベースに接続.
+        boolean isTranSuccessed = false;
+        try (Connection connTargetDb = BasicJdbcUtil.getConnection(sqlInfo.getEntitySet().getSettingsDatabase())) {
+            // Set auto commit OFF.
+            connTargetDb.setAutoCommit(false);
+            try {
+                BasicJdbcUtil.executeDml(connTargetDb, sqlInfo);
+
+                // トランザクションを成功としてマーク.
+                isTranSuccessed = true;
+            } finally {
+                if (isTranSuccessed) {
+                    connTargetDb.commit();
+                } else {
+                    connTargetDb.rollback();
+                }
+                // Set auto commit ON.
+                connTargetDb.setAutoCommit(true);
+            }
+        } catch (SQLException ex) {
+            // [M205] Fail to execute SQL.
+            System.err.println(OiyokanMessages.M205 + ": " + ex.toString());
+            throw new ODataApplicationException(OiyokanMessages.M205, 500, Locale.ENGLISH);
+        }
     }
 
     private void getDeleteDml(EdmEntitySet edmEntitySet, List<UriParameter> keyPredicates)
@@ -321,7 +363,31 @@ public class BasicJdbcEntityProcessor {
 
         sqlInfo = new BasicSqlInfo(entitySet);
         getUpdatePatchDml(edmEntitySet, keyPredicates, requestEntity);
-        BasicJdbcUtil.executeDml(sqlInfo);
+
+        // データベースに接続.
+        try (Connection connTargetDb = BasicJdbcUtil.getConnection(sqlInfo.getEntitySet().getSettingsDatabase())) {
+            // Set auto commit OFF.
+            connTargetDb.setAutoCommit(false);
+            boolean isTranSuccessed = false;
+            try {
+                BasicJdbcUtil.executeDml(connTargetDb, sqlInfo);
+
+                // トランザクションを成功としてマーク.
+                isTranSuccessed = true;
+            } finally {
+                if (isTranSuccessed) {
+                    connTargetDb.commit();
+                } else {
+                    connTargetDb.rollback();
+                }
+                // Set auto commit ON.
+                connTargetDb.setAutoCommit(true);
+            }
+        } catch (SQLException ex) {
+            // [M205] Fail to execute SQL.
+            System.err.println(OiyokanMessages.M205 + ": " + ex.toString());
+            throw new ODataApplicationException(OiyokanMessages.M205, 500, Locale.ENGLISH);
+        }
     }
 
     private void getUpdatePatchDml(EdmEntitySet edmEntitySet, List<UriParameter> keyPredicates, Entity requestEntity)
@@ -372,7 +438,32 @@ public class BasicJdbcEntityProcessor {
 
         sqlInfo = new BasicSqlInfo(entitySet);
         getUpdatePutDml(edmEntitySet, keyPredicates, requestEntity);
-        BasicJdbcUtil.executeDml(sqlInfo);
+
+        // データベースに接続.
+        try (Connection connTargetDb = BasicJdbcUtil.getConnection(sqlInfo.getEntitySet().getSettingsDatabase())) {
+            // Set auto commit OFF.
+            connTargetDb.setAutoCommit(false);
+            boolean isTranSuccessed = false;
+
+            try {
+                BasicJdbcUtil.executeDml(connTargetDb, sqlInfo);
+
+                // トランザクションを成功としてマーク.
+                isTranSuccessed = true;
+            } finally {
+                if (isTranSuccessed) {
+                    connTargetDb.commit();
+                } else {
+                    connTargetDb.rollback();
+                }
+                // Set auto commit ON.
+                connTargetDb.setAutoCommit(true);
+            }
+        } catch (SQLException ex) {
+            // [M205] Fail to execute SQL.
+            System.err.println(OiyokanMessages.M205 + ": " + ex.toString());
+            throw new ODataApplicationException(OiyokanMessages.M205, 500, Locale.ENGLISH);
+        }
     }
 
     private void getUpdatePutDml(EdmEntitySet edmEntitySet, List<UriParameter> keyPredicates, Entity requestEntity)
@@ -429,7 +520,7 @@ public class BasicJdbcEntityProcessor {
         }
     }
 
-    private static OiyokanCsdlEntitySet findEntitySet(EdmEntitySet edmEntitySet) throws ODataApplicationException {
+    public static OiyokanCsdlEntitySet findEntitySet(EdmEntitySet edmEntitySet) throws ODataApplicationException {
         final OiyokanEdmProvider provider = new OiyokanEdmProvider();
         if (!edmEntitySet.getEntityContainer().getName().equals(provider.getEntityContainer().getName())) {
             // Container 名が不一致. 処理せずに戻します.
