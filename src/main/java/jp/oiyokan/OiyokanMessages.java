@@ -56,7 +56,6 @@ public class OiyokanMessages {
     public static final String M035 = "[M035] SQL timeout at count";
     public static final String M036 = "[M036] SQL timeout at execute";
     public static final String M037 = "[M037] NOT SUPPORTED: Parameter Type";
-    public static final String M038 = "[M038] Integrity constraint violation occured. 一意制約違反.";
 
     ///////////////////
     // Expression

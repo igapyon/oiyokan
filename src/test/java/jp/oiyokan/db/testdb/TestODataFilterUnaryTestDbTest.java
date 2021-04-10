@@ -34,7 +34,7 @@ class TestODataFilterUnaryTestDbTest {
             return;
 
         final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1", BasicUrlUtil
-                .encodeUrlQuery("&$filter=not contains(StringVar65535,'VARCHAR65535') &$count=true &$select=ID"));
+                .encodeUrlQuery("&$filter=not contains(StringVar255,'VARCHAR255') &$count=true &$select=ID"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         // System.err.println("result: " + result);
