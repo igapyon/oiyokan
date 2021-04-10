@@ -58,10 +58,9 @@ public class BasicJdbcEntityProcessor {
             throws ODataApplicationException {
         final OiyokanCsdlEntitySet entitySet = findEntitySet(edmEntitySet);
         if (entitySet == null) {
-            // TODO FIXME メッセージ番号取り直し
-            // [NEW] 該当する EntitySet NOT FOUND (readEntity)
-            System.err.println(OiyokanMessages.M999);
-            throw new ODataApplicationException(OiyokanMessages.M999, 500, Locale.ENGLISH);
+            // [M206] No such EntitySet found (readEntity)
+            System.err.println(OiyokanMessages.M206);
+            throw new ODataApplicationException(OiyokanMessages.M206, 500, Locale.ENGLISH);
         }
 
         sqlInfo = new BasicSqlInfo(entitySet);
@@ -86,10 +85,9 @@ public class BasicJdbcEntityProcessor {
                 stmt.executeQuery();
                 var rset = stmt.getResultSet();
                 if (!rset.next()) {
-                    // TODO FIXME ばんごうとりなおし。
-                    // [NEW] 該当する Entity なし
-                    System.err.println(OiyokanMessages.M036 + ": " + sql);
-                    throw new ODataApplicationException(OiyokanMessages.M036 + ": " + sql + ": 実際には NOT FOUND",
+                    // [M207] No such Entity data
+                    System.err.println(OiyokanMessages.M207 + ": " + sql);
+                    throw new ODataApplicationException(OiyokanMessages.M207 + ": " + sql + ": 実際には NOT FOUND",
                             HttpStatusCode.NOT_FOUND.getStatusCode(), Locale.ENGLISH);
                 }
 
@@ -110,24 +108,19 @@ public class BasicJdbcEntityProcessor {
 
                 return ent;
             } catch (SQLTimeoutException ex) {
-                // TODO
-                // [NEW] SQL timeout at execute (readEntity)
-                System.err.println(OiyokanMessages.M036 + ": " + sql + ", " + ex.toString());
-                throw new ODataApplicationException(OiyokanMessages.M036 + ": " + sql, 500, Locale.ENGLISH);
+                // [M208] SQL timeout at execute (readEntity)
+                System.err.println(OiyokanMessages.M208 + ": " + sql + ", " + ex.toString());
+                throw new ODataApplicationException(OiyokanMessages.M208 + ": " + sql, 500, Locale.ENGLISH);
             } catch (SQLException ex) {
-                // TODO FIXME メッセージ番号取り直し
-                // [NEW] Fail to execute SQL (readEntity)
-                System.err.println(OiyokanMessages.M017 + ": " + sql + ", " + ex.toString());
-                throw new ODataApplicationException(OiyokanMessages.M017 + ": " + sql, 500, Locale.ENGLISH);
+                // [M209] Fail to execute SQL (readEntity)
+                System.err.println(OiyokanMessages.M209 + ": " + sql + ", " + ex.toString());
+                throw new ODataApplicationException(OiyokanMessages.M209 + ": " + sql, 500, Locale.ENGLISH);
             }
 
         } catch (SQLException ex) {
-            // TODO メッセージ処理
-            // [NEW] Database exception occured (readEntity)
-
-            // TODO FIXME メッセージ番号取り直し
-            System.err.println(OiyokanMessages.M999 + ": " + ex.toString());
-            throw new ODataApplicationException(OiyokanMessages.M999, 500, Locale.ENGLISH);
+            // [M210] Database exception occured (readEntity)
+            System.err.println(OiyokanMessages.M210 + ": " + ex.toString());
+            throw new ODataApplicationException(OiyokanMessages.M210, 500, Locale.ENGLISH);
         }
     }
 
@@ -178,10 +171,9 @@ public class BasicJdbcEntityProcessor {
             throws ODataApplicationException {
         final OiyokanCsdlEntitySet entitySet = findEntitySet(edmEntitySet);
         if (entitySet == null) {
-            // TODO FIXME メッセージ番号取り直し
-            // [NEW] 該当する EntitySet NOT FOUND (createEntity)
-            System.err.println(OiyokanMessages.M999);
-            throw new ODataApplicationException(OiyokanMessages.M999, 500, Locale.ENGLISH);
+            // [M211] No such EntitySet found (createEntity)
+            System.err.println(OiyokanMessages.M211);
+            throw new ODataApplicationException(OiyokanMessages.M211, 500, Locale.ENGLISH);
         }
 
         sqlInfo = new BasicSqlInfo(entitySet);
@@ -261,10 +253,9 @@ public class BasicJdbcEntityProcessor {
             throws ODataApplicationException {
         final OiyokanCsdlEntitySet entitySet = findEntitySet(edmEntitySet);
         if (entitySet == null) {
-            // TODO FIXME メッセージ番号取り直し
-            // [NEW] 該当する EntitySet NOT FOUND (deleteEntity)
-            System.err.println(OiyokanMessages.M999);
-            throw new ODataApplicationException(OiyokanMessages.M999, 500, Locale.ENGLISH);
+            // [M212] No such EntitySet found (deleteEntity)
+            System.err.println(OiyokanMessages.M212);
+            throw new ODataApplicationException(OiyokanMessages.M212, 500, Locale.ENGLISH);
         }
 
         sqlInfo = new BasicSqlInfo(entitySet);
@@ -303,10 +294,9 @@ public class BasicJdbcEntityProcessor {
             Entity requestEntity) throws ODataApplicationException {
         final OiyokanCsdlEntitySet entitySet = findEntitySet(edmEntitySet);
         if (entitySet == null) {
-            // TODO FIXME メッセージ番号取り直し
-            // [NEW] 該当する EntitySet NOT FOUND (updateEntity)
-            System.err.println(OiyokanMessages.M999);
-            throw new ODataApplicationException(OiyokanMessages.M999, 500, Locale.ENGLISH);
+            // [M213] No such EntitySet found (updateEntity(PATCH))
+            System.err.println(OiyokanMessages.M213);
+            throw new ODataApplicationException(OiyokanMessages.M213, 500, Locale.ENGLISH);
         }
 
         sqlInfo = new BasicSqlInfo(entitySet);
@@ -355,10 +345,9 @@ public class BasicJdbcEntityProcessor {
             Entity requestEntity) throws ODataApplicationException {
         final OiyokanCsdlEntitySet entitySet = findEntitySet(edmEntitySet);
         if (entitySet == null) {
-            // TODO FIXME メッセージ番号取り直し
-            // [NEW] 該当する EntitySet NOT FOUND (updateEntity(2))
-            System.err.println(OiyokanMessages.M999);
-            throw new ODataApplicationException(OiyokanMessages.M999, 500, Locale.ENGLISH);
+            // [M214] No such EntitySet found (updateEntity(PUT))
+            System.err.println(OiyokanMessages.M214);
+            throw new ODataApplicationException(OiyokanMessages.M214, 500, Locale.ENGLISH);
         }
 
         sqlInfo = new BasicSqlInfo(entitySet);

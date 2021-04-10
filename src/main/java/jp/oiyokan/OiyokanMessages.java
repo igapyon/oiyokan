@@ -102,6 +102,15 @@ public class OiyokanMessages {
     public static final String M203 = "[M203] SQL timeout at execute.";
     public static final String M204 = "[M204] Fail to execute SQL.";
     public static final String M205 = "[M205] Fail to execute SQL.";
+    public static final String M206 = "[M206] No such EntitySet found (readEntity)";
+    public static final String M207 = "[M207] No such Entity data";
+    public static final String M208 = "[M208] SQL timeout at execute (readEntity)";
+    public static final String M209 = "[M209] Fail to execute SQL (readEntity)";
+    public static final String M210 = "[M210] Database exception occured (readEntity)";
+    public static final String M211 = "[M211] No such EntitySet found (createEntity)";
+    public static final String M212 = "[M212] No such EntitySet found (deleteEntity)";
+    public static final String M213 = "[M213] No such EntitySet found (updateEntity(PATCH))";
+    public static final String M214 = "[M214] No such EntitySet found (updateEntity(PUT))";
 
     /**
      * 手早く未実装マークをつけるためのテンポラリなメッセージ.
