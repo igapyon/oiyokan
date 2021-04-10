@@ -1,10 +1,10 @@
 # Oiyokan
 
 Oiyokan is an OData v4 server (provider) SDK for RDB.
-You can use Oiyokan to turn RDBMS into read-only OData v4 services.
+You can use Oiyokan to turn RDBMS into OData v4 services.
 
 - Based on Apache Olingo. Build with Spring Boot, Java, h2.
-- Oiyokan uses JDBC to provide read-only OData v4 access to the RDB.
+- Oiyokan uses JDBC to provide OData v4 access to the RDB.
 - Source code at github, license : Apache License.
 
 ## Supported target RDBMS
