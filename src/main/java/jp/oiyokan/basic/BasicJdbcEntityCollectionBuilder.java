@@ -160,7 +160,8 @@ public class BasicJdbcEntityCollectionBuilder implements OiyokanEntityCollection
         } catch (SQLTimeoutException ex) {
             // [M035] SQL timeout at count
             System.err.println(OiyokanMessages.M035 + ": " + sql + ", " + ex.toString());
-            throw new ODataApplicationException(OiyokanMessages.M035 + ": " + sql,              HttpStatusCode.REQUEST_TIMEOUT.getStatusCode(), Locale.ENGLISH);
+            throw new ODataApplicationException(OiyokanMessages.M035 + ": " + sql,
+                    HttpStatusCode.REQUEST_TIMEOUT.getStatusCode(), Locale.ENGLISH);
         } catch (SQLException ex) {
             // [M015] UNEXPECTED: An error occurred in SQL that counts the number of search
             // results.
@@ -261,7 +262,8 @@ public class BasicJdbcEntityCollectionBuilder implements OiyokanEntityCollection
         } catch (SQLTimeoutException ex) {
             // [M036] SQL timeout at execute
             System.err.println(OiyokanMessages.M036 + ": " + sql + ", " + ex.toString());
-            throw new ODataApplicationException(OiyokanMessages.M036 + ": " + sql,              HttpStatusCode.REQUEST_TIMEOUT.getStatusCode(), Locale.ENGLISH);
+            throw new ODataApplicationException(OiyokanMessages.M036 + ": " + sql,
+                    HttpStatusCode.REQUEST_TIMEOUT.getStatusCode(), Locale.ENGLISH);
         } catch (SQLException ex) {
             // ex.printStackTrace();
             // [M017] Fail to execute SQL

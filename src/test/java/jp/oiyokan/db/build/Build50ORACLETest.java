@@ -18,8 +18,6 @@ package jp.oiyokan.db.build;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import org.junit.jupiter.api.Test;
-
 import jp.oiyokan.basic.BasicJdbcUtil;
 import jp.oiyokan.data.OiyokanResourceSqlUtil;
 import jp.oiyokan.dto.OiyokanSettingsDatabase;
