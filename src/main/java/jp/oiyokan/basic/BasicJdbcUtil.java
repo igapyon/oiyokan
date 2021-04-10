@@ -347,7 +347,11 @@ public class BasicJdbcUtil {
      */
     public static void bindPreparedParameter(PreparedStatement stmt, int column, Object value)
             throws ODataApplicationException, SQLException {
-        if (value instanceof Byte) {
+        if (value == null) {
+            // 仮で文字列設定
+            // TODO FIXME 後で見直し
+            stmt.setNull(column, Types.VARCHAR);
+        } else if (value instanceof Byte) {
             stmt.setByte(column, (Byte) value);
         } else if (value instanceof Short) {
             stmt.setShort(column, (Short) value);
@@ -393,6 +397,12 @@ public class BasicJdbcUtil {
      */
     public static void buildLiteralOrPlaceholder(final BasicSqlInfo sqlInfo, String csdlType, String paramText)
             throws ODataApplicationException {
+        if (paramText == null) {
+            sqlInfo.getSqlBuilder().append("?");
+            sqlInfo.getSqlParamList().add(null);
+            return;
+        }
+
         if ("Edm.SByte".equals(csdlType)) {
             if (IS_DEBUG_EXPAND_LITERAL)
                 System.err.println("TRACE: EdmSByte: " + paramText);

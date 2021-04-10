@@ -30,7 +30,7 @@ class TestODataDmlTestDbTest {
     /**
      * テストデータが利用する ID 範囲。
      */
-    private static final int TEST_ID = 10007;
+    private static final int TEST_ID = 10022;
 
     /**
      * CREATE + DELETE
@@ -41,7 +41,7 @@ class TestODataDmlTestDbTest {
             return;
 
         // INSERT + DELETE
-        ODataResponse resp = OiyokanTestUtil.callRequestPost("/ODataTests1", "{\n" //
+        ODataResponse resp = OiyokanTestUtil.callRequestPost("/ODataTests3", "{\n" //
                 + "  \"ID\":" + TEST_ID + ",\n" //
                 + "  \"Name\":\"Name\",\n" //
                 + "  \"Description\":\"Description\"\n" + "}");
@@ -50,7 +50,7 @@ class TestODataDmlTestDbTest {
         assertEquals(201, resp.getStatusCode());
 
         // DELETE
-        resp = OiyokanTestUtil.callRequestDelete("/ODataTests1(" + TEST_ID + ")");
+        resp = OiyokanTestUtil.callRequestDelete("/ODataTests3(" + TEST_ID + ")");
         assertEquals(204, resp.getStatusCode());
     }
 
@@ -63,7 +63,7 @@ class TestODataDmlTestDbTest {
             return;
 
         // INSERT + DELETE
-        ODataResponse resp = OiyokanTestUtil.callRequestPost("/ODataTests1", "{\n" //
+        ODataResponse resp = OiyokanTestUtil.callRequestPost("/ODataTests3", "{\n" //
                 + "  \"ID\":" + TEST_ID + ",\n" //
                 + "  \"Name\":\"Name\",\n" //
                 + "  \"Description\":\"Description\"\n" + "}");
@@ -72,13 +72,19 @@ class TestODataDmlTestDbTest {
         assertEquals(201, resp.getStatusCode());
 
         // UPDATE (PATCH)
-        resp = OiyokanTestUtil.callRequestPatch("/ODataTests1(" + TEST_ID + ")", "{\n" //
+        resp = OiyokanTestUtil.callRequestPatch("/ODataTests3(" + TEST_ID + ")", "{\n" //
+                + "  \"Name\":\"Name2\",\n" //
+                + "  \"Description\":\"Description2\"\n" + "}");
+        assertEquals(204, resp.getStatusCode());
+
+        // UPDATE (PUT)
+        resp = OiyokanTestUtil.callRequestPut("/ODataTests3(" + TEST_ID + ")", "{\n" //
                 + "  \"Name\":\"Name2\",\n" //
                 + "  \"Description\":\"Description2\"\n" + "}");
         assertEquals(204, resp.getStatusCode());
 
         // DELETE
-        resp = OiyokanTestUtil.callRequestDelete("/ODataTests1(" + TEST_ID + ")");
+        resp = OiyokanTestUtil.callRequestDelete("/ODataTests3(" + TEST_ID + ")");
         assertEquals(204, resp.getStatusCode());
     }
 }
