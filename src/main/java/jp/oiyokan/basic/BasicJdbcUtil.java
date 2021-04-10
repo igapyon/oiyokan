@@ -401,6 +401,8 @@ public class BasicJdbcUtil {
     public static void buildLiteralOrPlaceholder(final BasicSqlInfo sqlInfo, String csdlType, String paramText)
             throws ODataApplicationException {
         if (paramText == null) {
+            if (IS_DEBUG_EXPAND_LITERAL)
+                System.err.println("TRACE: null: ");
             sqlInfo.getSqlBuilder().append("?");
             sqlInfo.getSqlParamList().add(paramText);
             return;
