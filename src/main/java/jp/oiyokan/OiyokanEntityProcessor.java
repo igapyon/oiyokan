@@ -145,16 +145,24 @@ public class OiyokanEntityProcessor implements EntityProcessor {
         // 該当レコードの存在チェック.
         new BasicJdbcEntityProcessor().readEntityData(uriInfo, edmEntitySet, keyPredicates);
 
+        InputStream requestInputStream = request.getBody();
+        ODataDeserializer deserializer = this.odata.createDeserializer(requestFormat);
+        DeserializerResult result = deserializer.entity(requestInputStream, edmEntitySet.getEntityType());
+        final Entity requestEntity = result.getEntity();
+
         if (request.getMethod().equals(HttpMethod.PATCH)) {
             // 指定項目のみ設定
             // in case of PATCH, the existing property is not touched
-            new BasicJdbcEntityProcessor().updateEntityDataPatch(uriInfo, edmEntitySet, keyPredicates);
+            new BasicJdbcEntityProcessor().updateEntityDataPatch(uriInfo, edmEntitySet, keyPredicates, requestEntity);
         } else if (request.getMethod().equals(HttpMethod.PUT)) {
             // 指定項目以外、キー以外は null 設定
-            new BasicJdbcEntityProcessor().updateEntityDataPut(uriInfo, edmEntitySet, keyPredicates);
+            new BasicJdbcEntityProcessor().updateEntityDataPut(uriInfo, edmEntitySet, keyPredicates, requestEntity);
         } else {
             // TODO FIXME これは例外.
         }
+
+        response.setStatusCode(HttpStatusCode.NO_CONTENT.getStatusCode());
+        response.setHeader(HttpHeader.CONTENT_TYPE, responseFormat.toContentTypeString());
     }
 
     @Override

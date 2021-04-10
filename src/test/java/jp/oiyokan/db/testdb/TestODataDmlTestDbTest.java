@@ -30,7 +30,7 @@ class TestODataDmlTestDbTest {
     /**
      * テストデータが利用する ID 範囲。
      */
-    private static final int TEST_ID = 10001;
+    private static final int TEST_ID = 10007;
 
     /**
      * CREATE + DELETE
@@ -73,7 +73,6 @@ class TestODataDmlTestDbTest {
 
         // UPDATE (PATCH)
         resp = OiyokanTestUtil.callRequestPatch("/ODataTests1(" + TEST_ID + ")", "{\n" //
-                + "  \"ID\":" + TEST_ID + ",\n" //
                 + "  \"Name\":\"Name2\",\n" //
                 + "  \"Description\":\"Description2\"\n" + "}");
         assertEquals(204, resp.getStatusCode());

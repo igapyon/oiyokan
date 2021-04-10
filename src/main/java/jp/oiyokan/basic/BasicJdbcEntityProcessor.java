@@ -407,8 +407,8 @@ public class BasicJdbcEntityProcessor {
     ////////////////////////
     // UPDATE
 
-    public void updateEntityDataPatch(UriInfo uriInfo, EdmEntitySet edmEntitySet, List<UriParameter> keyPredicates)
-            throws ODataApplicationException {
+    public void updateEntityDataPatch(UriInfo uriInfo, EdmEntitySet edmEntitySet, List<UriParameter> keyPredicates,
+            Entity requestEntity) throws ODataApplicationException {
         OiyokanEdmProvider provider = new OiyokanEdmProvider();
         if (!edmEntitySet.getEntityContainer().getName().equals(provider.getEntityContainer().getName())) {
             // Container 名が不一致. 処理せずに戻します.
@@ -429,17 +429,49 @@ public class BasicJdbcEntityProcessor {
         }
 
         sqlInfo = new BasicSqlInfo(entitySet);
-        ///////// getDeleteDml(edmEntitySet, keyPredicates);
+        getUpdatePatchDml(edmEntitySet, keyPredicates, requestEntity);
         executeDml();
-
-        // TODO FIXME メッセージ番号取り直し
-        // [M999] NOT IMPLEMENTED: Generic NOT implemented message.
-        System.err.println(OiyokanMessages.M999);
-        throw new ODataApplicationException(OiyokanMessages.M999, 500, Locale.ENGLISH);
     }
 
-    public void updateEntityDataPut(UriInfo uriInfo, EdmEntitySet edmEntitySet, List<UriParameter> keyPredicates)
+    private void getUpdatePatchDml(EdmEntitySet edmEntitySet, List<UriParameter> keyPredicates, Entity requestEntity)
             throws ODataApplicationException {
+        sqlInfo.getSqlBuilder().append("UPDATE ");
+        // TODO FIXME テーブル名の空白を含むパターンの対応.
+        sqlInfo.getSqlBuilder().append(sqlInfo.getEntitySet().getDbTableNameTargetIyo());
+        sqlInfo.getSqlBuilder().append(" SET ");
+        boolean isFirst = true;
+        for (Property prop : requestEntity.getProperties()) {
+            if (isFirst) {
+                isFirst = false;
+            } else {
+                sqlInfo.getSqlBuilder().append(",");
+            }
+
+            sqlInfo.getSqlBuilder().append(prop.getName());
+            sqlInfo.getSqlBuilder().append(" = ");
+
+            BasicJdbcUtil.buildLiteralOrPlaceholder(sqlInfo, prop.getType(), prop.getValue().toString());
+        }
+
+        sqlInfo.getSqlBuilder().append(" WHERE ");
+
+        isFirst = true;
+        for (UriParameter param : keyPredicates) {
+            if (isFirst) {
+                isFirst = false;
+            } else {
+                sqlInfo.getSqlBuilder().append(" AND ");
+            }
+            sqlInfo.getSqlBuilder().append(param.getName());
+            sqlInfo.getSqlBuilder().append(" = ");
+
+            CsdlProperty csdlProp = sqlInfo.getEntitySet().getEntityType().getProperty(param.getName());
+            BasicJdbcUtil.buildLiteralOrPlaceholder(sqlInfo, csdlProp.getType(), param.getText());
+        }
+    }
+
+    public void updateEntityDataPut(UriInfo uriInfo, EdmEntitySet edmEntitySet, List<UriParameter> keyPredicates,
+            Entity requestEntity) throws ODataApplicationException {
         OiyokanEdmProvider provider = new OiyokanEdmProvider();
         if (!edmEntitySet.getEntityContainer().getName().equals(provider.getEntityContainer().getName())) {
             // Container 名が不一致. 処理せずに戻します.
