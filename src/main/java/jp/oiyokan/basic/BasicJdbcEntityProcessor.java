@@ -29,6 +29,7 @@ import org.apache.olingo.commons.api.edm.EdmEntitySet;
 import org.apache.olingo.commons.api.edm.provider.CsdlEntitySet;
 import org.apache.olingo.commons.api.edm.provider.CsdlProperty;
 import org.apache.olingo.commons.api.edm.provider.CsdlPropertyRef;
+import org.apache.olingo.commons.api.http.HttpStatusCode;
 import org.apache.olingo.server.api.ODataApplicationException;
 import org.apache.olingo.server.api.uri.UriInfo;
 import org.apache.olingo.server.api.uri.UriParameter;
@@ -44,6 +45,15 @@ import jp.oiyokan.settings.OiyokanNamingUtil;
 public class BasicJdbcEntityProcessor {
     private BasicSqlInfo sqlInfo;
 
+    /**
+     * Read Entity data.
+     * 
+     * @param uriInfo       URI info.
+     * @param edmEntitySet  EdmEntitySet.
+     * @param keyPredicates List of UriParameter.
+     * @return Entity.
+     * @throws ODataApplicationException OData App exception occured.
+     */
     public Entity readEntityData(UriInfo uriInfo, EdmEntitySet edmEntitySet, List<UriParameter> keyPredicates)
             throws ODataApplicationException {
         final OiyokanCsdlEntitySet entitySet = findEntitySet(edmEntitySet);
@@ -61,7 +71,7 @@ public class BasicJdbcEntityProcessor {
         try (Connection connTargetDb = BasicJdbcUtil.getConnection(entitySet.getSettingsDatabase())) {
             final String sql = sqlInfo.getSqlBuilder().toString();
             if (OiyokanConstants.IS_TRACE_ODATA_V4)
-                System.err.println("OData v4: TRACE: SQL one: " + sql);
+                System.err.println("OData v4: TRACE: SQL single: " + sql);
 
             final long startMillisec = System.currentTimeMillis();
             try (var stmt = connTargetDb.prepareStatement(sql)) {
@@ -70,33 +80,34 @@ public class BasicJdbcEntityProcessor {
 
                 int idxColumn = 1;
                 for (Object look : sqlInfo.getSqlParamList()) {
-                    // System.err.println("TRACE: param: " + look.toString());
                     BasicJdbcUtil.bindPreparedParameter(stmt, idxColumn++, look);
                 }
 
                 stmt.executeQuery();
                 var rset = stmt.getResultSet();
-                ResultSetMetaData rsmeta = null;
-                for (; rset.next();) {
-                    if (rsmeta == null) {
-                        rsmeta = rset.getMetaData();
-                    }
-                    final Entity ent = new Entity();
-                    for (int column = 1; column <= rsmeta.getColumnCount(); column++) {
-                        Property prop = BasicJdbcUtil.resultSet2Property(rset, rsmeta, column, entitySet);
-                        ent.addProperty(prop);
-                    }
-
-                    final long endMillisec = System.currentTimeMillis();
-                    if (OiyokanConstants.IS_TRACE_ODATA_V4) {
-                        final long elapsed = endMillisec - startMillisec;
-                        if (elapsed >= 10) {
-                            System.err.println("OData v4: TRACE: SQL: elapsed: " + (endMillisec - startMillisec));
-                        }
-                    }
-
-                    return ent;
+                if (!rset.next()) {
+                    // TODO FIXME ばんごうとりなおし。
+                    System.err.println(OiyokanMessages.M036 + ": " + sql);
+                    throw new ODataApplicationException(OiyokanMessages.M036 + ": " + sql,
+                            HttpStatusCode.NOT_FOUND.getStatusCode(), Locale.ENGLISH);
                 }
+
+                final ResultSetMetaData rsmeta = rset.getMetaData();
+                final Entity ent = new Entity();
+                for (int column = 1; column <= rsmeta.getColumnCount(); column++) {
+                    Property prop = BasicJdbcUtil.resultSet2Property(rset, rsmeta, column, entitySet);
+                    ent.addProperty(prop);
+                }
+
+                final long endMillisec = System.currentTimeMillis();
+                if (OiyokanConstants.IS_TRACE_ODATA_V4) {
+                    final long elapsed = endMillisec - startMillisec;
+                    if (elapsed >= 10) {
+                        System.err.println("OData v4: TRACE: SQL: elapsed: " + (endMillisec - startMillisec));
+                    }
+                }
+
+                return ent;
             } catch (SQLTimeoutException ex) {
                 // TODO FIXME メッセージ番号取り直し
                 // [M036] SQL timeout at execute
@@ -117,11 +128,6 @@ public class BasicJdbcEntityProcessor {
             System.err.println(OiyokanMessages.M999 + ": " + ex.toString());
             throw new ODataApplicationException(OiyokanMessages.M999, 500, Locale.ENGLISH);
         }
-
-        // TODO FIXME メッセージ番号取り直し
-        // [M999] NOT IMPLEMENTED: Generic NOT implemented message.
-        System.err.println(OiyokanMessages.M999 + ": 終端に到達");
-        throw new ODataApplicationException(OiyokanMessages.M999, 500, Locale.ENGLISH);
     }
 
     /**

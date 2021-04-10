@@ -87,4 +87,16 @@ class TestODataDmlTestDbTest {
         resp = OiyokanTestUtil.callRequestDelete("/ODataTests3(" + TEST_ID + ")");
         assertEquals(204, resp.getStatusCode());
     }
+
+    /**
+     * NOT FOUND
+     */
+    @Test
+    void test03() throws Exception {
+        if (!OiyokanTestConstants.IS_TEST_ODATATEST)
+            return;
+
+        ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests3(9876543)", null);
+        assertEquals(404, resp.getStatusCode());
+    }
 }
