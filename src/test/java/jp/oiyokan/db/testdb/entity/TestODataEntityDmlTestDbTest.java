@@ -46,7 +46,7 @@ class TestODataEntityDmlTestDbTest {
                 + "  \"Name\":\"Name\",\n" //
                 + "  \"Description\":\"Description\"\n" + "}");
         String result = OiyokanTestUtil.stream2String(resp.getContent());
-        System.err.println(result);
+        // System.err.println(result);
         assertEquals(201, resp.getStatusCode());
 
         resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests3(" + TEST_ID + ")", null);
@@ -118,11 +118,6 @@ class TestODataEntityDmlTestDbTest {
 
         ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests3(9876543)", null);
         assertEquals(404, resp.getStatusCode());
-
-        resp = OiyokanTestUtil.callRequestPost("/ODataTests3(9876543)", "{\n" //
-                + "  \"Name\":\"Name2\",\n" //
-                + "  \"Description\":\"Description2\"\n" + "}");
-  //      assertEquals(404, resp.getStatusCode());
 
         resp = OiyokanTestUtil.callRequestPatch("/ODataTests3(9876543)", "{\n" //
                 + "  \"Name\":\"Name2\",\n" //

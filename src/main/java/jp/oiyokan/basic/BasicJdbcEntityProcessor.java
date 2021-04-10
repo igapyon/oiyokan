@@ -87,7 +87,7 @@ public class BasicJdbcEntityProcessor {
                 if (!rset.next()) {
                     // [M207] No such Entity data
                     System.err.println(OiyokanMessages.M207 + ": " + sql);
-                    throw new ODataApplicationException(OiyokanMessages.M207 + ": " + sql + ": 実際には NOT FOUND",
+                    throw new ODataApplicationException(OiyokanMessages.M207 + ": " + sql,
                             HttpStatusCode.NOT_FOUND.getStatusCode(), Locale.ENGLISH);
                 }
 
@@ -214,6 +214,7 @@ public class BasicJdbcEntityProcessor {
             keyPredicates.add(newParam);
         }
 
+        // 更新後のデータをリロード.
         return readEntityData(uriInfo, edmEntitySet, keyPredicates);
     }
 
