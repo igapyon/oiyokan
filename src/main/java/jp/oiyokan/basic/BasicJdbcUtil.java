@@ -36,6 +36,7 @@ import org.apache.olingo.commons.api.data.Property;
 import org.apache.olingo.commons.api.data.ValueType;
 import org.apache.olingo.commons.api.edm.EdmPrimitiveTypeKind;
 import org.apache.olingo.commons.api.edm.provider.CsdlProperty;
+import org.apache.olingo.commons.api.http.HttpStatusCode;
 import org.apache.olingo.server.api.ODataApplicationException;
 import org.springframework.util.StreamUtils;
 
@@ -682,7 +683,8 @@ public class BasicJdbcUtil {
                 if (result != 1) {
                     // [M201] NO record processed. No Entity effects.
                     System.err.println(OiyokanMessages.M201 + ": " + sql);
-                    throw new ODataApplicationException(OiyokanMessages.M201 + ": " + sql, 500, Locale.ENGLISH);
+                    throw new ODataApplicationException(OiyokanMessages.M201 + ": " + sql,
+                            HttpStatusCode.NOT_FOUND.getStatusCode(), Locale.ENGLISH);
                 }
 
                 // 生成されたキーがあればそれを採用。
