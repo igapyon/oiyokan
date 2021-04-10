@@ -140,6 +140,7 @@ public class OiyokanEntityProcessor implements EntityProcessor {
             response.setHeader(HttpHeader.CONTENT_TYPE, responseFormat.toContentTypeString());
 
         } catch (RuntimeException ex) {
+         //   ex.printStackTrace();
             System.err.println("OiyokanEntityProcessor#createEntity: exception: " + ex.toString());
             throw ex;
         }
@@ -158,8 +159,7 @@ public class OiyokanEntityProcessor implements EntityProcessor {
 
             // 2. retrieve the data from backend
             List<UriParameter> keyPredicates = uriResourceEntitySet.getKeyPredicates();
-            // 該当レコードの存在チェック.
-            new BasicJdbcEntityProcessor().readEntityData(uriInfo, edmEntitySet, keyPredicates);
+            // Olingサンプルには記載あったものの、Oiyokanでは該当レコードの存在チェックは実施しない。
 
             InputStream requestInputStream = request.getBody();
             ODataDeserializer deserializer = this.odata.createDeserializer(requestFormat);
@@ -185,7 +185,7 @@ public class OiyokanEntityProcessor implements EntityProcessor {
             response.setHeader(HttpHeader.CONTENT_TYPE, responseFormat.toContentTypeString());
 
         } catch (RuntimeException ex) {
-            ex.printStackTrace();
+            // ex.printStackTrace();
             System.err.println("OiyokanEntityProcessor#updateEntity: exception: " + ex.toString());
             throw ex;
         }
@@ -210,7 +210,7 @@ public class OiyokanEntityProcessor implements EntityProcessor {
             response.setStatusCode(HttpStatusCode.NO_CONTENT.getStatusCode());
 
         } catch (RuntimeException ex) {
-            ex.printStackTrace();
+            // ex.printStackTrace();
             System.err.println("OiyokanEntityProcessor#deleteEntity: exception: " + ex.toString());
             throw ex;
         }
