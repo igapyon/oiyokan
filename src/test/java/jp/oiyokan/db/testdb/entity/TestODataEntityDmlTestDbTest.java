@@ -24,7 +24,7 @@ import jp.oiyokan.OiyokanTestConstants;
 import jp.oiyokan.util.OiyokanTestUtil;
 
 /**
- * フィルタの型に着眼したテスト.
+ * Entityの基本的なテスト.
  */
 class TestODataEntityDmlTestDbTest {
     /**
@@ -46,7 +46,7 @@ class TestODataEntityDmlTestDbTest {
                 + "  \"Name\":\"Name\",\n" //
                 + "  \"Description\":\"Description\"\n" + "}");
         String result = OiyokanTestUtil.stream2String(resp.getContent());
-        System.err.println("TRACE: " + result);
+        // System.err.println("TRACE: " + result);
         assertEquals(201, resp.getStatusCode());
 
         resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests3(" + TEST_ID + ")", null);

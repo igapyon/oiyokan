@@ -24,7 +24,7 @@ import jp.oiyokan.OiyokanTestConstants;
 import jp.oiyokan.util.OiyokanTestUtil;
 
 /**
- * フィルタの型に着眼したテスト.
+ * Entityアクセスのフル桁に着眼したテスト.
  */
 class TestODataEntityFullTestDbTest {
     /**
