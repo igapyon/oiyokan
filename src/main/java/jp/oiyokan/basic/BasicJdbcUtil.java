@@ -664,6 +664,10 @@ public class BasicJdbcUtil {
     public static void executeDml(BasicSqlInfo sqlInfo) throws ODataApplicationException {
         // データベースに接続.
         try (Connection connTargetDb = BasicJdbcUtil.getConnection(sqlInfo.getEntitySet().getSettingsDatabase())) {
+            // Set auto commit OFF.
+            connTargetDb.setAutoCommit(false);
+            boolean isTranSuccessed = false;
+
             final String sql = sqlInfo.getSqlBuilder().toString();
             if (OiyokanConstants.IS_TRACE_ODATA_V4)
                 System.err.println("OData v4: TRACE: SQL exec: " + sql);
@@ -708,6 +712,9 @@ public class BasicJdbcUtil {
                         System.err.println("OData v4: TRACE: SQL: elapsed: " + (endMillisec - startMillisec));
                     }
                 }
+
+                // トランザクションを成功としてマーク.
+                isTranSuccessed = true;
             } catch (SQLIntegrityConstraintViolationException ex) {
                 // [M202] Integrity constraint violation occured (DML). 一意制約違反.
                 System.err.println(OiyokanMessages.M202 + ": " + sql + ", " + ex.toString());
@@ -720,6 +727,14 @@ public class BasicJdbcUtil {
                 // [M204] Fail to execute SQL.
                 System.err.println(OiyokanMessages.M204 + ": " + sql + ", " + ex.toString());
                 throw new ODataApplicationException(OiyokanMessages.M204 + ": " + sql, 500, Locale.ENGLISH);
+            } finally {
+                if (isTranSuccessed) {
+                    connTargetDb.commit();
+                } else {
+                    connTargetDb.rollback();
+                }
+                // Set auto commit ON.
+                connTargetDb.setAutoCommit(true);
             }
         } catch (SQLException ex) {
             // [M205] Fail to execute SQL.

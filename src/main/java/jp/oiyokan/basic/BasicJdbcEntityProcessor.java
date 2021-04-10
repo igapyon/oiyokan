@@ -116,7 +116,6 @@ public class BasicJdbcEntityProcessor {
                 System.err.println(OiyokanMessages.M209 + ": " + sql + ", " + ex.toString());
                 throw new ODataApplicationException(OiyokanMessages.M209 + ": " + sql, 500, Locale.ENGLISH);
             }
-
         } catch (SQLException ex) {
             // [M210] Database exception occured (readEntity)
             System.err.println(OiyokanMessages.M210 + ": " + ex.toString());

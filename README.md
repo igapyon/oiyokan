@@ -96,12 +96,11 @@ oiyokan プロジェクトは、OData v4 server のシンプルなサンプル(h
 ## TODO
 
 - テストテーブルのSTRINGのバリエーションが多すぎる。これは減らす。
-- UPDATE, DELETEは処理なしは404なのか確認。SELECT ONE も404かしら？
+- POST や PATCH/PUT についてのバリエーションおよび項目値のテストを増やす。
 - テーブル名、項目名にに半角空白を含むテストケースの作成。
 - 自動採番された項目名のテストケースの作成。
 - CHAR固定で後方に半角空白を含むテストデータ・ケースの作成。
 - 複数列でユニークな EntitySet サンプルを追加
-- Entity の C_UD について 適切にトランザクション境界を持つように実装。
 - EntitySetごとに canCreate, canRead, canUpdate, canDelete のプロパティを追加。
 - Navigation property についての実装。
 - 項目名マッピングを 接続情報または設定情報ごとにロードできるように変更。
