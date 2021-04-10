@@ -41,13 +41,18 @@ class TestODataEntityCHARTestDbTest {
         ODataResponse resp = OiyokanTestUtil.callRequestPost("/ODataTests3", //
                 "{\n" //
                         + "  \"ID\": " + TEST_ID + ",\n" //
-                        + "  \"Name\": \"Name\",\n" //
-                        + "  \"Description\": \"Description\",\n" //
-                        + "  \"StringChar8\": \"C8\"\n" //
+                        + "  \"Name\": \"左右確認\",\n" //
+                        + "  \"Description\": \"CHARの左右の挙動確認\",\n" //
+                        + "  \"StringChar8\": \"  C456  \"\n" //
                         + "}");
         String result = OiyokanTestUtil.stream2String(resp.getContent());
         System.err.println("TRACE: " + result);
         assertEquals(201, resp.getStatusCode());
+
+        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests3(" + TEST_ID + ")", null);
+        assertEquals(200, resp.getStatusCode());
+        result = OiyokanTestUtil.stream2String(resp.getContent());
+        System.err.println(result);
 
         // DELETE
         resp = OiyokanTestUtil.callRequestDelete("/ODataTests3(" + TEST_ID + ")");
