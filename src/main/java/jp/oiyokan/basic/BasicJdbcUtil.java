@@ -680,9 +680,9 @@ public class BasicJdbcUtil {
 
                 final int result = stmt.executeUpdate();
                 if (result != 1) {
-                    // TODO FIXME メッセージ番号取り直し
-                    System.err.println(OiyokanMessages.M036 + ": " + sql);
-                    throw new ODataApplicationException(OiyokanMessages.M036 + ": " + sql, 500, Locale.ENGLISH);
+                    // [M201] NO record processed. No Entity effects.
+                    System.err.println(OiyokanMessages.M201 + ": " + sql);
+                    throw new ODataApplicationException(OiyokanMessages.M201 + ": " + sql, 500, Locale.ENGLISH);
                 }
 
                 // 生成されたキーがあればそれを採用。
@@ -692,7 +692,7 @@ public class BasicJdbcUtil {
                     for (int column = 1; column <= rsmetaKeys.getColumnCount(); column++) {
                         System.out.println(rsKeys.getInt(column));
 
-                        // TODO FIXME メッセージ番号取り直し
+                        // TODO ここは本当に未実装。
                         // [M999] NOT IMPLEMENTED: Generic NOT implemented message.
                         System.err.println(OiyokanMessages.M999);
                         throw new ODataApplicationException(OiyokanMessages.M999, 500, Locale.ENGLISH);
@@ -707,28 +707,22 @@ public class BasicJdbcUtil {
                     }
                 }
             } catch (SQLIntegrityConstraintViolationException ex) {
-                // [M038] Integrity constraint violation occured. 一位制約違反.
-                System.err.println(OiyokanMessages.M038 + ": " + sql + ", " + ex.toString());
-                throw new ODataApplicationException(OiyokanMessages.M038 + ": " + sql, 500, Locale.ENGLISH);
+                // [M202] Integrity constraint violation occured (DML). 一意制約違反.
+                System.err.println(OiyokanMessages.M202 + ": " + sql + ", " + ex.toString());
+                throw new ODataApplicationException(OiyokanMessages.M202 + ": " + sql, 500, Locale.ENGLISH);
             } catch (SQLTimeoutException ex) {
-                // TODO FIXME メッセージ番号取り直し
-                // [M036] SQL timeout at execute
-                System.err.println(OiyokanMessages.M036 + ": " + sql + ", " + ex.toString());
-                throw new ODataApplicationException(OiyokanMessages.M036 + ": " + sql, 500, Locale.ENGLISH);
+                // [M203] SQL timeout at execute.
+                System.err.println(OiyokanMessages.M203 + ": " + sql + ", " + ex.toString());
+                throw new ODataApplicationException(OiyokanMessages.M203 + ": " + sql, 500, Locale.ENGLISH);
             } catch (SQLException ex) {
-                // TODO FIXME メッセージ番号取り直し
-                // [M017] Fail to execute SQL
-                System.err.println(OiyokanMessages.M017 + ": " + sql + ", " + ex.toString());
-                throw new ODataApplicationException(OiyokanMessages.M017 + ": " + sql, 500, Locale.ENGLISH);
+                // [M204] Fail to execute SQL.
+                System.err.println(OiyokanMessages.M204 + ": " + sql + ", " + ex.toString());
+                throw new ODataApplicationException(OiyokanMessages.M204 + ": " + sql, 500, Locale.ENGLISH);
             }
-
         } catch (SQLException ex) {
-            // TODO メッセージ処理
-
-            // TODO FIXME メッセージ番号取り直し
-            // [M999] NOT IMPLEMENTED: Generic NOT implemented message.
-            System.err.println(OiyokanMessages.M999 + ": " + ex.toString());
-            throw new ODataApplicationException(OiyokanMessages.M999, 500, Locale.ENGLISH);
+            // [M205] Fail to execute SQL.
+            System.err.println(OiyokanMessages.M205 + ": " + ex.toString());
+            throw new ODataApplicationException(OiyokanMessages.M205, 500, Locale.ENGLISH);
         }
     }
 }

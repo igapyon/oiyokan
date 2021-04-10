@@ -97,7 +97,11 @@ public class OiyokanMessages {
     ///////////////////
     // Entity
 
-    // TBD
+    public static final String M201 = "[M201] NO record processed. No Entity effects.";
+    public static final String M202 = "[M202] Integrity constraint violation occured (DML). 一意制約違反.";
+    public static final String M203 = "[M203] SQL timeout at execute.";
+    public static final String M204 = "[M204] Fail to execute SQL.";
+    public static final String M205 = "[M205] Fail to execute SQL.";
 
     /**
      * 手早く未実装マークをつけるためのテンポラリなメッセージ.

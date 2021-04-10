@@ -59,7 +59,7 @@ public class BasicJdbcEntityProcessor {
         final OiyokanCsdlEntitySet entitySet = findEntitySet(edmEntitySet);
         if (entitySet == null) {
             // TODO FIXME メッセージ番号取り直し
-            // [M999] NOT IMPLEMENTED: Generic NOT implemented message.
+            // [NEW] 該当する EntitySet NOT FOUND (readEntity)
             System.err.println(OiyokanMessages.M999);
             throw new ODataApplicationException(OiyokanMessages.M999, 500, Locale.ENGLISH);
         }
@@ -87,8 +87,9 @@ public class BasicJdbcEntityProcessor {
                 var rset = stmt.getResultSet();
                 if (!rset.next()) {
                     // TODO FIXME ばんごうとりなおし。
+                    // [NEW] 該当する Entity なし
                     System.err.println(OiyokanMessages.M036 + ": " + sql);
-                    throw new ODataApplicationException(OiyokanMessages.M036 + ": " + sql,
+                    throw new ODataApplicationException(OiyokanMessages.M036 + ": " + sql + ": 実際には NOT FOUND",
                             HttpStatusCode.NOT_FOUND.getStatusCode(), Locale.ENGLISH);
                 }
 
@@ -109,22 +110,22 @@ public class BasicJdbcEntityProcessor {
 
                 return ent;
             } catch (SQLTimeoutException ex) {
-                // TODO FIXME メッセージ番号取り直し
-                // [M036] SQL timeout at execute
+                // TODO
+                // [NEW] SQL timeout at execute (readEntity)
                 System.err.println(OiyokanMessages.M036 + ": " + sql + ", " + ex.toString());
                 throw new ODataApplicationException(OiyokanMessages.M036 + ": " + sql, 500, Locale.ENGLISH);
             } catch (SQLException ex) {
                 // TODO FIXME メッセージ番号取り直し
-                // [M017] Fail to execute SQL
+                // [NEW] Fail to execute SQL (readEntity)
                 System.err.println(OiyokanMessages.M017 + ": " + sql + ", " + ex.toString());
                 throw new ODataApplicationException(OiyokanMessages.M017 + ": " + sql, 500, Locale.ENGLISH);
             }
 
         } catch (SQLException ex) {
             // TODO メッセージ処理
+            // [NEW] Database exception occured (readEntity)
 
             // TODO FIXME メッセージ番号取り直し
-            // [M999] NOT IMPLEMENTED: Generic NOT implemented message.
             System.err.println(OiyokanMessages.M999 + ": " + ex.toString());
             throw new ODataApplicationException(OiyokanMessages.M999, 500, Locale.ENGLISH);
         }
@@ -178,7 +179,7 @@ public class BasicJdbcEntityProcessor {
         final OiyokanCsdlEntitySet entitySet = findEntitySet(edmEntitySet);
         if (entitySet == null) {
             // TODO FIXME メッセージ番号取り直し
-            // [M999] NOT IMPLEMENTED: Generic NOT implemented message.
+            // [NEW] 該当する EntitySet NOT FOUND (createEntity)
             System.err.println(OiyokanMessages.M999);
             throw new ODataApplicationException(OiyokanMessages.M999, 500, Locale.ENGLISH);
         }
@@ -186,7 +187,7 @@ public class BasicJdbcEntityProcessor {
         sqlInfo = new BasicSqlInfo(entitySet);
         getInsertIntoDml(edmEntitySet, requestEntity);
 
-        // TODO FIXME 戻り値を受け取ること。
+        // TODO FIXME キー自動生成の戻り値を受け取ること。
         BasicJdbcUtil.executeDml(sqlInfo);
 
         // TODO FIXME 戻り値を反映させること。
@@ -261,7 +262,7 @@ public class BasicJdbcEntityProcessor {
         final OiyokanCsdlEntitySet entitySet = findEntitySet(edmEntitySet);
         if (entitySet == null) {
             // TODO FIXME メッセージ番号取り直し
-            // [M999] NOT IMPLEMENTED: Generic NOT implemented message.
+            // [NEW] 該当する EntitySet NOT FOUND (deleteEntity)
             System.err.println(OiyokanMessages.M999);
             throw new ODataApplicationException(OiyokanMessages.M999, 500, Locale.ENGLISH);
         }
@@ -303,7 +304,7 @@ public class BasicJdbcEntityProcessor {
         final OiyokanCsdlEntitySet entitySet = findEntitySet(edmEntitySet);
         if (entitySet == null) {
             // TODO FIXME メッセージ番号取り直し
-            // [M999] NOT IMPLEMENTED: Generic NOT implemented message.
+            // [NEW] 該当する EntitySet NOT FOUND (updateEntity)
             System.err.println(OiyokanMessages.M999);
             throw new ODataApplicationException(OiyokanMessages.M999, 500, Locale.ENGLISH);
         }
@@ -355,7 +356,7 @@ public class BasicJdbcEntityProcessor {
         final OiyokanCsdlEntitySet entitySet = findEntitySet(edmEntitySet);
         if (entitySet == null) {
             // TODO FIXME メッセージ番号取り直し
-            // [M999] NOT IMPLEMENTED: Generic NOT implemented message.
+            // [NEW] 該当する EntitySet NOT FOUND (updateEntity(2))
             System.err.println(OiyokanMessages.M999);
             throw new ODataApplicationException(OiyokanMessages.M999, 500, Locale.ENGLISH);
         }
@@ -423,7 +424,7 @@ public class BasicJdbcEntityProcessor {
         final OiyokanEdmProvider provider = new OiyokanEdmProvider();
         if (!edmEntitySet.getEntityContainer().getName().equals(provider.getEntityContainer().getName())) {
             // Container 名が不一致. 処理せずに戻します.
-            // TODO FIXME 例外.
+            // 例外処理は呼び出し元で実施.
             return null;
         }
 
@@ -432,6 +433,8 @@ public class BasicJdbcEntityProcessor {
                 return (OiyokanCsdlEntitySet) look;
             }
         }
+
+        // 例外処理は呼び出し元で実施.
         return null;
     }
 }

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jp.oiyokan.db.testdb;
+package jp.oiyokan.db.testdb.entity;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -26,7 +26,7 @@ import jp.oiyokan.util.OiyokanTestUtil;
 /**
  * フィルタの型に着眼したテスト.
  */
-class TestODataDmlTestDbTest {
+class TestODataEntityDmlTestDbTest {
     /**
      * テストデータが利用する ID 範囲。
      */
@@ -117,6 +117,24 @@ class TestODataDmlTestDbTest {
             return;
 
         ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests3(9876543)", null);
+        assertEquals(404, resp.getStatusCode());
+
+        resp = OiyokanTestUtil.callRequestPost("/ODataTests3(9876543)", "{\n" //
+                + "  \"Name\":\"Name2\",\n" //
+                + "  \"Description\":\"Description2\"\n" + "}");
+        assertEquals(404, resp.getStatusCode());
+
+        resp = OiyokanTestUtil.callRequestPatch("/ODataTests3(9876543)", "{\n" //
+                + "  \"Name\":\"Name2\",\n" //
+                + "  \"Description\":\"Description2\"\n" + "}");
+        assertEquals(404, resp.getStatusCode());
+
+        resp = OiyokanTestUtil.callRequestPut("/ODataTests3(9876543)", "{\n" //
+                + "  \"Name\":\"Name2\",\n" //
+                + "  \"Description\":\"Description2\"\n" + "}");
+        assertEquals(404, resp.getStatusCode());
+
+        resp = OiyokanTestUtil.callRequestDelete("/ODataTests3(9876543)");
         assertEquals(404, resp.getStatusCode());
     }
 }
