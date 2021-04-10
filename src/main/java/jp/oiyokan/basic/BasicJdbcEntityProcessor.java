@@ -30,6 +30,7 @@ import org.apache.olingo.commons.api.data.Property;
 import org.apache.olingo.commons.api.edm.EdmEntitySet;
 import org.apache.olingo.commons.api.edm.provider.CsdlEntitySet;
 import org.apache.olingo.commons.api.edm.provider.CsdlProperty;
+import org.apache.olingo.commons.api.edm.provider.CsdlPropertyRef;
 import org.apache.olingo.server.api.ODataApplicationException;
 import org.apache.olingo.server.api.uri.UriInfo;
 import org.apache.olingo.server.api.uri.UriParameter;
@@ -160,7 +161,7 @@ public class BasicJdbcEntityProcessor {
                 sqlInfo.getSqlBuilder().append(" AND ");
             }
             sqlInfo.getSqlBuilder().append(param.getName());
-            sqlInfo.getSqlBuilder().append(" = ");
+            sqlInfo.getSqlBuilder().append("=");
 
             CsdlProperty csdlProp = sqlInfo.getEntitySet().getEntityType().getProperty(param.getName());
             BasicJdbcUtil.buildLiteralOrPlaceholder(sqlInfo, csdlProp.getType(), param.getText());
@@ -399,7 +400,153 @@ public class BasicJdbcEntityProcessor {
 
             // TODO 項目名の変形対応。
             sqlInfo.getSqlBuilder().append(csdlProp.getName());
-            sqlInfo.getSqlBuilder().append(" = ");
+            sqlInfo.getSqlBuilder().append("=");
+            BasicJdbcUtil.buildLiteralOrPlaceholder(sqlInfo, csdlProp.getType(), param.getText());
+        }
+    }
+
+    ////////////////////////
+    // UPDATE
+
+    public void updateEntityDataPatch(UriInfo uriInfo, EdmEntitySet edmEntitySet, List<UriParameter> keyPredicates,
+            Entity requestEntity) throws ODataApplicationException {
+        OiyokanEdmProvider provider = new OiyokanEdmProvider();
+        if (!edmEntitySet.getEntityContainer().getName().equals(provider.getEntityContainer().getName())) {
+            // Container 名が不一致. 処理せずに戻します.
+            // TODO FIXME 例外.
+            return;
+        }
+
+        OiyokanCsdlEntitySet entitySet = null;
+        for (CsdlEntitySet look : provider.getEntityContainer().getEntitySets()) {
+            if (edmEntitySet.getName().equals(look.getName())) {
+                entitySet = (OiyokanCsdlEntitySet) look;
+                break;
+            }
+        }
+        if (entitySet == null) {
+            // TODO FIXME 例外.
+            return;
+        }
+
+        sqlInfo = new BasicSqlInfo(entitySet);
+        getUpdatePatchDml(edmEntitySet, keyPredicates, requestEntity);
+        executeDml();
+    }
+
+    private void getUpdatePatchDml(EdmEntitySet edmEntitySet, List<UriParameter> keyPredicates, Entity requestEntity)
+            throws ODataApplicationException {
+        sqlInfo.getSqlBuilder().append("UPDATE ");
+        // TODO FIXME テーブル名の空白を含むパターンの対応.
+        sqlInfo.getSqlBuilder().append(sqlInfo.getEntitySet().getDbTableNameTargetIyo());
+        sqlInfo.getSqlBuilder().append(" SET ");
+        boolean isFirst = true;
+        for (Property prop : requestEntity.getProperties()) {
+            if (isFirst) {
+                isFirst = false;
+            } else {
+                sqlInfo.getSqlBuilder().append(",");
+            }
+
+            sqlInfo.getSqlBuilder().append(prop.getName());
+            sqlInfo.getSqlBuilder().append("=");
+
+            BasicJdbcUtil.buildLiteralOrPlaceholder(sqlInfo, prop.getType(), prop.getValue().toString());
+        }
+
+        sqlInfo.getSqlBuilder().append(" WHERE ");
+
+        isFirst = true;
+        for (UriParameter param : keyPredicates) {
+            if (isFirst) {
+                isFirst = false;
+            } else {
+                sqlInfo.getSqlBuilder().append(" AND ");
+            }
+            sqlInfo.getSqlBuilder().append(param.getName());
+            sqlInfo.getSqlBuilder().append("=");
+
+            CsdlProperty csdlProp = sqlInfo.getEntitySet().getEntityType().getProperty(param.getName());
+            BasicJdbcUtil.buildLiteralOrPlaceholder(sqlInfo, csdlProp.getType(), param.getText());
+        }
+    }
+
+    public void updateEntityDataPut(UriInfo uriInfo, EdmEntitySet edmEntitySet, List<UriParameter> keyPredicates,
+            Entity requestEntity) throws ODataApplicationException {
+        OiyokanEdmProvider provider = new OiyokanEdmProvider();
+        if (!edmEntitySet.getEntityContainer().getName().equals(provider.getEntityContainer().getName())) {
+            // Container 名が不一致. 処理せずに戻します.
+            // TODO FIXME 例外.
+            return;
+        }
+
+        OiyokanCsdlEntitySet entitySet = null;
+        for (CsdlEntitySet look : provider.getEntityContainer().getEntitySets()) {
+            if (edmEntitySet.getName().equals(look.getName())) {
+                entitySet = (OiyokanCsdlEntitySet) look;
+                break;
+            }
+        }
+        if (entitySet == null) {
+            // TODO FIXME 例外.
+            return;
+        }
+
+        sqlInfo = new BasicSqlInfo(entitySet);
+        getUpdatePutDml(edmEntitySet, keyPredicates, requestEntity);
+        executeDml();
+    }
+
+    private void getUpdatePutDml(EdmEntitySet edmEntitySet, List<UriParameter> keyPredicates, Entity requestEntity)
+            throws ODataApplicationException {
+        sqlInfo.getSqlBuilder().append("UPDATE ");
+        // TODO FIXME テーブル名の空白を含むパターンの対応.
+        sqlInfo.getSqlBuilder().append(sqlInfo.getEntitySet().getDbTableNameTargetIyo());
+        sqlInfo.getSqlBuilder().append(" SET ");
+
+        // primary key 以外の全てが対象。指定のないものは null。
+        final List<CsdlPropertyRef> keys = sqlInfo.getEntitySet().getEntityType().getKey();
+        boolean isFirst = true;
+        CSDL_LOOP: for (CsdlProperty csdlProp : sqlInfo.getEntitySet().getEntityType().getProperties()) {
+            // KEY以外が対象。
+            for (CsdlPropertyRef key : keys) {
+                if (key.getName().equals(csdlProp.getName())) {
+                    // これはキー項目です。処理対象外.
+                    continue CSDL_LOOP;
+                }
+            }
+
+            if (isFirst) {
+                isFirst = false;
+            } else {
+                sqlInfo.getSqlBuilder().append(",");
+            }
+
+            sqlInfo.getSqlBuilder().append(csdlProp.getName());
+
+            sqlInfo.getSqlBuilder().append("=");
+            Property prop = requestEntity.getProperty(csdlProp.getName());
+            if (prop != null) {
+                BasicJdbcUtil.buildLiteralOrPlaceholder(sqlInfo, csdlProp.getType(), prop.getValue().toString());
+            } else {
+                // 指定のないものには nullをセット.
+                BasicJdbcUtil.buildLiteralOrPlaceholder(sqlInfo, csdlProp.getType(), null);
+            }
+        }
+
+        sqlInfo.getSqlBuilder().append(" WHERE ");
+
+        isFirst = true;
+        for (UriParameter param : keyPredicates) {
+            if (isFirst) {
+                isFirst = false;
+            } else {
+                sqlInfo.getSqlBuilder().append(" AND ");
+            }
+            sqlInfo.getSqlBuilder().append(param.getName());
+            sqlInfo.getSqlBuilder().append("=");
+
+            CsdlProperty csdlProp = sqlInfo.getEntitySet().getEntityType().getProperty(param.getName());
             BasicJdbcUtil.buildLiteralOrPlaceholder(sqlInfo, csdlProp.getType(), param.getText());
         }
     }

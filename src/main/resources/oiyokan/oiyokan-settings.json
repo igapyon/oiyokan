@@ -95,6 +95,15 @@
 			"dbTableNameTarget": "ODataTest2"
 		},
 		{
+			"name": "oiyokan-test-database3",
+			"description": "Oiyokan internal Target Test Entity. キー以外がnull許容のサンプル.",
+			"entitySetName": "ODataTests3",
+			"entityName": "ODataTest3",
+			"databaseName": "oiyokanInternalTarget",
+			"dbTableNameLocal": "OiyoODataTest3",
+			"dbTableNameTarget": "ODataTest3"
+		},
+		{
 			"name": "oiyokan-test-database-fulltext",
 			"description": "Oiyokan internal Target Test Entity (Fulltext - Experimental). Used for build unit test.",
 			"entitySetName": "ODataTestFulls1",
