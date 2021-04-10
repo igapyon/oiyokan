@@ -194,7 +194,7 @@ public class BasicJdbcEntityProcessor {
 
                 @Override
                 public String getText() {
-                    return prop.getValue().toString();
+                    return String.valueOf(prop.getValue());
                 }
 
                 @Override
@@ -241,8 +241,7 @@ public class BasicJdbcEntityProcessor {
             } else {
                 sqlInfo.getSqlBuilder().append(",");
             }
-            sqlInfo.getSqlBuilder().append("?");
-            sqlInfo.getSqlParamList().add(prop.getValue());
+            BasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo, prop.getType(), prop.getValue());
         }
 
         sqlInfo.getSqlBuilder().append(")");
@@ -325,7 +324,7 @@ public class BasicJdbcEntityProcessor {
             sqlInfo.getSqlBuilder().append(prop.getName());
             sqlInfo.getSqlBuilder().append("=");
 
-            BasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo, prop.getType(), prop.getValue().toString());
+            BasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo, prop.getType(), prop.getValue());
         }
 
         sqlInfo.getSqlBuilder().append(" WHERE ");
@@ -390,7 +389,7 @@ public class BasicJdbcEntityProcessor {
             sqlInfo.getSqlBuilder().append("=");
             Property prop = requestEntity.getProperty(csdlProp.getName());
             if (prop != null) {
-                BasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo, csdlProp.getType(), prop.getValue().toString());
+                BasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo, csdlProp.getType(), prop.getValue());
             } else {
                 // 指定のないものには nullをセット.
                 BasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo, csdlProp.getType(), null);
