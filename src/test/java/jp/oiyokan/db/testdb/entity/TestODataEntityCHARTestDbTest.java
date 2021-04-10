@@ -26,11 +26,11 @@ import jp.oiyokan.util.OiyokanTestUtil;
 /**
  * Entityアクセスのフル桁に着眼したテスト.
  */
-class TestODataEntityFullTestDbTest {
+class TestODataEntityCHARTestDbTest {
     /**
      * テストデータが利用する ID 範囲。
      */
-    private static final int TEST_ID = 10018;
+    private static final int TEST_ID = 10023;
 
     @Test
     void test01() throws Exception {
@@ -43,33 +43,11 @@ class TestODataEntityFullTestDbTest {
                         + "  \"ID\": " + TEST_ID + ",\n" //
                         + "  \"Name\": \"Name\",\n" //
                         + "  \"Description\": \"Description\",\n" //
-                        + "  \"Sbyte1\": 127,\n" //
-                        + "  \"Int16a\": 32767,\n" //
-                        + "  \"Int32a\": 2147483647,\n" //
-                        + "  \"Int64a\": 2147483647,\n" //
-                        + "  \"Decimal1\": 1234.56,\n" //
-                        + "  \"StringChar8\": \"C2345678\",\n" //
-                        + "  \"StringVar255\": \"VARCHAR255\",\n" //
-                        + "  \"StringLongVar1\": \"LONGVARCHAR\",\n" //
-                        + "  \"Clob1\": \"CLOB\",\n" //
-                        + "  \"Boolean1\": false,\n" //
-                        + "  \"Single1\": 123.45679,\n" //
-                        + "  \"Double1\": 123.4567890123,\n" //
-                        + "  \"Date1\": \"2021-04-10\",\n" //
-                        + "  \"DateTimeOffset1\": \"2021-04-10T10:12:49.082587Z\",\n" //
-                        + "  \"TimeOfDay1\": \"19:12:49\",\n" //
-                        + "  \"Binary1\": \"SGVsbG8gd29ybGQh\",\n" //
-                        + "  \"VarBinary1\": \"SGVsbG8gd29ybGQh\",\n" //
-                        + "  \"LongVarBinary1\": \"SGVsbG8gd29ybGQh\",\n" //
-                        + "  \"Blob1\": \"SGVsbG8gd29ybGQh\",\n" //
-                        + "  \"Uuid1\": \"8a98afad-72f0-40ae-a401-e92775ec02dd\"\n" //
+                        + "  \"StringChar8\": \"C8\"\n" //
                         + "}");
         String result = OiyokanTestUtil.stream2String(resp.getContent());
         System.err.println("TRACE: " + result);
         assertEquals(201, resp.getStatusCode());
-
-        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests3(" + TEST_ID + ")", null);
-        assertEquals(200, resp.getStatusCode());
 
         // DELETE
         resp = OiyokanTestUtil.callRequestDelete("/ODataTests3(" + TEST_ID + ")");
