@@ -68,7 +68,7 @@ class TestODataDmlTestDbTest {
                 + "  \"Name\":\"Name\",\n" //
                 + "  \"Description\":\"Description\"\n" + "}");
         String result = OiyokanTestUtil.stream2String(resp.getContent());
-        System.err.println(result);
+        // System.err.println(result);
         assertEquals(201, resp.getStatusCode());
 
         // UPDATE (PATCH)
