@@ -151,7 +151,7 @@ public class BasicJdbcEntityProcessor {
             sqlInfo.getSqlBuilder().append("=");
 
             CsdlProperty csdlProp = sqlInfo.getEntitySet().getEntityType().getProperty(param.getName());
-            BasicJdbcUtil.buildLiteralOrPlaceholder(sqlInfo, csdlProp.getType(), param.getText());
+            BasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo, csdlProp.getType(), param.getText());
         }
     }
 
@@ -286,7 +286,7 @@ public class BasicJdbcEntityProcessor {
             // TODO 項目名の変形対応。
             sqlInfo.getSqlBuilder().append(csdlProp.getName());
             sqlInfo.getSqlBuilder().append("=");
-            BasicJdbcUtil.buildLiteralOrPlaceholder(sqlInfo, csdlProp.getType(), param.getText());
+            BasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo, csdlProp.getType(), param.getText());
         }
     }
 
@@ -325,7 +325,7 @@ public class BasicJdbcEntityProcessor {
             sqlInfo.getSqlBuilder().append(prop.getName());
             sqlInfo.getSqlBuilder().append("=");
 
-            BasicJdbcUtil.buildLiteralOrPlaceholder(sqlInfo, prop.getType(), prop.getValue().toString());
+            BasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo, prop.getType(), prop.getValue().toString());
         }
 
         sqlInfo.getSqlBuilder().append(" WHERE ");
@@ -341,7 +341,7 @@ public class BasicJdbcEntityProcessor {
             sqlInfo.getSqlBuilder().append("=");
 
             CsdlProperty csdlProp = sqlInfo.getEntitySet().getEntityType().getProperty(param.getName());
-            BasicJdbcUtil.buildLiteralOrPlaceholder(sqlInfo, csdlProp.getType(), param.getText());
+            BasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo, csdlProp.getType(), param.getText());
         }
     }
 
@@ -390,10 +390,10 @@ public class BasicJdbcEntityProcessor {
             sqlInfo.getSqlBuilder().append("=");
             Property prop = requestEntity.getProperty(csdlProp.getName());
             if (prop != null) {
-                BasicJdbcUtil.buildLiteralOrPlaceholder(sqlInfo, csdlProp.getType(), prop.getValue().toString());
+                BasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo, csdlProp.getType(), prop.getValue().toString());
             } else {
                 // 指定のないものには nullをセット.
-                BasicJdbcUtil.buildLiteralOrPlaceholder(sqlInfo, csdlProp.getType(), null);
+                BasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo, csdlProp.getType(), null);
             }
         }
 
@@ -410,7 +410,7 @@ public class BasicJdbcEntityProcessor {
             sqlInfo.getSqlBuilder().append("=");
 
             CsdlProperty csdlProp = sqlInfo.getEntitySet().getEntityType().getProperty(param.getName());
-            BasicJdbcUtil.buildLiteralOrPlaceholder(sqlInfo, csdlProp.getType(), param.getText());
+            BasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo, csdlProp.getType(), param.getText());
         }
     }
 

@@ -249,7 +249,7 @@ public class BasicSqlExprExpander {
             return;
         }
 
-        BasicJdbcUtil.buildLiteralOrPlaceholder(sqlInfo,
+        BasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo,
                 impl.getType().getFullQualifiedName().getFullQualifiedNameAsString(), impl.getText());
 
         // TODO FIMXE ここは通過しなくなったかどうか調べること。
