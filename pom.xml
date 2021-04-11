@@ -14,7 +14,8 @@
 	<artifactId>oiyokan</artifactId>
 	<version>1.1.20210411</version>
 	<name>oiyokan</name>
-	<description>Oiyokan is a simple OData v4 Server. (based on Apache Olingo / Spring Boot / h2 database)</description>
+	<description>Oiyokan is a simple OData v4 Server. (based on Apache
+		Olingo / Spring Boot / h2 database)</description>
 
 	<properties>
 		<java.version>11</java.version>
@@ -63,8 +64,7 @@
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
-			<!-- 1.4.200 (NG), 1.4.198 (NG), 1.4.197 (NG) getGeneratedKeys が機能しない -->
-			<version>1.4.196</version> <!-- 1.4.196 (OK), 1.4.195 (OK) -->
+			<version>1.4.200</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->

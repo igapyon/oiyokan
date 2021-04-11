@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.Statement;
 
 import org.junit.jupiter.api.Test;
 
@@ -38,7 +39,8 @@ class H2DatabaseIdentityTest {
             try (var stmt = conn.prepareStatement("CREATE TABLE IF NOT EXISTS t (id INT auto_increment, val TEXT)")) {
                 stmt.executeUpdate();
             }
-            try (var stmt = conn.prepareStatement("INSERT INTO t (val) VALUES ('test value')")) {
+            try (var stmt = conn.prepareStatement("INSERT INTO t (val) VALUES ('test value')",
+                    Statement.RETURN_GENERATED_KEYS)) {
                 stmt.executeUpdate();
 
                 ResultSet rs = stmt.getGeneratedKeys();
