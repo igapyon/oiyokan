@@ -79,7 +79,7 @@ public class OiyokanMessages {
     public static final String M104 = "[M104] NOT SUPPORTED: Filter Expression: TypeLiteralImpl";
     public static final String M105 = "[M105] UNEXPECTED: Fail to process Expression";
     public static final String M106 = "[M106] UNEXPECTED: Unsupported binary operator";
-    public static final String M107 = "[M107] NOT SUPPORTED: LiteralImpl";
+    // M107
     public static final String M108 = "[M108] NOT SUPPORTED: MethodKind.FRACTIONALSECONDS";
     public static final String M109 = "[M109] NOT SUPPORTED: MethodKind.TOTALSECONDS";
     public static final String M110 = "[M110] NOT SUPPORTED: MethodKind.DATE";

@@ -354,54 +354,88 @@ public class BasicJdbcUtil {
      */
     public static void bindPreparedParameter(PreparedStatement stmt, int column, Object value)
             throws ODataApplicationException, SQLException {
+        final boolean IS_SHOW_DEBUG = false;
+
         if (value == null) {
+            if (IS_SHOW_DEBUG)
+                System.err.println("TRACE: PreparedStatement#setNull: null");
             // 仮で文字列設定
             // TODO FIXME 後で見直し
             stmt.setNull(column, Types.VARCHAR);
         } else if (value instanceof Byte) {
+            if (IS_SHOW_DEBUG)
+                System.err.println("TRACE: PreparedStatement#setByte: " + value);
             stmt.setByte(column, (Byte) value);
         } else if (value instanceof Short) {
+            if (IS_SHOW_DEBUG)
+                System.err.println("TRACE: PreparedStatement#setShort: " + value);
             stmt.setShort(column, (Short) value);
         } else if (value instanceof Integer) {
+            if (IS_SHOW_DEBUG)
+                System.err.println("TRACE: PreparedStatement#setInt: " + value);
             stmt.setInt(column, (Integer) value);
         } else if (value instanceof Long) {
+            if (IS_SHOW_DEBUG)
+                System.err.println("TRACE: PreparedStatement#setLong: " + value);
             stmt.setLong(column, (Long) value);
         } else if (value instanceof BigDecimal) {
+            if (IS_SHOW_DEBUG)
+                System.err.println("TRACE: PreparedStatement#setBigDecimal: " + value);
             // Oiyokan では 小数点は基本的にリテラルのまま残すため、このコードは通過しない.
             stmt.setBigDecimal(column, (BigDecimal) value);
         } else if (value instanceof Boolean) {
+            if (IS_SHOW_DEBUG)
+                System.err.println("TRACE: PreparedStatement#setBoolean: " + value);
             stmt.setBoolean(column, (Boolean) value);
         } else if (value instanceof Float) {
+            if (IS_SHOW_DEBUG)
+                System.err.println("TRACE: PreparedStatement#setFloat: " + value);
             // Oiyokan では 小数点は基本的にリテラルのまま残すため、このコードは通過しない.
             stmt.setFloat(column, (Float) value);
         } else if (value instanceof Double) {
+            if (IS_SHOW_DEBUG)
+                System.err.println("TRACE: PreparedStatement#setDouble: " + value);
             // Oiyokan では 小数点は基本的にリテラルのまま残すため、このコードは通過しない.
             stmt.setDouble(column, (Double) value);
         } else if (value instanceof java.sql.Time) {
+            if (IS_SHOW_DEBUG)
+                System.err.println("TRACE: PreparedStatement#setTime: " + value);
             // java.util.Dateより先に記載が必要
             java.sql.Time look = (java.sql.Time) value;
             stmt.setTime(column, look);
         } else if (value instanceof java.sql.Date) {
+            if (IS_SHOW_DEBUG)
+                System.err.println("TRACE: PreparedStatement#setDate(1): " + value);
             // java.util.Dateより先に記載が必要
             java.sql.Date look = (java.sql.Date) value;
             stmt.setDate(column, look);
         } else if (value instanceof java.util.Date) {
+            if (IS_SHOW_DEBUG)
+                System.err.println("TRACE: PreparedStatement#setDate(2): " + value);
             // java.sql.Timestampはここを通過.
             java.util.Date udate = (java.util.Date) value;
             java.sql.Date sdate = new java.sql.Date(udate.getTime());
             stmt.setDate(column, sdate);
         } else if (value instanceof java.util.Calendar) {
+            if (IS_SHOW_DEBUG)
+                System.err.println("TRACE: PreparedStatement#setDate(3): " + value);
             java.util.Calendar cal = (java.util.Calendar) value;
             java.sql.Date sdate = new java.sql.Date(cal.getTime().getTime());
             stmt.setDate(column, sdate);
         } else if (value instanceof ZonedDateTime) {
+            if (IS_SHOW_DEBUG)
+                System.err.println("TRACE: PreparedStatement#setDate(4): " + value);
             ZonedDateTime zdt = (ZonedDateTime) value;
             java.util.Date look = BasicDateTimeUtil.zonedDateTime2Date(zdt);
             java.sql.Date sdate = new java.sql.Date(look.getTime());
             stmt.setDate(column, sdate);
         } else if (value instanceof String) {
+            if (IS_SHOW_DEBUG)
+                System.err.println("TRACE: PreparedStatement#setString: " + value);
             stmt.setString(column, (String) value);
         } else if (value instanceof byte[]) {
+            if (IS_SHOW_DEBUG)
+                System.err.println("TRACE: PreparedStatement#setBytes: " + value);
             byte[] look = (byte[]) value;
             stmt.setBytes(column, look);
         } else {
@@ -440,8 +474,8 @@ public class BasicJdbcUtil {
                 sqlInfo.getSqlBuilder().append("?");
                 sqlInfo.getSqlParamList().add(inputParam);
             } else {
-                sqlInfo.getSqlBuilder().append("?");
-                sqlInfo.getSqlParamList().add(String.valueOf(inputParam));
+                // そのままSQL本文
+                sqlInfo.getSqlBuilder().append(String.valueOf(inputParam));
             }
             return;
         }
@@ -455,8 +489,8 @@ public class BasicJdbcUtil {
                 sqlInfo.getSqlBuilder().append("?");
                 sqlInfo.getSqlParamList().add(inputParam);
             } else {
-                sqlInfo.getSqlBuilder().append("?");
-                sqlInfo.getSqlParamList().add(Short.valueOf(String.valueOf(inputParam)));
+                // そのままSQL本文
+                sqlInfo.getSqlBuilder().append(String.valueOf(inputParam));
             }
             return;
         }
@@ -613,10 +647,16 @@ public class BasicJdbcUtil {
             if (value.startsWith("'") && value.endsWith("'")) {
                 // 文字列リテラルについては前後のクオートを除去して記憶.
                 value = value.substring(1, value.length() - 1);
+
+                // 文字列リテラルとしてパラメータ化クエリで扱う.
+                sqlInfo.getSqlBuilder().append("?");
+                sqlInfo.getSqlParamList().add(value);
+            } else {
+                // 文字列リテラルとしてパラメータ化クエリで扱う.
+                // そのまま出力するとエラーになる点に注意!
+                sqlInfo.getSqlBuilder().append("?");
+                sqlInfo.getSqlParamList().add(value);
             }
-            // 文字列リテラルとしてパラメータ化クエリで扱う.
-            sqlInfo.getSqlBuilder().append("?");
-            sqlInfo.getSqlParamList().add(value);
             return;
         }
         if ("Edm.Binary".equals(csdlType)) {
