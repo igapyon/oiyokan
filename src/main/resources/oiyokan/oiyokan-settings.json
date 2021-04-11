@@ -110,7 +110,7 @@
 			"entityName": "ODataTest4",
 			"databaseName": "oiyokanInternalTarget",
 			"dbTableNameLocal": "OiyoODataTest4",
-			"dbTableNameTarget": "[OData Test4]"
+			"dbTableNameTarget": "OData Test4"
 		},
 		{
 			"name": "oiyokan-test-database5",

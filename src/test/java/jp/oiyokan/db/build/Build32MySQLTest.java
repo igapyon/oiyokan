@@ -18,6 +18,8 @@ package jp.oiyokan.db.build;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import org.junit.jupiter.api.Test;
+
 import jp.oiyokan.basic.BasicJdbcUtil;
 import jp.oiyokan.data.OiyokanResourceSqlUtil;
 import jp.oiyokan.dto.OiyokanSettingsDatabase;
@@ -26,9 +28,12 @@ import jp.oiyokan.settings.OiyokanSettingsUtil;
 /**
  * テスト用の内部データベースを作成します。この内部データベースは動作の上で必要です。
  */
-class Build50MySQLTest {
-    // @Test
+class Build32MySQLTest {
+    @Test
     void test01() throws Exception {
+        if (true)
+            return;
+
         OiyokanSettingsDatabase settingsDatabase = OiyokanSettingsUtil.getOiyokanDatabase("mysql1");
 
         try (Connection connTargetDb = BasicJdbcUtil.getConnection(settingsDatabase)) {

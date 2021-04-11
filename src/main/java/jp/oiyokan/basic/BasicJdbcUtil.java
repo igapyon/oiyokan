@@ -27,6 +27,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.SQLTimeoutException;
+import java.sql.Statement;
 import java.sql.Types;
 import java.time.ZonedDateTime;
 import java.time.temporal.TemporalAccessor;
@@ -761,14 +762,15 @@ public class BasicJdbcUtil {
      * @return (もしあれば)生成されたキーのリスト.
      * @throws ODataApplicationException
      */
-    public static List<String> executeDml(Connection connTargetDb, BasicSqlInfo sqlInfo)
+    public static List<String> executeDml(Connection connTargetDb, BasicSqlInfo sqlInfo, boolean returnGeneratedKeys)
             throws ODataApplicationException {
         final String sql = sqlInfo.getSqlBuilder().toString();
         if (OiyokanConstants.IS_TRACE_ODATA_V4)
             System.err.println("OData v4: TRACE: SQL exec: " + sql);
 
         final long startMillisec = System.currentTimeMillis();
-        try (var stmt = connTargetDb.prepareStatement(sql)) {
+        try (var stmt = connTargetDb.prepareStatement(sql, //
+                (returnGeneratedKeys ? Statement.RETURN_GENERATED_KEYS : Statement.NO_GENERATED_KEYS))) {
             // set query timeout
             stmt.setQueryTimeout(OiyokanConstants.JDBC_STMT_TIMEOUT);
 
@@ -788,11 +790,13 @@ public class BasicJdbcUtil {
 
             // 生成されたキーがあればそれを採用。
             final List<String> generatedKeys = new ArrayList<>();
-            final ResultSet rsKeys = stmt.getGeneratedKeys();
-            if (rsKeys.next()) {
-                final ResultSetMetaData rsmetaKeys = rsKeys.getMetaData();
-                for (int column = 1; column <= rsmetaKeys.getColumnCount(); column++) {
-                    generatedKeys.add(rsKeys.getString(column));
+            if (returnGeneratedKeys) {
+                final ResultSet rsKeys = stmt.getGeneratedKeys();
+                if (rsKeys.next()) {
+                    final ResultSetMetaData rsmetaKeys = rsKeys.getMetaData();
+                    for (int column = 1; column <= rsmetaKeys.getColumnCount(); column++) {
+                        generatedKeys.add(rsKeys.getString(column));
+                    }
                 }
             }
 
@@ -816,6 +820,7 @@ public class BasicJdbcUtil {
             throw new ODataApplicationException(OiyokanMessages.M203 + ": " + sql, //
                     OiyokanMessages.M203_CODE, Locale.ENGLISH);
         } catch (SQLException ex) {
+            ex.printStackTrace();
             // [M204] Fail to execute SQL.
             System.err.println(OiyokanMessages.M204 + ": " + sql + ", " + ex.toString());
             throw new ODataApplicationException(OiyokanMessages.M204 + ": " + sql, //
