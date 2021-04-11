@@ -267,7 +267,10 @@ public class BasicJdbcEntityProcessor {
             } else {
                 sqlInfo.getSqlBuilder().append(",");
             }
-            sqlInfo.getSqlBuilder().append(prop.getName());
+
+            final String colName = BasicJdbcUtil.escapeKakkoFieldName(sqlInfo,
+                    OiyokanNamingUtil.entity2Db(prop.getName()));
+            sqlInfo.getSqlBuilder().append(colName);
         }
 
         sqlInfo.getSqlBuilder().append(") VALUES (");
