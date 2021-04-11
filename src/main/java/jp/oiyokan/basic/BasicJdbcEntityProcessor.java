@@ -508,7 +508,8 @@ public class BasicJdbcEntityProcessor {
                 sqlInfo.getSqlBuilder().append(",");
             }
 
-            sqlInfo.getSqlBuilder().append(csdlProp.getName());
+            sqlInfo.getSqlBuilder().append(
+                    BasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyokanNamingUtil.entity2Db(csdlProp.getName())));
 
             sqlInfo.getSqlBuilder().append("=");
             Property prop = requestEntity.getProperty(csdlProp.getName());
@@ -529,7 +530,8 @@ public class BasicJdbcEntityProcessor {
             } else {
                 sqlInfo.getSqlBuilder().append(" AND ");
             }
-            sqlInfo.getSqlBuilder().append(param.getName());
+            sqlInfo.getSqlBuilder()
+                    .append(BasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyokanNamingUtil.entity2Db(param.getName())));
             sqlInfo.getSqlBuilder().append("=");
 
             CsdlProperty csdlProp = sqlInfo.getEntitySet().getEntityType().getProperty(param.getName());
