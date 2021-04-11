@@ -78,6 +78,9 @@ class Build00InternalTargetDbTest {
                                 "UNEXPECTED: Fail to execute SQL for local internal table(2)", 500, Locale.ENGLISH);
                     }
                 }
+
+                if (OiyokanConstants.IS_TRACE_ODATA_V4)
+                    System.err.println("OData: load: internal db: end: " + sqlFileDef[0] + ", sql: " + sqlFileDef[1]);
             } catch (SQLException ex) {
                 System.err.println("UNEXPECTED: Fail to execute Dabaase: " + ex.toString());
                 throw new ODataApplicationException("UNEXPECTED: Fail to execute Dabaase", 500, Locale.ENGLISH);

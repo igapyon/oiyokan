@@ -1,3 +1,30 @@
+# ORACLE メモ
+
+## 仕様
+
+以下の型は読み替え
+
+- TINYINT => SMALLINT
+- BIGING => INT
+- LONGVARCHAR => VARCHAR(2000)
+- BOOLEAN => NUMERIC(1.0)
+- DOUBLE => FLOAT
+- LONGVARBINARY->RAW(2000)
+- UUIDはRAW(16)で代用
+- TIME相当が見つからず、TIMESTAMPで代用
+- BINARY はデフォルト設定なし
+
+## TODO
+
+### バイナリの書き込みが機能しない
+
+- BINARYの書き込みが機能しない。エラーになる。
+- 自動生成項目を利用した場合、行の追加でエラーが発生する。
+
+### getGeneratedKey対策
+
+- ORACLEの場合は ROWIDが取得される。他のJDBCドライバと挙動が異なる。
+
 # Oracle セットアップメモ
 
 ```sh
@@ -29,9 +56,3 @@ grant connect to orauser;
 grant resource to orauser;
 grant unlimited tablespace to orauser;
 ```
-
-# 相対的に型が足りない
-
-- boolean 型の対応が不明
-- SByte 型の対応が不明
-- TIME 型の対応が不明

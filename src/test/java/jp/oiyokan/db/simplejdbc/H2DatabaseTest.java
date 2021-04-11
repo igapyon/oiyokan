@@ -24,6 +24,7 @@ import java.sql.ResultSetMetaData;
 import org.junit.jupiter.api.Test;
 
 import jp.oiyokan.OiyokanConstants;
+import jp.oiyokan.OiyokanTestConstants;
 import jp.oiyokan.basic.BasicJdbcUtil;
 import jp.oiyokan.data.OiyokanKanDatabase;
 import jp.oiyokan.settings.OiyokanSettingsUtil;
@@ -34,6 +35,9 @@ import jp.oiyokan.settings.OiyokanSettingsUtil;
 class H2DatabaseTest {
     @Test
     void test01() throws Exception {
+        if (!OiyokanTestConstants.IS_TEST_ODATATEST)
+            return;
+
         try (Connection conn = BasicJdbcUtil
                 .getConnection(OiyokanSettingsUtil.getOiyokanDatabase(OiyokanConstants.OIYOKAN_INTERNAL_TARGET_DB))) {
 
@@ -47,11 +51,14 @@ class H2DatabaseTest {
 
     @Test
     void testo2() throws Exception {
+        if (!OiyokanTestConstants.IS_TEST_ODATATEST)
+            return;
+
         try (Connection conn = BasicJdbcUtil
                 .getConnection(OiyokanSettingsUtil.getOiyokanDatabase(OiyokanConstants.OIYOKAN_INTERNAL_TARGET_DB))) {
 
             try (var stmt = conn.prepareStatement("SELECT ID, Name, Description" //
-                    + ",Sbyte1,Int16a,Int32a,Int64a,Decimal1,StringChar2,StringVar255,StringVar65535,Boolean1,Single1,Double1,DateTimeOffset1,TimeOfDay1" //
+                    + ",Sbyte1,Int16a,Int32a,Int64a,Decimal1,StringChar8,StringVar255,Boolean1,Single1,Double1,DateTimeOffset1,TimeOfDay1" //
                     + " FROM ODataTest1 ORDER BY ID LIMIT 1")) {
                 stmt.executeQuery();
                 var rset = stmt.getResultSet();
@@ -72,6 +79,9 @@ class H2DatabaseTest {
      */
     @Test
     void test03() throws Exception {
+        if (!OiyokanTestConstants.IS_TEST_ODATATEST)
+            return;
+
         try (Connection conn = BasicJdbcUtil
                 .getConnection(OiyokanSettingsUtil.getOiyokanDatabase(OiyokanConstants.OIYOKAN_INTERNAL_DB))) {
             // 内部データベースのテーブルをセットアップ.
@@ -99,6 +109,9 @@ class H2DatabaseTest {
      */
     // @Test
     void testListTables() throws Exception {
+        if (!OiyokanTestConstants.IS_TEST_ODATATEST)
+            return;
+
         try (Connection conn = BasicJdbcUtil.getConnection(OiyokanSettingsUtil.getOiyokanDatabase("mysql1"))) {
 
             ResultSet rset = conn.getMetaData().getTables(null, "%", "%", new String[] { "TABLE", "VIEW" });

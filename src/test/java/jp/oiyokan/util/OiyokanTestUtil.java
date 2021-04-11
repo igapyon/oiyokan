@@ -1,15 +1,27 @@
+/*
+ * Copyright 2021 Toshiki Iga
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package jp.oiyokan.util;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.BitSet;
 
-import org.apache.commons.codec.DecoderException;
-import org.apache.commons.codec.net.URLCodec;
 import org.apache.olingo.commons.api.http.HttpMethod;
 import org.apache.olingo.server.api.OData;
 import org.apache.olingo.server.api.ODataHttpHandler;
@@ -19,6 +31,7 @@ import org.apache.olingo.server.api.ServiceMetadata;
 
 import jp.oiyokan.OiyokanEdmProvider;
 import jp.oiyokan.OiyokanEntityCollectionProcessor;
+import jp.oiyokan.OiyokanEntityProcessor;
 
 /**
  * Utility class for OData test
@@ -31,7 +44,9 @@ public class OiyokanTestUtil {
         req.setRawBaseUri("http://localhost:8080/odata4.svc");
         req.setRawODataPath(rawODataPath);
         req.setRawQueryPath(rawQueryPath);
-        req.setRawRequestUri(req.getRawBaseUri() + req.getRawODataPath() + "?" + req.getRawQueryPath());
+        req.setRawRequestUri(req.getRawBaseUri() + req.getRawODataPath() //
+                + (rawQueryPath != null && rawQueryPath.trim().length() > 0 ? "?" : "") //
+                + req.getRawQueryPath());
 
         return handler.process(req);
     }
@@ -45,43 +60,11 @@ public class OiyokanTestUtil {
 
         // EntityCollectionProcessor を登録.
         handler.register(new OiyokanEntityCollectionProcessor());
+
+        // EntityProcessor を登録.
+        handler.register(new OiyokanEntityProcessor());
+
         return handler;
-    }
-
-    /**
-     * 与えられた文字列を URL クエリとしてエンコード.
-     * 
-     * @param inputString URLクエリ.
-     * @return エンコード済みURLクエリ.
-     */
-    public static String encodeUrlQuery(String inputString) {
-        BitSet urlSafe = new BitSet();
-        urlSafe.set('0', '9' + 1);
-        urlSafe.set('-');
-        urlSafe.set('=');
-        urlSafe.set('&');
-        urlSafe.set('%');
-        urlSafe.set('A', 'Z' + 1);
-        urlSafe.set('a', 'z' + 1);
-        try {
-            return new String(URLCodec.encodeUrl(urlSafe, inputString.getBytes("UTF-8")));
-        } catch (UnsupportedEncodingException ex) {
-            throw new IllegalArgumentException(ex);
-        }
-    }
-
-    /**
-     * 与えられた エンコード済み URL をデコード.
-     * 
-     * @param encodedString エンコード済みURL.
-     * @return もとのURL.
-     */
-    public static String decodeUrlQuery(String encodedString) {
-        try {
-            return new URLCodec("UTF-8").decode(encodedString);
-        } catch (DecoderException ex) {
-            throw new IllegalArgumentException(ex);
-        }
     }
 
     /**
@@ -92,6 +75,10 @@ public class OiyokanTestUtil {
      * @throws IOException 入出力例外が発生した場合.
      */
     public static String stream2String(InputStream inStream) throws IOException {
+        if (inStream == null) {
+            return null;
+        }
+
         StringBuilder builder = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(inStream, "UTF-8"))) {
             for (;;) {
@@ -102,5 +89,68 @@ public class OiyokanTestUtil {
             }
         }
         return builder.toString();
+    }
+
+    /////////////////
+    // INSERT
+
+    public static ODataResponse callRequestPost(String rawODataPath, String bodyJson) throws Exception {
+        final ODataHttpHandler handler = OiyokanTestUtil.getHandler();
+        final ODataRequest req = new ODataRequest();
+        req.setMethod(HttpMethod.POST);
+        req.setRawBaseUri("http://localhost:8080/odata4.svc");
+        req.setRawODataPath(rawODataPath);
+        req.setRawRequestUri(req.getRawBaseUri() + req.getRawODataPath());
+        req.addHeader("Content-type", "application/json; odata.metadata=minimal");
+
+        req.setBody(new ByteArrayInputStream(bodyJson.getBytes("UTF-8")));
+
+        return handler.process(req);
+    }
+
+    /////////////////
+    // DELETE
+
+    public static ODataResponse callRequestDelete(String rawODataPath) throws Exception {
+        final ODataHttpHandler handler = OiyokanTestUtil.getHandler();
+        final ODataRequest req = new ODataRequest();
+        req.setMethod(HttpMethod.DELETE);
+        req.setRawBaseUri("http://localhost:8080/odata4.svc");
+        req.setRawODataPath(rawODataPath);
+        req.setRawRequestUri(req.getRawBaseUri() + req.getRawODataPath());
+        req.addHeader("Content-type", "application/json; odata.metadata=minimal");
+
+        return handler.process(req);
+    }
+
+    /////////////////
+    // UPDATE
+
+    public static ODataResponse callRequestPatch(String rawODataPath, String bodyJson) throws Exception {
+        final ODataHttpHandler handler = OiyokanTestUtil.getHandler();
+        final ODataRequest req = new ODataRequest();
+        req.setMethod(HttpMethod.PATCH);
+        req.setRawBaseUri("http://localhost:8080/odata4.svc");
+        req.setRawODataPath(rawODataPath);
+        req.setRawRequestUri(req.getRawBaseUri() + req.getRawODataPath());
+        req.addHeader("Content-type", "application/json; odata.metadata=minimal");
+
+        req.setBody(new ByteArrayInputStream(bodyJson.getBytes("UTF-8")));
+
+        return handler.process(req);
+    }
+
+    public static ODataResponse callRequestPut(String rawODataPath, String bodyJson) throws Exception {
+        final ODataHttpHandler handler = OiyokanTestUtil.getHandler();
+        final ODataRequest req = new ODataRequest();
+        req.setMethod(HttpMethod.PUT);
+        req.setRawBaseUri("http://localhost:8080/odata4.svc");
+        req.setRawODataPath(rawODataPath);
+        req.setRawRequestUri(req.getRawBaseUri() + req.getRawODataPath());
+        req.addHeader("Content-type", "application/json; odata.metadata=minimal");
+
+        req.setBody(new ByteArrayInputStream(bodyJson.getBytes("UTF-8")));
+
+        return handler.process(req);
     }
 }

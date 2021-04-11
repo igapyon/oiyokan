@@ -12,9 +12,9 @@
   <title>Oiyokan OData v4 Server SDK</title>
   <meta property="og:title" content="Oiyokan OData v4 Server SDK" />
   <meta name="description"
-    content="Oiyokan is an OData v4 server SDK. Based on Apache Olingo. Build with Spring Boot, Java, h2. Oiyokan provides read-only OData v4 access to resources.">
+    content="Oiyokan is an OData v4 server SDK. Based on Apache Olingo. Build with Spring Boot, Java, h2. Oiyokan provides OData v4 access to resources.">
   <meta property="og:description"
-    content="Oiyokan is an OData v4 server SDK. Based on Apache Olingo. Build with Spring Boot, Java, h2. Oiyokan provides read-only OData v4 access to resources." />
+    content="Oiyokan is an OData v4 server SDK. Based on Apache Olingo. Build with Spring Boot, Java, h2. Oiyokan provides OData v4 access to resources." />
   <meta property="og:url" content="https://oiyokan.herokuapp.com/index.html" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Oiyokan v4 Server SDK" />
@@ -334,8 +334,12 @@
     </svg>
     <div class="slds-text-longform">
       <h3 class="slds-illustration__header slds-text-heading_medium">Oiyokan OData v4 Server SDK</h3>
-      <p class="slds-badge .slds-badge_lightest">v<span th:text="${indexBean.version}" th:remove="tag" /></p>
+      <p class="slds-badge">v<span th:text="${indexBean.version}" th:remove="tag" /></p>
     </div>
+  </div>
+
+  <div class="slds-align_absolute-center slds-m-left_medium slds-m-right_medium">
+    <img src="/images/OiyokanAbstract.png">
   </div>
 
   <div class="slds-align_absolute-center slds-m-left_medium slds-m-right_medium">
@@ -343,8 +347,8 @@
       <dt>Oiyokan is an OData v4 server (provider) SDK for RDB</dt>
       <dd>
         <ul class="slds-list_dotted">
-          <li>You can use Oiyokan to turn RDBMS into read-only OData v4 services.</li>
-          <li>Oiyokan uses JDBC to provide read-only OData v4 access to the RDB.</li>
+          <li>You can use Oiyokan to turn RDBMS into OData v4 services.</li>
+          <li>Oiyokan uses JDBC to provide OData v4 access to the RDB.</li>
           <li>Based on <a href="https://olingo.apache.org/" target="_blank">Apache Olingo</a>. Build with <a
               href="https://spring.io/projects/spring-boot" target="_blank">Spring Boot</a>, Java, <a
               href="https://www.h2database.com/" target="_blank">h2</a>.</li>
@@ -352,6 +356,10 @@
               href="https://www.apache.org/licenses/LICENSE-2.0" target="_blank">Apache License</a>.</li>
         </ul>
       </dd>
+
+      <div class="slds-align_absolute-center slds-m-left_medium slds-m-right_medium slds-m-top_medium">
+        <p class="slds-badge slds-badge_lightest">RDBMS</p>
+      </div>
       <dt>Supported target RDBMS</dt>
       <dd>
         <ul class="slds-list_dotted">
@@ -361,6 +369,10 @@
           <li>Oracle XE (18c)</li>
         </ul>
       </dd>
+
+      <div class="slds-align_absolute-center slds-m-left_medium slds-m-right_medium slds-m-top_medium">
+        <p class="slds-badge slds-badge_lightest">Query options</p>
+      </div>
       <dt>Supported OData system query options</dt>
       <dd>
         <ul class="slds-list_dotted">
@@ -372,12 +384,17 @@
           <li>$skip</li>
         </ul>
       </dd>
+
+      <div class="slds-align_absolute-center slds-m-left_medium slds-m-right_medium slds-m-top_medium">
+        <p class="slds-badge slds-badge_lightest">Samples</p>
+      </div>
       <dt>Oiyokan includes sample OData v4 server implementation.</dt>
       <dd>
         <ul class="slds-list_dotted">
           <li>Sample OData v4 Server of <a href="https://www.jooq.org/sakila" target="_blank">Sakila DVD
               rental</a>.</li>
-          <li>Metadata of OData v4 is provided at <a th:href="${odataRootpath + '/$metadata'}" target="_blank">$metadata</a>.
+          <li>Metadata of OData v4 is provided at <a th:href="${odataRootpath + '/$metadata'}"
+              target="_blank">$metadata</a>.
           </li>
         </ul>
       </dd>

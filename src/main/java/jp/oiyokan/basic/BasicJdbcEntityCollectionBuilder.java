@@ -20,6 +20,7 @@ import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.SQLTimeoutException;
 import java.util.Locale;
 
 import org.apache.olingo.commons.api.data.Entity;
@@ -81,27 +82,27 @@ public class BasicJdbcEntityCollectionBuilder implements OiyokanEntityCollection
         if (uriInfo.getSearchOption() != null && !OiyokanConstants.IS_EXPERIMENTAL_SEARCH_ENABLED) {
             // [M032] NOT SUPPORTED: URI: $search
             System.err.println(OiyokanMessages.M032);
-            throw new ODataApplicationException(OiyokanMessages.M032, 500, Locale.ENGLISH);
+            throw new ODataApplicationException(OiyokanMessages.M032, OiyokanMessages.M032_CODE, Locale.ENGLISH);
         }
         if (uriInfo.getApplyOption() != null) {
             // [M011] NOT SUPPORTED: URI: $apply
             System.err.println(OiyokanMessages.M011);
-            throw new ODataApplicationException(OiyokanMessages.M011, 500, Locale.ENGLISH);
+            throw new ODataApplicationException(OiyokanMessages.M011, OiyokanMessages.M011_CODE, Locale.ENGLISH);
         }
         if (uriInfo.getCustomQueryOptions() != null && uriInfo.getCustomQueryOptions().size() > 0) {
             // [M012] NOT SUPPORTED: URI: customQuery
             System.err.println(OiyokanMessages.M012);
-            throw new ODataApplicationException(OiyokanMessages.M012, 500, Locale.ENGLISH);
+            throw new ODataApplicationException(OiyokanMessages.M012, OiyokanMessages.M012_CODE, Locale.ENGLISH);
         }
         if (uriInfo.getDeltaTokenOption() != null) {
             // [M013] NOT SUPPORTED: URI: deltaToken
             System.err.println(OiyokanMessages.M013);
-            throw new ODataApplicationException(OiyokanMessages.M013, 500, Locale.ENGLISH);
+            throw new ODataApplicationException(OiyokanMessages.M013, OiyokanMessages.M013_CODE, Locale.ENGLISH);
         }
         if (uriInfo.getExpandOption() != null && uriInfo.getExpandOption().getExpandItems().size() > 0) {
             // [M014] NOT SUPPORTED: URI: $expand
             System.err.println(OiyokanMessages.M014);
-            throw new ODataApplicationException(OiyokanMessages.M014, 500, Locale.ENGLISH);
+            throw new ODataApplicationException(OiyokanMessages.M014, OiyokanMessages.M014_CODE, Locale.ENGLISH);
         }
 
         // データベースに接続.
@@ -138,10 +139,14 @@ public class BasicJdbcEntityCollectionBuilder implements OiyokanEntityCollection
         final String sql = basicSqlBuilder.getSqlInfo().getSqlBuilder().toString();
 
         if (OiyokanConstants.IS_TRACE_ODATA_V4)
-            System.err.println("OData v4: TRACE: SQL: " + sql);
+            System.err.println("OData v4: TRACE: COUNT: " + sql);
 
         int countWithWhere = 0;
+        final long startMillisec = System.currentTimeMillis();
         try (var stmt = connTargetDb.prepareStatement(sql)) {
+            // set query timeout
+            stmt.setQueryTimeout(OiyokanConstants.JDBC_STMT_TIMEOUT);
+
             int column = 1;
             for (Object look : basicSqlBuilder.getSqlInfo().getSqlParamList()) {
                 BasicJdbcUtil.bindPreparedParameter(stmt, column++, look);
@@ -151,12 +156,25 @@ public class BasicJdbcEntityCollectionBuilder implements OiyokanEntityCollection
             var rset = stmt.getResultSet();
             rset.next();
             countWithWhere = rset.getInt(1);
+        } catch (SQLTimeoutException ex) {
+            // [M035] SQL timeout at count
+            System.err.println(OiyokanMessages.M035 + ": " + sql + ", " + ex.toString());
+            throw new ODataApplicationException(OiyokanMessages.M035 + ": " + sql, //
+                    OiyokanMessages.M035_CODE, Locale.ENGLISH);
         } catch (SQLException ex) {
             // [M015] UNEXPECTED: An error occurred in SQL that counts the number of search
             // results.
             System.err.println(OiyokanMessages.M015 + ": " + sql + ", " + ex.toString());
             throw new ODataApplicationException(OiyokanMessages.M015 + ": " + sql, 500, Locale.ENGLISH);
         }
+
+        final long endMillisec = System.currentTimeMillis();
+        if (OiyokanConstants.IS_TRACE_ODATA_V4) {
+            final long elapsed = endMillisec - startMillisec;
+            System.err.println("OData v4: TRACE: COUNT = " + countWithWhere //
+                    + (elapsed >= 10 ? " (elapsed: " + (endMillisec - startMillisec) + ")" : ""));
+        }
+
         // 取得できたレコード件数を設定.
         eCollection.setCount(countWithWhere);
     }
@@ -171,7 +189,11 @@ public class BasicJdbcEntityCollectionBuilder implements OiyokanEntityCollection
         if (OiyokanConstants.IS_TRACE_ODATA_V4)
             System.err.println("OData v4: TRACE: SQL: " + sql);
 
+        final long startMillisec = System.currentTimeMillis();
         try (var stmt = connTargetDb.prepareStatement(sql)) {
+            // set query timeout
+            stmt.setQueryTimeout(OiyokanConstants.JDBC_STMT_TIMEOUT);
+
             int idxColumn = 1;
             for (Object look : basicSqlBuilder.getSqlInfo().getSqlParamList()) {
                 BasicJdbcUtil.bindPreparedParameter(stmt, idxColumn++, look);
@@ -196,27 +218,57 @@ public class BasicJdbcEntityCollectionBuilder implements OiyokanEntityCollection
                 } else {
                     // キーが存在する場合は、IDとして設定。
                     OiyokanCsdlEntitySet iyoEntitySet = (OiyokanCsdlEntitySet) entitySet;
-                    String keyValue = "";
-                    for (CsdlPropertyRef look : iyoEntitySet.getEntityType().getKey()) {
-                        if (keyValue.length() > 0) {
-                            keyValue += "-";
+                    if (iyoEntitySet.getEntityType().getKey().size() == 1) {
+                        // 単一キー
+                        final Property prop = ent.getProperty(iyoEntitySet.getEntityType().getKey().get(0).getName());
+                        String idVal = prop.getValue().toString();
+                        if ("Edm.String".equals(prop.getType())) {
+                            idVal = "'" + BasicUrlUtil.encodeUrl4Key(idVal) + "'";
                         }
-
-                        String idVal = rset.getString(look.getName());
-                        // 未整理の事項。キーの値をエスケープすべきかどうか.
-                        // 現状、スペースとコロンはアンダースコアに置き換え.
-                        idVal = idVal.replaceAll("[' '|':']", "_");
-                        keyValue += idVal;
+                        ent.setId(createId(entitySet.getName(), idVal));
+                    } else {
+                        // 複数キー
+                        String keyString = "";
+                        boolean isFirst = true;
+                        for (CsdlPropertyRef propRef : iyoEntitySet.getEntityType().getKey()) {
+                            if (isFirst) {
+                                isFirst = false;
+                            } else {
+                                keyString += ",";
+                            }
+                            final Property prop = ent.getProperty(propRef.getName());
+                            keyString += prop.getName() + "=";
+                            String idVal = prop.getValue().toString();
+                            if ("Edm.String".equals(prop.getType())) {
+                                idVal = "'" + BasicUrlUtil.encodeUrl4Key(idVal) + "'";
+                            }
+                            keyString += idVal;
+                        }
+                        ent.setId(createId(entitySet.getName(), keyString));
                     }
-                    ent.setId(createId(entitySet.getName(), keyValue));
                 }
 
                 eCollection.getEntities().add(ent);
             }
+
+            final long endMillisec = System.currentTimeMillis();
+            if (OiyokanConstants.IS_TRACE_ODATA_V4) {
+                final long elapsed = endMillisec - startMillisec;
+                if (elapsed >= 10) {
+                    System.err.println("OData v4: TRACE: SQL: elapsed: " + (endMillisec - startMillisec));
+                }
+            }
+        } catch (SQLTimeoutException ex) {
+            // [M036] SQL timeout at execute
+            System.err.println(OiyokanMessages.M036 + ": " + sql + ", " + ex.toString());
+            throw new ODataApplicationException(OiyokanMessages.M036 + ": " + sql, //
+                    OiyokanMessages.M036_CODE, Locale.ENGLISH);
         } catch (SQLException ex) {
+            // ex.printStackTrace();
             // [M017] Fail to execute SQL
             System.err.println(OiyokanMessages.M017 + ": " + sql + ", " + ex.toString());
-            throw new ODataApplicationException(OiyokanMessages.M017 + ": " + sql, 500, Locale.ENGLISH);
+            throw new ODataApplicationException(OiyokanMessages.M017 + ": " + sql, //
+                    OiyokanMessages.M017_CODE, Locale.ENGLISH);
         }
     }
 
@@ -229,6 +281,7 @@ public class BasicJdbcEntityCollectionBuilder implements OiyokanEntityCollection
      */
     public static URI createId(String entitySetName, Object id) {
         try {
+            // 事前に BasicUrlUtil.encodeUrl4Key() が実施されていること。
             return new URI(entitySetName + "(" + id + ")");
         } catch (URISyntaxException ex) {
             // [M018] UNEXPECTED: Fail to create ID EntitySet name

@@ -1,3 +1,19 @@
+# Release 1.2 (2021-04-11)
+
+## EN
+
+- Added Entity access function.
+- Add the message ID for TIMEOUT.
+- Tested support for column names containing spaces.
+- In this release, ORACLE support is treated as a BETA version.
+
+## JA
+
+- Entity アクセス機能を追加.
+- TIMEOUTについてメッセージIDを採番.
+- 空白を含む項目名への対応をテスト.
+- 今回のリリースでは ORACLE サポートは BETA 版扱い.
+
 # Release 1.1 (2021-04-06)
 
 - Added MySQL v8, SQL Server 2008, Oracle XE 18c to supported rdbms.

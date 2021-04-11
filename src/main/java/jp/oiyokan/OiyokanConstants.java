@@ -27,12 +27,17 @@ public class OiyokanConstants {
     /**
      * Oiyokan のバージョン番号
      */
-    public static final String VERSION = "1.1.20210406c";
+    public static final String VERSION = "1.2.20210411a";
 
     /**
      * OData のルートパス.
      */
     public static final String ODATA_ROOTPATH = "/odata4.svc";
+
+    /**
+     * JDBC Statement のタイムアウト値.
+     */
+    public static final int JDBC_STMT_TIMEOUT = 30;
 
     /**
      * Oiyokan がリクエストを処理する際の 'OData v4' からはじまるトレースを出力するかどうか。

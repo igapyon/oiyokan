@@ -17,6 +17,7 @@ package jp.oiyokan.oiyo.gen;
 
 import java.sql.Connection;
 
+import jp.oiyokan.OiyokanTestConstants;
 import jp.oiyokan.basic.BasicJdbcUtil;
 import jp.oiyokan.data.OiyokanKanDatabase;
 import jp.oiyokan.dto.OiyokanSettingsDatabase;
@@ -33,6 +34,9 @@ class GenOiyoPostgresSakilaTest {
      */
     // @Test
     void test01() throws Exception {
+        if (!OiyokanTestConstants.IS_TEST_SAKILA)
+            return;
+
         OiyokanSettingsDatabase settingsDatabase = OiyokanSettingsUtil.getOiyokanDatabase("postgres1");
 
         try (Connection connTargetDb = BasicJdbcUtil.getConnection(settingsDatabase)) {

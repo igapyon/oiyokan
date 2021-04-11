@@ -12,9 +12,10 @@
 
 	<groupId>jp.oiyokan</groupId>
 	<artifactId>oiyokan</artifactId>
-	<version>1.1.20210406</version>
+	<version>1.2.20210411</version>
 	<name>oiyokan</name>
-	<description>Oiyokan is a simple OData v4 Server. (based on Apache Olingo / Spring Boot / h2 database)</description>
+	<description>Oiyokan is a simple OData v4 Server. (based on Apache
+		Olingo / Spring Boot / h2 database)</description>
 
 	<properties>
 		<java.version>11</java.version>
@@ -63,6 +64,7 @@
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
+			<version>1.4.200</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->

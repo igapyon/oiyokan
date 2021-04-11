@@ -20,6 +20,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.apache.olingo.server.api.ODataResponse;
 import org.junit.jupiter.api.Test;
 
+import jp.oiyokan.OiyokanTestConstants;
+import jp.oiyokan.basic.BasicUrlUtil;
 import jp.oiyokan.util.OiyokanTestUtil;
 
 /**
@@ -28,8 +30,11 @@ import jp.oiyokan.util.OiyokanTestUtil;
 class TestODataFilterUnaryTestDbTest {
     @Test
     void testNotA() throws Exception {
-        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1", OiyokanTestUtil
-                .encodeUrlQuery("&$filter=not contains(StringVar65535,'VARCHAR65535') &$count=true &$select=ID"));
+        if (!OiyokanTestConstants.IS_TEST_ODATATEST)
+            return;
+
+        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1", BasicUrlUtil
+                .encodeUrlQuery("&$filter=not contains(StringVar255,'VARCHAR255') &$count=true &$select=ID"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         // System.err.println("result: " + result);

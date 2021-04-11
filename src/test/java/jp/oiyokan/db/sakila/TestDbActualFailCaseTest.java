@@ -20,6 +20,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.apache.olingo.server.api.ODataResponse;
 import org.junit.jupiter.api.Test;
 
+import jp.oiyokan.OiyokanTestConstants;
+import jp.oiyokan.basic.BasicUrlUtil;
 import jp.oiyokan.util.OiyokanTestUtil;
 
 /**
@@ -28,9 +30,11 @@ import jp.oiyokan.util.OiyokanTestUtil;
 class TestDbActualFailCaseTest {
     @Test
     void test01() throws Exception {
-        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/SklFilmActors",
-                OiyokanTestUtil.encodeUrlQuery(
-                        "$top=2001 &$filter=actor_id eq 1 and film_id eq 140 &$count=true &$select=actor_id,film_id,last_update"));
+        if (!OiyokanTestConstants.IS_TEST_SAKILA)
+            return;
+
+        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/SklFilmActors", BasicUrlUtil.encodeUrlQuery(
+                "$top=2001 &$filter=actor_id eq 1 and film_id eq 140 &$count=true &$select=actor_id,film_id,last_update"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         // System.err.println("result: " + result);

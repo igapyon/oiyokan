@@ -15,6 +15,8 @@
  */
 package jp.oiyokan;
 
+import org.apache.olingo.commons.api.http.HttpStatusCode;
+
 /**
  * Messages of Oiyokan.
  */
@@ -29,13 +31,19 @@ public class OiyokanMessages {
     public static final String M008 = "[M008] UNEXPECTED: fail to read from binary";
     public static final String M009 = "[M009] UNEXPECTED: missing impl";
     public static final String M010 = "[M010] NOT SUPPORTED: Parameter Type";
+    public static final int M010_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
     public static final String M011 = "[M011] NOT SUPPORTED: URI: $apply";
+    public static final int M011_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
     public static final String M012 = "[M012] NOT SUPPORTED: URI: customQuery";
+    public static final int M012_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
     public static final String M013 = "[M013] NOT SUPPORTED: URI: deltaToken";
+    public static final int M013_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
     public static final String M014 = "[M014] NOT SUPPORTED: URI: $expand";
+    public static final int M014_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
     public static final String M015 = "[M015] UNEXPECTED: An error occurred in SQL that counts the number of search results.";
-    public static final String M016 = "[M016] Fail to execute count SQL";
+    // M016
     public static final String M017 = "[M017] Fail to execute SQL";
+    public static final int M017_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
     public static final String M018 = "[M018] UNEXPECTED: Fail to create ID EntitySet name";
     public static final String M019 = "[M019] UNEXPECTED: Fail to get database meta";
     public static final String M020 = "[M020] NOT SUPPORTED: Database type";
@@ -51,8 +59,16 @@ public class OiyokanMessages {
     public static final String M030 = "[M030] UNEXPECTED: Fail to execute SQL for local internal table(2)";
     public static final String M031 = "[M031] UNEXPECTED: Fail to execute Dabaase";
     public static final String M032 = "[M032] NOT SUPPORTED: URI: $search";
+    public static final int M032_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
     public static final String M033 = "[M033] NOT SUPPORTED: unknown UUID object given";
+    public static final int M033_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
     public static final String M034 = "[M034] ERROR: An unknown field name was specified. The field names are case sensitive. Make sure the Oiyo field name matches the target field name.";
+    public static final String M035 = "[M035] SQL timeout at count";
+    public static final int M035_CODE = HttpStatusCode.REQUEST_TIMEOUT.getStatusCode();
+    public static final String M036 = "[M036] SQL timeout at execute";
+    public static final int M036_CODE = HttpStatusCode.REQUEST_TIMEOUT.getStatusCode();
+    public static final String M037 = "[M037] NOT SUPPORTED: Parameter Type";
+    public static final int M037_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
 
     ///////////////////
     // Expression
@@ -63,7 +79,7 @@ public class OiyokanMessages {
     public static final String M104 = "[M104] NOT SUPPORTED: Filter Expression: TypeLiteralImpl";
     public static final String M105 = "[M105] UNEXPECTED: Fail to process Expression";
     public static final String M106 = "[M106] UNEXPECTED: Unsupported binary operator";
-    public static final String M107 = "[M107] NOT SUPPORTED: LiteralImpl";
+    // M107
     public static final String M108 = "[M108] NOT SUPPORTED: MethodKind.FRACTIONALSECONDS";
     public static final String M109 = "[M109] NOT SUPPORTED: MethodKind.TOTALSECONDS";
     public static final String M110 = "[M110] NOT SUPPORTED: MethodKind.DATE";
@@ -79,8 +95,7 @@ public class OiyokanMessages {
     public static final String M120 = "[M120] NOT SUPPORTED: MethodKind.ISOF";
     public static final String M121 = "[M121] UNEXPECTED: NOT SUPPORTED MethodKind";
     public static final String M122 = "[M122] UNEXPECTED: Unsupported UnaryOperatorKind";
-    // public static final String M123 = "[M123] NOT SUPPORTED:
-    // MethodKind.ENDSWITH";
+    // M123
     public static final String M124 = "[M124] NOT SUPPORTED: BinaryOperatorKind.HAS";
     public static final String M125 = "[M125] NOT SUPPORTED: BinaryOperatorKind.IN";
     public static final String M126 = "[M126] NOT SUPPORTED: BinaryOperatorKind.MUL";
@@ -89,6 +104,44 @@ public class OiyokanMessages {
     public static final String M129 = "[M129] NOT SUPPORTED: BinaryOperatorKind.ADD";
     public static final String M130 = "[M130] NOT SUPPORTED: BinaryOperatorKind.SUB";
     public static final String M131 = "[M131] NOT SUPPORTED: UnaryOperatorKind.MINUS";
+
+    ///////////////////
+    // Entity
+
+    public static final String M201 = "[M201] NO record processed. No Entity effects.";
+    public static final int M201_CODE = HttpStatusCode.NOT_FOUND.getStatusCode();
+    public static final String M202 = "[M202] Integrity constraint violation occured (DML). 一意制約違反.";
+    public static final int M202_CODE = HttpStatusCode.CONFLICT.getStatusCode();
+    public static final String M203 = "[M203] SQL timeout at execute.";
+    public static final int M203_CODE = HttpStatusCode.REQUEST_TIMEOUT.getStatusCode();
+    public static final String M204 = "[M204] Fail to execute SQL.";
+    public static final int M204_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
+    public static final String M205 = "[M205] Fail to execute SQL.";
+    public static final int M205_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
+    public static final String M206 = "[M206] No such EntitySet found (readEntity)";
+    public static final int M206_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
+    public static final String M207 = "[M207] No such Entity data";
+    public static final int M207_CODE = HttpStatusCode.NOT_FOUND.getStatusCode();
+    public static final String M208 = "[M208] SQL timeout at execute (readEntity)";
+    public static final int M208_CODE = HttpStatusCode.REQUEST_TIMEOUT.getStatusCode();
+    public static final String M209 = "[M209] Fail to execute SQL (readEntity)";
+    public static final int M209_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
+    public static final String M210 = "[M210] Database exception occured (readEntity)";
+    public static final int M210_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
+    public static final String M211 = "[M211] No such EntitySet found (createEntity)";
+    public static final int M211_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
+    public static final String M212 = "[M212] No such EntitySet found (deleteEntity)";
+    public static final int M212_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
+    public static final String M213 = "[M213] No such EntitySet found (updateEntity(PATCH))";
+    public static final int M213_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
+    public static final String M214 = "[M214] No such EntitySet found (updateEntity(PUT))";
+    public static final int M214_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
+    public static final String M215 = "[M215] UNEXPECTED: Too many rows found (readEntity)";
+    public static final int M215_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
+    public static final String M216 = "[M216] UNEXPECTED: Must NOT pass this case.";
+    public static final int M216_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
+    public static final String M217 = "[M217] UNEXPECTED: Can't retrieve PreparedStatement#getGeneratedKeys: Fail to map auto generated key field.";
+    public static final int M217_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
 
     /**
      * 手早く未実装マークをつけるためのテンポラリなメッセージ.

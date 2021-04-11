@@ -7,7 +7,7 @@
 			"type": "h2",
 			"description": "Oiyokan internal DB. Do not change.",
 			"jdbcDriver": "org.h2.Driver",
-			"jdbcUrl": "jdbc:h2:mem:oiyokan;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=FALSE;CASE_INSENSITIVE_IDENTIFIERS=TRUE;MODE=MSSQLServer",
+			"jdbcUrl": "jdbc:h2:mem:oiyokan;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=FALSE;MODE=MSSQLServer",
 			"jdbcUser": "sa",
 			"jdbcPass": ""
 		},
@@ -16,7 +16,7 @@
 			"type": "h2",
 			"description": "Oiyokan internal Target Test DB. Used for build unit test.",
 			"jdbcDriver": "org.h2.Driver",
-			"jdbcUrl": "jdbc:h2:file:./src/main/resources/db/oiyokan-internal;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=FALSE;CASE_INSENSITIVE_IDENTIFIERS=TRUE;MODE=MSSQLServer",
+			"jdbcUrl": "jdbc:h2:file:./src/main/resources/db/oiyokan-internal;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=FALSE;MODE=MSSQLServer",
 			"jdbcUser": "sa",
 			"jdbcPass": ""
 		},
@@ -78,12 +78,48 @@
 		},
 		{
 			"name": "oiyokan-test-database",
-			"description": "Oiyokan internal Target Test Entity. Used for build unit test.",
+			"description": "Oiyokan internal Target Test Entity.[FOR UNIT TEST].",
 			"entitySetName": "ODataTests1",
 			"entityName": "ODataTest1",
 			"databaseName": "oiyokanInternalTarget",
 			"dbTableNameLocal": "OiyoODataTest1",
 			"dbTableNameTarget": "ODataTest1"
+		},
+		{
+			"name": "oiyokan-test-database2",
+			"description": "Oiyokan internal Target Test Entity. 複数項目で一意のサンプル.",
+			"entitySetName": "ODataTests2",
+			"entityName": "ODataTest2",
+			"databaseName": "oiyokanInternalTarget",
+			"dbTableNameLocal": "OiyoODataTest2",
+			"dbTableNameTarget": "ODataTest2"
+		},
+		{
+			"name": "oiyokan-test-database3",
+			"description": "Oiyokan internal Target Test Entity. キー以外がnull許容のサンプル.",
+			"entitySetName": "ODataTests3",
+			"entityName": "ODataTest3",
+			"databaseName": "oiyokanInternalTarget",
+			"dbTableNameLocal": "OiyoODataTest3",
+			"dbTableNameTarget": "ODataTest3"
+		},
+		{
+			"name": "oiyokan-test-database4",
+			"description": "Oiyokan internal Target Test Entity. 空白含み項目.",
+			"entitySetName": "ODataTests4",
+			"entityName": "ODataTest4",
+			"databaseName": "oiyokanInternalTarget",
+			"dbTableNameLocal": "OiyoODataTest4",
+			"dbTableNameTarget": "OData Test4"
+		},
+		{
+			"name": "oiyokan-test-database5",
+			"description": "Oiyokan internal Target Test Entity. 自動採番.",
+			"entitySetName": "ODataTests5",
+			"entityName": "ODataTest5",
+			"databaseName": "oiyokanInternalTarget",
+			"dbTableNameLocal": "OiyoODataTest5",
+			"dbTableNameTarget": "ODataTest5"
 		},
 		{
 			"name": "oiyokan-test-database-fulltext",

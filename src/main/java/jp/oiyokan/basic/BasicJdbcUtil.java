@@ -15,6 +15,7 @@
  */
 package jp.oiyokan.basic;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.charset.Charset;
@@ -24,10 +25,19 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
+import java.sql.SQLTimeoutException;
+import java.sql.Statement;
 import java.sql.Types;
+import java.time.ZonedDateTime;
+import java.time.temporal.TemporalAccessor;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.olingo.commons.api.data.Property;
 import org.apache.olingo.commons.api.data.ValueType;
 import org.apache.olingo.commons.api.edm.EdmPrimitiveTypeKind;
@@ -35,6 +45,7 @@ import org.apache.olingo.commons.api.edm.provider.CsdlProperty;
 import org.apache.olingo.server.api.ODataApplicationException;
 import org.springframework.util.StreamUtils;
 
+import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanCsdlEntitySet;
 import jp.oiyokan.OiyokanMessages;
 import jp.oiyokan.basic.sql.BasicSqlInfo;
@@ -60,8 +71,8 @@ public class BasicJdbcUtil {
         // OData server 起動シーケンスにてドライバ存在チェックは既に実施済み.
         // Class.forName(settingsDatabase.getJdbcDriver());
 
-        System.err.println(
-                "TRACE: DEBUG: DB接続開始: " + settingsDatabase.getName() + " (" + settingsDatabase.getDescription() + ")");
+        System.err.println("TRACE: DEBUG: DB connect: " + settingsDatabase.getName() + " ("
+                + settingsDatabase.getDescription() + ")");
 
         try {
             if (settingsDatabase.getJdbcUser() == null || settingsDatabase.getJdbcUser().trim().length() == 0) {
@@ -320,7 +331,7 @@ public class BasicJdbcUtil {
                 System.err.println(OiyokanMessages.M033 + ": type[" + csdlProp.getType() + "], "
                         + obj.getClass().getCanonicalName());
                 throw new ODataApplicationException(OiyokanMessages.M033 + ": type[" + csdlProp.getType() + "], "
-                        + obj.getClass().getCanonicalName(), 500, Locale.ENGLISH);
+                        + obj.getClass().getCanonicalName(), OiyokanMessages.M033_CODE, Locale.ENGLISH);
             }
         } else {
             // ARRAY と OTHER には対応しない。そもそもここ通過しないのじゃないの?
@@ -344,38 +355,342 @@ public class BasicJdbcUtil {
      */
     public static void bindPreparedParameter(PreparedStatement stmt, int column, Object value)
             throws ODataApplicationException, SQLException {
-        if (value instanceof Byte) {
+        final boolean IS_SHOW_DEBUG = false;
+
+        if (value == null) {
+            if (IS_SHOW_DEBUG)
+                System.err.println("TRACE: PreparedStatement#setNull: null");
+            stmt.setNull(column, Types.NULL);
+        } else if (value instanceof Byte) {
+            if (IS_SHOW_DEBUG)
+                System.err.println("TRACE: PreparedStatement#setByte: " + value);
             stmt.setByte(column, (Byte) value);
         } else if (value instanceof Short) {
+            if (IS_SHOW_DEBUG)
+                System.err.println("TRACE: PreparedStatement#setShort: " + value);
             stmt.setShort(column, (Short) value);
         } else if (value instanceof Integer) {
+            if (IS_SHOW_DEBUG)
+                System.err.println("TRACE: PreparedStatement#setInt: " + value);
             stmt.setInt(column, (Integer) value);
         } else if (value instanceof Long) {
+            if (IS_SHOW_DEBUG)
+                System.err.println("TRACE: PreparedStatement#setLong: " + value);
             stmt.setLong(column, (Long) value);
         } else if (value instanceof BigDecimal) {
+            if (IS_SHOW_DEBUG)
+                System.err.println("TRACE: PreparedStatement#setBigDecimal: " + value);
             // Oiyokan では 小数点は基本的にリテラルのまま残すため、このコードは通過しない.
             stmt.setBigDecimal(column, (BigDecimal) value);
         } else if (value instanceof Boolean) {
+            if (IS_SHOW_DEBUG)
+                System.err.println("TRACE: PreparedStatement#setBoolean: " + value);
             stmt.setBoolean(column, (Boolean) value);
         } else if (value instanceof Float) {
+            if (IS_SHOW_DEBUG)
+                System.err.println("TRACE: PreparedStatement#setFloat: " + value);
             // Oiyokan では 小数点は基本的にリテラルのまま残すため、このコードは通過しない.
             stmt.setFloat(column, (Float) value);
         } else if (value instanceof Double) {
+            if (IS_SHOW_DEBUG)
+                System.err.println("TRACE: PreparedStatement#setDouble: " + value);
             // Oiyokan では 小数点は基本的にリテラルのまま残すため、このコードは通過しない.
             stmt.setDouble(column, (Double) value);
+        } else if (value instanceof java.sql.Time) {
+            if (IS_SHOW_DEBUG)
+                System.err.println("TRACE: PreparedStatement#setTime: " + value);
+            // java.util.Dateより先に記載が必要
+            java.sql.Time look = (java.sql.Time) value;
+            stmt.setTime(column, look);
+        } else if (value instanceof java.sql.Date) {
+            if (IS_SHOW_DEBUG)
+                System.err.println("TRACE: PreparedStatement#setDate(1): " + value);
+            // java.util.Dateより先に記載が必要
+            java.sql.Date look = (java.sql.Date) value;
+            stmt.setDate(column, look);
         } else if (value instanceof java.util.Date) {
+            if (IS_SHOW_DEBUG)
+                System.err.println("TRACE: PreparedStatement#setDate(2): " + value);
             // java.sql.Timestampはここを通過.
             java.util.Date udate = (java.util.Date) value;
             java.sql.Date sdate = new java.sql.Date(udate.getTime());
             stmt.setDate(column, sdate);
+        } else if (value instanceof java.util.Calendar) {
+            if (IS_SHOW_DEBUG)
+                System.err.println("TRACE: PreparedStatement#setDate(3): " + value);
+            java.util.Calendar cal = (java.util.Calendar) value;
+            java.sql.Date sdate = new java.sql.Date(cal.getTime().getTime());
+            stmt.setDate(column, sdate);
+        } else if (value instanceof ZonedDateTime) {
+            if (IS_SHOW_DEBUG)
+                System.err.println("TRACE: PreparedStatement#setDate(4): " + value);
+            ZonedDateTime zdt = (ZonedDateTime) value;
+            java.util.Date look = BasicDateTimeUtil.zonedDateTime2Date(zdt);
+            java.sql.Date sdate = new java.sql.Date(look.getTime());
+            stmt.setDate(column, sdate);
         } else if (value instanceof String) {
+            if (IS_SHOW_DEBUG)
+                System.err.println("TRACE: PreparedStatement#setString: " + value);
             stmt.setString(column, (String) value);
+        } else if (value instanceof byte[]) {
+            if (IS_SHOW_DEBUG)
+                System.err.println("TRACE: PreparedStatement#setBytes: " + value);
+            byte[] look = (byte[]) value;
+            stmt.setBytes(column, look);
         } else {
             // [M010] NOT SUPPORTED: Parameter Type
             System.err.println(OiyokanMessages.M010 + ": " + value.getClass().getCanonicalName());
             throw new ODataApplicationException(OiyokanMessages.M010 + ": " + value.getClass().getCanonicalName(), //
-                    500, Locale.ENGLISH);
+                    OiyokanMessages.M010_CODE, Locale.ENGLISH);
         }
+    }
+
+    private static final boolean IS_DEBUG_EXPAND_LITERAL = false;
+
+    /**
+     * リテラルまたはプレースホルダーをビルド.
+     * 
+     * @param sqlInfo    SQL info.
+     * @param csdlType   CSDL type.
+     * @param inputParam parameter text.
+     * @throws ODataApplicationException ODataアプリ例外が発生した場合.
+     */
+    public static void expandLiteralOrBindParameter(final BasicSqlInfo sqlInfo, String csdlType, Object inputParam)
+            throws ODataApplicationException {
+        if (inputParam == null) {
+            if (IS_DEBUG_EXPAND_LITERAL)
+                System.err.println("TRACE: null: ");
+            sqlInfo.getSqlBuilder().append("?");
+            sqlInfo.getSqlParamList().add(inputParam);
+            return;
+        }
+        if ("Edm.SByte".equals(csdlType)) {
+            if (IS_DEBUG_EXPAND_LITERAL)
+                System.err.println("TRACE: EdmSByte: " + inputParam);
+            if (inputParam instanceof Byte //
+                    || inputParam instanceof Short//
+                    || inputParam instanceof Integer) {
+                sqlInfo.getSqlBuilder().append("?");
+                sqlInfo.getSqlParamList().add(inputParam);
+            } else {
+                // そのままSQL本文
+                sqlInfo.getSqlBuilder().append(String.valueOf(inputParam));
+            }
+            return;
+        }
+        if ("Edm.Byte".equals(csdlType)) {
+            if (IS_DEBUG_EXPAND_LITERAL)
+                System.err.println("TRACE: EdmByte: " + inputParam);
+            // 符号なしByteはJavaには該当する型がないので Shortで代用.
+            if (inputParam instanceof Byte //
+                    || inputParam instanceof Short//
+                    || inputParam instanceof Integer) {
+                sqlInfo.getSqlBuilder().append("?");
+                sqlInfo.getSqlParamList().add(inputParam);
+            } else {
+                // そのままSQL本文
+                sqlInfo.getSqlBuilder().append(String.valueOf(inputParam));
+            }
+            return;
+        }
+        if ("Edm.Int16".equals(csdlType)) {
+            if (IS_DEBUG_EXPAND_LITERAL)
+                System.err.println("TRACE: EdmInt16: " + inputParam);
+            if (inputParam instanceof Byte //
+                    || inputParam instanceof Short//
+                    || inputParam instanceof Integer) {
+                sqlInfo.getSqlBuilder().append("?");
+                sqlInfo.getSqlParamList().add(inputParam);
+            } else {
+                sqlInfo.getSqlBuilder().append("?");
+                sqlInfo.getSqlParamList().add(Short.valueOf(String.valueOf(inputParam)));
+            }
+            return;
+        }
+        if ("Edm.Int32".equals(csdlType)) {
+            if (IS_DEBUG_EXPAND_LITERAL)
+                System.err.println("TRACE: EdmInt32: " + inputParam);
+            if (inputParam instanceof Byte //
+                    || inputParam instanceof Short//
+                    || inputParam instanceof Integer) {
+                sqlInfo.getSqlBuilder().append("?");
+                sqlInfo.getSqlParamList().add(inputParam);
+            } else {
+                sqlInfo.getSqlBuilder().append("?");
+                sqlInfo.getSqlParamList().add(Integer.valueOf(String.valueOf(inputParam)));
+            }
+            return;
+        }
+        if ("Edm.Int64".equals(csdlType)) {
+            if (IS_DEBUG_EXPAND_LITERAL)
+                System.err.println("TRACE: EdmInt64: " + inputParam);
+            if (inputParam instanceof Byte //
+                    || inputParam instanceof Short//
+                    || inputParam instanceof Integer) {
+                sqlInfo.getSqlBuilder().append("?");
+                sqlInfo.getSqlParamList().add(inputParam);
+            } else {
+                sqlInfo.getSqlBuilder().append("?");
+                sqlInfo.getSqlParamList().add(Long.valueOf(String.valueOf(inputParam)));
+            }
+            return;
+        }
+        if ("Edm.Decimal".equals(csdlType)) {
+            if (IS_DEBUG_EXPAND_LITERAL)
+                System.err.println("TRACE: EdmDecimal: " + inputParam);
+            if (inputParam instanceof BigDecimal) {
+                sqlInfo.getSqlBuilder().append("?");
+                sqlInfo.getSqlParamList().add(inputParam);
+            } else {
+                // 小数点付きの数値はパラメータとしては処理せずにそのまま文字列として連結.
+                sqlInfo.getSqlBuilder().append(String.valueOf(inputParam));
+            }
+            return;
+        }
+        if ("Edm.Boolean".equals(csdlType)) {
+            if (IS_DEBUG_EXPAND_LITERAL)
+                System.err.println("TRACE: EdmBoolean: " + inputParam);
+            if (inputParam instanceof Boolean) {
+                sqlInfo.getSqlBuilder().append("?");
+                sqlInfo.getSqlParamList().add((Boolean) inputParam);
+            } else {
+                sqlInfo.getSqlBuilder().append("?");
+                sqlInfo.getSqlParamList().add(Boolean.valueOf("true".equalsIgnoreCase(String.valueOf(inputParam))));
+            }
+            return;
+        }
+        if ("Edm.Single".equals(csdlType)) {
+            if (IS_DEBUG_EXPAND_LITERAL)
+                System.err.println("TRACE: EdmSingle: " + inputParam);
+            if (inputParam instanceof Float //
+                    || inputParam instanceof Short//
+                    || inputParam instanceof Integer) {
+                sqlInfo.getSqlBuilder().append("?");
+                sqlInfo.getSqlParamList().add(inputParam);
+            } else {
+                // 小数点付きの数値はパラメータとしては処理せずにそのまま文字列として連結.
+                sqlInfo.getSqlBuilder().append(inputParam);
+            }
+            return;
+        }
+        if ("Edm.Double".equals(csdlType)) {
+            if (IS_DEBUG_EXPAND_LITERAL)
+                System.err.println("TRACE: EdmDouble: " + inputParam);
+            if (inputParam instanceof Double //
+                    || inputParam instanceof Short//
+                    || inputParam instanceof Integer) {
+                sqlInfo.getSqlBuilder().append("?");
+                sqlInfo.getSqlParamList().add(inputParam);
+            } else {
+                // 小数点付きの数値はパラメータとしては処理せずにそのまま文字列として連結.
+                sqlInfo.getSqlBuilder().append(inputParam);
+            }
+            return;
+        }
+        if ("Edm.Date".equals(csdlType)) {
+            if (IS_DEBUG_EXPAND_LITERAL)
+                System.err.println("TRACE: EdmDate: " + inputParam);
+            if (inputParam instanceof java.sql.Date //
+                    || inputParam instanceof java.util.Date//
+                    || inputParam instanceof java.util.Calendar) {
+                sqlInfo.getSqlBuilder().append("?");
+                sqlInfo.getSqlParamList().add(inputParam);
+            } else {
+                ZonedDateTime zdt = BasicDateTimeUtil.parseStringDateTime(String.valueOf(inputParam));
+                sqlInfo.getSqlBuilder().append("?");
+                sqlInfo.getSqlParamList().add(zdt);
+            }
+            return;
+        }
+        if ("Edm.DateTimeOffset".equals(csdlType)) {
+            if (IS_DEBUG_EXPAND_LITERAL)
+                System.err.println("TRACE: EdmDateTimeOffset: " + inputParam);
+            if (inputParam instanceof java.sql.Date //
+                    || inputParam instanceof java.util.Date//
+                    || inputParam instanceof java.util.Calendar) {
+                sqlInfo.getSqlBuilder().append("?");
+                sqlInfo.getSqlParamList().add(inputParam);
+            } else if (inputParam instanceof TemporalAccessor) {
+                sqlInfo.getSqlBuilder().append("?");
+                sqlInfo.getSqlParamList().add(inputParam);
+            } else {
+                ZonedDateTime zdt = BasicDateTimeUtil.parseStringDateTime(String.valueOf(inputParam));
+                sqlInfo.getSqlBuilder().append("?");
+                sqlInfo.getSqlParamList().add(zdt);
+            }
+            return;
+        }
+        if ("Edm.TimeOfDay".equals(csdlType)) {
+            if (IS_DEBUG_EXPAND_LITERAL)
+                System.err.println("TRACE: EdmTimeOfDay: " + inputParam);
+            if (inputParam instanceof java.sql.Time) {
+                sqlInfo.getSqlBuilder().append("?");
+                sqlInfo.getSqlParamList().add(inputParam);
+            } else if (inputParam instanceof java.util.Calendar) {
+                java.util.Calendar cal = (java.util.Calendar) inputParam;
+                java.sql.Time look = new java.sql.Time(cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE),
+                        cal.get(Calendar.SECOND));
+                sqlInfo.getSqlBuilder().append("?");
+                sqlInfo.getSqlParamList().add(look);
+            } else {
+                ZonedDateTime zdt = BasicDateTimeUtil.parseStringDateTime(String.valueOf(inputParam));
+                sqlInfo.getSqlBuilder().append("?");
+                sqlInfo.getSqlParamList().add(zdt);
+            }
+            return;
+        }
+        if ("Edm.String".equals(csdlType)) {
+            if (IS_DEBUG_EXPAND_LITERAL)
+                System.err.println("TRACE: EdmString: " + inputParam);
+            String value = String.valueOf(inputParam);
+            if (value.startsWith("'") && value.endsWith("'")) {
+                // 文字列リテラルについては前後のクオートを除去して記憶.
+                value = value.substring(1, value.length() - 1);
+
+                // 文字列リテラルとしてパラメータ化クエリで扱う.
+                sqlInfo.getSqlBuilder().append("?");
+                sqlInfo.getSqlParamList().add(value);
+            } else {
+                // 文字列リテラルとしてパラメータ化クエリで扱う.
+                // そのまま出力するとエラーになる点に注意!
+                sqlInfo.getSqlBuilder().append("?");
+                sqlInfo.getSqlParamList().add(value);
+            }
+            return;
+        }
+        if ("Edm.Binary".equals(csdlType)) {
+            if (IS_DEBUG_EXPAND_LITERAL)
+                System.err.println("TRACE: EdmBinary: " + inputParam);
+            if (inputParam instanceof byte[] //
+                    || inputParam instanceof ByteArrayInputStream) {
+                sqlInfo.getSqlBuilder().append("?");
+                sqlInfo.getSqlParamList().add(inputParam);
+            } else {
+                final byte[] look = new Base64().decode(String.valueOf(inputParam));
+                sqlInfo.getSqlBuilder().append("?");
+                sqlInfo.getSqlParamList().add(look);
+            }
+            return;
+        }
+        if ("Edm.Guid".equals(csdlType)) {
+            if (IS_DEBUG_EXPAND_LITERAL)
+                System.err.println("TRACE: EdmGuid: " + inputParam);
+            if (inputParam instanceof byte[] //
+                    || inputParam instanceof ByteArrayInputStream) {
+                sqlInfo.getSqlBuilder().append("?");
+                sqlInfo.getSqlParamList().add(inputParam);
+            } else {
+                final String look = String.valueOf(inputParam);
+                sqlInfo.getSqlBuilder().append("?");
+                sqlInfo.getSqlParamList().add(look);
+            }
+            return;
+        }
+
+        // [M037] NOT SUPPORTED: Parameter Type
+        System.err.println(OiyokanMessages.M037 + ": " + csdlType);
+        throw new ODataApplicationException(OiyokanMessages.M037 + ": " + csdlType, //
+                OiyokanMessages.M037_CODE, Locale.ENGLISH);
     }
 
     ////////////////////////////
@@ -433,6 +748,83 @@ public class BasicJdbcUtil {
             System.err.println(OiyokanMessages.M020 + ": " + sqlInfo.getSettingsDatabase().getType());
             throw new ODataApplicationException(OiyokanMessages.M020 + ": " + sqlInfo.getSettingsDatabase().getType(),
                     500, Locale.ENGLISH);
+        }
+    }
+
+    ////////////////////////////
+    // EXECUTE DML
+
+    /**
+     * TODO FIXME 自動採集番された項目の値をreturnすること。
+     * 
+     * @param connTargetDb 利用データベース接続.
+     * @param sqlInfo      実行したいSQL情報.
+     * @return (もしあれば)生成されたキーのリスト.
+     * @throws ODataApplicationException
+     */
+    public static List<String> executeDml(Connection connTargetDb, BasicSqlInfo sqlInfo, boolean returnGeneratedKeys)
+            throws ODataApplicationException {
+        final String sql = sqlInfo.getSqlBuilder().toString();
+        if (OiyokanConstants.IS_TRACE_ODATA_V4)
+            System.err.println("OData v4: TRACE: SQL exec: " + sql);
+
+        final long startMillisec = System.currentTimeMillis();
+        try (var stmt = connTargetDb.prepareStatement(sql, //
+                (returnGeneratedKeys ? Statement.RETURN_GENERATED_KEYS : Statement.NO_GENERATED_KEYS))) {
+            // set query timeout
+            stmt.setQueryTimeout(OiyokanConstants.JDBC_STMT_TIMEOUT);
+
+            int idxColumn = 1;
+            for (Object look : sqlInfo.getSqlParamList()) {
+                // System.err.println("TRACE: param: " + look.toString());
+                BasicJdbcUtil.bindPreparedParameter(stmt, idxColumn++, look);
+            }
+
+            final int result = stmt.executeUpdate();
+            if (result != 1) {
+                // [M201] NO record processed. No Entity effects.
+                System.err.println(OiyokanMessages.M201 + ": " + sql);
+                throw new ODataApplicationException(OiyokanMessages.M201 + ": " + sql, //
+                        OiyokanMessages.M201_CODE, Locale.ENGLISH);
+            }
+
+            // 生成されたキーがあればそれを採用。
+            final List<String> generatedKeys = new ArrayList<>();
+            if (returnGeneratedKeys) {
+                final ResultSet rsKeys = stmt.getGeneratedKeys();
+                if (rsKeys.next()) {
+                    final ResultSetMetaData rsmetaKeys = rsKeys.getMetaData();
+                    for (int column = 1; column <= rsmetaKeys.getColumnCount(); column++) {
+                        generatedKeys.add(rsKeys.getString(column));
+                    }
+                }
+            }
+
+            final long endMillisec = System.currentTimeMillis();
+            if (OiyokanConstants.IS_TRACE_ODATA_V4) {
+                final long elapsed = endMillisec - startMillisec;
+                if (elapsed >= 10) {
+                    System.err.println("OData v4: TRACE: SQL: elapsed: " + (endMillisec - startMillisec));
+                }
+            }
+
+            return generatedKeys;
+        } catch (SQLIntegrityConstraintViolationException ex) {
+            // [M202] Integrity constraint violation occured (DML). 一意制約違反.
+            System.err.println(OiyokanMessages.M202 + ": " + sql + ", " + ex.toString());
+            throw new ODataApplicationException(OiyokanMessages.M202 + ": " + sql, //
+                    OiyokanMessages.M202_CODE, Locale.ENGLISH);
+        } catch (SQLTimeoutException ex) {
+            // [M203] SQL timeout at execute.
+            System.err.println(OiyokanMessages.M203 + ": " + sql + ", " + ex.toString());
+            throw new ODataApplicationException(OiyokanMessages.M203 + ": " + sql, //
+                    OiyokanMessages.M203_CODE, Locale.ENGLISH);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            // [M204] Fail to execute SQL.
+            System.err.println(OiyokanMessages.M204 + ": " + sql + ", " + ex.toString());
+            throw new ODataApplicationException(OiyokanMessages.M204 + ": " + sql, //
+                    OiyokanMessages.M204_CODE, Locale.ENGLISH);
         }
     }
 }

@@ -1,9 +1,19 @@
 {
 	"db2entity": [
 		{
-			"db": "zip code",
+			"db": "ZIP CODE",
 			"entity": "zip_code",
 			"description": "pg dvdrental"
+		},
+		{
+			"db": "NA ME",
+			"entity": "Na_me",
+			"description": "Space test"
+		},
+		{
+			"db": "VA LUE1",
+			"entity": "Va_lue1",
+			"description": "Space test"
 		},
 		{
 			"db": "ID",
@@ -46,18 +56,13 @@
 			"description": "OdataTest1"
 		},
 		{
-			"db": "STRINGCHAR2",
-			"entity": "StringChar2",
+			"db": "STRINGCHAR8",
+			"entity": "StringChar8",
 			"description": "OdataTest1"
 		},
 		{
 			"db": "STRINGVAR255",
 			"entity": "StringVar255",
-			"description": "OdataTest1"
-		},
-		{
-			"db": "STRINGVAR65535",
-			"entity": "StringVar65535",
 			"description": "OdataTest1"
 		},
 		{

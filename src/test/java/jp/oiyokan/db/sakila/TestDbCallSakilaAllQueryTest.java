@@ -22,6 +22,8 @@ import org.junit.jupiter.api.Test;
 
 import jp.app.ctrl.ThSakilaCtrl;
 import jp.oiyokan.OiyokanConstants;
+import jp.oiyokan.OiyokanTestConstants;
+import jp.oiyokan.basic.BasicUrlUtil;
 import jp.oiyokan.util.OiyokanTestUtil;
 
 /**
@@ -30,6 +32,9 @@ import jp.oiyokan.util.OiyokanTestUtil;
 class TestDbCallSakilaAllQueryTest {
     @Test
     void test01() throws Exception {
+        if (!OiyokanTestConstants.IS_TEST_SAKILA)
+            return;
+
         for (String[] entrys : ThSakilaCtrl.ODATA_ENTRY_INFOS) {
             if (entrys[0].indexOf("$search") >= 0) {
                 if (!OiyokanConstants.IS_EXPERIMENTAL_SEARCH_ENABLED) {
@@ -43,9 +48,10 @@ class TestDbCallSakilaAllQueryTest {
             final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse(entry[0], entry[1]);
             final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
-            // System.err.println("TRACE: " + OiyokanTestUtil.decodeUrlQuery(entrys[1]));
-            // System.err.println("[" + entrys[0] + "], [" + entrys[1] + "], result: " +
-            // result);
+            if (false) {
+                System.err.println("TRACE: " + BasicUrlUtil.decodeUrlQuery(entrys[1]));
+                System.err.println("[" + entrys[0] + "], [" + entrys[1] + "], result: " + result);
+            }
             assertEquals(200, resp.getStatusCode());
         }
     }

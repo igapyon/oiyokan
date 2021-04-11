@@ -30,7 +30,8 @@ import org.junit.jupiter.api.Test;
 import jp.oiyokan.OiyokanCsdlEntityContainer;
 import jp.oiyokan.OiyokanCsdlEntitySet;
 import jp.oiyokan.OiyokanEdmProvider;
-import jp.oiyokan.util.OiyokanTestUtil;
+import jp.oiyokan.OiyokanTestConstants;
+import jp.oiyokan.basic.BasicUrlUtil;
 
 /**
  * TinyH2SqlExprExpanderのテスト.
@@ -76,20 +77,29 @@ class BasicSqlExprExpanderTest {
 
     @Test
     void test01() throws Exception {
+        if (!OiyokanTestConstants.IS_TEST_ODATATEST)
+            return;
+
         assertEquals("(ID = 1.0)", getExprString("/ODataTests1", //
-                OiyokanTestUtil.encodeUrlQuery("$filter=ID eq 1.0")));
+                BasicUrlUtil.encodeUrlQuery("$filter=ID eq 1.0")));
     }
 
     @Test
     void test02() throws Exception {
+        if (!OiyokanTestConstants.IS_TEST_ODATATEST)
+            return;
+
         assertEquals("((Description = ?) AND (ID = 2.0))", getExprString("/ODataTests1", //
-                OiyokanTestUtil.encodeUrlQuery("$filter=Description eq 'Mac' and ID eq 2.0")));
+                BasicUrlUtil.encodeUrlQuery("$filter=Description eq 'Mac' and ID eq 2.0")));
     }
 
     @Test
     void test03() throws Exception {
-        assertEquals("((INSTR(Description,?) - 1) <> ?)", getExprString("/ODataTests1", //
-                OiyokanTestUtil.encodeUrlQuery(
+        if (!OiyokanTestConstants.IS_TEST_ODATATEST)
+            return;
+
+        assertEquals("((INSTR(Description,?) - 1) <> -1)", getExprString("/ODataTests1", //
+                BasicUrlUtil.encodeUrlQuery(
                         "$top=51&$filter= indexof(Description,'増殖タブレット7') ne -1 &$orderby=ID &$count=true &$select=Description,ID,Name")));
     }
 }
