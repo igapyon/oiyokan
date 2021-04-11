@@ -28,7 +28,7 @@ import jp.oiyokan.util.OiyokanTestUtil;
  */
 class TestODataIdentityTestDbTest {
     @Test
-    void testNotA() throws Exception {
+    void test01() throws Exception {
         if (!OiyokanTestConstants.IS_TEST_ODATATEST)
             return;
 
