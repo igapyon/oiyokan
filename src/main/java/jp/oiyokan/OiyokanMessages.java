@@ -110,6 +110,7 @@ public class OiyokanMessages {
     public static final String M212 = "[M212] No such EntitySet found (deleteEntity)";
     public static final String M213 = "[M213] No such EntitySet found (updateEntity(PATCH))";
     public static final String M214 = "[M214] No such EntitySet found (updateEntity(PUT))";
+    public static final String M215 = "[M215] UNEXPECTED: Too many rows found (readEntity)";
 
     /**
      * 手早く未実装マークをつけるためのテンポラリなメッセージ.

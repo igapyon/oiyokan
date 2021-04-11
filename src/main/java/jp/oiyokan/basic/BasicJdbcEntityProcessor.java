@@ -101,6 +101,13 @@ public class BasicJdbcEntityProcessor {
                 ent.addProperty(prop);
             }
 
+            if (rset.next()) {
+                // [M215] UNEXPECTED: Too many rows found (readEntity)
+                System.err.println(OiyokanMessages.M215 + ": " + sql);
+                throw new ODataApplicationException(OiyokanMessages.M215 + ": " + sql,
+                        HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode(), Locale.ENGLISH);
+            }
+
             final long endMillisec = System.currentTimeMillis();
             if (OiyokanConstants.IS_TRACE_ODATA_V4) {
                 final long elapsed = endMillisec - startMillisec;
