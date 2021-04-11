@@ -98,7 +98,7 @@ class BasicSqlExprExpanderTest {
         if (!OiyokanTestConstants.IS_TEST_ODATATEST)
             return;
 
-        assertEquals("((INSTR(Description,?) - 1) <> ?)", getExprString("/ODataTests1", //
+        assertEquals("((INSTR(Description,?) - 1) <> -1)", getExprString("/ODataTests1", //
                 BasicUrlUtil.encodeUrlQuery(
                         "$top=51&$filter= indexof(Description,'増殖タブレット7') ne -1 &$orderby=ID &$count=true &$select=Description,ID,Name")));
     }

@@ -192,7 +192,7 @@ public class BasicJdbcEntityProcessor {
             // Set auto commit OFF.
             connTargetDb.setAutoCommit(false);
             try {
-                final List<String> generatedKeys = BasicJdbcUtil.executeDml(connTargetDb, sqlInfo);
+                final List<String> generatedKeys = BasicJdbcUtil.executeDml(connTargetDb, sqlInfo, true);
                 // 生成されたキーをその後の処理に反映。
                 final List<UriParameter> keyPredicates = new ArrayList<>();
                 for (CsdlPropertyRef propKey : entitySet.getEntityType().getKey()) {
@@ -329,7 +329,7 @@ public class BasicJdbcEntityProcessor {
             // Set auto commit OFF.
             connTargetDb.setAutoCommit(false);
             try {
-                BasicJdbcUtil.executeDml(connTargetDb, sqlInfo);
+                BasicJdbcUtil.executeDml(connTargetDb, sqlInfo, false);
 
                 // トランザクションを成功としてマーク.
                 isTranSuccessed = true;
@@ -396,7 +396,7 @@ public class BasicJdbcEntityProcessor {
             connTargetDb.setAutoCommit(false);
             boolean isTranSuccessed = false;
             try {
-                BasicJdbcUtil.executeDml(connTargetDb, sqlInfo);
+                BasicJdbcUtil.executeDml(connTargetDb, sqlInfo, false);
 
                 // トランザクションを成功としてマーク.
                 isTranSuccessed = true;
@@ -476,7 +476,7 @@ public class BasicJdbcEntityProcessor {
             boolean isTranSuccessed = false;
 
             try {
-                BasicJdbcUtil.executeDml(connTargetDb, sqlInfo);
+                BasicJdbcUtil.executeDml(connTargetDb, sqlInfo, false);
 
                 // トランザクションを成功としてマーク.
                 isTranSuccessed = true;
