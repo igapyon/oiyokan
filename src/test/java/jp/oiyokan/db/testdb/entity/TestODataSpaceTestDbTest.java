@@ -30,7 +30,7 @@ class TestODataSpaceTestDbTest {
     /**
      * テストデータが利用する ID 範囲。
      */
-    private static final int TEST_ID = 10152;
+    private static final int TEST_ID = 10156;
 
     @Test
     void test01() throws Exception {
@@ -66,29 +66,28 @@ class TestODataSpaceTestDbTest {
 
         // UPDATE (PUT)
         resp = OiyokanTestUtil.callRequestPut("/ODataTests4(I_D=" + TEST_ID + ",Na_me='Name2')", "{\n" //
-                + "  \"Na_me\":\"Name3\",\n" //
                 + "  \"Va_lue1\":\"Description3\"\n" + "}");
         result = OiyokanTestUtil.stream2String(resp.getContent());
         System.err.println(result);
         assertEquals(204, resp.getStatusCode());
 
         /// 通常のfilter
-        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests4", "$filter=I_D eq " + TEST_ID + "");
+        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests4", "$filter=I_D eq " + TEST_ID);
         result = OiyokanTestUtil.stream2String(resp.getContent());
         System.err.println(result);
         assertEquals(200, resp.getStatusCode());
 
         // Entity
-        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests4(I_D=" + TEST_ID + ",Na_me='Name3')", null);
+        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests4(I_D=" + TEST_ID + ",Na_me='Name2')", null);
         result = OiyokanTestUtil.stream2String(resp.getContent());
         System.err.println(result);
         assertEquals(200, resp.getStatusCode());
 
         // DELETE
-        resp = OiyokanTestUtil.callRequestDelete("/ODataTests4(I_D=" + TEST_ID + ",Na_me='Name3')");
+        resp = OiyokanTestUtil.callRequestDelete("/ODataTests4(I_D=" + TEST_ID + ",Na_me='Name2')");
         assertEquals(204, resp.getStatusCode());
 
-        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests4(" + TEST_ID + ")", null);
+        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests4(I_D=" + TEST_ID + ",Na_me='Name2')", null);
         assertEquals(404, resp.getStatusCode());
     }
 }

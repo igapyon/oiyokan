@@ -141,7 +141,6 @@ public class BasicJdbcEntityProcessor {
 
         expandSelectKey(edmEntitySet);
 
-        // TODO FIXME テーブル名の空白を含むパターンの対応.
         sqlInfo.getSqlBuilder().append(" FROM " + sqlInfo.getEntitySet().getDbTableNameTargetIyo());
 
         sqlInfo.getSqlBuilder().append(" WHERE ");
@@ -192,8 +191,7 @@ public class BasicJdbcEntityProcessor {
             connTargetDb.setAutoCommit(false);
             try {
                 final List<String> generatedKeys = BasicJdbcUtil.executeDml(connTargetDb, sqlInfo);
-
-                // TODO FIXME 戻り値を反映させること。
+                // 生成されたキーをその後の処理に反映。
                 final List<UriParameter> keyPredicates = new ArrayList<>();
                 for (CsdlPropertyRef propKey : entitySet.getEntityType().getKey()) {
                     String propValue = null;
@@ -269,7 +267,6 @@ public class BasicJdbcEntityProcessor {
 
     private void getInsertIntoDml(EdmEntitySet edmEntitySet, Entity requestEntity) throws ODataApplicationException {
         sqlInfo.getSqlBuilder().append("INSERT INTO ");
-        // TODO FIXME テーブル名の空白を含むパターンの対応.
         sqlInfo.getSqlBuilder().append(sqlInfo.getEntitySet().getDbTableNameTargetIyo());
         sqlInfo.getSqlBuilder().append(" (");
         boolean isFirst = true;
@@ -343,7 +340,6 @@ public class BasicJdbcEntityProcessor {
     private void getDeleteDml(EdmEntitySet edmEntitySet, List<UriParameter> keyPredicates)
             throws ODataApplicationException {
         sqlInfo.getSqlBuilder().append("DELETE FROM ");
-        // TODO FIXME テーブル名の空白を含むパターンの対応.
         sqlInfo.getSqlBuilder().append(sqlInfo.getEntitySet().getDbTableNameTargetIyo());
         sqlInfo.getSqlBuilder().append(" WHERE ");
         boolean isFirst = true;
@@ -357,8 +353,8 @@ public class BasicJdbcEntityProcessor {
 
             CsdlProperty csdlProp = sqlInfo.getEntitySet().getEntityType().getProperty(param.getName());
 
-            // TODO 項目名の変形対応。
-            sqlInfo.getSqlBuilder().append(csdlProp.getName());
+            sqlInfo.getSqlBuilder().append(
+                    BasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyokanNamingUtil.entity2Db(csdlProp.getName())));
             sqlInfo.getSqlBuilder().append("=");
             BasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo, csdlProp.getType(), param.getText());
         }
@@ -408,7 +404,6 @@ public class BasicJdbcEntityProcessor {
     private void getUpdatePatchDml(EdmEntitySet edmEntitySet, List<UriParameter> keyPredicates, Entity requestEntity)
             throws ODataApplicationException {
         sqlInfo.getSqlBuilder().append("UPDATE ");
-        // TODO FIXME テーブル名の空白を含むパターンの対応.
         sqlInfo.getSqlBuilder().append(sqlInfo.getEntitySet().getDbTableNameTargetIyo());
         sqlInfo.getSqlBuilder().append(" SET ");
         boolean isFirst = true;
@@ -486,7 +481,6 @@ public class BasicJdbcEntityProcessor {
     private void getUpdatePutDml(EdmEntitySet edmEntitySet, List<UriParameter> keyPredicates, Entity requestEntity)
             throws ODataApplicationException {
         sqlInfo.getSqlBuilder().append("UPDATE ");
-        // TODO FIXME テーブル名の空白を含むパターンの対応.
         sqlInfo.getSqlBuilder().append(sqlInfo.getEntitySet().getDbTableNameTargetIyo());
         sqlInfo.getSqlBuilder().append(" SET ");
 
