@@ -36,10 +36,11 @@ class H2DatabaseIdentityTest {
             return;
 
         try (Connection conn = DriverManager.getConnection("jdbc:h2:mem:identest")) {
-            try (var stmt = conn.prepareStatement("CREATE TABLE IF NOT EXISTS t (id INT auto_increment, val TEXT)")) {
+            try (var stmt = conn
+                    .prepareStatement("CREATE TABLE IF NOT EXISTS tab1 (id INT auto_increment, val1 TEXT)")) {
                 stmt.executeUpdate();
             }
-            try (var stmt = conn.prepareStatement("INSERT INTO t (val) VALUES ('test value')",
+            try (var stmt = conn.prepareStatement("INSERT INTO tab1 (val1) VALUES ('Hello world.')",
                     Statement.RETURN_GENERATED_KEYS)) {
                 stmt.executeUpdate();
 
