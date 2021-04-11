@@ -141,7 +141,7 @@ class TestODataFilterTypeAtTestDbTest {
             return;
 
         final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1",
-                "$top=1&$filter=Sbyte1 eq 127&$orderby=ID&$count=true&$select=ID");
+                "$top=1 &$filter=Sbyte1 eq 127 &$orderby=ID &$count=true &$select=ID");
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         // System.err.println("result: " + result);

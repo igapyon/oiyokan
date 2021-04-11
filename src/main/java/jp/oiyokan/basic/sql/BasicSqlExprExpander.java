@@ -251,12 +251,6 @@ public class BasicSqlExprExpander {
 
         BasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo,
                 impl.getType().getFullQualifiedName().getFullQualifiedNameAsString(), impl.getText());
-
-        // TODO FIMXE ここは通過しなくなったかどうか調べること。
-        // [M107] NOT SUPPORTED: LiteralImpl
-        // System.err.println(OiyokanMessages.M107 + ": " + impl.getType());
-        // throw new ODataApplicationException(OiyokanMessages.M107 + ": " +
-        // impl.getType(), 500, Locale.ENGLISH);
     }
 
     private void expandMember(MemberImpl impl) throws ODataApplicationException {

@@ -18,17 +18,24 @@ package jp.oiyokan.db.build;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import org.junit.jupiter.api.Test;
+
 import jp.oiyokan.basic.BasicJdbcUtil;
 import jp.oiyokan.data.OiyokanResourceSqlUtil;
 import jp.oiyokan.dto.OiyokanSettingsDatabase;
 import jp.oiyokan.settings.OiyokanSettingsUtil;
 
 /**
- * テスト用の内部データベースを作成します。この内部データベースは動作の上で必要です。
+ * テスト用の Postgres Test データベースを作成します。
+ * 
+ * Postgres での単体テスト実施時に利用します。
  */
-class Build50PostgresTest {
-    // @Test
+class Build31PostgresTest {
+    @Test
     void test01() throws Exception {
+        if (true)
+            return;
+
         OiyokanSettingsDatabase settingsDatabase = OiyokanSettingsUtil.getOiyokanDatabase("postgres1");
 
         try (Connection connTargetDb = BasicJdbcUtil.getConnection(settingsDatabase)) {
