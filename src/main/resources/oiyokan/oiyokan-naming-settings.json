@@ -4,6 +4,21 @@
 			"db": "zip code",
 			"entity": "zip_code",
 			"description": "pg dvdrental"
+		},
+		{
+			"db": "I D",
+			"entity": "I_D",
+			"description": "Space test"
+		},
+		{
+			"db": "Na me",
+			"entity": "Na_me",
+			"description": "Space test"
+		},
+		{
+			"db": "Va lue1",
+			"entity": "Va_lue1",
+			"description": "Space test"
 		}
 	]
 }

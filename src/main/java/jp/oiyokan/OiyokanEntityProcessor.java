@@ -159,7 +159,7 @@ public class OiyokanEntityProcessor implements EntityProcessor {
             response.setHeader(HttpHeader.CONTENT_TYPE, responseFormat.toContentTypeString());
 
         } catch (RuntimeException ex) {
-            // ex.printStackTrace();
+            ex.printStackTrace();
             System.err.println("OiyokanEntityProcessor#createEntity: exception: " + ex.toString());
             throw ex;
         }

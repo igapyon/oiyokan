@@ -191,23 +191,31 @@ public class BasicJdbcEntityProcessor {
             // Set auto commit OFF.
             connTargetDb.setAutoCommit(false);
             try {
-                // TODO FIXME キー自動生成の戻り値を受け取ること。
-                /* ここで戻り値を受けるはず */ BasicJdbcUtil.executeDml(connTargetDb, sqlInfo);
+                final List<String> generatedKeys = BasicJdbcUtil.executeDml(connTargetDb, sqlInfo);
 
                 // TODO FIXME 戻り値を反映させること。
                 final List<UriParameter> keyPredicates = new ArrayList<>();
-                for (Property prop : requestEntity.getProperties()) {
-                    boolean isPrimaryKey = false;
-                    for (CsdlPropertyRef propKey : entitySet.getEntityType().getKey()) {
-                        if (prop.getName().equals(propKey.getName())) {
-                            isPrimaryKey = true;
+                for (CsdlPropertyRef propKey : entitySet.getEntityType().getKey()) {
+                    String propValue = null;
+                    for (Property look : requestEntity.getProperties()) {
+                        if (look.getName().equals(propKey.getName())) {
+                            if (look.getValue() instanceof java.util.Calendar) {
+                                java.util.Calendar cal = (java.util.Calendar) look.getValue();
+                                Instant instant = cal.toInstant();
+                                ZonedDateTime zdt = ZonedDateTime.ofInstant(instant, ZoneId.systemDefault());
+                                propValue = zdt.format(DateTimeFormatter.ISO_INSTANT);
+                            } else {
+                                propValue = String.valueOf(look.getValue());
+                            }
                             break;
                         }
                     }
-                    if (!isPrimaryKey) {
-                        continue;
+                    if (propValue == null) {
+                        System.err.println("TRACE: propKey:" + propKey.getName() + "に対応する入力なし.");
+                        propValue = generatedKeys.get(0);
+                        generatedKeys.remove(0);
                     }
-
+                    final String propValueFixed = propValue;
                     UriParameter newParam = new UriParameter() {
                         @Override
                         public String getAlias() {
@@ -216,16 +224,7 @@ public class BasicJdbcEntityProcessor {
 
                         @Override
                         public String getText() {
-                            // TODO FIXME 型ごとの文字列化処理に改善が必要.
-                            // TODO 共通化
-                            if (prop.getValue() instanceof java.util.Calendar) {
-                                java.util.Calendar cal = (java.util.Calendar) prop.getValue();
-                                Instant instant = cal.toInstant();
-                                ZonedDateTime zdt = ZonedDateTime.ofInstant(instant, ZoneId.systemDefault());
-                                return zdt.format(DateTimeFormatter.ISO_INSTANT);
-                            } else {
-                                return String.valueOf(prop.getValue());
-                            }
+                            return propValueFixed;
                         }
 
                         @Override
@@ -235,7 +234,7 @@ public class BasicJdbcEntityProcessor {
 
                         @Override
                         public String getName() {
-                            return prop.getName();
+                            return propKey.getName();
                         }
 
                         @Override

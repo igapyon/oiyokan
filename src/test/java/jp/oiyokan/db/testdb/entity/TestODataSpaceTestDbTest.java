@@ -30,7 +30,7 @@ class TestODataSpaceTestDbTest {
     /**
      * テストデータが利用する ID 範囲。
      */
-    private static final int TEST_ID = 10121;
+    private static final int TEST_ID = 10138;
 
     @Test
     void test01() throws Exception {
@@ -39,12 +39,43 @@ class TestODataSpaceTestDbTest {
 
         // INSERT + DELETE
         ODataResponse resp = OiyokanTestUtil.callRequestPost("/ODataTests4", "{\n" //
-                + "  \"I D\":" + TEST_ID + ",\n" //
-                + "  \"Na me\":\"Name\"\n" //
+                + "  \"I_D\":" + TEST_ID + ",\n" //
+                + "  \"Na_me\":\"Name\"\n" //
                 + "}");
         String result = OiyokanTestUtil.stream2String(resp.getContent());
         System.err.println(result);
         assertEquals(201, resp.getStatusCode());
+        assertEquals("{\"@odata.context\":\"$metadata#ODataTests4\",\"I_D\":" + TEST_ID
+                + ",\"Na_me\":\"Name\",\"Va_lue1\":\"VALUEVALUE12345\"}", result);
 
+        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests4(I_D=" + TEST_ID + ",Na_me='Name')", null);
+        result = OiyokanTestUtil.stream2String(resp.getContent());
+        System.err.println(result);
+        assertEquals(200, resp.getStatusCode());
+
+        // UPDATE (PATCH)
+        resp = OiyokanTestUtil.callRequestPatch("/ODataTests4(" + TEST_ID + ")", "{\n" //
+                + "  \"Name\":\"Name2\",\n" //
+                + "  \"Description\":\"Description2\"\n" + "}");
+        assertEquals(204, resp.getStatusCode());
+
+        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests4(" + TEST_ID + ")", null);
+        assertEquals(200, resp.getStatusCode());
+
+        // UPDATE (PUT)
+        resp = OiyokanTestUtil.callRequestPut("/ODataTests4(" + TEST_ID + ")", "{\n" //
+                + "  \"Name\":\"Name2\",\n" //
+                + "  \"Description\":\"Description2\"\n" + "}");
+        assertEquals(204, resp.getStatusCode());
+
+        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests4(" + TEST_ID + ")", null);
+        assertEquals(200, resp.getStatusCode());
+
+        // DELETE
+        resp = OiyokanTestUtil.callRequestDelete("/ODataTests4(" + TEST_ID + ")");
+        assertEquals(204, resp.getStatusCode());
+
+        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests4(" + TEST_ID + ")", null);
+        assertEquals(404, resp.getStatusCode());
     }
 }

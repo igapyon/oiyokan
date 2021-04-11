@@ -34,6 +34,7 @@ import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanCsdlEntitySet;
 import jp.oiyokan.OiyokanMessages;
 import jp.oiyokan.dto.OiyokanSettingsDatabase;
+import jp.oiyokan.settings.OiyokanNamingUtil;
 import jp.oiyokan.settings.OiyokanSettingsUtil;
 
 /**
@@ -101,7 +102,7 @@ public class BasicJdbcEntityTypeBuilder {
                     String colName = rsKey.getString("COLUMN_NAME");
 
                     CsdlPropertyRef propertyRef = new CsdlPropertyRef();
-                    propertyRef.setName(colName);
+                    propertyRef.setName(OiyokanNamingUtil.db2Entity(colName));
                     keyRefList.add(propertyRef);
                 }
 
