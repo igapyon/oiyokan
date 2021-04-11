@@ -27,6 +27,11 @@ import jp.oiyokan.util.OiyokanTestUtil;
  * フィルタの型に着眼したテスト.
  */
 class TestODataSpaceTestDbTest {
+    /**
+     * テストデータが利用する ID 範囲。
+     */
+    private static final int TEST_ID = 10021;
+
     @Test
     void testNotA() throws Exception {
         if (!OiyokanTestConstants.IS_TEST_ODATATEST)
@@ -34,6 +39,7 @@ class TestODataSpaceTestDbTest {
 
         // INSERT + DELETE
         ODataResponse resp = OiyokanTestUtil.callRequestPost("/ODataTests4", "{\n" //
+                + "  \"I D\":" + TEST_ID + ",\n" //
                 + "  \"Na me\":\"Name\"\n" //
                 + "}");
         String result = OiyokanTestUtil.stream2String(resp.getContent());
