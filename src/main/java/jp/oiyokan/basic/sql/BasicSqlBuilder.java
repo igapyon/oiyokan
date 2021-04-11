@@ -63,7 +63,8 @@ public class BasicSqlBuilder {
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
     public void getSelectCountQuery(UriInfo uriInfo) throws ODataApplicationException {
-        sqlInfo.getSqlBuilder().append("SELECT COUNT(*) FROM " + sqlInfo.getEntitySet().getDbTableNameTargetIyo());
+        sqlInfo.getSqlBuilder().append("SELECT COUNT(*) FROM "
+                + BasicJdbcUtil.escapeKakkoFieldName(sqlInfo, sqlInfo.getEntitySet().getDbTableNameTargetIyo()));
         if (uriInfo.getFilterOption() != null) {
             FilterOptionImpl filterOpt = (FilterOptionImpl) uriInfo.getFilterOption();
             sqlInfo.getSqlBuilder().append(" WHERE ");
@@ -194,7 +195,8 @@ public class BasicSqlBuilder {
         // 取得元のテーブル.
         switch (sqlInfo.getEntitySet().getDatabaseType()) {
         default:
-            sqlInfo.getSqlBuilder().append(" FROM " + sqlInfo.getEntitySet().getDbTableNameTargetIyo());
+            sqlInfo.getSqlBuilder().append(" FROM "
+                    + BasicJdbcUtil.escapeKakkoFieldName(sqlInfo, sqlInfo.getEntitySet().getDbTableNameTargetIyo()));
             break;
         case MSSQL2008:
         case ORACLE: {
@@ -216,7 +218,8 @@ public class BasicSqlBuilder {
             sqlInfo.getSqlBuilder().append("AS rownum4between,");
             // 必要な分だけ項目展開.
             expandSelect(uriInfo);
-            sqlInfo.getSqlBuilder().append(" FROM " + sqlInfo.getEntitySet().getDbTableNameTargetIyo());
+            sqlInfo.getSqlBuilder().append(" FROM "
+                    + BasicJdbcUtil.escapeKakkoFieldName(sqlInfo, sqlInfo.getEntitySet().getDbTableNameTargetIyo()));
             if (uriInfo.getFilterOption() != null) {
                 sqlInfo.getSqlBuilder().append(" WHERE ");
                 // データ絞り込みはここで実現.

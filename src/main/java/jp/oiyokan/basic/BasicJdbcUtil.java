@@ -359,9 +359,7 @@ public class BasicJdbcUtil {
         if (value == null) {
             if (IS_SHOW_DEBUG)
                 System.err.println("TRACE: PreparedStatement#setNull: null");
-            // 仮で文字列設定
-            // TODO FIXME 後で見直し
-            stmt.setNull(column, Types.VARCHAR);
+            stmt.setNull(column, Types.NULL);
         } else if (value instanceof Byte) {
             if (IS_SHOW_DEBUG)
                 System.err.println("TRACE: PreparedStatement#setByte: " + value);

@@ -141,7 +141,8 @@ public class BasicJdbcEntityProcessor {
 
         expandSelectKey(edmEntitySet);
 
-        sqlInfo.getSqlBuilder().append(" FROM " + sqlInfo.getEntitySet().getDbTableNameTargetIyo());
+        sqlInfo.getSqlBuilder().append(" FROM "
+                + BasicJdbcUtil.escapeKakkoFieldName(sqlInfo, sqlInfo.getEntitySet().getDbTableNameTargetIyo()));
 
         sqlInfo.getSqlBuilder().append(" WHERE ");
         boolean isFirst = true;
@@ -211,6 +212,13 @@ public class BasicJdbcEntityProcessor {
                     }
                     if (propValue == null) {
                         System.err.println("TRACE: propKey:" + propKey.getName() + "に対応する入力なし.");
+                        if (generatedKeys.size() == 0) {
+                            // [M217] UNEXPECTED: Can't retrieve PreparedStatement#getGeneratedKeys: Fail to
+                            // map auto generated key field.
+                            System.err.println(OiyokanMessages.M217 + ": " + propKey.getName());
+                            throw new ODataApplicationException(OiyokanMessages.M217 + ": " + propKey.getName(), //
+                                    OiyokanMessages.M217_CODE, Locale.ENGLISH);
+                        }
                         propValue = generatedKeys.get(0);
                         generatedKeys.remove(0);
                     }
@@ -269,7 +277,8 @@ public class BasicJdbcEntityProcessor {
 
     private void getInsertIntoDml(EdmEntitySet edmEntitySet, Entity requestEntity) throws ODataApplicationException {
         sqlInfo.getSqlBuilder().append("INSERT INTO ");
-        sqlInfo.getSqlBuilder().append(sqlInfo.getEntitySet().getDbTableNameTargetIyo());
+        sqlInfo.getSqlBuilder()
+                .append(BasicJdbcUtil.escapeKakkoFieldName(sqlInfo, sqlInfo.getEntitySet().getDbTableNameTargetIyo()));
         sqlInfo.getSqlBuilder().append(" (");
         boolean isFirst = true;
         for (Property prop : requestEntity.getProperties()) {
@@ -344,7 +353,8 @@ public class BasicJdbcEntityProcessor {
     private void getDeleteDml(EdmEntitySet edmEntitySet, List<UriParameter> keyPredicates)
             throws ODataApplicationException {
         sqlInfo.getSqlBuilder().append("DELETE FROM ");
-        sqlInfo.getSqlBuilder().append(sqlInfo.getEntitySet().getDbTableNameTargetIyo());
+        sqlInfo.getSqlBuilder()
+                .append(BasicJdbcUtil.escapeKakkoFieldName(sqlInfo, sqlInfo.getEntitySet().getDbTableNameTargetIyo()));
         sqlInfo.getSqlBuilder().append(" WHERE ");
         boolean isFirst = true;
 
@@ -410,7 +420,8 @@ public class BasicJdbcEntityProcessor {
     private void getUpdatePatchDml(EdmEntitySet edmEntitySet, List<UriParameter> keyPredicates, Entity requestEntity)
             throws ODataApplicationException {
         sqlInfo.getSqlBuilder().append("UPDATE ");
-        sqlInfo.getSqlBuilder().append(sqlInfo.getEntitySet().getDbTableNameTargetIyo());
+        sqlInfo.getSqlBuilder()
+                .append(BasicJdbcUtil.escapeKakkoFieldName(sqlInfo, sqlInfo.getEntitySet().getDbTableNameTargetIyo()));
         sqlInfo.getSqlBuilder().append(" SET ");
         boolean isFirst = true;
         for (Property prop : requestEntity.getProperties()) {
@@ -489,7 +500,8 @@ public class BasicJdbcEntityProcessor {
     private void getUpdatePutDml(EdmEntitySet edmEntitySet, List<UriParameter> keyPredicates, Entity requestEntity)
             throws ODataApplicationException {
         sqlInfo.getSqlBuilder().append("UPDATE ");
-        sqlInfo.getSqlBuilder().append(sqlInfo.getEntitySet().getDbTableNameTargetIyo());
+        sqlInfo.getSqlBuilder()
+                .append(BasicJdbcUtil.escapeKakkoFieldName(sqlInfo, sqlInfo.getEntitySet().getDbTableNameTargetIyo()));
         sqlInfo.getSqlBuilder().append(" SET ");
 
         // primary key 以外の全てが対象。指定のないものは null。

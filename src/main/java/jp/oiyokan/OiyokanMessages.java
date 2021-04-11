@@ -140,6 +140,8 @@ public class OiyokanMessages {
     public static final int M215_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
     public static final String M216 = "[M216] UNEXPECTED: Must NOT pass this case.";
     public static final int M216_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
+    public static final String M217 = "[M217] UNEXPECTED: Can't retrieve PreparedStatement#getGeneratedKeys: Fail to map auto generated key field.";
+    public static final int M217_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
 
     /**
      * 手早く未実装マークをつけるためのテンポラリなメッセージ.
