@@ -30,7 +30,6 @@ import org.apache.olingo.commons.api.edm.EdmEntitySet;
 import org.apache.olingo.commons.api.edm.provider.CsdlEntitySet;
 import org.apache.olingo.commons.api.edm.provider.CsdlPropertyRef;
 import org.apache.olingo.commons.api.ex.ODataRuntimeException;
-import org.apache.olingo.commons.api.http.HttpStatusCode;
 import org.apache.olingo.server.api.ODataApplicationException;
 import org.apache.olingo.server.api.uri.UriInfo;
 
@@ -83,27 +82,27 @@ public class BasicJdbcEntityCollectionBuilder implements OiyokanEntityCollection
         if (uriInfo.getSearchOption() != null && !OiyokanConstants.IS_EXPERIMENTAL_SEARCH_ENABLED) {
             // [M032] NOT SUPPORTED: URI: $search
             System.err.println(OiyokanMessages.M032);
-            throw new ODataApplicationException(OiyokanMessages.M032, 500, Locale.ENGLISH);
+            throw new ODataApplicationException(OiyokanMessages.M032, OiyokanMessages.M032_CODE, Locale.ENGLISH);
         }
         if (uriInfo.getApplyOption() != null) {
             // [M011] NOT SUPPORTED: URI: $apply
             System.err.println(OiyokanMessages.M011);
-            throw new ODataApplicationException(OiyokanMessages.M011, 500, Locale.ENGLISH);
+            throw new ODataApplicationException(OiyokanMessages.M011, OiyokanMessages.M011_CODE, Locale.ENGLISH);
         }
         if (uriInfo.getCustomQueryOptions() != null && uriInfo.getCustomQueryOptions().size() > 0) {
             // [M012] NOT SUPPORTED: URI: customQuery
             System.err.println(OiyokanMessages.M012);
-            throw new ODataApplicationException(OiyokanMessages.M012, 500, Locale.ENGLISH);
+            throw new ODataApplicationException(OiyokanMessages.M012, OiyokanMessages.M012_CODE, Locale.ENGLISH);
         }
         if (uriInfo.getDeltaTokenOption() != null) {
             // [M013] NOT SUPPORTED: URI: deltaToken
             System.err.println(OiyokanMessages.M013);
-            throw new ODataApplicationException(OiyokanMessages.M013, 500, Locale.ENGLISH);
+            throw new ODataApplicationException(OiyokanMessages.M013, OiyokanMessages.M013_CODE, Locale.ENGLISH);
         }
         if (uriInfo.getExpandOption() != null && uriInfo.getExpandOption().getExpandItems().size() > 0) {
             // [M014] NOT SUPPORTED: URI: $expand
             System.err.println(OiyokanMessages.M014);
-            throw new ODataApplicationException(OiyokanMessages.M014, 500, Locale.ENGLISH);
+            throw new ODataApplicationException(OiyokanMessages.M014, OiyokanMessages.M014_CODE, Locale.ENGLISH);
         }
 
         // データベースに接続.
@@ -160,8 +159,8 @@ public class BasicJdbcEntityCollectionBuilder implements OiyokanEntityCollection
         } catch (SQLTimeoutException ex) {
             // [M035] SQL timeout at count
             System.err.println(OiyokanMessages.M035 + ": " + sql + ", " + ex.toString());
-            throw new ODataApplicationException(OiyokanMessages.M035 + ": " + sql,
-                    HttpStatusCode.REQUEST_TIMEOUT.getStatusCode(), Locale.ENGLISH);
+            throw new ODataApplicationException(OiyokanMessages.M035 + ": " + sql, //
+                    OiyokanMessages.M035_CODE, Locale.ENGLISH);
         } catch (SQLException ex) {
             // [M015] UNEXPECTED: An error occurred in SQL that counts the number of search
             // results.
@@ -262,13 +261,14 @@ public class BasicJdbcEntityCollectionBuilder implements OiyokanEntityCollection
         } catch (SQLTimeoutException ex) {
             // [M036] SQL timeout at execute
             System.err.println(OiyokanMessages.M036 + ": " + sql + ", " + ex.toString());
-            throw new ODataApplicationException(OiyokanMessages.M036 + ": " + sql,
-                    HttpStatusCode.REQUEST_TIMEOUT.getStatusCode(), Locale.ENGLISH);
+            throw new ODataApplicationException(OiyokanMessages.M036 + ": " + sql, //
+                    OiyokanMessages.M036_CODE, Locale.ENGLISH);
         } catch (SQLException ex) {
             // ex.printStackTrace();
             // [M017] Fail to execute SQL
             System.err.println(OiyokanMessages.M017 + ": " + sql + ", " + ex.toString());
-            throw new ODataApplicationException(OiyokanMessages.M017 + ": " + sql, 500, Locale.ENGLISH);
+            throw new ODataApplicationException(OiyokanMessages.M017 + ": " + sql, //
+                    OiyokanMessages.M017_CODE, Locale.ENGLISH);
         }
     }
 

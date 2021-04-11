@@ -91,7 +91,8 @@ public class OiyokanEntityProcessor implements EntityProcessor {
             } catch (SQLException ex) {
                 // [M210] Database exception occured (readEntity)
                 System.err.println(OiyokanMessages.M210 + ": " + ex.toString());
-                throw new ODataApplicationException(OiyokanMessages.M210, 500, Locale.ENGLISH);
+                throw new ODataApplicationException(OiyokanMessages.M210, //
+                        OiyokanMessages.M210_CODE, Locale.ENGLISH);
             }
 
             // 3. serialize
@@ -194,10 +195,9 @@ public class OiyokanEntityProcessor implements EntityProcessor {
                 // 指定項目以外、キー以外は null 設定
                 new BasicJdbcEntityProcessor().updateEntityDataPut(uriInfo, edmEntitySet, keyPredicates, requestEntity);
             } else {
-                // TODO FIXME メッセージ番号取り直し
-                // [M999] NOT IMPLEMENTED: Generic NOT implemented message.
-                System.err.println(OiyokanMessages.M999);
-                throw new ODataApplicationException(OiyokanMessages.M999, 500, Locale.ENGLISH);
+                // [M216] UNEXPECTED: Must NOT pass this case.
+                System.err.println(OiyokanMessages.M216);
+                throw new ODataApplicationException(OiyokanMessages.M216, OiyokanMessages.M216_CODE, Locale.ENGLISH);
             }
 
             response.setStatusCode(HttpStatusCode.NO_CONTENT.getStatusCode());

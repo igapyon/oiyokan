@@ -41,7 +41,6 @@ import org.apache.olingo.commons.api.data.Property;
 import org.apache.olingo.commons.api.data.ValueType;
 import org.apache.olingo.commons.api.edm.EdmPrimitiveTypeKind;
 import org.apache.olingo.commons.api.edm.provider.CsdlProperty;
-import org.apache.olingo.commons.api.http.HttpStatusCode;
 import org.apache.olingo.server.api.ODataApplicationException;
 import org.springframework.util.StreamUtils;
 
@@ -331,7 +330,7 @@ public class BasicJdbcUtil {
                 System.err.println(OiyokanMessages.M033 + ": type[" + csdlProp.getType() + "], "
                         + obj.getClass().getCanonicalName());
                 throw new ODataApplicationException(OiyokanMessages.M033 + ": type[" + csdlProp.getType() + "], "
-                        + obj.getClass().getCanonicalName(), 500, Locale.ENGLISH);
+                        + obj.getClass().getCanonicalName(), OiyokanMessages.M033_CODE, Locale.ENGLISH);
             }
         } else {
             // ARRAY と OTHER には対応しない。そもそもここ通過しないのじゃないの?
@@ -409,7 +408,7 @@ public class BasicJdbcUtil {
             // [M010] NOT SUPPORTED: Parameter Type
             System.err.println(OiyokanMessages.M010 + ": " + value.getClass().getCanonicalName());
             throw new ODataApplicationException(OiyokanMessages.M010 + ": " + value.getClass().getCanonicalName(), //
-                    500, Locale.ENGLISH);
+                    OiyokanMessages.M010_CODE, Locale.ENGLISH);
         }
     }
 
@@ -652,8 +651,7 @@ public class BasicJdbcUtil {
         // [M037] NOT SUPPORTED: Parameter Type
         System.err.println(OiyokanMessages.M037 + ": " + csdlType);
         throw new ODataApplicationException(OiyokanMessages.M037 + ": " + csdlType, //
-                500, Locale.ENGLISH);
-
+                OiyokanMessages.M037_CODE, Locale.ENGLISH);
     }
 
     ////////////////////////////
@@ -746,8 +744,8 @@ public class BasicJdbcUtil {
             if (result != 1) {
                 // [M201] NO record processed. No Entity effects.
                 System.err.println(OiyokanMessages.M201 + ": " + sql);
-                throw new ODataApplicationException(OiyokanMessages.M201 + ": " + sql,
-                        HttpStatusCode.NOT_FOUND.getStatusCode(), Locale.ENGLISH);
+                throw new ODataApplicationException(OiyokanMessages.M201 + ": " + sql, //
+                        OiyokanMessages.M201_CODE, Locale.ENGLISH);
             }
 
             // 生成されたキーがあればそれを採用。
@@ -772,18 +770,18 @@ public class BasicJdbcUtil {
         } catch (SQLIntegrityConstraintViolationException ex) {
             // [M202] Integrity constraint violation occured (DML). 一意制約違反.
             System.err.println(OiyokanMessages.M202 + ": " + sql + ", " + ex.toString());
-            throw new ODataApplicationException(OiyokanMessages.M202 + ": " + sql,
-                    HttpStatusCode.CONFLICT.getStatusCode(), Locale.ENGLISH);
+            throw new ODataApplicationException(OiyokanMessages.M202 + ": " + sql, //
+                    OiyokanMessages.M202_CODE, Locale.ENGLISH);
         } catch (SQLTimeoutException ex) {
             // [M203] SQL timeout at execute.
             System.err.println(OiyokanMessages.M203 + ": " + sql + ", " + ex.toString());
-            throw new ODataApplicationException(OiyokanMessages.M203 + ": " + sql,
-                    HttpStatusCode.REQUEST_TIMEOUT.getStatusCode(), Locale.ENGLISH);
+            throw new ODataApplicationException(OiyokanMessages.M203 + ": " + sql, //
+                    OiyokanMessages.M203_CODE, Locale.ENGLISH);
         } catch (SQLException ex) {
             // [M204] Fail to execute SQL.
             System.err.println(OiyokanMessages.M204 + ": " + sql + ", " + ex.toString());
-            throw new ODataApplicationException(OiyokanMessages.M204 + ": " + sql,
-                    HttpStatusCode.BAD_REQUEST.getStatusCode(), Locale.ENGLISH);
+            throw new ODataApplicationException(OiyokanMessages.M204 + ": " + sql, //
+                    OiyokanMessages.M204_CODE, Locale.ENGLISH);
         }
     }
 }
