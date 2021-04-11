@@ -7,7 +7,7 @@
 			"type": "h2",
 			"description": "Oiyokan internal DB. Do not change.",
 			"jdbcDriver": "org.h2.Driver",
-			"jdbcUrl": "jdbc:h2:mem:oiyokan;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=FALSE;CASE_INSENSITIVE_IDENTIFIERS=TRUE;MODE=MSSQLServer",
+			"jdbcUrl": "jdbc:h2:mem:oiyokan;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=FALSE;MODE=MSSQLServer",
 			"jdbcUser": "sa",
 			"jdbcPass": ""
 		},
@@ -16,7 +16,7 @@
 			"type": "h2",
 			"description": "Oiyokan internal Target Test DB. Used for build unit test.",
 			"jdbcDriver": "org.h2.Driver",
-			"jdbcUrl": "jdbc:h2:file:./src/main/resources/db/oiyokan-internal;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=FALSE;CASE_INSENSITIVE_IDENTIFIERS=TRUE;MODE=MSSQLServer",
+			"jdbcUrl": "jdbc:h2:file:./src/main/resources/db/oiyokan-internal;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=FALSE;MODE=MSSQLServer",
 			"jdbcUser": "sa",
 			"jdbcPass": ""
 		},

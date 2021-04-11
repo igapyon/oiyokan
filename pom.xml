@@ -63,7 +63,10 @@
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
-			<version>1.4.200</version>
+			<!-- NOT WORKS <version>1.4.198</version> -->
+			<!-- <version>1.4.197</version> -->
+			<version>1.4.196</version> <!-- 1.4.196 getGeneratedKeys WORKS! -->
+			<!-- <version>1.4.195</version> --> <!-- 1.4.195 getGeneratedKeys WORKS! -->
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
