@@ -33,7 +33,6 @@ import org.apache.olingo.commons.api.edm.EdmEntitySet;
 import org.apache.olingo.commons.api.edm.provider.CsdlEntitySet;
 import org.apache.olingo.commons.api.edm.provider.CsdlProperty;
 import org.apache.olingo.commons.api.edm.provider.CsdlPropertyRef;
-import org.apache.olingo.commons.api.http.HttpStatusCode;
 import org.apache.olingo.server.api.ODataApplicationException;
 import org.apache.olingo.server.api.uri.UriInfo;
 import org.apache.olingo.server.api.uri.UriParameter;
@@ -65,7 +64,7 @@ public class BasicJdbcEntityProcessor {
         if (entitySet == null) {
             // [M206] No such EntitySet found (readEntity)
             System.err.println(OiyokanMessages.M206);
-            throw new ODataApplicationException(OiyokanMessages.M206, 500, Locale.ENGLISH);
+            throw new ODataApplicationException(OiyokanMessages.M206, OiyokanMessages.M206_CODE, Locale.ENGLISH);
         }
 
         sqlInfo = new BasicSqlInfo(entitySet);
@@ -90,8 +89,8 @@ public class BasicJdbcEntityProcessor {
             if (!rset.next()) {
                 // [M207] No such Entity data
                 System.err.println(OiyokanMessages.M207 + ": " + sql);
-                throw new ODataApplicationException(OiyokanMessages.M207 + ": " + sql,
-                        HttpStatusCode.NOT_FOUND.getStatusCode(), Locale.ENGLISH);
+                throw new ODataApplicationException(OiyokanMessages.M207 + ": " //
+                        + sql, OiyokanMessages.M207_CODE, Locale.ENGLISH);
             }
 
             final ResultSetMetaData rsmeta = rset.getMetaData();
@@ -104,8 +103,8 @@ public class BasicJdbcEntityProcessor {
             if (rset.next()) {
                 // [M215] UNEXPECTED: Too many rows found (readEntity)
                 System.err.println(OiyokanMessages.M215 + ": " + sql);
-                throw new ODataApplicationException(OiyokanMessages.M215 + ": " + sql,
-                        HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode(), Locale.ENGLISH);
+                throw new ODataApplicationException(OiyokanMessages.M215 + ": " + sql, //
+                        OiyokanMessages.M215_CODE, Locale.ENGLISH);
             }
 
             final long endMillisec = System.currentTimeMillis();
@@ -120,8 +119,8 @@ public class BasicJdbcEntityProcessor {
         } catch (SQLTimeoutException ex) {
             // [M208] SQL timeout at execute (readEntity)
             System.err.println(OiyokanMessages.M208 + ": " + sql + ", " + ex.toString());
-            throw new ODataApplicationException(OiyokanMessages.M208 + ": " + sql,
-                    HttpStatusCode.REQUEST_TIMEOUT.getStatusCode(), Locale.ENGLISH);
+            throw new ODataApplicationException(OiyokanMessages.M208 + ": " + sql, //
+                    OiyokanMessages.M208_CODE, Locale.ENGLISH);
         } catch (SQLException ex) {
             // [M209] Fail to execute SQL (readEntity)
             System.err.println(OiyokanMessages.M209 + ": " + sql + ", " + ex.toString());
@@ -178,7 +177,8 @@ public class BasicJdbcEntityProcessor {
         if (entitySet == null) {
             // [M211] No such EntitySet found (createEntity)
             System.err.println(OiyokanMessages.M211);
-            throw new ODataApplicationException(OiyokanMessages.M211, 500, Locale.ENGLISH);
+            throw new ODataApplicationException(OiyokanMessages.M211, //
+                    OiyokanMessages.M211_CODE, Locale.ENGLISH);
         }
 
         sqlInfo = new BasicSqlInfo(entitySet);
@@ -261,7 +261,8 @@ public class BasicJdbcEntityProcessor {
         } catch (SQLException ex) {
             // [M205] Fail to execute SQL.
             System.err.println(OiyokanMessages.M205 + ": " + ex.toString());
-            throw new ODataApplicationException(OiyokanMessages.M205, 500, Locale.ENGLISH);
+            throw new ODataApplicationException(OiyokanMessages.M205, //
+                    OiyokanMessages.M205_CODE, Locale.ENGLISH);
         }
     }
 
@@ -305,7 +306,8 @@ public class BasicJdbcEntityProcessor {
         if (entitySet == null) {
             // [M212] No such EntitySet found (deleteEntity)
             System.err.println(OiyokanMessages.M212);
-            throw new ODataApplicationException(OiyokanMessages.M212, 500, Locale.ENGLISH);
+            throw new ODataApplicationException(OiyokanMessages.M212, //
+                    OiyokanMessages.M212_CODE, Locale.ENGLISH);
         }
 
         sqlInfo = new BasicSqlInfo(entitySet);
@@ -333,7 +335,8 @@ public class BasicJdbcEntityProcessor {
         } catch (SQLException ex) {
             // [M205] Fail to execute SQL.
             System.err.println(OiyokanMessages.M205 + ": " + ex.toString());
-            throw new ODataApplicationException(OiyokanMessages.M205, 500, Locale.ENGLISH);
+            throw new ODataApplicationException(OiyokanMessages.M205, //
+                    OiyokanMessages.M205_CODE, Locale.ENGLISH);
         }
     }
 
@@ -369,7 +372,8 @@ public class BasicJdbcEntityProcessor {
         if (entitySet == null) {
             // [M213] No such EntitySet found (updateEntity(PATCH))
             System.err.println(OiyokanMessages.M213);
-            throw new ODataApplicationException(OiyokanMessages.M213, 500, Locale.ENGLISH);
+            throw new ODataApplicationException(OiyokanMessages.M213, //
+                    OiyokanMessages.M213_CODE, Locale.ENGLISH);
         }
 
         sqlInfo = new BasicSqlInfo(entitySet);
@@ -397,7 +401,8 @@ public class BasicJdbcEntityProcessor {
         } catch (SQLException ex) {
             // [M205] Fail to execute SQL.
             System.err.println(OiyokanMessages.M205 + ": " + ex.toString());
-            throw new ODataApplicationException(OiyokanMessages.M205, 500, Locale.ENGLISH);
+            throw new ODataApplicationException(OiyokanMessages.M205, //
+                    OiyokanMessages.M205_CODE, Locale.ENGLISH);
         }
     }
 
@@ -445,7 +450,8 @@ public class BasicJdbcEntityProcessor {
         if (entitySet == null) {
             // [M214] No such EntitySet found (updateEntity(PUT))
             System.err.println(OiyokanMessages.M214);
-            throw new ODataApplicationException(OiyokanMessages.M214, 500, Locale.ENGLISH);
+            throw new ODataApplicationException(OiyokanMessages.M214, //
+                    OiyokanMessages.M214_CODE, Locale.ENGLISH);
         }
 
         sqlInfo = new BasicSqlInfo(entitySet);
@@ -474,7 +480,8 @@ public class BasicJdbcEntityProcessor {
         } catch (SQLException ex) {
             // [M205] Fail to execute SQL.
             System.err.println(OiyokanMessages.M205 + ": " + ex.toString());
-            throw new ODataApplicationException(OiyokanMessages.M205, 500, Locale.ENGLISH);
+            throw new ODataApplicationException(OiyokanMessages.M205, //
+                    OiyokanMessages.M205_CODE, Locale.ENGLISH);
         }
     }
 

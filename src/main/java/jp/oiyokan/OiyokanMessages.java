@@ -15,6 +15,8 @@
  */
 package jp.oiyokan;
 
+import org.apache.olingo.commons.api.http.HttpStatusCode;
+
 /**
  * Messages of Oiyokan.
  */
@@ -101,16 +103,26 @@ public class OiyokanMessages {
     public static final String M203 = "[M203] SQL timeout at execute.";
     public static final String M204 = "[M204] Fail to execute SQL.";
     public static final String M205 = "[M205] Fail to execute SQL.";
+    public static final int M205_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
     public static final String M206 = "[M206] No such EntitySet found (readEntity)";
+    public static final int M206_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
     public static final String M207 = "[M207] No such Entity data";
+    public static final int M207_CODE = HttpStatusCode.NOT_FOUND.getStatusCode();
     public static final String M208 = "[M208] SQL timeout at execute (readEntity)";
+    public static final int M208_CODE = HttpStatusCode.REQUEST_TIMEOUT.getStatusCode();
     public static final String M209 = "[M209] Fail to execute SQL (readEntity)";
     public static final String M210 = "[M210] Database exception occured (readEntity)";
     public static final String M211 = "[M211] No such EntitySet found (createEntity)";
+    public static final int M211_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
     public static final String M212 = "[M212] No such EntitySet found (deleteEntity)";
+    public static final int M212_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
     public static final String M213 = "[M213] No such EntitySet found (updateEntity(PATCH))";
+    public static final int M213_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
     public static final String M214 = "[M214] No such EntitySet found (updateEntity(PUT))";
+    public static final int M214_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
     public static final String M215 = "[M215] UNEXPECTED: Too many rows found (readEntity)";
+    public static final int M215_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
+    public static final String M216 = "[M216] UNEXPECTED: Must NOT pass this case.";
 
     /**
      * 手早く未実装マークをつけるためのテンポラリなメッセージ.
