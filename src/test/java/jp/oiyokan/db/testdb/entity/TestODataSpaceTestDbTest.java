@@ -30,7 +30,7 @@ class TestODataSpaceTestDbTest {
     /**
      * テストデータが利用する ID 範囲。
      */
-    private static final int TEST_ID = 10142;
+    private static final int TEST_ID = 10145;
 
     @Test
     void test01() throws Exception {
