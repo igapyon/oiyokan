@@ -33,7 +33,7 @@ class TestODataSpaceTestDbTest {
     private static final int TEST_ID = 10121;
 
     @Test
-    void testNotA() throws Exception {
+    void test01() throws Exception {
         if (!OiyokanTestConstants.IS_TEST_ODATATEST)
             return;
 

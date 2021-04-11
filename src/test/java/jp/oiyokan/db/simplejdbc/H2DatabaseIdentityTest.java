@@ -42,7 +42,7 @@ class H2DatabaseIdentityTest {
                 stmt.executeUpdate();
 
                 ResultSet rs = stmt.getGeneratedKeys();
-                assertEquals(true, rs.next());
+                assertEquals(true, rs.next(), "getGeneratedKeys が機能することを確認.");
             }
         }
     }
