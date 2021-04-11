@@ -58,7 +58,7 @@ class H2DatabaseTest {
                 .getConnection(OiyokanSettingsUtil.getOiyokanDatabase(OiyokanConstants.OIYOKAN_INTERNAL_TARGET_DB))) {
 
             try (var stmt = conn.prepareStatement("SELECT ID, Name, Description" //
-                    + ",Sbyte1,Int16a,Int32a,Int64a,Decimal1,StringChar2,StringVar255,Boolean1,Single1,Double1,DateTimeOffset1,TimeOfDay1" //
+                    + ",Sbyte1,Int16a,Int32a,Int64a,Decimal1,StringChar8,StringVar255,Boolean1,Single1,Double1,DateTimeOffset1,TimeOfDay1" //
                     + " FROM ODataTest1 ORDER BY ID LIMIT 1")) {
                 stmt.executeQuery();
                 var rset = stmt.getResultSet();

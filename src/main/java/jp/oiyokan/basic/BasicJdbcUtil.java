@@ -30,7 +30,9 @@ import java.sql.SQLTimeoutException;
 import java.sql.Types;
 import java.time.ZonedDateTime;
 import java.time.temporal.TemporalAccessor;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -718,89 +720,70 @@ public class BasicJdbcUtil {
     /**
      * TODO FIXME 自動採集番された項目の値をreturnすること。
      * 
+     * @param connTargetDb 利用データベース接続.
+     * @param sqlInfo      実行したいSQL情報.
+     * @return (もしあれば)生成されたキーのリスト.
      * @throws ODataApplicationException
      */
-    public static void executeDml(BasicSqlInfo sqlInfo) throws ODataApplicationException {
-        // データベースに接続.
-        try (Connection connTargetDb = BasicJdbcUtil.getConnection(sqlInfo.getEntitySet().getSettingsDatabase())) {
-            // Set auto commit OFF.
-            connTargetDb.setAutoCommit(false);
-            boolean isTranSuccessed = false;
+    public static List<String> executeDml(Connection connTargetDb, BasicSqlInfo sqlInfo)
+            throws ODataApplicationException {
+        final String sql = sqlInfo.getSqlBuilder().toString();
+        if (OiyokanConstants.IS_TRACE_ODATA_V4)
+            System.err.println("OData v4: TRACE: SQL exec: " + sql);
 
-            final String sql = sqlInfo.getSqlBuilder().toString();
-            if (OiyokanConstants.IS_TRACE_ODATA_V4)
-                System.err.println("OData v4: TRACE: SQL exec: " + sql);
+        final long startMillisec = System.currentTimeMillis();
+        try (var stmt = connTargetDb.prepareStatement(sql)) {
+            // set query timeout
+            stmt.setQueryTimeout(OiyokanConstants.JDBC_STMT_TIMEOUT);
 
-            final long startMillisec = System.currentTimeMillis();
-            try (var stmt = connTargetDb.prepareStatement(sql)) {
-                // set query timeout
-                stmt.setQueryTimeout(OiyokanConstants.JDBC_STMT_TIMEOUT);
-
-                int idxColumn = 1;
-                for (Object look : sqlInfo.getSqlParamList()) {
-                    // System.err.println("TRACE: param: " + look.toString());
-                    BasicJdbcUtil.bindPreparedParameter(stmt, idxColumn++, look);
-                }
-
-                final int result = stmt.executeUpdate();
-                if (result != 1) {
-                    // [M201] NO record processed. No Entity effects.
-                    System.err.println(OiyokanMessages.M201 + ": " + sql);
-                    throw new ODataApplicationException(OiyokanMessages.M201 + ": " + sql,
-                            HttpStatusCode.NOT_FOUND.getStatusCode(), Locale.ENGLISH);
-                }
-
-                // 生成されたキーがあればそれを採用。
-                final ResultSet rsKeys = stmt.getGeneratedKeys();
-                if (rsKeys.next()) {
-                    final ResultSetMetaData rsmetaKeys = rsKeys.getMetaData();
-                    for (int column = 1; column <= rsmetaKeys.getColumnCount(); column++) {
-                        System.out.println(rsKeys.getInt(column));
-
-                        // TODO ここは本当に未実装。
-                        // [M999] NOT IMPLEMENTED: Generic NOT implemented message.
-                        System.err.println(OiyokanMessages.M999);
-                        throw new ODataApplicationException(OiyokanMessages.M999, 500, Locale.ENGLISH);
-                    }
-                }
-
-                final long endMillisec = System.currentTimeMillis();
-                if (OiyokanConstants.IS_TRACE_ODATA_V4) {
-                    final long elapsed = endMillisec - startMillisec;
-                    if (elapsed >= 10) {
-                        System.err.println("OData v4: TRACE: SQL: elapsed: " + (endMillisec - startMillisec));
-                    }
-                }
-
-                // トランザクションを成功としてマーク.
-                isTranSuccessed = true;
-            } catch (SQLIntegrityConstraintViolationException ex) {
-                // [M202] Integrity constraint violation occured (DML). 一意制約違反.
-                System.err.println(OiyokanMessages.M202 + ": " + sql + ", " + ex.toString());
-                throw new ODataApplicationException(OiyokanMessages.M202 + ": " + sql,
-                        HttpStatusCode.CONFLICT.getStatusCode(), Locale.ENGLISH);
-            } catch (SQLTimeoutException ex) {
-                // [M203] SQL timeout at execute.
-                System.err.println(OiyokanMessages.M203 + ": " + sql + ", " + ex.toString());
-                throw new ODataApplicationException(OiyokanMessages.M203 + ": " + sql,
-                        HttpStatusCode.REQUEST_TIMEOUT.getStatusCode(), Locale.ENGLISH);
-            } catch (SQLException ex) {
-                // [M204] Fail to execute SQL.
-                System.err.println(OiyokanMessages.M204 + ": " + sql + ", " + ex.toString());
-                throw new ODataApplicationException(OiyokanMessages.M204 + ": " + sql, 500, Locale.ENGLISH);
-            } finally {
-                if (isTranSuccessed) {
-                    connTargetDb.commit();
-                } else {
-                    connTargetDb.rollback();
-                }
-                // Set auto commit ON.
-                connTargetDb.setAutoCommit(true);
+            int idxColumn = 1;
+            for (Object look : sqlInfo.getSqlParamList()) {
+                // System.err.println("TRACE: param: " + look.toString());
+                BasicJdbcUtil.bindPreparedParameter(stmt, idxColumn++, look);
             }
+
+            final int result = stmt.executeUpdate();
+            if (result != 1) {
+                // [M201] NO record processed. No Entity effects.
+                System.err.println(OiyokanMessages.M201 + ": " + sql);
+                throw new ODataApplicationException(OiyokanMessages.M201 + ": " + sql,
+                        HttpStatusCode.NOT_FOUND.getStatusCode(), Locale.ENGLISH);
+            }
+
+            // 生成されたキーがあればそれを採用。
+            final List<String> generatedKeys = new ArrayList<>();
+            final ResultSet rsKeys = stmt.getGeneratedKeys();
+            if (rsKeys.next()) {
+                final ResultSetMetaData rsmetaKeys = rsKeys.getMetaData();
+                for (int column = 1; column <= rsmetaKeys.getColumnCount(); column++) {
+                    generatedKeys.add(rsKeys.getString(column));
+                }
+            }
+
+            final long endMillisec = System.currentTimeMillis();
+            if (OiyokanConstants.IS_TRACE_ODATA_V4) {
+                final long elapsed = endMillisec - startMillisec;
+                if (elapsed >= 10) {
+                    System.err.println("OData v4: TRACE: SQL: elapsed: " + (endMillisec - startMillisec));
+                }
+            }
+
+            return generatedKeys;
+        } catch (SQLIntegrityConstraintViolationException ex) {
+            // [M202] Integrity constraint violation occured (DML). 一意制約違反.
+            System.err.println(OiyokanMessages.M202 + ": " + sql + ", " + ex.toString());
+            throw new ODataApplicationException(OiyokanMessages.M202 + ": " + sql,
+                    HttpStatusCode.CONFLICT.getStatusCode(), Locale.ENGLISH);
+        } catch (SQLTimeoutException ex) {
+            // [M203] SQL timeout at execute.
+            System.err.println(OiyokanMessages.M203 + ": " + sql + ", " + ex.toString());
+            throw new ODataApplicationException(OiyokanMessages.M203 + ": " + sql,
+                    HttpStatusCode.REQUEST_TIMEOUT.getStatusCode(), Locale.ENGLISH);
         } catch (SQLException ex) {
-            // [M205] Fail to execute SQL.
-            System.err.println(OiyokanMessages.M205 + ": " + ex.toString());
-            throw new ODataApplicationException(OiyokanMessages.M205, 500, Locale.ENGLISH);
+            // [M204] Fail to execute SQL.
+            System.err.println(OiyokanMessages.M204 + ": " + sql + ", " + ex.toString());
+            throw new ODataApplicationException(OiyokanMessages.M204 + ": " + sql,
+                    HttpStatusCode.BAD_REQUEST.getStatusCode(), Locale.ENGLISH);
         }
     }
 }

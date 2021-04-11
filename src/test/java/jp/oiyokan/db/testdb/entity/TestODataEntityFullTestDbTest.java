@@ -48,7 +48,7 @@ class TestODataEntityFullTestDbTest {
                         + "  \"Int32a\": 2147483647,\n" //
                         + "  \"Int64a\": 2147483647,\n" //
                         + "  \"Decimal1\": 1234.56,\n" //
-                        + "  \"StringChar2\": \"C2\",\n" //
+                        + "  \"StringChar8\": \"C2345678\",\n" //
                         + "  \"StringVar255\": \"VARCHAR255\",\n" //
                         + "  \"StringLongVar1\": \"LONGVARCHAR\",\n" //
                         + "  \"Clob1\": \"CLOB\",\n" //

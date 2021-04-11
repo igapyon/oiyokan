@@ -75,6 +75,10 @@ public class OiyokanTestUtil {
      * @throws IOException 入出力例外が発生した場合.
      */
     public static String stream2String(InputStream inStream) throws IOException {
+        if (inStream == null) {
+            return null;
+        }
+
         StringBuilder builder = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(inStream, "UTF-8"))) {
             for (;;) {

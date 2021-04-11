@@ -16,6 +16,8 @@
 package jp.oiyokan;
 
 import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Locale;
 
@@ -45,6 +47,7 @@ import org.apache.olingo.server.api.uri.UriResource;
 import org.apache.olingo.server.api.uri.UriResourceEntitySet;
 
 import jp.oiyokan.basic.BasicJdbcEntityProcessor;
+import jp.oiyokan.basic.BasicJdbcUtil;
 
 /**
  * Oiyokan による Entity Processor
@@ -73,7 +76,23 @@ public class OiyokanEntityProcessor implements EntityProcessor {
 
             // 2. retrieve the data from backend
             List<UriParameter> keyPredicates = uriResourceEntitySet.getKeyPredicates();
-            Entity entity = new BasicJdbcEntityProcessor().readEntityData(uriInfo, edmEntitySet, keyPredicates);
+
+            // データベースに接続.
+            final OiyokanCsdlEntitySet entitySet = BasicJdbcEntityProcessor.findEntitySet(edmEntitySet);
+            if (entitySet == null) {
+                // [M211] No such EntitySet found (createEntity)
+                System.err.println(OiyokanMessages.M211);
+                throw new ODataApplicationException(OiyokanMessages.M211, 500, Locale.ENGLISH);
+            }
+            Entity entity = null;
+            try (Connection connTargetDb = BasicJdbcUtil.getConnection(entitySet.getSettingsDatabase())) {
+                entity = new BasicJdbcEntityProcessor().readEntityData(connTargetDb, uriInfo, edmEntitySet,
+                        keyPredicates);
+            } catch (SQLException ex) {
+                // [M210] Database exception occured (readEntity)
+                System.err.println(OiyokanMessages.M210 + ": " + ex.toString());
+                throw new ODataApplicationException(OiyokanMessages.M210, 500, Locale.ENGLISH);
+            }
 
             // 3. serialize
             EdmEntityType entityType = edmEntitySet.getEntityType();
@@ -140,7 +159,7 @@ public class OiyokanEntityProcessor implements EntityProcessor {
             response.setHeader(HttpHeader.CONTENT_TYPE, responseFormat.toContentTypeString());
 
         } catch (RuntimeException ex) {
-            // ex.printStackTrace();
+            ex.printStackTrace();
             System.err.println("OiyokanEntityProcessor#createEntity: exception: " + ex.toString());
             throw ex;
         }
@@ -185,7 +204,7 @@ public class OiyokanEntityProcessor implements EntityProcessor {
             response.setHeader(HttpHeader.CONTENT_TYPE, responseFormat.toContentTypeString());
 
         } catch (RuntimeException ex) {
-            // ex.printStackTrace();
+            ex.printStackTrace();
             System.err.println("OiyokanEntityProcessor#updateEntity: exception: " + ex.toString());
             throw ex;
         }

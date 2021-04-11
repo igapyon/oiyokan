@@ -63,6 +63,8 @@
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
+			<!-- 1.4.200 (NG), 1.4.198 (NG), 1.4.197 (NG) getGeneratedKeys が機能しない -->
+			<version>1.4.196</version> <!-- 1.4.196 (OK), 1.4.195 (OK) -->
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
