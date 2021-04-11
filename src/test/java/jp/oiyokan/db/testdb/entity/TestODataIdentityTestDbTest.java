@@ -37,8 +37,31 @@ class TestODataIdentityTestDbTest {
                 + "  \"Name\":\"Name\"\n" //
                 + "}");
         String result = OiyokanTestUtil.stream2String(resp.getContent());
-        System.err.println(result);
+        // System.err.println(result);
         assertEquals(201, resp.getStatusCode());
 
+        int indexOf = result.indexOf("\",\"Iden1\":");
+        String subString = result.substring(indexOf + "\",\"Iden1\":".length());
+        String[] subStrParts = subString.split(",");
+        // System.err.println(subStrParts[0]);
+        final String nowID = subStrParts[0];
+
+        /// 通常のfilter
+        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests5", "$filter=Iden1 eq " + nowID);
+        result = OiyokanTestUtil.stream2String(resp.getContent());
+        // System.err.println(result);
+        assertEquals(200, resp.getStatusCode());
+
+        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests5(" + nowID + ")", null);
+        result = OiyokanTestUtil.stream2String(resp.getContent());
+        // System.err.println(result);
+        assertEquals(200, resp.getStatusCode());
+
+        // DELETE
+        resp = OiyokanTestUtil.callRequestDelete("/ODataTests5(" + nowID + ")");
+        assertEquals(204, resp.getStatusCode());
+
+        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests5(" + nowID + ")", null);
+        assertEquals(404, resp.getStatusCode());
     }
 }
