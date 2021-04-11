@@ -124,7 +124,8 @@ public class BasicJdbcEntityProcessor {
         } catch (SQLException ex) {
             // [M209] Fail to execute SQL (readEntity)
             System.err.println(OiyokanMessages.M209 + ": " + sql + ", " + ex.toString());
-            throw new ODataApplicationException(OiyokanMessages.M209 + ": " + sql, 500, Locale.ENGLISH);
+            throw new ODataApplicationException(OiyokanMessages.M209 + ": " + sql, //
+                    OiyokanMessages.M209_CODE, Locale.ENGLISH);
         }
     }
 
