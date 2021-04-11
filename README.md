@@ -93,9 +93,5 @@ oiyokan プロジェクトは、OData v4 server のシンプルなサンプル(h
 
 # 仕様メモ
 
-- ORACLE では $filter で CLOB 型の項目では検索できない。
-- Oracle 12c には TIME 型が無い模様。BOOLEANなど他にも対応のない型がある。それを整理。
 - Sakila DB定義の create_date が Postgres版と MySQL 版とで型が違う.
     これにより、同一の Oiyo ファイルでアクセスすると "The types 'Edm.DateTimeOffset' and 'Edm.Date' are not compatible. が発生する。
-- ORACLE は項目名が大文字に変わってしまうので、対応表の利用が必要.
-- いつの日か、Singleの検索の挙動確認を横展開で調査したい.
