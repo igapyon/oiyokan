@@ -12,10 +12,54 @@
 
 	<groupId>jp.oiyokan</groupId>
 	<artifactId>oiyokan</artifactId>
-	<version>1.2.20210411</version>
+	<version>1.2.20210412</version>
 	<name>oiyokan</name>
 	<description>Oiyokan is a simple OData v4 Server. (based on Apache
 		Olingo / Spring Boot / h2 database)</description>
+	<url>https://github.com/igapyon/oiyokan</url>
+
+	<!-- see: https://maven.apache.org/guides/mini/guide-central-repository-upload.html -->
+	<licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<scm>
+		<url>https://github.com/igapyon/oiyokan</url>
+		<connection>scm:git:https://github.com/igapyon/oiyokan.git</connection>
+		<developerConnection>scm:git:https://github.com/igapyon/oiyokan.git</developerConnection>
+		<tag>HEAD</tag>
+	</scm>
+
+	<developers>
+		<developer>
+			<id>igapyon</id>
+			<name>Toshiki Iga</name>
+			<email>igapyon@gmail.com</email>
+			<url>http://www.igapyon.jp/</url>
+			<roles>
+				<role>lead</role>
+				<role>architect</role>
+				<role>developer</role>
+			</roles>
+			<timezone>+9</timezone>
+		</developer>
+	</developers>
+
+	<distributionManagement>
+		<snapshotRepository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+		<repository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/
+			</url>
+		</repository>
+	</distributionManagement>
 
 	<properties>
 		<java.version>11</java.version>
