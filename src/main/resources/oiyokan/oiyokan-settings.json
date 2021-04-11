@@ -113,6 +113,15 @@
 			"dbTableNameTarget": "[OData Test4]"
 		},
 		{
+			"name": "oiyokan-test-database5",
+			"description": "Oiyokan internal Target Test Entity. 自動採番.",
+			"entitySetName": "ODataTests5",
+			"entityName": "ODataTest5",
+			"databaseName": "oiyokanInternalTarget",
+			"dbTableNameLocal": "OiyoODataTest5",
+			"dbTableNameTarget": "ODataTest5"
+		},
+		{
 			"name": "oiyokan-test-database-fulltext",
 			"description": "Oiyokan internal Target Test Entity (Fulltext - Experimental). Used for build unit test.",
 			"entitySetName": "ODataTestFulls1",

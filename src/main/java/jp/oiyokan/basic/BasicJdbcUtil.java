@@ -746,11 +746,17 @@ public class BasicJdbcUtil {
                         HttpStatusCode.NOT_FOUND.getStatusCode(), Locale.ENGLISH);
             }
 
+            System.err.println("TRACE IGA 749");
+
             // 生成されたキーがあればそれを採用。
             final ResultSet rsKeys = stmt.getGeneratedKeys();
             if (rsKeys.next()) {
+                System.err.println("TRACE IGA 754");
+
                 final ResultSetMetaData rsmetaKeys = rsKeys.getMetaData();
                 for (int column = 1; column <= rsmetaKeys.getColumnCount(); column++) {
+                    System.err.println("TRACE IGA 758");
+
                     System.out.println(rsKeys.getInt(column));
 
                     // TODO ここは本当に未実装。
