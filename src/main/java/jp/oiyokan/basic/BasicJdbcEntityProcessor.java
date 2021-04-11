@@ -145,7 +145,8 @@ public class BasicJdbcEntityProcessor {
             } else {
                 sqlInfo.getSqlBuilder().append(" AND ");
             }
-            sqlInfo.getSqlBuilder().append(param.getName());
+            sqlInfo.getSqlBuilder()
+                    .append(BasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyokanNamingUtil.entity2Db(param.getName())));
             sqlInfo.getSqlBuilder().append("=");
 
             CsdlProperty csdlProp = sqlInfo.getEntitySet().getEntityType().getProperty(param.getName());
@@ -184,15 +185,20 @@ public class BasicJdbcEntityProcessor {
             connTargetDb.setAutoCommit(false);
             try {
                 // TODO FIXME キー自動生成の戻り値を受け取ること。
-                BasicJdbcUtil.executeDml(connTargetDb, sqlInfo);
+                /* ここで戻り値を受けるはず */ BasicJdbcUtil.executeDml(connTargetDb, sqlInfo);
 
                 // TODO FIXME 戻り値を反映させること。
                 final List<UriParameter> keyPredicates = new ArrayList<>();
-                OUTERLOOP: for (Property prop : requestEntity.getProperties()) {
+                for (Property prop : requestEntity.getProperties()) {
+                    boolean isPrimaryKey = false;
                     for (CsdlPropertyRef propKey : entitySet.getEntityType().getKey()) {
-                        if (!prop.getName().equals(propKey.getName())) {
-                            break OUTERLOOP;
+                        if (prop.getName().equals(propKey.getName())) {
+                            isPrimaryKey = true;
+                            break;
                         }
+                    }
+                    if (!isPrimaryKey) {
+                        continue;
                     }
 
                     UriParameter newParam = new UriParameter() {
