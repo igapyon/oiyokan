@@ -45,7 +45,16 @@
 				<role>architect</role>
 				<role>developer</role>
 			</roles>
-			<timezone>+9</timezone>
+			<timezone>Asia/Tokyo</timezone>
+		</developer>
+		<developer>
+			<id>ymoto</id>
+			<name>Koji Yamamoto</name>
+			<email>k.ymoto@gmail.com</email>
+			<roles>
+				<role>tester</role>
+			</roles>
+			<timezone>Asia/Tokyo</timezone>
 		</developer>
 	</developers>
 
