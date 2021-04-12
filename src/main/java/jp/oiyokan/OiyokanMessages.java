@@ -46,6 +46,7 @@ public class OiyokanMessages {
     public static final int M017_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
     public static final String M018 = "[M018] UNEXPECTED: Fail to create ID EntitySet name";
     public static final String M019 = "[M019] UNEXPECTED: Fail to get database meta";
+    public static final int M019_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
     public static final String M020 = "[M020] NOT SUPPORTED: Database type";
     public static final String M021 = "[M021] NOT SUPPORTED: JDBC Type";
     public static final String M022 = "[M022] UNEXPECTED: Fail to load setting SQL file";
