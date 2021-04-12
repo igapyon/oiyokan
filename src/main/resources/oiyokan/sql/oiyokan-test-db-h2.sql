@@ -28,13 +28,12 @@ CREATE TABLE IF NOT EXISTS
 
 CREATE TABLE IF NOT EXISTS
   ODataTest2 (
-    ID INT NOT NULL
-    , Name VARCHAR(80) NOT NULL
-    , Description VARCHAR(250)
-    , Decimal1 DECIMAL(6,2) DEFAULT 1234.56
+    Decimal1 DECIMAL(6,2) DEFAULT 1234.56
     , StringChar8 CHAR(8) DEFAULT 'CHAR_VAL'
     , StringVar255 VARCHAR(255) DEFAULT 'VARCHAR255'
-    , PRIMARY KEY(ID,Decimal1,StringChar8,StringVar255)
+    , Name VARCHAR(80) NOT NULL
+    , Description VARCHAR(250)
+    , PRIMARY KEY(Decimal1,StringChar8,StringVar255)
   );
 
 CREATE TABLE IF NOT EXISTS
@@ -517,8 +516,8 @@ INSERT INTO ODataTest1 (ID, Name, Description) VALUES (
 INSERT INTO ODataTest1 (ID, Name, Description, StringVar255, StringLongVar1, Clob1) VALUES (
   204, 'StringTests', '文字列検索確認', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ');
 
-INSERT INTO ODataTest2 (ID, Name, Description, StringVar255) VALUES (
-  1, 'StringTests', '文字列検索確認', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ');
+INSERT INTO ODataTest2 (Name, Description, StringVar255) VALUES (
+  'StringTests', '文字列検索確認', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ');
 
 INSERT INTO ODataTestFulls1 (ID, Name, Description) VALUES (
   1, 'MacBookPro16,2', 'MacBook Pro (13-inch, 2020, Thunderbolt 3ポートx 4)');

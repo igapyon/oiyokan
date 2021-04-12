@@ -28,13 +28,12 @@ CREATE TABLE IF NOT EXISTS
 
 CREATE TABLE IF NOT EXISTS
   OiyoODataTest2 (
-    ID INT NOT NULL
-    , Name VARCHAR(80) NOT NULL
-    , Description VARCHAR(250)
-    , Decimal1 DECIMAL(6,2) DEFAULT 1234.56
+    Decimal1 DECIMAL(6,2) DEFAULT 1234.56
     , StringChar8 CHAR(8) DEFAULT 'CHAR_VAL'
     , StringVar255 VARCHAR(255) DEFAULT 'VARCHAR255'
-    , PRIMARY KEY(ID,Decimal1,StringChar8,StringVar255)
+    , Name VARCHAR(80) NOT NULL
+    , Description VARCHAR(250)
+    , PRIMARY KEY(Decimal1,StringChar8,StringVar255)
   );
 
 CREATE TABLE IF NOT EXISTS

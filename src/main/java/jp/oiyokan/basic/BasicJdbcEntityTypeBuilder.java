@@ -124,7 +124,7 @@ public class BasicJdbcEntityTypeBuilder {
         } catch (SQLException ex) {
             // [M019] UNEXPECTED: Fail to get database meta
             System.err.println(OiyokanMessages.M019 + ": " + ex.toString());
-            throw new ODataApplicationException(OiyokanMessages.M019, 500, Locale.ENGLISH);
+            throw new ODataApplicationException(OiyokanMessages.M019, OiyokanMessages.M019_CODE, Locale.ENGLISH);
         }
     }
 }
