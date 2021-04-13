@@ -42,7 +42,7 @@ import jp.oiyokan.settings.OiyokanSettingsUtil;
  * 
  * 内部データベースをもとにした Oiyo 形式での処理であるため接続先のリソースの種類によらず Oiyokan ではこのクラスを利用.
  */
-public class BasicJdbcEntityTypeBuilder {
+public class OiyoBasicJdbcEntityTypeBuilder {
     /**
      * 処理対象となる EntitySet.
      */
@@ -53,7 +53,7 @@ public class BasicJdbcEntityTypeBuilder {
      * 
      * @param entitySet OiyokanCsdlEntitySetのインスタンス.
      */
-    public BasicJdbcEntityTypeBuilder(OiyokanCsdlEntitySet entitySet) {
+    public OiyoBasicJdbcEntityTypeBuilder(OiyokanCsdlEntitySet entitySet) {
         this.entitySet = entitySet;
         if (OiyokanConstants.IS_TRACE_ODATA_V4)
             System.err.println( //
@@ -72,7 +72,7 @@ public class BasicJdbcEntityTypeBuilder {
         OiyokanSettingsDatabase settingsInternalDatabase = OiyokanSettingsUtil
                 .getOiyokanDatabase(OiyokanConstants.OIYOKAN_INTERNAL_DB);
 
-        try (Connection connInterDb = BasicJdbcUtil.getConnection(settingsInternalDatabase)) {
+        try (Connection connInterDb = OiyoBasicJdbcUtil.getConnection(settingsInternalDatabase)) {
             // CSDL要素型として情報を組み上げ.
             final CsdlEntityType entityType = new CsdlEntityType();
             entityType.setName(entitySet.getEntityNameIyo());
@@ -90,7 +90,7 @@ public class BasicJdbcEntityTypeBuilder {
                 ResultSetMetaData rsmeta = stmt.getMetaData();
                 final int columnCount = rsmeta.getColumnCount();
                 for (int column = 1; column <= columnCount; column++) {
-                    propertyList.add(BasicJdbcUtil.resultSetMetaData2CsdlProperty(rsmeta, column));
+                    propertyList.add(OiyoBasicJdbcUtil.resultSetMetaData2CsdlProperty(rsmeta, column));
                 }
 
                 // テーブルのキー情報

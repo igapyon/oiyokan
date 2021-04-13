@@ -6,7 +6,7 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
-public class BasicDateTimeUtil {
+public class OiyoBasicDateTimeUtil {
     // TODO ゾーン指定付きを追加
     private static final String[] PATTERNS = new String[] { "yyyy-MM-dd HH:mm:ss.SSS", "yyyy-MM-dd HH:mm:ss",
             "yyyy-MM-dd" };

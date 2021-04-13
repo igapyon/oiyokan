@@ -38,15 +38,15 @@ import jp.oiyokan.OiyokanCsdlEntitySet;
 import jp.oiyokan.OiyokanEdmProvider;
 import jp.oiyokan.OiyokanEntityCollectionBuilderInterface;
 import jp.oiyokan.OiyokanMessages;
-import jp.oiyokan.basic.sql.BasicSqlQueryListBuilder;
-import jp.oiyokan.h2.data.ExperimentalH2FullTextSearch;
+import jp.oiyokan.basic.sql.OiyoSqlQueryListBuilder;
+import jp.oiyokan.h2.data.OiyoExperimentalH2FullTextSearch;
 
 /**
  * 実際に返却するデータ本体を組み上げるクラス.
  * 
  * EDM要素セットを入力に実際のデータを組み上げ.
  */
-public class BasicJdbcEntityCollectionBuilder implements OiyokanEntityCollectionBuilderInterface {
+public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollectionBuilderInterface {
     /**
      * 指定のEDM要素セットに対応する要素コレクションを作成.
      * 
@@ -106,10 +106,10 @@ public class BasicJdbcEntityCollectionBuilder implements OiyokanEntityCollection
         }
 
         // データベースに接続.
-        try (Connection connTargetDb = BasicJdbcUtil.getConnection(entitySet.getSettingsDatabase())) {
+        try (Connection connTargetDb = OiyoBasicJdbcUtil.getConnection(entitySet.getSettingsDatabase())) {
             if (uriInfo.getSearchOption() != null) {
                 // $search.
-                new ExperimentalH2FullTextSearch().process(connTargetDb, edmEntitySet, uriInfo, entityCollection);
+                new OiyoExperimentalH2FullTextSearch().process(connTargetDb, edmEntitySet, uriInfo, entityCollection);
                 return entityCollection;
             }
 
@@ -134,7 +134,7 @@ public class BasicJdbcEntityCollectionBuilder implements OiyokanEntityCollection
     private static void processCountQuery(OiyokanCsdlEntitySet entitySet, UriInfo uriInfo, Connection connTargetDb,
             EntityCollection entityCollection) throws ODataApplicationException {
         // 件数をカウントして設定。
-        BasicSqlQueryListBuilder basicSqlBuilder = new BasicSqlQueryListBuilder(entitySet);
+        OiyoSqlQueryListBuilder basicSqlBuilder = new OiyoSqlQueryListBuilder(entitySet);
         basicSqlBuilder.buildSelectCountQuery(uriInfo);
         final String sql = basicSqlBuilder.getSqlInfo().getSqlBuilder().toString();
 
@@ -149,7 +149,7 @@ public class BasicJdbcEntityCollectionBuilder implements OiyokanEntityCollection
 
             int column = 1;
             for (Object look : basicSqlBuilder.getSqlInfo().getSqlParamList()) {
-                BasicJdbcUtil.bindPreparedParameter(stmt, column++, look);
+                OiyoBasicJdbcUtil.bindPreparedParameter(stmt, column++, look);
             }
 
             stmt.executeQuery();
@@ -191,7 +191,7 @@ public class BasicJdbcEntityCollectionBuilder implements OiyokanEntityCollection
      */
     public void processCollectionQuery(OiyokanCsdlEntitySet entitySet, UriInfo uriInfo, Connection connTargetDb,
             EntityCollection entityCollection) throws ODataApplicationException {
-        BasicSqlQueryListBuilder basicSqlBuilder = new BasicSqlQueryListBuilder(entitySet);
+        OiyoSqlQueryListBuilder basicSqlBuilder = new OiyoSqlQueryListBuilder(entitySet);
 
         // UriInfo 情報を元に SQL文を組み立て.
         basicSqlBuilder.buildSelectQuery(uriInfo);
@@ -208,7 +208,7 @@ public class BasicJdbcEntityCollectionBuilder implements OiyokanEntityCollection
             // 組み立て後のバインド変数を PreparedStatement にセット.
             int idxColumn = 1;
             for (Object look : basicSqlBuilder.getSqlInfo().getSqlParamList()) {
-                BasicJdbcUtil.bindPreparedParameter(stmt, idxColumn++, look);
+                OiyoBasicJdbcUtil.bindPreparedParameter(stmt, idxColumn++, look);
             }
 
             // 検索を実行.
@@ -224,7 +224,7 @@ public class BasicJdbcEntityCollectionBuilder implements OiyokanEntityCollection
                 final Entity ent = new Entity();
                 for (int column = 1; column <= rsmeta.getColumnCount(); column++) {
                     // 取得された検索結果を Property に組み替え.
-                    Property prop = BasicJdbcUtil.resultSet2Property(rset, rsmeta, column, entitySet);
+                    Property prop = OiyoBasicJdbcUtil.resultSet2Property(rset, rsmeta, column, entitySet);
                     ent.addProperty(prop);
                 }
 
@@ -240,7 +240,7 @@ public class BasicJdbcEntityCollectionBuilder implements OiyokanEntityCollection
                         String idVal = prop.getValue().toString();
                         if ("Edm.String".equals(prop.getType())) {
                             // TODO FIXME Property の値を文字列に変換する共通関数を期待したい.
-                            idVal = "'" + BasicUrlUtil.encodeUrl4Key(idVal) + "'";
+                            idVal = "'" + OiyoBasicUrlUtil.encodeUrl4Key(idVal) + "'";
                         }
                         ent.setId(createId(entitySet.getName(), idVal));
                     } else {
@@ -258,7 +258,7 @@ public class BasicJdbcEntityCollectionBuilder implements OiyokanEntityCollection
                             String idVal = prop.getValue().toString();
                             if ("Edm.String".equals(prop.getType())) {
                                 // TODO FIXME Property の値を文字列に変換する共通関数を期待したい.
-                                idVal = "'" + BasicUrlUtil.encodeUrl4Key(idVal) + "'";
+                                idVal = "'" + OiyoBasicUrlUtil.encodeUrl4Key(idVal) + "'";
                             }
                             keyString += idVal;
                         }

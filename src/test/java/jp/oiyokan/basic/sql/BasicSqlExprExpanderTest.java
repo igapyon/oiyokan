@@ -31,7 +31,7 @@ import jp.oiyokan.OiyokanCsdlEntityContainer;
 import jp.oiyokan.OiyokanCsdlEntitySet;
 import jp.oiyokan.OiyokanEdmProvider;
 import jp.oiyokan.OiyokanTestConstants;
-import jp.oiyokan.basic.BasicUrlUtil;
+import jp.oiyokan.basic.OiyoBasicUrlUtil;
 
 /**
  * TinyH2SqlExprExpanderのテスト.
@@ -67,8 +67,8 @@ class BasicSqlExprExpanderTest {
 
         final Parser parser = new Parser(edm.getEdm(), odata);
         final UriInfo uriInfo = parser.parseUri(rawODataPath, rawQueryPath, "", "http://localhost:8080/odata4.svc/");
-        BasicSqlInfo sqlInfo = new BasicSqlInfo(entitySet);
-        new BasicSqlQueryListExpr(sqlInfo).expand(uriInfo.getFilterOption().getExpression());
+        OiyoSqlInfo sqlInfo = new OiyoSqlInfo(entitySet);
+        new OiyoSqlQueryListExpr(sqlInfo).expand(uriInfo.getFilterOption().getExpression());
         return sqlInfo.getSqlBuilder().toString();
     }
 
@@ -81,7 +81,7 @@ class BasicSqlExprExpanderTest {
             return;
 
         assertEquals("(ID = 1.0)", getExprString("/ODataTests1", //
-                BasicUrlUtil.encodeUrlQuery("$filter=ID eq 1.0")));
+                OiyoBasicUrlUtil.encodeUrlQuery("$filter=ID eq 1.0")));
     }
 
     @Test
@@ -90,7 +90,7 @@ class BasicSqlExprExpanderTest {
             return;
 
         assertEquals("((Description = ?) AND (ID = 2.0))", getExprString("/ODataTests1", //
-                BasicUrlUtil.encodeUrlQuery("$filter=Description eq 'Mac' and ID eq 2.0")));
+                OiyoBasicUrlUtil.encodeUrlQuery("$filter=Description eq 'Mac' and ID eq 2.0")));
     }
 
     @Test
@@ -99,7 +99,7 @@ class BasicSqlExprExpanderTest {
             return;
 
         assertEquals("((INSTR(Description,?) - 1) <> -1)", getExprString("/ODataTests1", //
-                BasicUrlUtil.encodeUrlQuery(
+                OiyoBasicUrlUtil.encodeUrlQuery(
                         "$top=51&$filter= indexof(Description,'増殖タブレット7') ne -1 &$orderby=ID &$count=true &$select=Description,ID,Name")));
     }
 }

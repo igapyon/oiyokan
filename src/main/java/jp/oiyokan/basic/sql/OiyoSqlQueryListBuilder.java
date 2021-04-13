@@ -31,29 +31,29 @@ import org.apache.olingo.server.core.uri.queryoption.expression.MemberImpl;
 
 import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanCsdlEntitySet;
-import jp.oiyokan.basic.BasicJdbcUtil;
+import jp.oiyokan.basic.OiyoBasicJdbcUtil;
 import jp.oiyokan.settings.OiyokanNamingUtil;
 
 /**
  * SQL文を構築するための簡易クラス.
  */
-public class BasicSqlQueryListBuilder {
+public class OiyoSqlQueryListBuilder {
     /**
      * SQL構築のデータ構造.
      */
-    private BasicSqlInfo sqlInfo;
+    private OiyoSqlInfo sqlInfo;
 
     /**
      * SQL構築のデータ構造を取得.
      * 
      * @return SQL構築のデータ構造.
      */
-    public BasicSqlInfo getSqlInfo() {
+    public OiyoSqlInfo getSqlInfo() {
         return sqlInfo;
     }
 
-    public BasicSqlQueryListBuilder(OiyokanCsdlEntitySet entitySet) {
-        this.sqlInfo = new BasicSqlInfo(entitySet);
+    public OiyoSqlQueryListBuilder(OiyokanCsdlEntitySet entitySet) {
+        this.sqlInfo = new OiyoSqlInfo(entitySet);
     }
 
     /**
@@ -64,11 +64,11 @@ public class BasicSqlQueryListBuilder {
      */
     public void buildSelectCountQuery(UriInfo uriInfo) throws ODataApplicationException {
         sqlInfo.getSqlBuilder().append("SELECT COUNT(*) FROM "
-                + BasicJdbcUtil.escapeKakkoFieldName(sqlInfo, sqlInfo.getEntitySet().getDbTableNameTargetIyo()));
+                + OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, sqlInfo.getEntitySet().getDbTableNameTargetIyo()));
         if (uriInfo.getFilterOption() != null) {
             FilterOptionImpl filterOpt = (FilterOptionImpl) uriInfo.getFilterOption();
             sqlInfo.getSqlBuilder().append(" WHERE ");
-            new BasicSqlQueryListExpr(sqlInfo).expand(filterOpt.getExpression());
+            new OiyoSqlQueryListExpr(sqlInfo).expand(filterOpt.getExpression());
         }
     }
 
@@ -99,7 +99,7 @@ public class BasicSqlQueryListBuilder {
                 FilterOptionImpl filterOpt = (FilterOptionImpl) uriInfo.getFilterOption();
                 // WHERE部分についてはパラメータクエリで処理するのを基本とする.
                 sqlInfo.getSqlBuilder().append(" WHERE ");
-                new BasicSqlQueryListExpr(sqlInfo).expand(filterOpt.getExpression());
+                new OiyoSqlQueryListExpr(sqlInfo).expand(filterOpt.getExpression());
             }
         }
 
@@ -159,7 +159,7 @@ public class BasicSqlQueryListBuilder {
             }
 
             // もし空白を含む場合はエスケープ。
-            strColumns += BasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyokanNamingUtil.entity2Db(prop.getName()));
+            strColumns += OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyokanNamingUtil.entity2Db(prop.getName()));
         }
         sqlInfo.getSqlBuilder().append(strColumns);
     }
@@ -174,8 +174,8 @@ public class BasicSqlQueryListBuilder {
         for (SelectItem item : uriInfo.getSelectOption().getSelectItems()) {
             for (UriResource res : item.getResourcePath().getUriResourceParts()) {
                 sqlInfo.getSqlBuilder().append(itemCount++ == 0 ? "" : ",");
-                sqlInfo.getSqlBuilder().append(BasicJdbcUtil.escapeKakkoFieldName(sqlInfo,
-                        OiyokanNamingUtil.entity2Db(BasicJdbcUtil.unescapeKakkoFieldName(res.toString()))));
+                sqlInfo.getSqlBuilder().append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo,
+                        OiyokanNamingUtil.entity2Db(OiyoBasicJdbcUtil.unescapeKakkoFieldName(res.toString()))));
                 for (int index = 0; index < keyTarget.size(); index++) {
                     if (keyTarget.get(index).equals(res.toString())) {
                         keyTarget.remove(index);
@@ -187,7 +187,7 @@ public class BasicSqlQueryListBuilder {
         for (int index = 0; index < keyTarget.size(); index++) {
             // レコードを一意に表すID項目が必須。検索対象にない場合は追加.
             sqlInfo.getSqlBuilder().append(itemCount++ == 0 ? "" : ",");
-            sqlInfo.getSqlBuilder().append(BasicJdbcUtil.unescapeKakkoFieldName(keyTarget.get(index)));
+            sqlInfo.getSqlBuilder().append(OiyoBasicJdbcUtil.unescapeKakkoFieldName(keyTarget.get(index)));
         }
     }
 
@@ -196,7 +196,7 @@ public class BasicSqlQueryListBuilder {
         switch (sqlInfo.getEntitySet().getDatabaseType()) {
         default:
             sqlInfo.getSqlBuilder().append(" FROM "
-                    + BasicJdbcUtil.escapeKakkoFieldName(sqlInfo, sqlInfo.getEntitySet().getDbTableNameTargetIyo()));
+                    + OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, sqlInfo.getEntitySet().getDbTableNameTargetIyo()));
             break;
         case MSSQL2008:
         case ORACLE: {
@@ -219,11 +219,11 @@ public class BasicSqlQueryListBuilder {
             // 必要な分だけ項目展開.
             expandSelect(uriInfo);
             sqlInfo.getSqlBuilder().append(" FROM "
-                    + BasicJdbcUtil.escapeKakkoFieldName(sqlInfo, sqlInfo.getEntitySet().getDbTableNameTargetIyo()));
+                    + OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, sqlInfo.getEntitySet().getDbTableNameTargetIyo()));
             if (uriInfo.getFilterOption() != null) {
                 sqlInfo.getSqlBuilder().append(" WHERE ");
                 // データ絞り込みはここで実現.
-                new BasicSqlQueryListExpr(sqlInfo).expand(uriInfo.getFilterOption().getExpression());
+                new OiyoSqlQueryListExpr(sqlInfo).expand(uriInfo.getFilterOption().getExpression());
             }
             sqlInfo.getSqlBuilder().append(")");
             if (OiyokanConstants.DatabaseType.MSSQL2008 == sqlInfo.getEntitySet().getDatabaseType()) {
@@ -246,8 +246,8 @@ public class BasicSqlQueryListBuilder {
                 sqlInfo.getSqlBuilder().append(",");
             }
 
-            sqlInfo.getSqlBuilder().append(BasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyokanNamingUtil.entity2Db(
-                    BasicJdbcUtil.unescapeKakkoFieldName(((MemberImpl) orderByItem.getExpression()).toString()))));
+            sqlInfo.getSqlBuilder().append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyokanNamingUtil.entity2Db(
+                    OiyoBasicJdbcUtil.unescapeKakkoFieldName(((MemberImpl) orderByItem.getExpression()).toString()))));
 
             if (orderByItem.isDescending()) {
                 sqlInfo.getSqlBuilder().append(" DESC");
@@ -264,8 +264,8 @@ public class BasicSqlQueryListBuilder {
             } else {
                 sqlInfo.getSqlBuilder().append(",");
             }
-            sqlInfo.getSqlBuilder().append(BasicJdbcUtil.escapeKakkoFieldName(sqlInfo,
-                    OiyokanNamingUtil.entity2Db(BasicJdbcUtil.unescapeKakkoFieldName(look.getName()))));
+            sqlInfo.getSqlBuilder().append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo,
+                    OiyokanNamingUtil.entity2Db(OiyoBasicJdbcUtil.unescapeKakkoFieldName(look.getName()))));
         }
     }
 

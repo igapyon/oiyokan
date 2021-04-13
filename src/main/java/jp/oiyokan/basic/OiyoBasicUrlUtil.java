@@ -24,8 +24,8 @@ import org.apache.commons.codec.net.URLCodec;
 /**
  * Oiyokan 関連の URL まわりユーティリティクラス.
  */
-public class BasicUrlUtil {
-    private BasicUrlUtil() {
+public class OiyoBasicUrlUtil {
+    private OiyoBasicUrlUtil() {
     }
 
     /**

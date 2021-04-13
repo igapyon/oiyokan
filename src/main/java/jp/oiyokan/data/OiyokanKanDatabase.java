@@ -30,7 +30,7 @@ import org.apache.olingo.server.api.ODataApplicationException;
 
 import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanMessages;
-import jp.oiyokan.basic.BasicJdbcUtil;
+import jp.oiyokan.basic.OiyoBasicJdbcUtil;
 import jp.oiyokan.dto.OiyokanSettingsDatabase;
 import jp.oiyokan.settings.OiyokanSettingsUtil;
 
@@ -74,7 +74,7 @@ public class OiyokanKanDatabase {
         OiyokanSettingsDatabase settingsInterDatabase = OiyokanSettingsUtil
                 .getOiyokanDatabase(OiyokanConstants.OIYOKAN_INTERNAL_DB);
 
-        try (Connection connInterDb = BasicJdbcUtil.getConnection(settingsInterDatabase)) {
+        try (Connection connInterDb = OiyoBasicJdbcUtil.getConnection(settingsInterDatabase)) {
             // Internal Database の バージョン情報および Oiyokanテーブルを setup.
 
             // Oiyokan が動作する上で必要なテーブルのセットアップ.
@@ -115,7 +115,7 @@ public class OiyokanKanDatabase {
             ///////////////////////////////////////////
             // ODataAppInfos にバージョン情報などデータの追加
             try (var stmt = connInterDb.prepareStatement("INSERT INTO Oiyokan (KeyName, KeyValue) VALUES ("
-                    + BasicJdbcUtil.getQueryPlaceholderString(2) + ")")) {
+                    + OiyoBasicJdbcUtil.getQueryPlaceholderString(2) + ")")) {
                 stmt.setString(1, "Version");
                 stmt.setString(2, OiyokanConstants.VERSION);
                 stmt.executeUpdate();
@@ -138,7 +138,7 @@ public class OiyokanKanDatabase {
 
                 OiyokanSettingsDatabase lookDatabase = OiyokanSettingsUtil.getOiyokanDatabase(sqlFileDef[0]);
 
-                try (Connection connLoookDatabase = BasicJdbcUtil.getConnection(lookDatabase)) {
+                try (Connection connLoookDatabase = OiyoBasicJdbcUtil.getConnection(lookDatabase)) {
                     final String[] sqls = OiyokanResourceSqlUtil.loadOiyokanResourceSql("oiyokan/sql/" + sqlFileDef[1]);
                     for (String sql : sqls) {
                         try (var stmt = connLoookDatabase.prepareStatement(sql.trim())) {

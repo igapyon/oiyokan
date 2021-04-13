@@ -21,7 +21,7 @@ import org.apache.olingo.server.api.ODataResponse;
 import org.junit.jupiter.api.Test;
 
 import jp.oiyokan.OiyokanTestConstants;
-import jp.oiyokan.basic.BasicUrlUtil;
+import jp.oiyokan.basic.OiyoBasicUrlUtil;
 import jp.oiyokan.util.OiyokanTestUtil;
 
 /**
@@ -40,7 +40,7 @@ class TestDbCheckNullBehaviorTest {
         if (!OiyokanTestConstants.IS_TEST_SAKILA)
             return;
 
-        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/SklAddresses", BasicUrlUtil.encodeUrlQuery(
+        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/SklAddresses", OiyoBasicUrlUtil.encodeUrlQuery(
                 "$top=1 &$count=true &$filter=address2 eq null &$select=address_id &$orderby=address_id"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
@@ -62,7 +62,7 @@ class TestDbCheckNullBehaviorTest {
             return;
 
         // NULLの件数をカウント.
-        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/SklAddresses", BasicUrlUtil.encodeUrlQuery(
+        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/SklAddresses", OiyoBasicUrlUtil.encodeUrlQuery(
                 "$top=1 &$count=true &$filter=null eq address2 &$select=address_id &$orderby=address_id"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
@@ -84,7 +84,7 @@ class TestDbCheckNullBehaviorTest {
             return;
 
         // NOT EQUAL NULL の件数をカウント.
-        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/SklAddresses", BasicUrlUtil.encodeUrlQuery(
+        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/SklAddresses", OiyoBasicUrlUtil.encodeUrlQuery(
                 "$top=1 &$count=true &$filter=address2 ne null &$select=address_id &$orderby=address_id"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 

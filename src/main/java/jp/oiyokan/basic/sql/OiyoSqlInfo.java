@@ -30,7 +30,7 @@ import jp.oiyokan.dto.OiyokanSettingsDatabase;
  * 
  * 当面は、このクラスはSQL文とパラメータを蓄える。
  */
-public class BasicSqlInfo {
+public class OiyoSqlInfo {
     private OiyokanCsdlEntitySet entitySet = null;
 
     private final StringBuilder sqlBuilder = new StringBuilder();
@@ -41,7 +41,7 @@ public class BasicSqlInfo {
      * 
      * @param entitySet EntitySet instance.
      */
-    public BasicSqlInfo(OiyokanCsdlEntitySet entitySet) {
+    public OiyoSqlInfo(OiyokanCsdlEntitySet entitySet) {
         this.entitySet = entitySet;
     }
 

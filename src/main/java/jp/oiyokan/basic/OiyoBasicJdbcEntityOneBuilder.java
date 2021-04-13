@@ -42,13 +42,13 @@ import jp.oiyokan.OiyokanConstants.DatabaseType;
 import jp.oiyokan.OiyokanCsdlEntitySet;
 import jp.oiyokan.OiyokanEdmProvider;
 import jp.oiyokan.OiyokanMessages;
-import jp.oiyokan.basic.sql.BasicSqlDeleteOneBuilder;
-import jp.oiyokan.basic.sql.BasicSqlInfo;
-import jp.oiyokan.basic.sql.BasicSqlInsertOneBuilder;
-import jp.oiyokan.basic.sql.BasicSqlQueryOneBuilder;
-import jp.oiyokan.basic.sql.BasicSqlUpdateOneBuilder;
+import jp.oiyokan.basic.sql.OiyoSqlDeleteOneBuilder;
+import jp.oiyokan.basic.sql.OiyoSqlInfo;
+import jp.oiyokan.basic.sql.OiyoSqlInsertOneBuilder;
+import jp.oiyokan.basic.sql.OiyoSqlQueryOneBuilder;
+import jp.oiyokan.basic.sql.OiyoSqlUpdateOneBuilder;
 
-public class BasicJdbcEntityProcessor {
+public class OiyoBasicJdbcEntityOneBuilder {
     /////////////////////////
     // SELECT
 
@@ -71,8 +71,8 @@ public class BasicJdbcEntityProcessor {
             throw new ODataApplicationException(OiyokanMessages.M206, OiyokanMessages.M206_CODE, Locale.ENGLISH);
         }
 
-        final BasicSqlInfo sqlInfo = new BasicSqlInfo(entitySet);
-        new BasicSqlQueryOneBuilder(sqlInfo).buildSelectOneQuery(edmEntitySet, keyPredicates);
+        final OiyoSqlInfo sqlInfo = new OiyoSqlInfo(entitySet);
+        new OiyoSqlQueryOneBuilder(sqlInfo).buildSelectOneQuery(edmEntitySet, keyPredicates);
 
         final String sql = sqlInfo.getSqlBuilder().toString();
         if (OiyokanConstants.IS_TRACE_ODATA_V4)
@@ -85,7 +85,7 @@ public class BasicJdbcEntityProcessor {
 
             int idxColumn = 1;
             for (Object look : sqlInfo.getSqlParamList()) {
-                BasicJdbcUtil.bindPreparedParameter(stmt, idxColumn++, look);
+                OiyoBasicJdbcUtil.bindPreparedParameter(stmt, idxColumn++, look);
             }
 
             stmt.executeQuery();
@@ -100,7 +100,7 @@ public class BasicJdbcEntityProcessor {
             final ResultSetMetaData rsmeta = rset.getMetaData();
             final Entity ent = new Entity();
             for (int column = 1; column <= rsmeta.getColumnCount(); column++) {
-                Property prop = BasicJdbcUtil.resultSet2Property(rset, rsmeta, column, entitySet);
+                Property prop = OiyoBasicJdbcUtil.resultSet2Property(rset, rsmeta, column, entitySet);
                 ent.addProperty(prop);
             }
 
@@ -146,16 +146,16 @@ public class BasicJdbcEntityProcessor {
                     OiyokanMessages.M211_CODE, Locale.ENGLISH);
         }
 
-        final BasicSqlInfo sqlInfo = new BasicSqlInfo(entitySet);
-        new BasicSqlInsertOneBuilder(sqlInfo).buildInsertIntoDml(edmEntitySet, requestEntity);
+        final OiyoSqlInfo sqlInfo = new OiyoSqlInfo(entitySet);
+        new OiyoSqlInsertOneBuilder(sqlInfo).buildInsertIntoDml(edmEntitySet, requestEntity);
 
         // データベースに接続.
         boolean isTranSuccessed = false;
-        try (Connection connTargetDb = BasicJdbcUtil.getConnection(sqlInfo.getEntitySet().getSettingsDatabase())) {
+        try (Connection connTargetDb = OiyoBasicJdbcUtil.getConnection(sqlInfo.getEntitySet().getSettingsDatabase())) {
             // Set auto commit OFF.
             connTargetDb.setAutoCommit(false);
             try {
-                final List<String> generatedKeys = BasicJdbcUtil.executeDml(connTargetDb, sqlInfo, true);
+                final List<String> generatedKeys = OiyoBasicJdbcUtil.executeDml(connTargetDb, sqlInfo, true);
                 // 生成されたキーをその後の処理に反映。
                 final List<UriParameter> keyPredicates = new ArrayList<>();
                 if (DatabaseType.ORACLE == sqlInfo.getEntitySet().getDatabaseType()) {
@@ -236,16 +236,16 @@ public class BasicJdbcEntityProcessor {
                     OiyokanMessages.M212_CODE, Locale.ENGLISH);
         }
 
-        final BasicSqlInfo sqlInfo = new BasicSqlInfo(entitySet);
-        new BasicSqlDeleteOneBuilder(sqlInfo).buildDeleteDml(edmEntitySet, keyPredicates);
+        final OiyoSqlInfo sqlInfo = new OiyoSqlInfo(entitySet);
+        new OiyoSqlDeleteOneBuilder(sqlInfo).buildDeleteDml(edmEntitySet, keyPredicates);
 
         // データベースに接続.
         boolean isTranSuccessed = false;
-        try (Connection connTargetDb = BasicJdbcUtil.getConnection(sqlInfo.getEntitySet().getSettingsDatabase())) {
+        try (Connection connTargetDb = OiyoBasicJdbcUtil.getConnection(sqlInfo.getEntitySet().getSettingsDatabase())) {
             // Set auto commit OFF.
             connTargetDb.setAutoCommit(false);
             try {
-                BasicJdbcUtil.executeDml(connTargetDb, sqlInfo, false);
+                OiyoBasicJdbcUtil.executeDml(connTargetDb, sqlInfo, false);
 
                 // トランザクションを成功としてマーク.
                 isTranSuccessed = true;
@@ -279,16 +279,16 @@ public class BasicJdbcEntityProcessor {
                     OiyokanMessages.M213_CODE, Locale.ENGLISH);
         }
 
-        final BasicSqlInfo sqlInfo = new BasicSqlInfo(entitySet);
-        new BasicSqlUpdateOneBuilder(sqlInfo).buildUpdatePatchDml(edmEntitySet, keyPredicates, requestEntity);
+        final OiyoSqlInfo sqlInfo = new OiyoSqlInfo(entitySet);
+        new OiyoSqlUpdateOneBuilder(sqlInfo).buildUpdatePatchDml(edmEntitySet, keyPredicates, requestEntity);
 
         // データベースに接続.
-        try (Connection connTargetDb = BasicJdbcUtil.getConnection(sqlInfo.getEntitySet().getSettingsDatabase())) {
+        try (Connection connTargetDb = OiyoBasicJdbcUtil.getConnection(sqlInfo.getEntitySet().getSettingsDatabase())) {
             // Set auto commit OFF.
             connTargetDb.setAutoCommit(false);
             boolean isTranSuccessed = false;
             try {
-                BasicJdbcUtil.executeDml(connTargetDb, sqlInfo, false);
+                OiyoBasicJdbcUtil.executeDml(connTargetDb, sqlInfo, false);
 
                 // トランザクションを成功としてマーク.
                 isTranSuccessed = true;
@@ -322,17 +322,17 @@ public class BasicJdbcEntityProcessor {
                     OiyokanMessages.M214_CODE, Locale.ENGLISH);
         }
 
-        final BasicSqlInfo sqlInfo = new BasicSqlInfo(entitySet);
-        new BasicSqlUpdateOneBuilder(sqlInfo).buildUpdatePutDml(edmEntitySet, keyPredicates, requestEntity);
+        final OiyoSqlInfo sqlInfo = new OiyoSqlInfo(entitySet);
+        new OiyoSqlUpdateOneBuilder(sqlInfo).buildUpdatePutDml(edmEntitySet, keyPredicates, requestEntity);
 
         // データベースに接続.
-        try (Connection connTargetDb = BasicJdbcUtil.getConnection(sqlInfo.getEntitySet().getSettingsDatabase())) {
+        try (Connection connTargetDb = OiyoBasicJdbcUtil.getConnection(sqlInfo.getEntitySet().getSettingsDatabase())) {
             // Set auto commit OFF.
             connTargetDb.setAutoCommit(false);
             boolean isTranSuccessed = false;
 
             try {
-                BasicJdbcUtil.executeDml(connTargetDb, sqlInfo, false);
+                OiyoBasicJdbcUtil.executeDml(connTargetDb, sqlInfo, false);
 
                 // トランザクションを成功としてマーク.
                 isTranSuccessed = true;

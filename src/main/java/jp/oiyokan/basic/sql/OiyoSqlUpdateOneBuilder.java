@@ -25,28 +25,28 @@ import org.apache.olingo.commons.api.edm.provider.CsdlPropertyRef;
 import org.apache.olingo.server.api.ODataApplicationException;
 import org.apache.olingo.server.api.uri.UriParameter;
 
-import jp.oiyokan.basic.BasicJdbcUtil;
+import jp.oiyokan.basic.OiyoBasicJdbcUtil;
 import jp.oiyokan.settings.OiyokanNamingUtil;
 
 /**
  * データベースの1件レコードを更新.
  */
-public class BasicSqlUpdateOneBuilder {
+public class OiyoSqlUpdateOneBuilder {
     /**
      * SQL構築のデータ構造.
      */
-    private BasicSqlInfo sqlInfo;
+    private OiyoSqlInfo sqlInfo;
 
     /**
      * SQL構築のデータ構造を取得.
      * 
      * @return SQL構築のデータ構造.
      */
-    public BasicSqlInfo getSqlInfo() {
+    public OiyoSqlInfo getSqlInfo() {
         return sqlInfo;
     }
 
-    public BasicSqlUpdateOneBuilder(BasicSqlInfo sqlInfo) {
+    public OiyoSqlUpdateOneBuilder(OiyoSqlInfo sqlInfo) {
         this.sqlInfo = sqlInfo;
     }
 
@@ -54,7 +54,7 @@ public class BasicSqlUpdateOneBuilder {
             throws ODataApplicationException {
         sqlInfo.getSqlBuilder().append("UPDATE ");
         sqlInfo.getSqlBuilder()
-                .append(BasicJdbcUtil.escapeKakkoFieldName(sqlInfo, sqlInfo.getEntitySet().getDbTableNameTargetIyo()));
+                .append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, sqlInfo.getEntitySet().getDbTableNameTargetIyo()));
         sqlInfo.getSqlBuilder().append(" SET ");
         boolean isFirst = true;
         for (Property prop : requestEntity.getProperties()) {
@@ -65,10 +65,10 @@ public class BasicSqlUpdateOneBuilder {
             }
 
             sqlInfo.getSqlBuilder()
-                    .append(BasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyokanNamingUtil.entity2Db(prop.getName())));
+                    .append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyokanNamingUtil.entity2Db(prop.getName())));
             sqlInfo.getSqlBuilder().append("=");
 
-            BasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo, prop.getType(), prop.getValue());
+            OiyoBasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo, prop.getType(), prop.getValue());
         }
 
         sqlInfo.getSqlBuilder().append(" WHERE ");
@@ -81,11 +81,11 @@ public class BasicSqlUpdateOneBuilder {
                 sqlInfo.getSqlBuilder().append(" AND ");
             }
             sqlInfo.getSqlBuilder()
-                    .append(BasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyokanNamingUtil.entity2Db(param.getName())));
+                    .append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyokanNamingUtil.entity2Db(param.getName())));
             sqlInfo.getSqlBuilder().append("=");
 
             CsdlProperty csdlProp = sqlInfo.getEntitySet().getEntityType().getProperty(param.getName());
-            BasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo, csdlProp.getType(), param.getText());
+            OiyoBasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo, csdlProp.getType(), param.getText());
         }
     }
 
@@ -93,7 +93,7 @@ public class BasicSqlUpdateOneBuilder {
             throws ODataApplicationException {
         sqlInfo.getSqlBuilder().append("UPDATE ");
         sqlInfo.getSqlBuilder()
-                .append(BasicJdbcUtil.escapeKakkoFieldName(sqlInfo, sqlInfo.getEntitySet().getDbTableNameTargetIyo()));
+                .append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, sqlInfo.getEntitySet().getDbTableNameTargetIyo()));
         sqlInfo.getSqlBuilder().append(" SET ");
 
         // primary key 以外の全てが対象。指定のないものは null。
@@ -115,15 +115,15 @@ public class BasicSqlUpdateOneBuilder {
             }
 
             sqlInfo.getSqlBuilder().append(
-                    BasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyokanNamingUtil.entity2Db(csdlProp.getName())));
+                    OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyokanNamingUtil.entity2Db(csdlProp.getName())));
 
             sqlInfo.getSqlBuilder().append("=");
             Property prop = requestEntity.getProperty(csdlProp.getName());
             if (prop != null) {
-                BasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo, csdlProp.getType(), prop.getValue());
+                OiyoBasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo, csdlProp.getType(), prop.getValue());
             } else {
                 // 指定のないものには nullをセット.
-                BasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo, csdlProp.getType(), null);
+                OiyoBasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo, csdlProp.getType(), null);
             }
         }
 
@@ -137,11 +137,11 @@ public class BasicSqlUpdateOneBuilder {
                 sqlInfo.getSqlBuilder().append(" AND ");
             }
             sqlInfo.getSqlBuilder()
-                    .append(BasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyokanNamingUtil.entity2Db(param.getName())));
+                    .append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyokanNamingUtil.entity2Db(param.getName())));
             sqlInfo.getSqlBuilder().append("=");
 
             CsdlProperty csdlProp = sqlInfo.getEntitySet().getEntityType().getProperty(param.getName());
-            BasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo, csdlProp.getType(), param.getText());
+            OiyoBasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo, csdlProp.getType(), param.getText());
         }
     }
 }

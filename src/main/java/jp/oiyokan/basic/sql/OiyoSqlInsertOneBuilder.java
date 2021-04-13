@@ -20,35 +20,35 @@ import org.apache.olingo.commons.api.data.Property;
 import org.apache.olingo.commons.api.edm.EdmEntitySet;
 import org.apache.olingo.server.api.ODataApplicationException;
 
-import jp.oiyokan.basic.BasicJdbcUtil;
+import jp.oiyokan.basic.OiyoBasicJdbcUtil;
 import jp.oiyokan.settings.OiyokanNamingUtil;
 
 /**
  * データベースに1件レコードを追加.
  */
-public class BasicSqlInsertOneBuilder {
+public class OiyoSqlInsertOneBuilder {
     /**
      * SQL構築のデータ構造.
      */
-    private BasicSqlInfo sqlInfo;
+    private OiyoSqlInfo sqlInfo;
 
     /**
      * SQL構築のデータ構造を取得.
      * 
      * @return SQL構築のデータ構造.
      */
-    public BasicSqlInfo getSqlInfo() {
+    public OiyoSqlInfo getSqlInfo() {
         return sqlInfo;
     }
 
-    public BasicSqlInsertOneBuilder(BasicSqlInfo sqlInfo) {
+    public OiyoSqlInsertOneBuilder(OiyoSqlInfo sqlInfo) {
         this.sqlInfo = sqlInfo;
     }
 
     public void buildInsertIntoDml(EdmEntitySet edmEntitySet, Entity requestEntity) throws ODataApplicationException {
         sqlInfo.getSqlBuilder().append("INSERT INTO ");
         sqlInfo.getSqlBuilder()
-                .append(BasicJdbcUtil.escapeKakkoFieldName(sqlInfo, sqlInfo.getEntitySet().getDbTableNameTargetIyo()));
+                .append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, sqlInfo.getEntitySet().getDbTableNameTargetIyo()));
         sqlInfo.getSqlBuilder().append(" (");
         boolean isFirst = true;
         for (Property prop : requestEntity.getProperties()) {
@@ -58,7 +58,7 @@ public class BasicSqlInsertOneBuilder {
                 sqlInfo.getSqlBuilder().append(",");
             }
 
-            final String colName = BasicJdbcUtil.escapeKakkoFieldName(sqlInfo,
+            final String colName = OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo,
                     OiyokanNamingUtil.entity2Db(prop.getName()));
             sqlInfo.getSqlBuilder().append(colName);
         }
@@ -71,7 +71,7 @@ public class BasicSqlInsertOneBuilder {
             } else {
                 sqlInfo.getSqlBuilder().append(",");
             }
-            BasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo, prop.getType(), prop.getValue());
+            OiyoBasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo, prop.getType(), prop.getValue());
         }
 
         sqlInfo.getSqlBuilder().append(")");

@@ -22,28 +22,28 @@ import org.apache.olingo.commons.api.edm.provider.CsdlProperty;
 import org.apache.olingo.server.api.ODataApplicationException;
 import org.apache.olingo.server.api.uri.UriParameter;
 
-import jp.oiyokan.basic.BasicJdbcUtil;
+import jp.oiyokan.basic.OiyoBasicJdbcUtil;
 import jp.oiyokan.settings.OiyokanNamingUtil;
 
 /**
  * データベースから1件レコードを検索.
  */
-public class BasicSqlQueryOneBuilder {
+public class OiyoSqlQueryOneBuilder {
     /**
      * SQL構築のデータ構造.
      */
-    private BasicSqlInfo sqlInfo;
+    private OiyoSqlInfo sqlInfo;
 
     /**
      * SQL構築のデータ構造を取得.
      * 
      * @return SQL構築のデータ構造.
      */
-    public BasicSqlInfo getSqlInfo() {
+    public OiyoSqlInfo getSqlInfo() {
         return sqlInfo;
     }
 
-    public BasicSqlQueryOneBuilder(BasicSqlInfo sqlInfo) {
+    public OiyoSqlQueryOneBuilder(OiyoSqlInfo sqlInfo) {
         this.sqlInfo = sqlInfo;
     }
 
@@ -60,7 +60,7 @@ public class BasicSqlQueryOneBuilder {
         expandSelectKey(edmEntitySet);
 
         sqlInfo.getSqlBuilder().append(" FROM "
-                + BasicJdbcUtil.escapeKakkoFieldName(sqlInfo, sqlInfo.getEntitySet().getDbTableNameTargetIyo()));
+                + OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, sqlInfo.getEntitySet().getDbTableNameTargetIyo()));
 
         sqlInfo.getSqlBuilder().append(" WHERE ");
         boolean isFirst = true;
@@ -71,13 +71,13 @@ public class BasicSqlQueryOneBuilder {
                 sqlInfo.getSqlBuilder().append(" AND ");
             }
             sqlInfo.getSqlBuilder()
-                    .append(BasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyokanNamingUtil.entity2Db(param.getName())));
+                    .append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyokanNamingUtil.entity2Db(param.getName())));
             sqlInfo.getSqlBuilder().append("=");
 
             CsdlProperty csdlProp = sqlInfo.getEntitySet().getEntityType().getProperty(param.getName());
             // ORACLEのROWIDを利用する場合、この処理がnullになってしまうため、nullの場合は Edm.String 決め打ちで処理する。
             final String propType = (csdlProp == null ? "Edm.String" : csdlProp.getType());
-            BasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo, propType, param.getText());
+            OiyoBasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo, propType, param.getText());
         }
     }
 
@@ -85,8 +85,8 @@ public class BasicSqlQueryOneBuilder {
         int itemCount = 0;
         for (String name : edmEntitySet.getEntityType().getPropertyNames()) {
             sqlInfo.getSqlBuilder().append(itemCount++ == 0 ? "" : ",");
-            sqlInfo.getSqlBuilder().append(BasicJdbcUtil.escapeKakkoFieldName(sqlInfo,
-                    OiyokanNamingUtil.entity2Db(BasicJdbcUtil.unescapeKakkoFieldName(name))));
+            sqlInfo.getSqlBuilder().append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo,
+                    OiyokanNamingUtil.entity2Db(OiyoBasicJdbcUtil.unescapeKakkoFieldName(name))));
         }
     }
 }
