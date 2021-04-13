@@ -38,7 +38,7 @@ import jp.oiyokan.OiyokanCsdlEntitySet;
 import jp.oiyokan.OiyokanEdmProvider;
 import jp.oiyokan.OiyokanEntityCollectionBuilderInterface;
 import jp.oiyokan.OiyokanMessages;
-import jp.oiyokan.basic.sql.BasicSqlBuilder;
+import jp.oiyokan.basic.sql.BasicSqlQueryListBuilder;
 import jp.oiyokan.h2.data.ExperimentalH2FullTextSearch;
 
 /**
@@ -134,7 +134,7 @@ public class BasicJdbcEntityCollectionBuilder implements OiyokanEntityCollection
     private static void processCountQuery(OiyokanCsdlEntitySet entitySet, UriInfo uriInfo, Connection connTargetDb,
             EntityCollection entityCollection) throws ODataApplicationException {
         // 件数をカウントして設定。
-        BasicSqlBuilder basicSqlBuilder = new BasicSqlBuilder(entitySet);
+        BasicSqlQueryListBuilder basicSqlBuilder = new BasicSqlQueryListBuilder(entitySet);
         basicSqlBuilder.getSelectCountQuery(uriInfo);
         final String sql = basicSqlBuilder.getSqlInfo().getSqlBuilder().toString();
 
@@ -191,7 +191,7 @@ public class BasicJdbcEntityCollectionBuilder implements OiyokanEntityCollection
      */
     public void processCollectionQuery(OiyokanCsdlEntitySet entitySet, UriInfo uriInfo, Connection connTargetDb,
             EntityCollection entityCollection) throws ODataApplicationException {
-        BasicSqlBuilder basicSqlBuilder = new BasicSqlBuilder(entitySet);
+        BasicSqlQueryListBuilder basicSqlBuilder = new BasicSqlQueryListBuilder(entitySet);
 
         // UriInfo 情報を元に SQL文を組み立て.
         basicSqlBuilder.getSelectQuery(uriInfo);

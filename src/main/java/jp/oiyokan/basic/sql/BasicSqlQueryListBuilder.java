@@ -37,7 +37,7 @@ import jp.oiyokan.settings.OiyokanNamingUtil;
 /**
  * SQL文を構築するための簡易クラス.
  */
-public class BasicSqlBuilder {
+public class BasicSqlQueryListBuilder {
     /**
      * SQL構築のデータ構造.
      */
@@ -52,7 +52,7 @@ public class BasicSqlBuilder {
         return sqlInfo;
     }
 
-    public BasicSqlBuilder(OiyokanCsdlEntitySet entitySet) {
+    public BasicSqlQueryListBuilder(OiyokanCsdlEntitySet entitySet) {
         this.sqlInfo = new BasicSqlInfo(entitySet);
     }
 
