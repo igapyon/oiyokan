@@ -43,6 +43,7 @@ import jp.oiyokan.OiyokanCsdlEntitySet;
 import jp.oiyokan.OiyokanEdmProvider;
 import jp.oiyokan.OiyokanMessages;
 import jp.oiyokan.basic.sql.BasicSqlInfo;
+import jp.oiyokan.basic.sql.BasicSqlQueryOneBuilder;
 import jp.oiyokan.settings.OiyokanNamingUtil;
 
 public class BasicJdbcEntityProcessor {
@@ -68,7 +69,7 @@ public class BasicJdbcEntityProcessor {
         }
 
         sqlInfo = new BasicSqlInfo(entitySet);
-        getSelectOneQuery(edmEntitySet, keyPredicates);
+        new BasicSqlQueryOneBuilder(sqlInfo).getSelectOneQuery(edmEntitySet, keyPredicates);
 
         final String sql = sqlInfo.getSqlBuilder().toString();
         if (OiyokanConstants.IS_TRACE_ODATA_V4)
@@ -126,47 +127,6 @@ public class BasicJdbcEntityProcessor {
             System.err.println(OiyokanMessages.M209 + ": " + sql + ", " + ex.toString());
             throw new ODataApplicationException(OiyokanMessages.M209 + ": " + sql, //
                     OiyokanMessages.M209_CODE, Locale.ENGLISH);
-        }
-    }
-
-    /**
-     * 1件の検索用のSQLを生成.
-     * 
-     * @param uriInfo URI情報.
-     * @throws ODataApplicationException ODataアプリ例外が発生した場合.
-     */
-    private void getSelectOneQuery(EdmEntitySet edmEntitySet, List<UriParameter> keyPredicates)
-            throws ODataApplicationException {
-        sqlInfo.getSqlBuilder().append("SELECT ");
-
-        expandSelectKey(edmEntitySet);
-
-        sqlInfo.getSqlBuilder().append(" FROM "
-                + BasicJdbcUtil.escapeKakkoFieldName(sqlInfo, sqlInfo.getEntitySet().getDbTableNameTargetIyo()));
-
-        sqlInfo.getSqlBuilder().append(" WHERE ");
-        boolean isFirst = true;
-        for (UriParameter param : keyPredicates) {
-            if (isFirst) {
-                isFirst = false;
-            } else {
-                sqlInfo.getSqlBuilder().append(" AND ");
-            }
-            sqlInfo.getSqlBuilder()
-                    .append(BasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyokanNamingUtil.entity2Db(param.getName())));
-            sqlInfo.getSqlBuilder().append("=");
-
-            CsdlProperty csdlProp = sqlInfo.getEntitySet().getEntityType().getProperty(param.getName());
-            BasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo, csdlProp.getType(), param.getText());
-        }
-    }
-
-    private void expandSelectKey(EdmEntitySet edmEntitySet) throws ODataApplicationException {
-        int itemCount = 0;
-        for (String name : edmEntitySet.getEntityType().getPropertyNames()) {
-            sqlInfo.getSqlBuilder().append(itemCount++ == 0 ? "" : ",");
-            sqlInfo.getSqlBuilder().append(BasicJdbcUtil.escapeKakkoFieldName(sqlInfo,
-                    OiyokanNamingUtil.entity2Db(BasicJdbcUtil.unescapeKakkoFieldName(name))));
         }
     }
 
