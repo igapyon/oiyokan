@@ -47,11 +47,18 @@ public class OiyoSqlDeleteOneBuilder {
         this.sqlInfo = sqlInfo;
     }
 
+    /**
+     * Create DML for DELETE.
+     * 
+     * @param edmEntitySet  instance of EdmEntitySet.
+     * @param keyPredicates keys to delete.
+     * @throws ODataApplicationException OData App exception occured.
+     */
     public void buildDeleteDml(EdmEntitySet edmEntitySet, List<UriParameter> keyPredicates)
             throws ODataApplicationException {
         sqlInfo.getSqlBuilder().append("DELETE FROM ");
-        sqlInfo.getSqlBuilder()
-                .append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, sqlInfo.getEntitySet().getDbTableNameTargetIyo()));
+        sqlInfo.getSqlBuilder().append(
+                OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, sqlInfo.getEntitySet().getDbTableNameTargetIyo()));
         sqlInfo.getSqlBuilder().append(" WHERE ");
         boolean isFirst = true;
 

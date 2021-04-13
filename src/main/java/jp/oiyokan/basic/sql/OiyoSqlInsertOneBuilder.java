@@ -45,6 +45,13 @@ public class OiyoSqlInsertOneBuilder {
         this.sqlInfo = sqlInfo;
     }
 
+    /**
+     * Create DML for INSERT.
+     * 
+     * @param edmEntitySet  instance of EdmEntitySet.
+     * @param requestEntity entity to delete.
+     * @throws ODataApplicationException OData App exception occured.
+     */
     public void buildInsertIntoDml(EdmEntitySet edmEntitySet, Entity requestEntity) throws ODataApplicationException {
         sqlInfo.getSqlBuilder().append("INSERT INTO ");
         sqlInfo.getSqlBuilder()

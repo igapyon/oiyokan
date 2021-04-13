@@ -136,6 +136,15 @@ public class OiyoBasicJdbcEntityOneBuilder {
     /////////////////////////
     // INSERT
 
+    /**
+     * Create Entity data.
+     * 
+     * @param uriInfo       URI info.
+     * @param edmEntitySet  EdmEntitySet.
+     * @param requestEntity Entity to create.
+     * @return Entity created.
+     * @throws ODataApplicationException OData App exception occured.
+     */
     public Entity createEntityData(UriInfo uriInfo, EdmEntitySet edmEntitySet, Entity requestEntity)
             throws ODataApplicationException {
         final OiyokanCsdlEntitySet entitySet = findEntitySet(edmEntitySet);
@@ -226,6 +235,14 @@ public class OiyoBasicJdbcEntityOneBuilder {
     ////////////////////////
     // DELETE
 
+    /**
+     * Delete Entity data.
+     * 
+     * @param uriInfo       URI info.
+     * @param edmEntitySet  EdmEntitySet.
+     * @param keyPredicates Keys to delete.
+     * @throws ODataApplicationException OData App exception occured.
+     */
     public void deleteEntityData(UriInfo uriInfo, EdmEntitySet edmEntitySet, List<UriParameter> keyPredicates)
             throws ODataApplicationException {
         final OiyokanCsdlEntitySet entitySet = findEntitySet(edmEntitySet);
@@ -269,6 +286,15 @@ public class OiyoBasicJdbcEntityOneBuilder {
     ////////////////////////
     // UPDATE (PATCH)
 
+    /**
+     * Update Entity data (PATCH).
+     * 
+     * @param uriInfo       URI info.
+     * @param edmEntitySet  EdmEntitySet.
+     * @param keyPredicates Keys to update.
+     * @param requestEntity Entity date for update.
+     * @throws ODataApplicationException OData App exception occured.
+     */
     public void updateEntityDataPatch(UriInfo uriInfo, EdmEntitySet edmEntitySet, List<UriParameter> keyPredicates,
             Entity requestEntity) throws ODataApplicationException {
         final OiyokanCsdlEntitySet entitySet = findEntitySet(edmEntitySet);
@@ -312,6 +338,15 @@ public class OiyoBasicJdbcEntityOneBuilder {
     /////////////////////////
     // UPDATE (PUT)
 
+    /**
+     * Update Entity data (PUT).
+     * 
+     * @param uriInfo       URI info.
+     * @param edmEntitySet  EdmEntitySet.
+     * @param keyPredicates Keys to update.
+     * @param requestEntity Entity date for update.
+     * @throws ODataApplicationException OData App exception occured.
+     */
     public void updateEntityDataPut(UriInfo uriInfo, EdmEntitySet edmEntitySet, List<UriParameter> keyPredicates,
             Entity requestEntity) throws ODataApplicationException {
         final OiyokanCsdlEntitySet entitySet = findEntitySet(edmEntitySet);
@@ -354,6 +389,13 @@ public class OiyoBasicJdbcEntityOneBuilder {
     }
 
     // TODO FIXME 以下のメソッドは共通関数化を検討すること.
+    /**
+     * Find EntitySet.
+     * 
+     * @param edmEntitySet EdmEntitySet.
+     * @return OiyokanCsdlEntitySet for specified edmEntitySet.
+     * @throws ODataApplicationException OData App exception occured.
+     */
     public static OiyokanCsdlEntitySet findEntitySet(EdmEntitySet edmEntitySet) throws ODataApplicationException {
         final OiyokanEdmProvider provider = new OiyokanEdmProvider();
         if (!edmEntitySet.getEntityContainer().getName().equals(provider.getEntityContainer().getName())) {

@@ -50,7 +50,8 @@ public class OiyoSqlQueryOneBuilder {
     /**
      * 1件の検索用のSQLを生成.
      * 
-     * @param uriInfo URI情報.
+     * @param edmEntitySet  instance of EdmEntitySet.
+     * @param keyPredicates Keys to select.
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
     public void buildSelectOneQuery(EdmEntitySet edmEntitySet, List<UriParameter> keyPredicates)
@@ -70,8 +71,8 @@ public class OiyoSqlQueryOneBuilder {
             } else {
                 sqlInfo.getSqlBuilder().append(" AND ");
             }
-            sqlInfo.getSqlBuilder()
-                    .append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyokanNamingUtil.entity2Db(param.getName())));
+            sqlInfo.getSqlBuilder().append(
+                    OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyokanNamingUtil.entity2Db(param.getName())));
             sqlInfo.getSqlBuilder().append("=");
 
             CsdlProperty csdlProp = sqlInfo.getEntitySet().getEntityType().getProperty(param.getName());

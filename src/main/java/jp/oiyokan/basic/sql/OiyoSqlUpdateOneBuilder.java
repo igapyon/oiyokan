@@ -50,11 +50,19 @@ public class OiyoSqlUpdateOneBuilder {
         this.sqlInfo = sqlInfo;
     }
 
+    /**
+     * Create DML for UPDATE (PATCH).
+     * 
+     * @param edmEntitySet  instance of EdmEntitySet.
+     * @param keyPredicates keys to update.
+     * @param requestEntity entity to delete.
+     * @throws ODataApplicationException OData App exception occured.
+     */
     public void buildUpdatePatchDml(EdmEntitySet edmEntitySet, List<UriParameter> keyPredicates, Entity requestEntity)
             throws ODataApplicationException {
         sqlInfo.getSqlBuilder().append("UPDATE ");
-        sqlInfo.getSqlBuilder()
-                .append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, sqlInfo.getEntitySet().getDbTableNameTargetIyo()));
+        sqlInfo.getSqlBuilder().append(
+                OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, sqlInfo.getEntitySet().getDbTableNameTargetIyo()));
         sqlInfo.getSqlBuilder().append(" SET ");
         boolean isFirst = true;
         for (Property prop : requestEntity.getProperties()) {
@@ -64,8 +72,8 @@ public class OiyoSqlUpdateOneBuilder {
                 sqlInfo.getSqlBuilder().append(",");
             }
 
-            sqlInfo.getSqlBuilder()
-                    .append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyokanNamingUtil.entity2Db(prop.getName())));
+            sqlInfo.getSqlBuilder().append(
+                    OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyokanNamingUtil.entity2Db(prop.getName())));
             sqlInfo.getSqlBuilder().append("=");
 
             OiyoBasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo, prop.getType(), prop.getValue());
@@ -80,8 +88,8 @@ public class OiyoSqlUpdateOneBuilder {
             } else {
                 sqlInfo.getSqlBuilder().append(" AND ");
             }
-            sqlInfo.getSqlBuilder()
-                    .append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyokanNamingUtil.entity2Db(param.getName())));
+            sqlInfo.getSqlBuilder().append(
+                    OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyokanNamingUtil.entity2Db(param.getName())));
             sqlInfo.getSqlBuilder().append("=");
 
             CsdlProperty csdlProp = sqlInfo.getEntitySet().getEntityType().getProperty(param.getName());
@@ -89,11 +97,19 @@ public class OiyoSqlUpdateOneBuilder {
         }
     }
 
+    /**
+     * Create DML for UPDATE (PUT).
+     * 
+     * @param edmEntitySet  instance of EdmEntitySet.
+     * @param keyPredicates keys to update.
+     * @param requestEntity entity to delete.
+     * @throws ODataApplicationException OData App exception occured.
+     */
     public void buildUpdatePutDml(EdmEntitySet edmEntitySet, List<UriParameter> keyPredicates, Entity requestEntity)
             throws ODataApplicationException {
         sqlInfo.getSqlBuilder().append("UPDATE ");
-        sqlInfo.getSqlBuilder()
-                .append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, sqlInfo.getEntitySet().getDbTableNameTargetIyo()));
+        sqlInfo.getSqlBuilder().append(
+                OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, sqlInfo.getEntitySet().getDbTableNameTargetIyo()));
         sqlInfo.getSqlBuilder().append(" SET ");
 
         // primary key 以外の全てが対象。指定のないものは null。
@@ -136,8 +152,8 @@ public class OiyoSqlUpdateOneBuilder {
             } else {
                 sqlInfo.getSqlBuilder().append(" AND ");
             }
-            sqlInfo.getSqlBuilder()
-                    .append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyokanNamingUtil.entity2Db(param.getName())));
+            sqlInfo.getSqlBuilder().append(
+                    OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyokanNamingUtil.entity2Db(param.getName())));
             sqlInfo.getSqlBuilder().append("=");
 
             CsdlProperty csdlProp = sqlInfo.getEntitySet().getEntityType().getProperty(param.getName());
