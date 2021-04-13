@@ -182,17 +182,18 @@ public class BasicJdbcEntityCollectionBuilder implements OiyokanEntityCollection
     /**
      * クエリを実行してエンティティの一覧を取得。直接は利用しないでください。
      * 
-     * @param entitySet    instance of OiyokanCsdlEntitySet.
-     * @param uriInfo      instance of
-     *                     org.apache.olingo.server.core.uri.UriInfoImpl.
-     * @param connTargetDb Connection of db.
-     * @param entityCollection  result of search.
+     * @param entitySet        instance of OiyokanCsdlEntitySet.
+     * @param uriInfo          instance of
+     *                         org.apache.olingo.server.core.uri.UriInfoImpl.
+     * @param connTargetDb     Connection of db.
+     * @param entityCollection result of search.
      * @throws ODataApplicationException OData App Exception occured.
      */
     public void processCollectionQuery(OiyokanCsdlEntitySet entitySet, UriInfo uriInfo, Connection connTargetDb,
             EntityCollection entityCollection) throws ODataApplicationException {
         BasicSqlBuilder basicSqlBuilder = new BasicSqlBuilder(entitySet);
 
+        // UriInfo 情報を元に SQL文を組み立て.
         basicSqlBuilder.getSelectQuery(uriInfo);
         final String sql = basicSqlBuilder.getSqlInfo().getSqlBuilder().toString();
 
@@ -204,12 +205,16 @@ public class BasicJdbcEntityCollectionBuilder implements OiyokanEntityCollection
             // set query timeout
             stmt.setQueryTimeout(OiyokanConstants.JDBC_STMT_TIMEOUT);
 
+            // 組み立て後のバインド変数を PreparedStatement にセット.
             int idxColumn = 1;
             for (Object look : basicSqlBuilder.getSqlInfo().getSqlParamList()) {
                 BasicJdbcUtil.bindPreparedParameter(stmt, idxColumn++, look);
             }
 
+            // 検索を実行.
             stmt.executeQuery();
+
+            // 検索結果を取得.
             var rset = stmt.getResultSet();
             ResultSetMetaData rsmeta = null;
             for (; rset.next();) {
@@ -218,6 +223,7 @@ public class BasicJdbcEntityCollectionBuilder implements OiyokanEntityCollection
                 }
                 final Entity ent = new Entity();
                 for (int column = 1; column <= rsmeta.getColumnCount(); column++) {
+                    // 取得された検索結果を Property に組み替え.
                     Property prop = BasicJdbcUtil.resultSet2Property(rset, rsmeta, column, entitySet);
                     ent.addProperty(prop);
                 }
@@ -226,18 +232,19 @@ public class BasicJdbcEntityCollectionBuilder implements OiyokanEntityCollection
                     // キーが存在しないのは OData としてはまずい。
                     // 別の箇所にて標準エラー出力にて報告。
                 } else {
-                    // キーが存在する場合は、IDとして設定。
+                    // キーが存在する場合は、キーの値を元にIDとして設定。
                     OiyokanCsdlEntitySet iyoEntitySet = (OiyokanCsdlEntitySet) entitySet;
                     if (iyoEntitySet.getEntityType().getKey().size() == 1) {
-                        // 単一キー
+                        // 単一項目によるキー
                         final Property prop = ent.getProperty(iyoEntitySet.getEntityType().getKey().get(0).getName());
                         String idVal = prop.getValue().toString();
                         if ("Edm.String".equals(prop.getType())) {
+                            // TODO FIXME Property の値を文字列に変換する共通関数を期待したい.
                             idVal = "'" + BasicUrlUtil.encodeUrl4Key(idVal) + "'";
                         }
                         ent.setId(createId(entitySet.getName(), idVal));
                     } else {
-                        // 複数キー
+                        // 複数項目によるキー
                         String keyString = "";
                         boolean isFirst = true;
                         for (CsdlPropertyRef propRef : iyoEntitySet.getEntityType().getKey()) {
@@ -250,6 +257,7 @@ public class BasicJdbcEntityCollectionBuilder implements OiyokanEntityCollection
                             keyString += prop.getName() + "=";
                             String idVal = prop.getValue().toString();
                             if ("Edm.String".equals(prop.getType())) {
+                                // TODO FIXME Property の値を文字列に変換する共通関数を期待したい.
                                 idVal = "'" + BasicUrlUtil.encodeUrl4Key(idVal) + "'";
                             }
                             keyString += idVal;
