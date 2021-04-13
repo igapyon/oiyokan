@@ -31,7 +31,6 @@ import org.apache.olingo.commons.api.data.Entity;
 import org.apache.olingo.commons.api.data.Property;
 import org.apache.olingo.commons.api.edm.EdmEntitySet;
 import org.apache.olingo.commons.api.edm.provider.CsdlEntitySet;
-import org.apache.olingo.commons.api.edm.provider.CsdlProperty;
 import org.apache.olingo.commons.api.edm.provider.CsdlPropertyRef;
 import org.apache.olingo.server.api.ODataApplicationException;
 import org.apache.olingo.server.api.uri.UriInfo;
@@ -42,10 +41,11 @@ import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanCsdlEntitySet;
 import jp.oiyokan.OiyokanEdmProvider;
 import jp.oiyokan.OiyokanMessages;
+import jp.oiyokan.basic.sql.BasicSqlDeleteOneBuilder;
 import jp.oiyokan.basic.sql.BasicSqlInfo;
 import jp.oiyokan.basic.sql.BasicSqlInsertOneBuilder;
 import jp.oiyokan.basic.sql.BasicSqlQueryOneBuilder;
-import jp.oiyokan.settings.OiyokanNamingUtil;
+import jp.oiyokan.basic.sql.BasicSqlUpdateOneBuilder;
 
 public class BasicJdbcEntityProcessor {
     private BasicSqlInfo sqlInfo;
@@ -250,7 +250,7 @@ public class BasicJdbcEntityProcessor {
         }
 
         sqlInfo = new BasicSqlInfo(entitySet);
-        getDeleteDml(edmEntitySet, keyPredicates);
+        new BasicSqlDeleteOneBuilder(sqlInfo).getDeleteDml(edmEntitySet, keyPredicates);
 
         // データベースに接続.
         boolean isTranSuccessed = false;
@@ -279,30 +279,6 @@ public class BasicJdbcEntityProcessor {
         }
     }
 
-    private void getDeleteDml(EdmEntitySet edmEntitySet, List<UriParameter> keyPredicates)
-            throws ODataApplicationException {
-        sqlInfo.getSqlBuilder().append("DELETE FROM ");
-        sqlInfo.getSqlBuilder()
-                .append(BasicJdbcUtil.escapeKakkoFieldName(sqlInfo, sqlInfo.getEntitySet().getDbTableNameTargetIyo()));
-        sqlInfo.getSqlBuilder().append(" WHERE ");
-        boolean isFirst = true;
-
-        for (UriParameter param : keyPredicates) {
-            if (isFirst) {
-                isFirst = false;
-            } else {
-                sqlInfo.getSqlBuilder().append(" AND ");
-            }
-
-            CsdlProperty csdlProp = sqlInfo.getEntitySet().getEntityType().getProperty(param.getName());
-
-            sqlInfo.getSqlBuilder().append(
-                    BasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyokanNamingUtil.entity2Db(csdlProp.getName())));
-            sqlInfo.getSqlBuilder().append("=");
-            BasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo, csdlProp.getType(), param.getText());
-        }
-    }
-
     ////////////////////////
     // UPDATE
 
@@ -317,7 +293,7 @@ public class BasicJdbcEntityProcessor {
         }
 
         sqlInfo = new BasicSqlInfo(entitySet);
-        getUpdatePatchDml(edmEntitySet, keyPredicates, requestEntity);
+        new BasicSqlUpdateOneBuilder(sqlInfo).getUpdatePatchDml(edmEntitySet, keyPredicates, requestEntity);
 
         // データベースに接続.
         try (Connection connTargetDb = BasicJdbcUtil.getConnection(sqlInfo.getEntitySet().getSettingsDatabase())) {
@@ -343,45 +319,6 @@ public class BasicJdbcEntityProcessor {
             System.err.println(OiyokanMessages.M205 + ": " + ex.toString());
             throw new ODataApplicationException(OiyokanMessages.M205, //
                     OiyokanMessages.M205_CODE, Locale.ENGLISH);
-        }
-    }
-
-    private void getUpdatePatchDml(EdmEntitySet edmEntitySet, List<UriParameter> keyPredicates, Entity requestEntity)
-            throws ODataApplicationException {
-        sqlInfo.getSqlBuilder().append("UPDATE ");
-        sqlInfo.getSqlBuilder()
-                .append(BasicJdbcUtil.escapeKakkoFieldName(sqlInfo, sqlInfo.getEntitySet().getDbTableNameTargetIyo()));
-        sqlInfo.getSqlBuilder().append(" SET ");
-        boolean isFirst = true;
-        for (Property prop : requestEntity.getProperties()) {
-            if (isFirst) {
-                isFirst = false;
-            } else {
-                sqlInfo.getSqlBuilder().append(",");
-            }
-
-            sqlInfo.getSqlBuilder()
-                    .append(BasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyokanNamingUtil.entity2Db(prop.getName())));
-            sqlInfo.getSqlBuilder().append("=");
-
-            BasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo, prop.getType(), prop.getValue());
-        }
-
-        sqlInfo.getSqlBuilder().append(" WHERE ");
-
-        isFirst = true;
-        for (UriParameter param : keyPredicates) {
-            if (isFirst) {
-                isFirst = false;
-            } else {
-                sqlInfo.getSqlBuilder().append(" AND ");
-            }
-            sqlInfo.getSqlBuilder()
-                    .append(BasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyokanNamingUtil.entity2Db(param.getName())));
-            sqlInfo.getSqlBuilder().append("=");
-
-            CsdlProperty csdlProp = sqlInfo.getEntitySet().getEntityType().getProperty(param.getName());
-            BasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo, csdlProp.getType(), param.getText());
         }
     }
 
@@ -396,7 +333,7 @@ public class BasicJdbcEntityProcessor {
         }
 
         sqlInfo = new BasicSqlInfo(entitySet);
-        getUpdatePutDml(edmEntitySet, keyPredicates, requestEntity);
+        new BasicSqlUpdateOneBuilder(sqlInfo).getUpdatePutDml(edmEntitySet, keyPredicates, requestEntity);
 
         // データベースに接続.
         try (Connection connTargetDb = BasicJdbcUtil.getConnection(sqlInfo.getEntitySet().getSettingsDatabase())) {
@@ -423,62 +360,6 @@ public class BasicJdbcEntityProcessor {
             System.err.println(OiyokanMessages.M205 + ": " + ex.toString());
             throw new ODataApplicationException(OiyokanMessages.M205, //
                     OiyokanMessages.M205_CODE, Locale.ENGLISH);
-        }
-    }
-
-    private void getUpdatePutDml(EdmEntitySet edmEntitySet, List<UriParameter> keyPredicates, Entity requestEntity)
-            throws ODataApplicationException {
-        sqlInfo.getSqlBuilder().append("UPDATE ");
-        sqlInfo.getSqlBuilder()
-                .append(BasicJdbcUtil.escapeKakkoFieldName(sqlInfo, sqlInfo.getEntitySet().getDbTableNameTargetIyo()));
-        sqlInfo.getSqlBuilder().append(" SET ");
-
-        // primary key 以外の全てが対象。指定のないものは null。
-        final List<CsdlPropertyRef> keys = sqlInfo.getEntitySet().getEntityType().getKey();
-        boolean isFirst = true;
-        CSDL_LOOP: for (CsdlProperty csdlProp : sqlInfo.getEntitySet().getEntityType().getProperties()) {
-            // KEY以外が対象。
-            for (CsdlPropertyRef key : keys) {
-                if (key.getName().equals(csdlProp.getName())) {
-                    // これはキー項目です。処理対象外.
-                    continue CSDL_LOOP;
-                }
-            }
-
-            if (isFirst) {
-                isFirst = false;
-            } else {
-                sqlInfo.getSqlBuilder().append(",");
-            }
-
-            sqlInfo.getSqlBuilder().append(
-                    BasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyokanNamingUtil.entity2Db(csdlProp.getName())));
-
-            sqlInfo.getSqlBuilder().append("=");
-            Property prop = requestEntity.getProperty(csdlProp.getName());
-            if (prop != null) {
-                BasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo, csdlProp.getType(), prop.getValue());
-            } else {
-                // 指定のないものには nullをセット.
-                BasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo, csdlProp.getType(), null);
-            }
-        }
-
-        sqlInfo.getSqlBuilder().append(" WHERE ");
-
-        isFirst = true;
-        for (UriParameter param : keyPredicates) {
-            if (isFirst) {
-                isFirst = false;
-            } else {
-                sqlInfo.getSqlBuilder().append(" AND ");
-            }
-            sqlInfo.getSqlBuilder()
-                    .append(BasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyokanNamingUtil.entity2Db(param.getName())));
-            sqlInfo.getSqlBuilder().append("=");
-
-            CsdlProperty csdlProp = sqlInfo.getEntitySet().getEntityType().getProperty(param.getName());
-            BasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo, csdlProp.getType(), param.getText());
         }
     }
 
