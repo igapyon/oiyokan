@@ -38,6 +38,7 @@ import org.apache.olingo.server.api.uri.UriParameter;
 import org.apache.olingo.server.core.uri.UriParameterImpl;
 
 import jp.oiyokan.OiyokanConstants;
+import jp.oiyokan.OiyokanConstants.DatabaseType;
 import jp.oiyokan.OiyokanCsdlEntitySet;
 import jp.oiyokan.OiyokanEdmProvider;
 import jp.oiyokan.OiyokanMessages;
@@ -157,38 +158,46 @@ public class BasicJdbcEntityProcessor {
                 final List<String> generatedKeys = BasicJdbcUtil.executeDml(connTargetDb, sqlInfo, true);
                 // 生成されたキーをその後の処理に反映。
                 final List<UriParameter> keyPredicates = new ArrayList<>();
-                for (CsdlPropertyRef propKey : entitySet.getEntityType().getKey()) {
-                    String propValue = null;
-                    for (Property look : requestEntity.getProperties()) {
-                        if (look.getName().equals(propKey.getName())) {
-                            if (look.getValue() instanceof java.util.Calendar) {
-                                java.util.Calendar cal = (java.util.Calendar) look.getValue();
-                                Instant instant = cal.toInstant();
-                                ZonedDateTime zdt = ZonedDateTime.ofInstant(instant, ZoneId.systemDefault());
-                                propValue = zdt.format(DateTimeFormatter.ISO_INSTANT);
-                            } else {
-                                propValue = String.valueOf(look.getValue());
-                            }
-                            break;
-                        }
-                    }
-                    if (propValue == null) {
-                        System.err.println("TRACE: propKey:" + propKey.getName() + "に対応する入力なし.");
-                        if (generatedKeys.size() == 0) {
-                            // [M217] UNEXPECTED: Can't retrieve PreparedStatement#getGeneratedKeys: Fail to
-                            // map auto generated key field.
-                            System.err.println(OiyokanMessages.M217 + ": " + propKey.getName());
-                            throw new ODataApplicationException(OiyokanMessages.M217 + ": " + propKey.getName(), //
-                                    OiyokanMessages.M217_CODE, Locale.ENGLISH);
-                        }
-                        propValue = generatedKeys.get(0);
-                        generatedKeys.remove(0);
-                    }
-
+                if (DatabaseType.ORACLE == sqlInfo.getEntitySet().getDatabaseType()) {
+                    // ORACLEの特殊ルール。ROWIDが戻るので決め打ちで検索.
                     final UriParameterImpl newParam = new UriParameterImpl();
-                    newParam.setName(propKey.getName());
-                    newParam.setText(propValue);
+                    newParam.setName("ROWID");
+                    newParam.setText(generatedKeys.get(0));
                     keyPredicates.add(newParam);
+                } else {
+                    for (CsdlPropertyRef propKey : entitySet.getEntityType().getKey()) {
+                        String propValue = null;
+                        for (Property look : requestEntity.getProperties()) {
+                            if (look.getName().equals(propKey.getName())) {
+                                if (look.getValue() instanceof java.util.Calendar) {
+                                    java.util.Calendar cal = (java.util.Calendar) look.getValue();
+                                    Instant instant = cal.toInstant();
+                                    ZonedDateTime zdt = ZonedDateTime.ofInstant(instant, ZoneId.systemDefault());
+                                    propValue = zdt.format(DateTimeFormatter.ISO_INSTANT);
+                                } else {
+                                    propValue = String.valueOf(look.getValue());
+                                }
+                                break;
+                            }
+                        }
+                        if (propValue == null) {
+                            System.err.println("TRACE: propKey:" + propKey.getName() + "に対応する入力なし.");
+                            if (generatedKeys.size() == 0) {
+                                // [M217] UNEXPECTED: Can't retrieve PreparedStatement#getGeneratedKeys: Fail to
+                                // map auto generated key field.
+                                System.err.println(OiyokanMessages.M217 + ": " + propKey.getName());
+                                throw new ODataApplicationException(OiyokanMessages.M217 + ": " + propKey.getName(), //
+                                        OiyokanMessages.M217_CODE, Locale.ENGLISH);
+                            }
+                            propValue = generatedKeys.get(0);
+                            generatedKeys.remove(0);
+                        }
+
+                        final UriParameterImpl newParam = new UriParameterImpl();
+                        newParam.setName(propKey.getName());
+                        newParam.setText(propValue);
+                        keyPredicates.add(newParam);
+                    }
                 }
 
                 // 更新後のデータをリロード.
