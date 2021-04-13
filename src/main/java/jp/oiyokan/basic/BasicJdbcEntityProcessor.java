@@ -48,7 +48,8 @@ import jp.oiyokan.basic.sql.BasicSqlQueryOneBuilder;
 import jp.oiyokan.basic.sql.BasicSqlUpdateOneBuilder;
 
 public class BasicJdbcEntityProcessor {
-    private BasicSqlInfo sqlInfo;
+    /////////////////////////
+    // SELECT
 
     /**
      * Read Entity data.
@@ -69,7 +70,7 @@ public class BasicJdbcEntityProcessor {
             throw new ODataApplicationException(OiyokanMessages.M206, OiyokanMessages.M206_CODE, Locale.ENGLISH);
         }
 
-        sqlInfo = new BasicSqlInfo(entitySet);
+        final BasicSqlInfo sqlInfo = new BasicSqlInfo(entitySet);
         new BasicSqlQueryOneBuilder(sqlInfo).buildSelectOneQuery(edmEntitySet, keyPredicates);
 
         final String sql = sqlInfo.getSqlBuilder().toString();
@@ -144,7 +145,7 @@ public class BasicJdbcEntityProcessor {
                     OiyokanMessages.M211_CODE, Locale.ENGLISH);
         }
 
-        sqlInfo = new BasicSqlInfo(entitySet);
+        final BasicSqlInfo sqlInfo = new BasicSqlInfo(entitySet);
         new BasicSqlInsertOneBuilder(sqlInfo).buildInsertIntoDml(edmEntitySet, requestEntity);
 
         // データベースに接続.
@@ -249,7 +250,7 @@ public class BasicJdbcEntityProcessor {
                     OiyokanMessages.M212_CODE, Locale.ENGLISH);
         }
 
-        sqlInfo = new BasicSqlInfo(entitySet);
+        final BasicSqlInfo sqlInfo = new BasicSqlInfo(entitySet);
         new BasicSqlDeleteOneBuilder(sqlInfo).buildDeleteDml(edmEntitySet, keyPredicates);
 
         // データベースに接続.
@@ -280,7 +281,7 @@ public class BasicJdbcEntityProcessor {
     }
 
     ////////////////////////
-    // UPDATE
+    // UPDATE (PATCH)
 
     public void updateEntityDataPatch(UriInfo uriInfo, EdmEntitySet edmEntitySet, List<UriParameter> keyPredicates,
             Entity requestEntity) throws ODataApplicationException {
@@ -292,7 +293,7 @@ public class BasicJdbcEntityProcessor {
                     OiyokanMessages.M213_CODE, Locale.ENGLISH);
         }
 
-        sqlInfo = new BasicSqlInfo(entitySet);
+        final BasicSqlInfo sqlInfo = new BasicSqlInfo(entitySet);
         new BasicSqlUpdateOneBuilder(sqlInfo).buildUpdatePatchDml(edmEntitySet, keyPredicates, requestEntity);
 
         // データベースに接続.
@@ -322,6 +323,9 @@ public class BasicJdbcEntityProcessor {
         }
     }
 
+    /////////////////////////
+    // UPDATE (PUT)
+
     public void updateEntityDataPut(UriInfo uriInfo, EdmEntitySet edmEntitySet, List<UriParameter> keyPredicates,
             Entity requestEntity) throws ODataApplicationException {
         final OiyokanCsdlEntitySet entitySet = findEntitySet(edmEntitySet);
@@ -332,7 +336,7 @@ public class BasicJdbcEntityProcessor {
                     OiyokanMessages.M214_CODE, Locale.ENGLISH);
         }
 
-        sqlInfo = new BasicSqlInfo(entitySet);
+        final BasicSqlInfo sqlInfo = new BasicSqlInfo(entitySet);
         new BasicSqlUpdateOneBuilder(sqlInfo).buildUpdatePutDml(edmEntitySet, keyPredicates, requestEntity);
 
         // データベースに接続.
@@ -363,6 +367,7 @@ public class BasicJdbcEntityProcessor {
         }
     }
 
+    // TODO FIXME 以下のメソッドは共通関数化を検討すること.
     public static OiyokanCsdlEntitySet findEntitySet(EdmEntitySet edmEntitySet) throws ODataApplicationException {
         final OiyokanEdmProvider provider = new OiyokanEdmProvider();
         if (!edmEntitySet.getEntityContainer().getName().equals(provider.getEntityContainer().getName())) {
