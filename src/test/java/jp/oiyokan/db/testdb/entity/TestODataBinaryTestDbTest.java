@@ -30,64 +30,78 @@ class TestODataBinaryTestDbTest {
     /**
      * テストデータが利用する ID 範囲。
      */
-    private static final int TEST_ID = 10180;
+    private static final int TEST_ID = 10389;
 
     @Test
     void test01() throws Exception {
         if (!OiyokanTestConstants.IS_TEST_ODATATEST)
             return;
 
-        // INSERT + DELETE
-        ODataResponse resp = OiyokanTestUtil.callRequestPost("/ODataTests4", "{\n" //
-                + "  \"I_D\":" + TEST_ID + ",\n" //
-                + "  \"Na_me\":\"Name\"\n" //
+        ODataResponse resp = OiyokanTestUtil.callRequestPost("/ODataTests6", "{\n" //
+                + "  \"ID\":" + TEST_ID + "\n" //
+                + "  , \"Binary1\":\"VG9uYXJpIG5vIGt5YWt1Lg==\"\n" //
+                + "  , \"VarBinary1\":\"VG9uYXJpIG5vIGt5YWt1Lg==\"\n" //
+                + "  , \"LongVarBinary1\":\"VG9uYXJpIG5vIGt5YWt1Lg==\"\n" //
+                + "  , \"Blob1\":\"VG9uYXJpIG5vIGt5YWt1Lg==\"\n" //
                 + "}");
         String result = OiyokanTestUtil.stream2String(resp.getContent());
-        System.err.println(result);
+        assertEquals("{\"@odata.context\":\"$metadata#ODataTests6\",\"ID\":" + TEST_ID
+                + ",\"Name\":\"Binary UnitTest\",\"Description\":\"Binary UnitTest table.\"" //
+                + ",\"Binary1\":\"VG9uYXJpIG5vIGt5YWt1Lg==\",\"VarBinary1\":\"VG9uYXJpIG5vIGt5YWt1Lg==\",\"LongVarBinary1\":\"VG9uYXJpIG5vIGt5YWt1Lg==\",\"Blob1\":\"VG9uYXJpIG5vIGt5YWt1Lg==\"}",
+                result, "INSERTできることを確認.");
         assertEquals(201, resp.getStatusCode());
-        assertEquals("{\"@odata.context\":\"$metadata#ODataTests4\",\"I_D\":" + TEST_ID
-                + ",\"Na_me\":\"Name\",\"Va_lue1\":\"VALUEVALUE12345\"}", result);
 
-        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests4(I_D=" + TEST_ID + ",Na_me='Name')", null);
+        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests6(" + TEST_ID + ")", null);
         result = OiyokanTestUtil.stream2String(resp.getContent());
-        System.err.println(result);
-        assertEquals(200, resp.getStatusCode());
+        // System.err.println(result);
+        assertEquals(200, resp.getStatusCode(), "INSERTしたレコードが格納されていることを確認.");
 
         // UPDATE (PATCH)
-        resp = OiyokanTestUtil.callRequestPatch("/ODataTests4(I_D=" + TEST_ID + ",Na_me='Name')", "{\n" //
-                + "  \"Na_me\":\"Name2\",\n" //
-                + "  \"Va_lue1\":\"Description2\"\n" + "}");
+        resp = OiyokanTestUtil.callRequestPatch("/ODataTests6(" + TEST_ID + ")", "{\n" //
+                + "  \"Binary1\":\"SG91cnl1amku\"\n" //
+                + "}");
         result = OiyokanTestUtil.stream2String(resp.getContent());
-        System.err.println(result);
-        assertEquals(204, resp.getStatusCode());
+        // System.err.println(result);
+        assertEquals(204, resp.getStatusCode(), "UPDATE(PATCH)できることを確認.");
 
-        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests4(I_D=" + TEST_ID + ",Na_me='Name2')", null);
+        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests6(" + TEST_ID + ")", null);
+        result = OiyokanTestUtil.stream2String(resp.getContent());
+        assertEquals("{\"@odata.context\":\"$metadata#ODataTests6\",\"ID\":" + TEST_ID
+                + ",\"Name\":\"Binary UnitTest\",\"Description\":\"Binary UnitTest table.\"" //
+                + ",\"Binary1\":\"SG91cnl1amku\",\"VarBinary1\":\"VG9uYXJpIG5vIGt5YWt1Lg==\",\"LongVarBinary1\":\"VG9uYXJpIG5vIGt5YWt1Lg==\",\"Blob1\":\"VG9uYXJpIG5vIGt5YWt1Lg==\"}",
+                result, "UPDATE(PATCH)後の値を確認.");
         assertEquals(200, resp.getStatusCode());
 
         // UPDATE (PUT)
-        resp = OiyokanTestUtil.callRequestPut("/ODataTests4(I_D=" + TEST_ID + ",Na_me='Name2')", "{\n" //
-                + "  \"Va_lue1\":\"Description3\"\n" + "}");
+        resp = OiyokanTestUtil.callRequestPut("/ODataTests6(" + TEST_ID + ")", "{\n" //
+                + "  \"Binary1\":\"S2lua2FrdWppLg==\"\n" //
+                + "}");
         result = OiyokanTestUtil.stream2String(resp.getContent());
         System.err.println(result);
-        assertEquals(204, resp.getStatusCode());
+        assertEquals(204, resp.getStatusCode(), "UPDATE(PUT)できることを確認.");
 
-        /// 通常のfilter
-        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests4", "$filter=I_D eq " + TEST_ID);
+        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests6(" + TEST_ID + ")", null);
         result = OiyokanTestUtil.stream2String(resp.getContent());
-        System.err.println(result);
+        assertEquals("{\"@odata.context\":\"$metadata#ODataTests6\",\"ID\":" + TEST_ID
+                + ",\"Name\":null,\"Description\":null" //
+                + ",\"Binary1\":\"S2lua2FrdWppLg==\",\"VarBinary1\":\"\",\"LongVarBinary1\":\"\",\"Blob1\":\"\"}",
+                result, "UPDATE(PUT)後の値を確認.");
         assertEquals(200, resp.getStatusCode());
 
-        // Entity
-        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests4(I_D=" + TEST_ID + ",Na_me='Name2')", null);
+        /// 通常のfilter
+        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests6", "$filter=ID eq " + TEST_ID);
         result = OiyokanTestUtil.stream2String(resp.getContent());
-        System.err.println(result);
+        System.err.println("TRACE: " + result);
+        assertEquals("{\"@odata.context\":\"$metadata#ODataTests6\",\"value\":[{\"ID\":" + TEST_ID
+                + ",\"Name\":null,\"Description\":null,\"Binary1\":\"S2lua2FrdWppLg==\",\"VarBinary1\":\"\",\"LongVarBinary1\":\"\",\"Blob1\":\"\"}]}",
+                result, "通常のFILTER検索ができることを確認.");
         assertEquals(200, resp.getStatusCode());
 
         // DELETE
-        resp = OiyokanTestUtil.callRequestDelete("/ODataTests4(I_D=" + TEST_ID + ",Na_me='Name2')");
-        assertEquals(204, resp.getStatusCode());
+        resp = OiyokanTestUtil.callRequestDelete("/ODataTests6(" + TEST_ID + ")");
+        assertEquals(204, resp.getStatusCode(), "DELETEできることを確認.");
 
-        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests4(I_D=" + TEST_ID + ",Na_me='Name2')", null);
-        assertEquals(404, resp.getStatusCode());
+        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests6(" + TEST_ID + ")", null);
+        assertEquals(404, resp.getStatusCode(), "DELETEされたことを確認.");
     }
 }
