@@ -68,7 +68,7 @@ class BasicSqlExprExpanderTest {
         final Parser parser = new Parser(edm.getEdm(), odata);
         final UriInfo uriInfo = parser.parseUri(rawODataPath, rawQueryPath, "", "http://localhost:8080/odata4.svc/");
         BasicSqlInfo sqlInfo = new BasicSqlInfo(entitySet);
-        new BasicSqlExprExpander(sqlInfo).expand(uriInfo.getFilterOption().getExpression());
+        new BasicSqlQueryListExpr(sqlInfo).expand(uriInfo.getFilterOption().getExpression());
         return sqlInfo.getSqlBuilder().toString();
     }
 
