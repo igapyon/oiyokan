@@ -131,7 +131,17 @@ public class BasicJdbcEntityCollectionBuilder implements OiyokanEntityCollection
         }
     }
 
-    private static void processCountQuery(OiyokanCsdlEntitySet entitySet, UriInfo uriInfo, Connection connTargetDb,
+    /**
+     * クエリを実行してエンティティの一覧を取得。直接は利用しないでください。O
+     * 
+     * @param entitySet    instance of OiyokanCsdlEntitySet.
+     * @param uriInfo      instance of
+     *                     org.apache.olingo.server.core.uri.UriInfoImpl.
+     * @param connTargetDb Connection of db.
+     * @param eCollection  result of search.
+     * @throws ODataApplicationException OData App Exception occured.
+     */
+    public static void processCountQuery(OiyokanCsdlEntitySet entitySet, UriInfo uriInfo, Connection connTargetDb,
             EntityCollection eCollection) throws ODataApplicationException {
         // 件数をカウントして設定。
         BasicSqlBuilder basicSqlBuilder = new BasicSqlBuilder(entitySet);
