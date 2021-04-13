@@ -56,12 +56,12 @@ public class BasicJdbcEntityCollectionBuilder implements OiyokanEntityCollection
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
     public EntityCollection build(EdmEntitySet edmEntitySet, UriInfo uriInfo) throws ODataApplicationException {
-        final EntityCollection eCollection = new EntityCollection();
+        final EntityCollection entityCollection = new EntityCollection();
 
         OiyokanEdmProvider provider = new OiyokanEdmProvider();
         if (!edmEntitySet.getEntityContainer().getName().equals(provider.getEntityContainer().getName())) {
             // Container 名が不一致. 処理せずに戻します.
-            return eCollection;
+            return entityCollection;
         }
 
         OiyokanCsdlEntitySet entitySet = null;
@@ -74,7 +74,7 @@ public class BasicJdbcEntityCollectionBuilder implements OiyokanEntityCollection
 
         if (entitySet == null) {
             // 処理対象外の要素セットです. 処理せずに戻します.
-            return eCollection;
+            return entityCollection;
         }
 
         //////////////////////////////////////////////
@@ -109,20 +109,20 @@ public class BasicJdbcEntityCollectionBuilder implements OiyokanEntityCollection
         try (Connection connTargetDb = BasicJdbcUtil.getConnection(entitySet.getSettingsDatabase())) {
             if (uriInfo.getSearchOption() != null) {
                 // $search.
-                new ExperimentalH2FullTextSearch().process(connTargetDb, edmEntitySet, uriInfo, eCollection);
-                return eCollection;
+                new ExperimentalH2FullTextSearch().process(connTargetDb, edmEntitySet, uriInfo, entityCollection);
+                return entityCollection;
             }
 
             // 件数カウントがONの場合はカウント処理を実行。
             if (uriInfo.getCountOption() != null && uriInfo.getCountOption().getValue()) {
                 // $count.
-                processCountQuery(entitySet, uriInfo, connTargetDb, eCollection);
+                processCountQuery(entitySet, uriInfo, connTargetDb, entityCollection);
             }
 
             // 実際のデータ取得処理を実行。
-            processCollectionQuery(entitySet, uriInfo, connTargetDb, eCollection);
+            processCollectionQuery(entitySet, uriInfo, connTargetDb, entityCollection);
 
-            return eCollection;
+            return entityCollection;
         } catch (SQLException ex) {
             // [M015] UNEXPECTED: An error occurred in SQL that counts the number of search
             // results.
@@ -131,18 +131,8 @@ public class BasicJdbcEntityCollectionBuilder implements OiyokanEntityCollection
         }
     }
 
-    /**
-     * クエリを実行してエンティティの一覧を取得。直接は利用しないでください。O
-     * 
-     * @param entitySet    instance of OiyokanCsdlEntitySet.
-     * @param uriInfo      instance of
-     *                     org.apache.olingo.server.core.uri.UriInfoImpl.
-     * @param connTargetDb Connection of db.
-     * @param eCollection  result of search.
-     * @throws ODataApplicationException OData App Exception occured.
-     */
-    public static void processCountQuery(OiyokanCsdlEntitySet entitySet, UriInfo uriInfo, Connection connTargetDb,
-            EntityCollection eCollection) throws ODataApplicationException {
+    private static void processCountQuery(OiyokanCsdlEntitySet entitySet, UriInfo uriInfo, Connection connTargetDb,
+            EntityCollection entityCollection) throws ODataApplicationException {
         // 件数をカウントして設定。
         BasicSqlBuilder basicSqlBuilder = new BasicSqlBuilder(entitySet);
         basicSqlBuilder.getSelectCountQuery(uriInfo);
@@ -186,11 +176,21 @@ public class BasicJdbcEntityCollectionBuilder implements OiyokanEntityCollection
         }
 
         // 取得できたレコード件数を設定.
-        eCollection.setCount(countWithWhere);
+        entityCollection.setCount(countWithWhere);
     }
 
-    private void processCollectionQuery(OiyokanCsdlEntitySet entitySet, UriInfo uriInfo, Connection connTargetDb,
-            EntityCollection eCollection) throws ODataApplicationException {
+    /**
+     * クエリを実行してエンティティの一覧を取得。直接は利用しないでください。
+     * 
+     * @param entitySet    instance of OiyokanCsdlEntitySet.
+     * @param uriInfo      instance of
+     *                     org.apache.olingo.server.core.uri.UriInfoImpl.
+     * @param connTargetDb Connection of db.
+     * @param entityCollection  result of search.
+     * @throws ODataApplicationException OData App Exception occured.
+     */
+    public void processCollectionQuery(OiyokanCsdlEntitySet entitySet, UriInfo uriInfo, Connection connTargetDb,
+            EntityCollection entityCollection) throws ODataApplicationException {
         BasicSqlBuilder basicSqlBuilder = new BasicSqlBuilder(entitySet);
 
         basicSqlBuilder.getSelectQuery(uriInfo);
@@ -258,7 +258,7 @@ public class BasicJdbcEntityCollectionBuilder implements OiyokanEntityCollection
                     }
                 }
 
-                eCollection.getEntities().add(ent);
+                entityCollection.getEntities().add(ent);
             }
 
             final long endMillisec = System.currentTimeMillis();
