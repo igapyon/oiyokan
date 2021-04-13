@@ -70,7 +70,7 @@ public class BasicJdbcEntityProcessor {
         }
 
         sqlInfo = new BasicSqlInfo(entitySet);
-        new BasicSqlQueryOneBuilder(sqlInfo).getSelectOneQuery(edmEntitySet, keyPredicates);
+        new BasicSqlQueryOneBuilder(sqlInfo).buildSelectOneQuery(edmEntitySet, keyPredicates);
 
         final String sql = sqlInfo.getSqlBuilder().toString();
         if (OiyokanConstants.IS_TRACE_ODATA_V4)
@@ -145,7 +145,7 @@ public class BasicJdbcEntityProcessor {
         }
 
         sqlInfo = new BasicSqlInfo(entitySet);
-        new BasicSqlInsertOneBuilder(sqlInfo).getInsertIntoDml(edmEntitySet, requestEntity);
+        new BasicSqlInsertOneBuilder(sqlInfo).buildInsertIntoDml(edmEntitySet, requestEntity);
 
         // データベースに接続.
         boolean isTranSuccessed = false;
@@ -250,7 +250,7 @@ public class BasicJdbcEntityProcessor {
         }
 
         sqlInfo = new BasicSqlInfo(entitySet);
-        new BasicSqlDeleteOneBuilder(sqlInfo).getDeleteDml(edmEntitySet, keyPredicates);
+        new BasicSqlDeleteOneBuilder(sqlInfo).buildDeleteDml(edmEntitySet, keyPredicates);
 
         // データベースに接続.
         boolean isTranSuccessed = false;
@@ -293,7 +293,7 @@ public class BasicJdbcEntityProcessor {
         }
 
         sqlInfo = new BasicSqlInfo(entitySet);
-        new BasicSqlUpdateOneBuilder(sqlInfo).getUpdatePatchDml(edmEntitySet, keyPredicates, requestEntity);
+        new BasicSqlUpdateOneBuilder(sqlInfo).buildUpdatePatchDml(edmEntitySet, keyPredicates, requestEntity);
 
         // データベースに接続.
         try (Connection connTargetDb = BasicJdbcUtil.getConnection(sqlInfo.getEntitySet().getSettingsDatabase())) {
@@ -333,7 +333,7 @@ public class BasicJdbcEntityProcessor {
         }
 
         sqlInfo = new BasicSqlInfo(entitySet);
-        new BasicSqlUpdateOneBuilder(sqlInfo).getUpdatePutDml(edmEntitySet, keyPredicates, requestEntity);
+        new BasicSqlUpdateOneBuilder(sqlInfo).buildUpdatePutDml(edmEntitySet, keyPredicates, requestEntity);
 
         // データベースに接続.
         try (Connection connTargetDb = BasicJdbcUtil.getConnection(sqlInfo.getEntitySet().getSettingsDatabase())) {

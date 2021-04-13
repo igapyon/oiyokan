@@ -1,3 +1,18 @@
+/*
+ * Copyright 2021 Toshiki Iga
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package jp.oiyokan.basic.sql;
 
 import java.util.List;
@@ -13,6 +28,9 @@ import org.apache.olingo.server.api.uri.UriParameter;
 import jp.oiyokan.basic.BasicJdbcUtil;
 import jp.oiyokan.settings.OiyokanNamingUtil;
 
+/**
+ * データベースの1件レコードを更新.
+ */
 public class BasicSqlUpdateOneBuilder {
     /**
      * SQL構築のデータ構造.
@@ -32,7 +50,7 @@ public class BasicSqlUpdateOneBuilder {
         this.sqlInfo = sqlInfo;
     }
 
-    public void getUpdatePatchDml(EdmEntitySet edmEntitySet, List<UriParameter> keyPredicates, Entity requestEntity)
+    public void buildUpdatePatchDml(EdmEntitySet edmEntitySet, List<UriParameter> keyPredicates, Entity requestEntity)
             throws ODataApplicationException {
         sqlInfo.getSqlBuilder().append("UPDATE ");
         sqlInfo.getSqlBuilder()
@@ -71,7 +89,7 @@ public class BasicSqlUpdateOneBuilder {
         }
     }
 
-    public void getUpdatePutDml(EdmEntitySet edmEntitySet, List<UriParameter> keyPredicates, Entity requestEntity)
+    public void buildUpdatePutDml(EdmEntitySet edmEntitySet, List<UriParameter> keyPredicates, Entity requestEntity)
             throws ODataApplicationException {
         sqlInfo.getSqlBuilder().append("UPDATE ");
         sqlInfo.getSqlBuilder()

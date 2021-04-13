@@ -62,13 +62,13 @@ public class BasicSqlQueryListBuilder {
      * @param uriInfo URI情報.
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
-    public void getSelectCountQuery(UriInfo uriInfo) throws ODataApplicationException {
+    public void buildSelectCountQuery(UriInfo uriInfo) throws ODataApplicationException {
         sqlInfo.getSqlBuilder().append("SELECT COUNT(*) FROM "
                 + BasicJdbcUtil.escapeKakkoFieldName(sqlInfo, sqlInfo.getEntitySet().getDbTableNameTargetIyo()));
         if (uriInfo.getFilterOption() != null) {
             FilterOptionImpl filterOpt = (FilterOptionImpl) uriInfo.getFilterOption();
             sqlInfo.getSqlBuilder().append(" WHERE ");
-            new BasicSqlExprExpander(sqlInfo).expand(filterOpt.getExpression());
+            new BasicSqlQueryListExpr(sqlInfo).expand(filterOpt.getExpression());
         }
     }
 
@@ -78,7 +78,7 @@ public class BasicSqlQueryListBuilder {
      * @param uriInfo URI情報.
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
-    public void getSelectQuery(UriInfo uriInfo) throws ODataApplicationException {
+    public void buildSelectQuery(UriInfo uriInfo) throws ODataApplicationException {
         sqlInfo.getSqlBuilder().append("SELECT ");
 
         expandSelect(uriInfo);
@@ -99,7 +99,7 @@ public class BasicSqlQueryListBuilder {
                 FilterOptionImpl filterOpt = (FilterOptionImpl) uriInfo.getFilterOption();
                 // WHERE部分についてはパラメータクエリで処理するのを基本とする.
                 sqlInfo.getSqlBuilder().append(" WHERE ");
-                new BasicSqlExprExpander(sqlInfo).expand(filterOpt.getExpression());
+                new BasicSqlQueryListExpr(sqlInfo).expand(filterOpt.getExpression());
             }
         }
 
@@ -223,7 +223,7 @@ public class BasicSqlQueryListBuilder {
             if (uriInfo.getFilterOption() != null) {
                 sqlInfo.getSqlBuilder().append(" WHERE ");
                 // データ絞り込みはここで実現.
-                new BasicSqlExprExpander(sqlInfo).expand(uriInfo.getFilterOption().getExpression());
+                new BasicSqlQueryListExpr(sqlInfo).expand(uriInfo.getFilterOption().getExpression());
             }
             sqlInfo.getSqlBuilder().append(")");
             if (OiyokanConstants.DatabaseType.MSSQL2008 == sqlInfo.getEntitySet().getDatabaseType()) {

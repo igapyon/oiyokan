@@ -39,7 +39,7 @@ import jp.oiyokan.settings.OiyokanNamingUtil;
 /**
  * SQL文を構築するための簡易クラスの、Expression を SQLに変換する処理.
  */
-public class BasicSqlExprExpander {
+public class BasicSqlQueryListExpr {
     private static final boolean IS_DEBUG_EXPAND_LITERAL = false;
 
     /**
@@ -52,7 +52,7 @@ public class BasicSqlExprExpander {
      * 
      * @param sqlInfo SQL構築のデータ構造.
      */
-    public BasicSqlExprExpander(BasicSqlInfo sqlInfo) {
+    public BasicSqlQueryListExpr(BasicSqlInfo sqlInfo) {
         this.sqlInfo = sqlInfo;
     }
 

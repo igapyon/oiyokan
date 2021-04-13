@@ -135,7 +135,7 @@ public class BasicJdbcEntityCollectionBuilder implements OiyokanEntityCollection
             EntityCollection entityCollection) throws ODataApplicationException {
         // 件数をカウントして設定。
         BasicSqlQueryListBuilder basicSqlBuilder = new BasicSqlQueryListBuilder(entitySet);
-        basicSqlBuilder.getSelectCountQuery(uriInfo);
+        basicSqlBuilder.buildSelectCountQuery(uriInfo);
         final String sql = basicSqlBuilder.getSqlInfo().getSqlBuilder().toString();
 
         if (OiyokanConstants.IS_TRACE_ODATA_V4)
@@ -194,7 +194,7 @@ public class BasicJdbcEntityCollectionBuilder implements OiyokanEntityCollection
         BasicSqlQueryListBuilder basicSqlBuilder = new BasicSqlQueryListBuilder(entitySet);
 
         // UriInfo 情報を元に SQL文を組み立て.
-        basicSqlBuilder.getSelectQuery(uriInfo);
+        basicSqlBuilder.buildSelectQuery(uriInfo);
         final String sql = basicSqlBuilder.getSqlInfo().getSqlBuilder().toString();
 
         if (OiyokanConstants.IS_TRACE_ODATA_V4)
