@@ -75,7 +75,9 @@ public class BasicSqlQueryOneBuilder {
             sqlInfo.getSqlBuilder().append("=");
 
             CsdlProperty csdlProp = sqlInfo.getEntitySet().getEntityType().getProperty(param.getName());
-            BasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo, csdlProp.getType(), param.getText());
+            // ORACLEのROWIDを利用する場合、この処理がnullになってしまうため、nullの場合は Edm.String 決め打ちで処理する。
+            final String propType = (csdlProp == null ? "Edm.String" : csdlProp.getType());
+            BasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo, propType, param.getText());
         }
     }
 
