@@ -23,7 +23,7 @@ import org.junit.jupiter.api.Test;
 import jp.app.ctrl.ThSakilaCtrl;
 import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanTestConstants;
-import jp.oiyokan.basic.BasicUrlUtil;
+import jp.oiyokan.basic.OiyoBasicUrlUtil;
 import jp.oiyokan.util.OiyokanTestUtil;
 
 /**
@@ -49,7 +49,7 @@ class TestDbCallSakilaAllQueryTest {
             final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
             if (false) {
-                System.err.println("TRACE: " + BasicUrlUtil.decodeUrlQuery(entrys[1]));
+                System.err.println("TRACE: " + OiyoBasicUrlUtil.decodeUrlQuery(entrys[1]));
                 System.err.println("[" + entrys[0] + "], [" + entrys[1] + "], result: " + result);
             }
             assertEquals(200, resp.getStatusCode());

@@ -35,7 +35,7 @@ import jp.oiyokan.OiyokanConstants;
 /**
  * h2 用の全文検索の実験的な実装。
  */
-public class ExperimentalH2FullTextSearch {
+public class OiyoExperimentalH2FullTextSearch {
     /**
      * 全文検索を処理.
      * 

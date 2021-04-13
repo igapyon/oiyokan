@@ -20,7 +20,7 @@ import java.sql.SQLException;
 
 import org.junit.jupiter.api.Test;
 
-import jp.oiyokan.basic.BasicJdbcUtil;
+import jp.oiyokan.basic.OiyoBasicJdbcUtil;
 import jp.oiyokan.data.OiyokanResourceSqlUtil;
 import jp.oiyokan.dto.OiyokanSettingsDatabase;
 import jp.oiyokan.settings.OiyokanSettingsUtil;
@@ -36,7 +36,7 @@ class Build34ORACLETest {
 
 		OiyokanSettingsDatabase settingsDatabase = OiyokanSettingsUtil.getOiyokanDatabase("oracle1");
 
-		try (Connection connTargetDb = BasicJdbcUtil.getConnection(settingsDatabase)) {
+		try (Connection connTargetDb = OiyoBasicJdbcUtil.getConnection(settingsDatabase)) {
 			try (var stmt = connTargetDb.prepareStatement("DROP TABLE ODataTest1")) {
 				stmt.executeUpdate();
 			} catch (SQLException ex) {

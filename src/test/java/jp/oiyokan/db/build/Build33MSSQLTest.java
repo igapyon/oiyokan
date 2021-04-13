@@ -20,7 +20,7 @@ import java.sql.SQLException;
 
 import org.junit.jupiter.api.Test;
 
-import jp.oiyokan.basic.BasicJdbcUtil;
+import jp.oiyokan.basic.OiyoBasicJdbcUtil;
 import jp.oiyokan.data.OiyokanResourceSqlUtil;
 import jp.oiyokan.dto.OiyokanSettingsDatabase;
 import jp.oiyokan.settings.OiyokanSettingsUtil;
@@ -36,7 +36,7 @@ class Build33MSSQLTest {
 
 		OiyokanSettingsDatabase settingsDatabase = OiyokanSettingsUtil.getOiyokanDatabase("mssql1");
 
-		try (Connection connTargetDb = BasicJdbcUtil.getConnection(settingsDatabase)) {
+		try (Connection connTargetDb = OiyoBasicJdbcUtil.getConnection(settingsDatabase)) {
 			String[] sqls = OiyokanResourceSqlUtil.loadOiyokanResourceSql("oiyokan/sql/" + "oiyokan-test-db-MSSQL.sql");
 			for (String sql : sqls) {
 				try (var stmt = connTargetDb.prepareStatement(sql)) {
@@ -54,7 +54,7 @@ class Build33MSSQLTest {
 	void test02() throws Exception {
 		OiyokanSettingsDatabase settingsDatabase = OiyokanSettingsUtil.getOiyokanDatabase("mssql1");
 
-		try (Connection connTargetDb = BasicJdbcUtil.getConnection(settingsDatabase)) {
+		try (Connection connTargetDb = OiyoBasicJdbcUtil.getConnection(settingsDatabase)) {
 			String[] sqls = OiyokanResourceSqlUtil
 					.loadOiyokanResourceSql("oiyokan/sql/" + "sample-sakila-db-MSSQL.sql");
 			for (String sql : sqls) {

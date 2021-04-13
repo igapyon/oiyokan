@@ -46,8 +46,8 @@ import org.apache.olingo.server.api.uri.UriParameter;
 import org.apache.olingo.server.api.uri.UriResource;
 import org.apache.olingo.server.api.uri.UriResourceEntitySet;
 
-import jp.oiyokan.basic.BasicJdbcEntityProcessor;
-import jp.oiyokan.basic.BasicJdbcUtil;
+import jp.oiyokan.basic.OiyoBasicJdbcEntityOneBuilder;
+import jp.oiyokan.basic.OiyoBasicJdbcUtil;
 
 /**
  * Oiyokan による Entity Processor
@@ -78,15 +78,15 @@ public class OiyokanEntityProcessor implements EntityProcessor {
             List<UriParameter> keyPredicates = uriResourceEntitySet.getKeyPredicates();
 
             // データベースに接続.
-            final OiyokanCsdlEntitySet entitySet = BasicJdbcEntityProcessor.findEntitySet(edmEntitySet);
+            final OiyokanCsdlEntitySet entitySet = OiyoBasicJdbcEntityOneBuilder.findEntitySet(edmEntitySet);
             if (entitySet == null) {
                 // [M211] No such EntitySet found (createEntity)
                 System.err.println(OiyokanMessages.M211);
                 throw new ODataApplicationException(OiyokanMessages.M211, 500, Locale.ENGLISH);
             }
             Entity entity = null;
-            try (Connection connTargetDb = BasicJdbcUtil.getConnection(entitySet.getSettingsDatabase())) {
-                entity = new BasicJdbcEntityProcessor().readEntityData(connTargetDb, uriInfo, edmEntitySet,
+            try (Connection connTargetDb = OiyoBasicJdbcUtil.getConnection(entitySet.getSettingsDatabase())) {
+                entity = new OiyoBasicJdbcEntityOneBuilder().readEntityData(connTargetDb, uriInfo, edmEntitySet,
                         keyPredicates);
             } catch (SQLException ex) {
                 // [M210] Database exception occured (readEntity)
@@ -142,7 +142,7 @@ public class OiyokanEntityProcessor implements EntityProcessor {
             DeserializerResult result = deserializer.entity(requestInputStream, edmEntityType);
             Entity requestEntity = result.getEntity();
             // 2.2 do the creation in backend, which returns the newly created entity
-            Entity createdEntity = new BasicJdbcEntityProcessor().createEntityData(uriInfo, edmEntitySet,
+            Entity createdEntity = new OiyoBasicJdbcEntityOneBuilder().createEntityData(uriInfo, edmEntitySet,
                     requestEntity);
 
             // 3. serialize the response (we have to return the created entity)
@@ -189,11 +189,11 @@ public class OiyokanEntityProcessor implements EntityProcessor {
             if (request.getMethod().equals(HttpMethod.PATCH)) {
                 // 指定項目のみ設定
                 // in case of PATCH, the existing property is not touched
-                new BasicJdbcEntityProcessor().updateEntityDataPatch(uriInfo, edmEntitySet, keyPredicates,
+                new OiyoBasicJdbcEntityOneBuilder().updateEntityDataPatch(uriInfo, edmEntitySet, keyPredicates,
                         requestEntity);
             } else if (request.getMethod().equals(HttpMethod.PUT)) {
                 // 指定項目以外、キー以外は null 設定
-                new BasicJdbcEntityProcessor().updateEntityDataPut(uriInfo, edmEntitySet, keyPredicates, requestEntity);
+                new OiyoBasicJdbcEntityOneBuilder().updateEntityDataPut(uriInfo, edmEntitySet, keyPredicates, requestEntity);
             } else {
                 // [M216] UNEXPECTED: Must NOT pass this case.
                 System.err.println(OiyokanMessages.M216);
@@ -223,7 +223,7 @@ public class OiyokanEntityProcessor implements EntityProcessor {
 
             // 2. delete the data in backend
             List<UriParameter> keyPredicates = uriResourceEntitySet.getKeyPredicates();
-            new BasicJdbcEntityProcessor().deleteEntityData(uriInfo, edmEntitySet, keyPredicates);
+            new OiyoBasicJdbcEntityOneBuilder().deleteEntityData(uriInfo, edmEntitySet, keyPredicates);
 
             // 3. configure the response object
             response.setStatusCode(HttpStatusCode.NO_CONTENT.getStatusCode());

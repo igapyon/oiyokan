@@ -33,26 +33,26 @@ import org.apache.olingo.server.core.uri.queryoption.expression.TypeLiteralImpl;
 import org.apache.olingo.server.core.uri.queryoption.expression.UnaryImpl;
 
 import jp.oiyokan.OiyokanMessages;
-import jp.oiyokan.basic.BasicJdbcUtil;
+import jp.oiyokan.basic.OiyoBasicJdbcUtil;
 import jp.oiyokan.settings.OiyokanNamingUtil;
 
 /**
  * SQL文を構築するための簡易クラスの、Expression を SQLに変換する処理.
  */
-public class BasicSqlQueryListExpr {
+public class OiyoSqlQueryListExpr {
     private static final boolean IS_DEBUG_EXPAND_LITERAL = false;
 
     /**
      * SQL構築のデータ構造.
      */
-    private BasicSqlInfo sqlInfo = null;
+    private OiyoSqlInfo sqlInfo = null;
 
     /**
      * コンストラクタ.
      * 
      * @param sqlInfo SQL構築のデータ構造.
      */
-    public BasicSqlQueryListExpr(BasicSqlInfo sqlInfo) {
+    public OiyoSqlQueryListExpr(OiyoSqlInfo sqlInfo) {
         this.sqlInfo = sqlInfo;
     }
 
@@ -249,14 +249,14 @@ public class BasicSqlQueryListExpr {
             return;
         }
 
-        BasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo,
+        OiyoBasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo,
                 impl.getType().getFullQualifiedName().getFullQualifiedNameAsString(), impl.getText());
     }
 
     private void expandMember(MemberImpl impl) throws ODataApplicationException {
         // そのままSQLのメンバーとせず、項目名エスケープを除去.
-        sqlInfo.getSqlBuilder().append(BasicJdbcUtil.escapeKakkoFieldName(sqlInfo,
-                OiyokanNamingUtil.entity2Db(BasicJdbcUtil.unescapeKakkoFieldName(impl.toString()))));
+        sqlInfo.getSqlBuilder().append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo,
+                OiyokanNamingUtil.entity2Db(OiyoBasicJdbcUtil.unescapeKakkoFieldName(impl.toString()))));
     }
 
     /**

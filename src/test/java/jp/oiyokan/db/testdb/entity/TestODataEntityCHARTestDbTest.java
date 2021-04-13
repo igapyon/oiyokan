@@ -21,7 +21,7 @@ import org.apache.olingo.server.api.ODataResponse;
 import org.junit.jupiter.api.Test;
 
 import jp.oiyokan.OiyokanTestConstants;
-import jp.oiyokan.basic.BasicUrlUtil;
+import jp.oiyokan.basic.OiyoBasicUrlUtil;
 import jp.oiyokan.util.OiyokanTestUtil;
 
 /**
@@ -91,18 +91,18 @@ class TestODataEntityCHARTestDbTest {
         String uri = "Decimal1=" + decVal + ",StringChar8='12345678',StringVar255='ABCXYZ'";
         // System.err.println("uri: " + uri);
         resp = OiyokanTestUtil.callRequestGetResponse( //
-                "/ODataTests2(" + BasicUrlUtil.encodeUrlQuery(uri) + ")", null);
+                "/ODataTests2(" + OiyoBasicUrlUtil.encodeUrlQuery(uri) + ")", null);
         result = OiyokanTestUtil.stream2String(resp.getContent());
         System.err.println(result);
         assertEquals(200, resp.getStatusCode());
 
         // DELETE
-        resp = OiyokanTestUtil.callRequestDelete("/ODataTests2(" + BasicUrlUtil.encodeUrlQuery(uri) + ")");
+        resp = OiyokanTestUtil.callRequestDelete("/ODataTests2(" + OiyoBasicUrlUtil.encodeUrlQuery(uri) + ")");
         result = OiyokanTestUtil.stream2String(resp.getContent());
         System.err.println(result);
         assertEquals(204, resp.getStatusCode());
 
-        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests2(" + BasicUrlUtil.encodeUrlQuery(uri) + ")", null);
+        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests2(" + OiyoBasicUrlUtil.encodeUrlQuery(uri) + ")", null);
         assertEquals(404, resp.getStatusCode());
     }
 
@@ -134,18 +134,18 @@ class TestODataEntityCHARTestDbTest {
         final String uri = "Decimal1=" + decVal + ",StringChar8='  3456  ',StringVar255='ABCXYZ'";
         // System.err.println("uri: " + uri);
         resp = OiyokanTestUtil.callRequestGetResponse( //
-                "/ODataTests2(" + BasicUrlUtil.encodeUrlQuery(uri) + ")", null);
+                "/ODataTests2(" + OiyoBasicUrlUtil.encodeUrlQuery(uri) + ")", null);
         result = OiyokanTestUtil.stream2String(resp.getContent());
         System.err.println(result);
         assertEquals(200, resp.getStatusCode());
 
         // DELETE
-        resp = OiyokanTestUtil.callRequestDelete("/ODataTests2(" + BasicUrlUtil.encodeUrlQuery(uri) + ")");
+        resp = OiyokanTestUtil.callRequestDelete("/ODataTests2(" + OiyoBasicUrlUtil.encodeUrlQuery(uri) + ")");
         result = OiyokanTestUtil.stream2String(resp.getContent());
         // System.err.println(result);
         assertEquals(204, resp.getStatusCode());
 
-        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests2(" + BasicUrlUtil.encodeUrlQuery(uri) + ")", null);
+        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests2(" + OiyoBasicUrlUtil.encodeUrlQuery(uri) + ")", null);
         assertEquals(404, resp.getStatusCode());
     }
 }

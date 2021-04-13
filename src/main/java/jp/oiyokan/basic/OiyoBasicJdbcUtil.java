@@ -48,15 +48,15 @@ import org.springframework.util.StreamUtils;
 import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanCsdlEntitySet;
 import jp.oiyokan.OiyokanMessages;
-import jp.oiyokan.basic.sql.BasicSqlInfo;
+import jp.oiyokan.basic.sql.OiyoSqlInfo;
 import jp.oiyokan.dto.OiyokanSettingsDatabase;
 import jp.oiyokan.settings.OiyokanNamingUtil;
 
 /**
  * Oiyokan 関連の JDBC まわりユーティリティクラス.
  */
-public class BasicJdbcUtil {
-    private BasicJdbcUtil() {
+public class OiyoBasicJdbcUtil {
+    private OiyoBasicJdbcUtil() {
     }
 
     /**
@@ -425,7 +425,7 @@ public class BasicJdbcUtil {
             if (IS_SHOW_DEBUG)
                 System.err.println("TRACE: PreparedStatement#setDate(4): " + value);
             ZonedDateTime zdt = (ZonedDateTime) value;
-            java.util.Date look = BasicDateTimeUtil.zonedDateTime2Date(zdt);
+            java.util.Date look = OiyoBasicDateTimeUtil.zonedDateTime2Date(zdt);
             java.sql.Date sdate = new java.sql.Date(look.getTime());
             stmt.setDate(column, sdate);
         } else if (value instanceof String) {
@@ -455,7 +455,7 @@ public class BasicJdbcUtil {
      * @param inputParam parameter text.
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
-    public static void expandLiteralOrBindParameter(final BasicSqlInfo sqlInfo, String csdlType, Object inputParam)
+    public static void expandLiteralOrBindParameter(final OiyoSqlInfo sqlInfo, String csdlType, Object inputParam)
             throws ODataApplicationException {
         if (inputParam == null) {
             if (IS_DEBUG_EXPAND_LITERAL)
@@ -596,7 +596,7 @@ public class BasicJdbcUtil {
                 sqlInfo.getSqlBuilder().append("?");
                 sqlInfo.getSqlParamList().add(inputParam);
             } else {
-                ZonedDateTime zdt = BasicDateTimeUtil.parseStringDateTime(String.valueOf(inputParam));
+                ZonedDateTime zdt = OiyoBasicDateTimeUtil.parseStringDateTime(String.valueOf(inputParam));
                 sqlInfo.getSqlBuilder().append("?");
                 sqlInfo.getSqlParamList().add(zdt);
             }
@@ -614,7 +614,7 @@ public class BasicJdbcUtil {
                 sqlInfo.getSqlBuilder().append("?");
                 sqlInfo.getSqlParamList().add(inputParam);
             } else {
-                ZonedDateTime zdt = BasicDateTimeUtil.parseStringDateTime(String.valueOf(inputParam));
+                ZonedDateTime zdt = OiyoBasicDateTimeUtil.parseStringDateTime(String.valueOf(inputParam));
                 sqlInfo.getSqlBuilder().append("?");
                 sqlInfo.getSqlParamList().add(zdt);
             }
@@ -633,7 +633,7 @@ public class BasicJdbcUtil {
                 sqlInfo.getSqlBuilder().append("?");
                 sqlInfo.getSqlParamList().add(look);
             } else {
-                ZonedDateTime zdt = BasicDateTimeUtil.parseStringDateTime(String.valueOf(inputParam));
+                ZonedDateTime zdt = OiyoBasicDateTimeUtil.parseStringDateTime(String.valueOf(inputParam));
                 sqlInfo.getSqlBuilder().append("?");
                 sqlInfo.getSqlParamList().add(zdt);
             }
@@ -717,7 +717,7 @@ public class BasicJdbcUtil {
      * @return 必要に応じてエスケープされた項目名.
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
-    public static String escapeKakkoFieldName(BasicSqlInfo sqlInfo, String fieldName) throws ODataApplicationException {
+    public static String escapeKakkoFieldName(OiyoSqlInfo sqlInfo, String fieldName) throws ODataApplicationException {
         switch (sqlInfo.getEntitySet().getDatabaseType()) {
         case h2:
         case MSSQL2008:
@@ -762,7 +762,7 @@ public class BasicJdbcUtil {
      * @return (もしあれば)生成されたキーのリスト.
      * @throws ODataApplicationException
      */
-    public static List<String> executeDml(Connection connTargetDb, BasicSqlInfo sqlInfo, boolean returnGeneratedKeys)
+    public static List<String> executeDml(Connection connTargetDb, OiyoSqlInfo sqlInfo, boolean returnGeneratedKeys)
             throws ODataApplicationException {
         final String sql = sqlInfo.getSqlBuilder().toString();
         if (OiyokanConstants.IS_TRACE_ODATA_V4)
@@ -777,7 +777,7 @@ public class BasicJdbcUtil {
             int idxColumn = 1;
             for (Object look : sqlInfo.getSqlParamList()) {
                 // System.err.println("TRACE: param: " + look.toString());
-                BasicJdbcUtil.bindPreparedParameter(stmt, idxColumn++, look);
+                OiyoBasicJdbcUtil.bindPreparedParameter(stmt, idxColumn++, look);
             }
 
             final int result = stmt.executeUpdate();
