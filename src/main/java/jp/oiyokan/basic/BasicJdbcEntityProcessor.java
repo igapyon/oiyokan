@@ -35,7 +35,7 @@ import org.apache.olingo.commons.api.edm.provider.CsdlPropertyRef;
 import org.apache.olingo.server.api.ODataApplicationException;
 import org.apache.olingo.server.api.uri.UriInfo;
 import org.apache.olingo.server.api.uri.UriParameter;
-import org.apache.olingo.server.api.uri.queryoption.expression.Expression;
+import org.apache.olingo.server.core.uri.UriParameterImpl;
 
 import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanCsdlEntitySet;
@@ -184,33 +184,10 @@ public class BasicJdbcEntityProcessor {
                         propValue = generatedKeys.get(0);
                         generatedKeys.remove(0);
                     }
-                    final String propValueFixed = propValue;
-                    UriParameter newParam = new UriParameter() {
-                        @Override
-                        public String getAlias() {
-                            return null;
-                        }
 
-                        @Override
-                        public String getText() {
-                            return propValueFixed;
-                        }
-
-                        @Override
-                        public Expression getExpression() {
-                            return null;
-                        }
-
-                        @Override
-                        public String getName() {
-                            return propKey.getName();
-                        }
-
-                        @Override
-                        public String getReferencedProperty() {
-                            return null;
-                        }
-                    };
+                    final UriParameterImpl newParam = new UriParameterImpl();
+                    newParam.setName(propKey.getName());
+                    newParam.setText(propValue);
                     keyPredicates.add(newParam);
                 }
 
