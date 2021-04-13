@@ -48,6 +48,9 @@ import jp.oiyokan.basic.sql.OiyoSqlInsertOneBuilder;
 import jp.oiyokan.basic.sql.OiyoSqlQueryOneBuilder;
 import jp.oiyokan.basic.sql.OiyoSqlUpdateOneBuilder;
 
+/**
+ * Entity 1件の検索に関する基本的なJDBC処理
+ */
 public class OiyoBasicJdbcEntityOneBuilder {
     /////////////////////////
     // SELECT
