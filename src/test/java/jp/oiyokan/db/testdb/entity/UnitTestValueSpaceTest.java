@@ -27,15 +27,12 @@ import jp.oiyokan.util.OiyokanTestUtil;
  * フィルタの型に着眼したテスト.
  */
 class UnitTestValueSpaceTest {
-    /**
-     * テストデータが利用する ID 範囲。
-     */
-    private static final int TEST_ID = 10156;
-
     @Test
     void test01() throws Exception {
         if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
             return;
+
+        final int TEST_ID = OiyokanTestUtil.getNextUniqueId();
 
         // INSERT + DELETE
         ODataResponse resp = OiyokanTestUtil.callRequestPost("/ODataTests4", "{\n" //
@@ -56,7 +53,7 @@ class UnitTestValueSpaceTest {
         // UPDATE (PATCH)
         resp = OiyokanTestUtil.callRequestPatch("/ODataTests4(I_D=" + TEST_ID + ",Na_me='Name')", "{\n" //
                 + "  \"Na_me\":\"Name2\",\n" //
-                + "  \"Va_lue1\":\"Description2\"\n" + "}");
+                + "  \"Va_lue1\":\"Description2\"\n" + "}", false, false);
         result = OiyokanTestUtil.stream2String(resp.getContent());
         System.err.println(result);
         assertEquals(204, resp.getStatusCode());

@@ -28,17 +28,14 @@ import jp.oiyokan.util.OiyokanTestUtil;
  */
 class UnitTestEntityBasicTest {
     /**
-     * テストデータが利用する ID 範囲。
-     */
-    private static final int TEST_ID = 10022;
-
-    /**
      * CREATE + DELETE
      */
     @Test
     void test01() throws Exception {
         if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
             return;
+
+        final int TEST_ID = OiyokanTestUtil.getNextUniqueId();
 
         // INSERT + DELETE
         ODataResponse resp = OiyokanTestUtil.callRequestPost("/ODataTests3", "{\n" //
@@ -68,6 +65,8 @@ class UnitTestEntityBasicTest {
         if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
             return;
 
+        final int TEST_ID = OiyokanTestUtil.getNextUniqueId();
+
         // INSERT + DELETE
         ODataResponse resp = OiyokanTestUtil.callRequestPost("/ODataTests3", "{\n" //
                 + "  \"ID\":" + TEST_ID + ",\n" //
@@ -85,7 +84,7 @@ class UnitTestEntityBasicTest {
         // UPDATE (PATCH)
         resp = OiyokanTestUtil.callRequestPatch("/ODataTests3(" + TEST_ID + ")", "{\n" //
                 + "  \"Name\":\"Name2\",\n" //
-                + "  \"Description\":\"Description2\"\n" + "}");
+                + "  \"Description\":\"Description2\"\n" + "}", false, false);
         assertEquals(204, resp.getStatusCode());
 
         resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests3(" + TEST_ID + ")", null);
@@ -107,12 +106,17 @@ class UnitTestEntityBasicTest {
         if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
             return;
 
-        ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests3(9876543)", null);
+        final int uniqueId = OiyokanTestUtil.getNextUniqueId();
+
+        ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests3(" + uniqueId + ")", null);
         assertEquals(404, resp.getStatusCode());
 
-        resp = OiyokanTestUtil.callRequestPatch("/ODataTests3(9876543)", "{\n" //
+        resp = OiyokanTestUtil.callRequestPatch("/ODataTests3(" + uniqueId + ")", "{\n" //
                 + "  \"Name\":\"Name2\",\n" //
-                + "  \"Description\":\"Description2\"\n" + "}");
+                + "  \"Description\":\"Description2\"\n" + "}", true, false);
         assertEquals(404, resp.getStatusCode());
+
+        resp = OiyokanTestUtil.callRequestDelete("/ODataTests3(" + uniqueId + ")");
+        assertEquals(404, resp.getStatusCode(), "追加・更新していないのでヒットもしない.");
     }
 }

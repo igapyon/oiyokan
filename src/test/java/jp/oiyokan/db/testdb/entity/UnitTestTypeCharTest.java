@@ -28,15 +28,12 @@ import jp.oiyokan.util.OiyokanTestUtil;
  * Entityアクセスのフル桁に着眼したテスト.
  */
 class UnitTestTypeCharTest {
-    /**
-     * テストデータが利用する ID 範囲。
-     */
-    private static final int TEST_ID = 10123;
-
     @Test
     void test01() throws Exception {
         if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
             return;
+
+        final int TEST_ID = OiyokanTestUtil.getNextUniqueId();
 
         // 左右の文字が正しいことを確認
         ODataResponse resp = OiyokanTestUtil.callRequestPost("/ODataTests3", //
