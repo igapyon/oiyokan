@@ -37,7 +37,7 @@ class UnitTestTypeBinaryTest {
     /**
      * テストデータが利用する ID 範囲。
      */
-    private static final int TEST_ID = 11390;
+    private static final int TEST_ID = 11391;
 
     @Test
     void test01() throws Exception {
@@ -55,12 +55,13 @@ class UnitTestTypeBinaryTest {
         assertEquals("{\"@odata.context\":\"$metadata#ODataTests6\",\"ID\":" + TEST_ID
                 + ",\"Name\":\"Binary UnitTest\",\"Description\":\"Binary UnitTest table.\"" //
                 + ",\"Binary1\":\"VG9uYXJpIG5vIGt5YWt1Lg==\",\"VarBinary1\":\"VG9uYXJpIG5vIGt5YWt1Lg==\",\"LongVarBinary1\":\"VG9uYXJpIG5vIGt5YWt1Lg==\",\"Blob1\":\"VG9uYXJpIG5vIGt5YWt1Lg==\"}",
-                result, "INSERTできることを確認.");
+                result, //
+                "INSERTできることを確認. MySQLではエラー Binary1が固定長扱いで後方に自動埋め込みが発生(既知の問題。だが解決方法にアイデア現状なし)");
         assertEquals(201, resp.getStatusCode());
 
         resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests6(" + TEST_ID + ")", null);
         result = OiyokanTestUtil.stream2String(resp.getContent());
-       // System.err.println(result);
+        // System.err.println(result);
         assertEquals(200, resp.getStatusCode(), "INSERTしたレコードが格納されていることを確認.");
 
         if (false/* ここは h2 database のときのみ通過が可能 */) {

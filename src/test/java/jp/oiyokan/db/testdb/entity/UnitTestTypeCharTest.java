@@ -125,7 +125,8 @@ class UnitTestTypeCharTest {
                         + "}");
         String result = OiyokanTestUtil.stream2String(resp.getContent());
         System.err.println("TRACE: " + result);
-        assertEquals(201, resp.getStatusCode(), "CHAR項目がINSERTできることの確認.");
+        assertEquals(201, resp.getStatusCode(), //
+                "CHAR項目がINSERTできることの確認. MySQL ではここが失敗する。後方に半角スペースを付与が必要 (既知の問題)");
 
         resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests2", null);
         result = OiyokanTestUtil.stream2String(resp.getContent());
