@@ -98,6 +98,18 @@ CREATE TABLE IF NOT EXISTS
     , PRIMARY KEY(Iden1)
   );
 
+CREATE TABLE IF NOT EXISTS
+  ODataTest6 (
+    ID INT NOT NULL
+    , Name VARCHAR(80) DEFAULT 'Binary UnitTest'
+    , Description VARCHAR(250) DEFAULT 'Binary UnitTest table.'
+    , Binary1 bytea
+    , VarBinary1 bytea
+    , LongVarBinary1 bytea
+    , Blob1 bytea
+    , PRIMARY KEY(ID)
+  );
+
 INSERT INTO ODataTest1 (ID, Name, Description) VALUES (
   1, 'MacBookPro16,2', 'MacBook Pro (13-inch, 2020, Thunderbolt 3ポートx 4)');
 
