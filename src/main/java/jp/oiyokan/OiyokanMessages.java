@@ -111,7 +111,7 @@ public class OiyokanMessages {
 
     public static final String M201 = "[M201] NO record processed. No Entity effects.";
     public static final int M201_CODE = HttpStatusCode.NOT_FOUND.getStatusCode();
-    public static final String M202 = "[M202] Integrity constraint violation occured (DML). 一意制約違反.";
+    public static final String M202 = "[M202] Integrity constraint violation occured (DML). 制約違反.";
     public static final int M202_CODE = HttpStatusCode.CONFLICT.getStatusCode();
     public static final String M203 = "[M203] SQL timeout at execute.";
     public static final int M203_CODE = HttpStatusCode.REQUEST_TIMEOUT.getStatusCode();
