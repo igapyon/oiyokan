@@ -52,7 +52,7 @@ class SakilaDollSearchTest {
                 System.err.println("TRACE: " + OiyoBasicUrlUtil.decodeUrlQuery(entrys[1]));
                 System.err.println("[" + entrys[0] + "], [" + entrys[1] + "], result: " + result);
             }
-            assertEquals(200, resp.getStatusCode());
+            assertEquals(200, resp.getStatusCode(), "Sakila sample db での挙動確認.");
         }
     }
 }

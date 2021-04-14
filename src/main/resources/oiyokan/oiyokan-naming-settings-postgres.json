@@ -134,6 +134,16 @@
 			"db": "uuid1",
 			"entity": "Uuid1",
 			"description": "OdataTest1"
+		},
+		{
+			"db": "iden1",
+			"entity": "Iden1",
+			"description": "OdataTest6"
+		},
+		{
+			"db": "value1",
+			"entity": "Value1",
+			"description": "OdataTest6"
 		}
 	]
 }
