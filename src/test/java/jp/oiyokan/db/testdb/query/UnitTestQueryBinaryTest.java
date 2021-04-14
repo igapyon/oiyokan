@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.apache.olingo.server.api.ODataResponse;
 import org.junit.jupiter.api.Test;
 
-import jp.oiyokan.OiyokanTestConstants;
+import jp.oiyokan.OiyokanTestSettingConstants;
 import jp.oiyokan.basic.OiyoBasicUrlUtil;
 import jp.oiyokan.util.OiyokanTestUtil;
 
@@ -31,7 +31,7 @@ class UnitTestQueryBinaryTest {
 
     @Test
     void testTimestamp() throws Exception {
-        if (!OiyokanTestConstants.IS_TEST_ODATATEST)
+        if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
             return;
 
         final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1",
@@ -46,7 +46,7 @@ class UnitTestQueryBinaryTest {
 
     @Test
     void testDate() throws Exception {
-        if (!OiyokanTestConstants.IS_TEST_ODATATEST)
+        if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
             return;
 
         final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1",
@@ -61,7 +61,7 @@ class UnitTestQueryBinaryTest {
 
     @Test
     void testBoolean() throws Exception {
-        if (!OiyokanTestConstants.IS_TEST_ODATATEST)
+        if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
             return;
 
         final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1",
@@ -75,7 +75,7 @@ class UnitTestQueryBinaryTest {
 
     @Test
     void testInt16a() throws Exception {
-        if (!OiyokanTestConstants.IS_TEST_ODATATEST)
+        if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
             return;
 
         final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1",
@@ -89,7 +89,7 @@ class UnitTestQueryBinaryTest {
 
     @Test
     void testInt32a() throws Exception {
-        if (!OiyokanTestConstants.IS_TEST_ODATATEST)
+        if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
             return;
 
         final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1", OiyoBasicUrlUtil
@@ -105,7 +105,7 @@ class UnitTestQueryBinaryTest {
 
     @Test
     void testInt64a() throws Exception {
-        if (!OiyokanTestConstants.IS_TEST_ODATATEST)
+        if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
             return;
 
         final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1", OiyoBasicUrlUtil
@@ -121,7 +121,7 @@ class UnitTestQueryBinaryTest {
 
     @Test
     void testIntBigDecimal() throws Exception {
-        if (!OiyokanTestConstants.IS_TEST_ODATATEST)
+        if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
             return;
 
         final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1",
@@ -137,7 +137,7 @@ class UnitTestQueryBinaryTest {
 
     @Test
     void testSbyte1() throws Exception {
-        if (!OiyokanTestConstants.IS_TEST_ODATATEST)
+        if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
             return;
 
         final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1",
@@ -152,7 +152,7 @@ class UnitTestQueryBinaryTest {
 
     @Test
     void testSingle1() throws Exception {
-        if (!OiyokanTestConstants.IS_TEST_ODATATEST)
+        if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
             return;
 
         final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1", OiyoBasicUrlUtil
@@ -167,7 +167,7 @@ class UnitTestQueryBinaryTest {
 
     @Test
     void testDouble1() throws Exception {
-        if (!OiyokanTestConstants.IS_TEST_ODATATEST)
+        if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
             return;
 
         final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1", OiyoBasicUrlUtil
@@ -182,7 +182,7 @@ class UnitTestQueryBinaryTest {
 
     @Test
     void testStringVar255a() throws Exception {
-        if (!OiyokanTestConstants.IS_TEST_ODATATEST)
+        if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
             return;
 
         final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1", OiyoBasicUrlUtil
@@ -197,7 +197,7 @@ class UnitTestQueryBinaryTest {
 
     @Test
     void testStringVar255WithAndOr() throws Exception {
-        if (!OiyokanTestConstants.IS_TEST_ODATATEST)
+        if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
             return;
 
         final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1", OiyoBasicUrlUtil.encodeUrlQuery(
@@ -212,7 +212,7 @@ class UnitTestQueryBinaryTest {
 
     @Test
     void testStringLongVar1a() throws Exception {
-        if (!OiyokanTestConstants.IS_TEST_ODATATEST)
+        if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
             return;
 
         final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1", OiyoBasicUrlUtil
@@ -227,7 +227,7 @@ class UnitTestQueryBinaryTest {
 
     @Test
     void testClob1a() throws Exception {
-        if (!OiyokanTestConstants.IS_TEST_ODATATEST)
+        if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
             return;
 
         final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1",

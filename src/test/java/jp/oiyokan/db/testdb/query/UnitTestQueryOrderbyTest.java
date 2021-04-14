@@ -21,7 +21,7 @@ import org.apache.olingo.server.api.ODataResponse;
 import org.junit.jupiter.api.Test;
 
 import jp.oiyokan.OiyokanConstants;
-import jp.oiyokan.OiyokanTestConstants;
+import jp.oiyokan.OiyokanTestSettingConstants;
 import jp.oiyokan.util.OiyokanTestUtil;
 
 /**
@@ -30,7 +30,7 @@ import jp.oiyokan.util.OiyokanTestUtil;
 class UnitTestQueryOrderbyTest {
     @Test
     void testSimpleOrderBy() throws Exception {
-        if (!OiyokanTestConstants.IS_TEST_ODATATEST)
+        if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
             return;
 
         final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1",
@@ -45,7 +45,7 @@ class UnitTestQueryOrderbyTest {
 
     @Test
     void testSimpleAllWithoutSelect() throws Exception {
-        if (!OiyokanTestConstants.IS_TEST_ODATATEST)
+        if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
             return;
 
         final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1", "$orderby=ID&$top=2");
@@ -58,7 +58,7 @@ class UnitTestQueryOrderbyTest {
 
     @Test
     void testSimpleFilter() throws Exception {
-        if (!OiyokanTestConstants.IS_TEST_ODATATEST)
+        if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
             return;
 
         final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1",
@@ -76,7 +76,7 @@ class UnitTestQueryOrderbyTest {
 
     @Test
     void testSimpleSearch() throws Exception {
-        if (!OiyokanTestConstants.IS_TEST_ODATATEST)
+        if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
             return;
 
         if (!OiyokanConstants.IS_EXPERIMENTAL_SEARCH_ENABLED) {

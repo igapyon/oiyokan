@@ -2,7 +2,10 @@ package jp.oiyokan.basic;
 
 import org.junit.jupiter.api.Test;
 
-class BasicDateTimeUtilTest {
+/**
+ * DateTimeに関するテスト。
+ */
+class OiyoBasicDateTimeUtilTest {
 
     @Test
     void test() {

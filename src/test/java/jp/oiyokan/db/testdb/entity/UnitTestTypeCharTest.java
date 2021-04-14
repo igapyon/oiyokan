@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.apache.olingo.server.api.ODataResponse;
 import org.junit.jupiter.api.Test;
 
-import jp.oiyokan.OiyokanTestConstants;
+import jp.oiyokan.OiyokanTestSettingConstants;
 import jp.oiyokan.basic.OiyoBasicUrlUtil;
 import jp.oiyokan.util.OiyokanTestUtil;
 
@@ -35,7 +35,7 @@ class UnitTestTypeCharTest {
 
     @Test
     void test01() throws Exception {
-        if (!OiyokanTestConstants.IS_TEST_ODATATEST)
+        if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
             return;
 
         // 左右の文字が正しいことを確認
@@ -65,7 +65,7 @@ class UnitTestTypeCharTest {
 
     @Test
     void test02() throws Exception {
-        if (!OiyokanTestConstants.IS_TEST_ODATATEST)
+        if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
             return;
 
         final String decVal = "1304";
@@ -108,7 +108,7 @@ class UnitTestTypeCharTest {
 
     @Test
     void test03() throws Exception {
-        if (!OiyokanTestConstants.IS_TEST_ODATATEST)
+        if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
             return;
 
         final String decVal = "1404";

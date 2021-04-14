@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.util.StreamUtils;
 
 import jp.oiyokan.OiyokanConstants;
-import jp.oiyokan.OiyokanTestConstants;
+import jp.oiyokan.OiyokanTestSettingConstants;
 import jp.oiyokan.basic.OiyoBasicJdbcUtil;
 import jp.oiyokan.settings.OiyokanSettingsUtil;
 import jp.oiyokan.util.OiyokanTestUtil;
@@ -41,7 +41,7 @@ class UnitTestTypeBinaryTest {
 
     @Test
     void test01() throws Exception {
-        if (!OiyokanTestConstants.IS_TEST_ODATATEST)
+        if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
             return;
 
         ODataResponse resp = OiyokanTestUtil.callRequestPost("/ODataTests6", "{\n" //

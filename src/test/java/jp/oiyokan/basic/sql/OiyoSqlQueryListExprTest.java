@@ -30,13 +30,13 @@ import org.junit.jupiter.api.Test;
 import jp.oiyokan.OiyokanCsdlEntityContainer;
 import jp.oiyokan.OiyokanCsdlEntitySet;
 import jp.oiyokan.OiyokanEdmProvider;
-import jp.oiyokan.OiyokanTestConstants;
+import jp.oiyokan.OiyokanTestSettingConstants;
 import jp.oiyokan.basic.OiyoBasicUrlUtil;
 
 /**
- * TinyH2SqlExprExpanderのテスト.
+ * OiyoSqlQueryListExpr のテスト.
  */
-class BasicSqlExprExpanderTest {
+class OiyoSqlQueryListExprTest {
     final OiyokanCsdlEntityContainer localTemplateEntityContainer = new OiyokanCsdlEntityContainer();
 
     /**
@@ -77,7 +77,7 @@ class BasicSqlExprExpanderTest {
 
     @Test
     void test01() throws Exception {
-        if (!OiyokanTestConstants.IS_TEST_ODATATEST)
+        if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
             return;
 
         assertEquals("(ID = 1.0)", getExprString("/ODataTests1", //
@@ -86,7 +86,7 @@ class BasicSqlExprExpanderTest {
 
     @Test
     void test02() throws Exception {
-        if (!OiyokanTestConstants.IS_TEST_ODATATEST)
+        if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
             return;
 
         assertEquals("((Description = ?) AND (ID = 2.0))", getExprString("/ODataTests1", //
@@ -95,7 +95,7 @@ class BasicSqlExprExpanderTest {
 
     @Test
     void test03() throws Exception {
-        if (!OiyokanTestConstants.IS_TEST_ODATATEST)
+        if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
             return;
 
         assertEquals("((INSTR(Description,?) - 1) <> -1)", getExprString("/ODataTests1", //

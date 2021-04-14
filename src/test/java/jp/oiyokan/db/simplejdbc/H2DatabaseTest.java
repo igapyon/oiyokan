@@ -24,7 +24,7 @@ import java.sql.ResultSetMetaData;
 import org.junit.jupiter.api.Test;
 
 import jp.oiyokan.OiyokanConstants;
-import jp.oiyokan.OiyokanTestConstants;
+import jp.oiyokan.OiyokanTestSettingConstants;
 import jp.oiyokan.basic.OiyoBasicJdbcUtil;
 import jp.oiyokan.data.OiyokanKanDatabase;
 import jp.oiyokan.settings.OiyokanSettingsUtil;
@@ -35,7 +35,7 @@ import jp.oiyokan.settings.OiyokanSettingsUtil;
 class H2DatabaseTest {
     @Test
     void test01() throws Exception {
-        if (!OiyokanTestConstants.IS_TEST_ODATATEST)
+        if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
             return;
 
         try (Connection conn = OiyoBasicJdbcUtil
@@ -51,7 +51,7 @@ class H2DatabaseTest {
 
     @Test
     void testo2() throws Exception {
-        if (!OiyokanTestConstants.IS_TEST_ODATATEST)
+        if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
             return;
 
         try (Connection conn = OiyoBasicJdbcUtil
@@ -79,7 +79,7 @@ class H2DatabaseTest {
      */
     @Test
     void test03() throws Exception {
-        if (!OiyokanTestConstants.IS_TEST_ODATATEST)
+        if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
             return;
 
         try (Connection conn = OiyoBasicJdbcUtil
@@ -109,7 +109,7 @@ class H2DatabaseTest {
      */
     // @Test
     void testListTables() throws Exception {
-        if (!OiyokanTestConstants.IS_TEST_ODATATEST)
+        if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
             return;
 
         try (Connection conn = OiyoBasicJdbcUtil.getConnection(OiyokanSettingsUtil.getOiyokanDatabase("mysql1"))) {

@@ -15,7 +15,10 @@
  */
 package jp.oiyokan;
 
-public class OiyokanTestConstants {
+/**
+ * テスト実行に関しての設定情報
+ */
+public class OiyokanTestSettingConstants {
     public static final boolean IS_TEST_ODATATEST = true;
 
     public static final boolean IS_TEST_SAKILA = true;

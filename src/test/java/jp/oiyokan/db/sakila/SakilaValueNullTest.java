@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.apache.olingo.server.api.ODataResponse;
 import org.junit.jupiter.api.Test;
 
-import jp.oiyokan.OiyokanTestConstants;
+import jp.oiyokan.OiyokanTestSettingConstants;
 import jp.oiyokan.basic.OiyoBasicUrlUtil;
 import jp.oiyokan.util.OiyokanTestUtil;
 
@@ -37,7 +37,7 @@ class SakilaValueNullTest {
      */
     @Test
     void test01() throws Exception {
-        if (!OiyokanTestConstants.IS_TEST_SAKILA)
+        if (!OiyokanTestSettingConstants.IS_TEST_SAKILA)
             return;
 
         final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/SklAddresses", OiyoBasicUrlUtil.encodeUrlQuery(
@@ -58,7 +58,7 @@ class SakilaValueNullTest {
      */
     @Test
     void test02() throws Exception {
-        if (!OiyokanTestConstants.IS_TEST_SAKILA)
+        if (!OiyokanTestSettingConstants.IS_TEST_SAKILA)
             return;
 
         // NULLの件数をカウント.
@@ -80,7 +80,7 @@ class SakilaValueNullTest {
      */
     @Test
     void test03() throws Exception {
-        if (!OiyokanTestConstants.IS_TEST_SAKILA)
+        if (!OiyokanTestSettingConstants.IS_TEST_SAKILA)
             return;
 
         // NOT EQUAL NULL の件数をカウント.
