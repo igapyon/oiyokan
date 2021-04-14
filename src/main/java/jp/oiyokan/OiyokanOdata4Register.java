@@ -59,7 +59,7 @@ public class OiyokanOdata4Register {
         }
 
         if (OiyokanConstants.IS_TRACE_ODATA_V4)
-            System.err.println("OData v4: URI: " + uri);
+            System.err.println("OData v4: URI (" + req.getMethod() + "): " + uri);
 
         try {
             OData odata = OData.newInstance();
