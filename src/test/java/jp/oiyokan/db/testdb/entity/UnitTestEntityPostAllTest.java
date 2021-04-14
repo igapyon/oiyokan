@@ -24,9 +24,9 @@ import jp.oiyokan.OiyokanTestSettingConstants;
 import jp.oiyokan.util.OiyokanTestUtil;
 
 /**
- * Entityアクセスのフル桁に着眼したテスト.
+ * Entityアクセスのフル設定に着眼したテスト.
  */
-class UnitTestEntityPutTest {
+class UnitTestEntityPostAllTest {
     /**
      * テストデータが利用する ID 範囲。
      */

@@ -139,18 +139,4 @@ public class OiyokanTestUtil {
 
         return handler.process(req);
     }
-
-    public static ODataResponse callRequestPut(String rawODataPath, String bodyJson) throws Exception {
-        final ODataHttpHandler handler = OiyokanTestUtil.getHandler();
-        final ODataRequest req = new ODataRequest();
-        req.setMethod(HttpMethod.PUT);
-        req.setRawBaseUri("http://localhost:8080/odata4.svc");
-        req.setRawODataPath(rawODataPath);
-        req.setRawRequestUri(req.getRawBaseUri() + req.getRawODataPath());
-        req.addHeader("Content-type", "application/json; odata.metadata=minimal");
-
-        req.setBody(new ByteArrayInputStream(bodyJson.getBytes("UTF-8")));
-
-        return handler.process(req);
-    }
 }

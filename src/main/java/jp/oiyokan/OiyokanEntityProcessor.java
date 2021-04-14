@@ -192,9 +192,9 @@ public class OiyokanEntityProcessor implements EntityProcessor {
                 new OiyoBasicJdbcEntityOneBuilder().updateEntityDataPatch(uriInfo, edmEntitySet, keyPredicates,
                         requestEntity);
             } else if (request.getMethod().equals(HttpMethod.PUT)) {
-                // 指定項目以外、キー以外は null 設定
-                new OiyoBasicJdbcEntityOneBuilder().updateEntityDataPut(uriInfo, edmEntitySet, keyPredicates,
-                        requestEntity);
+                // [M016] NOT SUPPORTED: PUT: use PATCH to update Entity.
+                System.err.println(OiyokanMessages.M016);
+                throw new ODataApplicationException(OiyokanMessages.M016, OiyokanMessages.M206_CODE, Locale.ENGLISH);
             } else {
                 // [M216] UNEXPECTED: Must NOT pass this case.
                 System.err.println(OiyokanMessages.M216);

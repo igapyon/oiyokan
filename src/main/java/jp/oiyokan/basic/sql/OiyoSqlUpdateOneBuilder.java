@@ -21,7 +21,6 @@ import org.apache.olingo.commons.api.data.Entity;
 import org.apache.olingo.commons.api.data.Property;
 import org.apache.olingo.commons.api.edm.EdmEntitySet;
 import org.apache.olingo.commons.api.edm.provider.CsdlProperty;
-import org.apache.olingo.commons.api.edm.provider.CsdlPropertyRef;
 import org.apache.olingo.server.api.ODataApplicationException;
 import org.apache.olingo.server.api.uri.UriParameter;
 
@@ -77,70 +76,6 @@ public class OiyoSqlUpdateOneBuilder {
             sqlInfo.getSqlBuilder().append("=");
 
             OiyoBasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo, prop.getType(), prop.getValue());
-        }
-
-        sqlInfo.getSqlBuilder().append(" WHERE ");
-
-        isFirst = true;
-        for (UriParameter param : keyPredicates) {
-            if (isFirst) {
-                isFirst = false;
-            } else {
-                sqlInfo.getSqlBuilder().append(" AND ");
-            }
-            sqlInfo.getSqlBuilder().append(
-                    OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyokanNamingUtil.entity2Db(param.getName())));
-            sqlInfo.getSqlBuilder().append("=");
-
-            CsdlProperty csdlProp = sqlInfo.getEntitySet().getEntityType().getProperty(param.getName());
-            OiyoBasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo, csdlProp.getType(), param.getText());
-        }
-    }
-
-    /**
-     * Create DML for UPDATE (PUT).
-     * 
-     * @param edmEntitySet  instance of EdmEntitySet.
-     * @param keyPredicates keys to update.
-     * @param requestEntity entity to delete.
-     * @throws ODataApplicationException OData App exception occured.
-     */
-    public void buildUpdatePutDml(EdmEntitySet edmEntitySet, List<UriParameter> keyPredicates, Entity requestEntity)
-            throws ODataApplicationException {
-        sqlInfo.getSqlBuilder().append("UPDATE ");
-        sqlInfo.getSqlBuilder().append(
-                OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, sqlInfo.getEntitySet().getDbTableNameTargetIyo()));
-        sqlInfo.getSqlBuilder().append(" SET ");
-
-        // primary key 以外の全てが対象。指定のないものは null。
-        final List<CsdlPropertyRef> keys = sqlInfo.getEntitySet().getEntityType().getKey();
-        boolean isFirst = true;
-        CSDL_LOOP: for (CsdlProperty csdlProp : sqlInfo.getEntitySet().getEntityType().getProperties()) {
-            // KEY以外が対象。
-            for (CsdlPropertyRef key : keys) {
-                if (key.getName().equals(csdlProp.getName())) {
-                    // これはキー項目です。処理対象外.
-                    continue CSDL_LOOP;
-                }
-            }
-
-            if (isFirst) {
-                isFirst = false;
-            } else {
-                sqlInfo.getSqlBuilder().append(",");
-            }
-
-            sqlInfo.getSqlBuilder().append(
-                    OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyokanNamingUtil.entity2Db(csdlProp.getName())));
-
-            sqlInfo.getSqlBuilder().append("=");
-            Property prop = requestEntity.getProperty(csdlProp.getName());
-            if (prop != null) {
-                OiyoBasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo, csdlProp.getType(), prop.getValue());
-            } else {
-                // 指定のないものには nullをセット.
-                OiyoBasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo, csdlProp.getType(), null);
-            }
         }
 
         sqlInfo.getSqlBuilder().append(" WHERE ");

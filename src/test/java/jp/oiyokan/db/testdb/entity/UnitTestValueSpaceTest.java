@@ -64,13 +64,6 @@ class UnitTestValueSpaceTest {
         resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests4(I_D=" + TEST_ID + ",Na_me='Name2')", null);
         assertEquals(200, resp.getStatusCode());
 
-        // UPDATE (PUT)
-        resp = OiyokanTestUtil.callRequestPut("/ODataTests4(I_D=" + TEST_ID + ",Na_me='Name2')", "{\n" //
-                + "  \"Va_lue1\":\"Description3\"\n" + "}");
-        result = OiyokanTestUtil.stream2String(resp.getContent());
-        System.err.println(result);
-        assertEquals(204, resp.getStatusCode());
-
         /// 通常のfilter
         resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests4", "$filter=I_D eq " + TEST_ID);
         result = OiyokanTestUtil.stream2String(resp.getContent());
