@@ -321,21 +321,20 @@ public class OiyoBasicJdbcEntityOneBuilder {
 
             if (ifMatch) {
                 // If-Match header が '*' 指定されたら UPDATE.
-                System.err.println("TRACE: OiyoBasicJdbcEntityOneBuilder#updateEntityDataPatch: UPDATE (If-Match): "
-                        + edmEntitySet.getName());
+                if (OiyokanConstants.IS_TRACE_ODATA_V4)
+                    System.err.println("OData v4: TRACE: PATCH: UPDATE (If-Match): " + edmEntitySet.getName());
                 new OiyoSqlUpdateOneBuilder(sqlInfo).buildUpdatePatchDml(edmEntitySet, keyPredicates, requestEntity);
 
             } else if (ifNoneMatch) {
                 // If-None-Match header が '*' 指定されたら INSERT.
-                System.err
-                        .println("TRACE: OiyoBasicJdbcEntityOneBuilder#updateEntityDataPatch: INSERT (If-None-Match): "
-                                + edmEntitySet.getName());
+                if (OiyokanConstants.IS_TRACE_ODATA_V4)
+                    System.err.println("OData v4: TRACE: PATCH: INSERT (If-None-Match): " + edmEntitySet.getName());
                 new OiyoSqlInsertOneBuilder(sqlInfo).buildInsertIntoDml(edmEntitySet, keyPredicates, requestEntity);
 
             } else {
                 // If-Match header も If-None-Match header も指定がない場合は UPSERT.
-                System.err.println("TRACE: OiyoBasicJdbcEntityOneBuilder#updateEntityDataPatch: UPSERT: "
-                        + edmEntitySet.getName());
+                if (OiyokanConstants.IS_TRACE_ODATA_V4)
+                    System.err.println("OData v4: TRACE: PATCH: UPSERT: " + edmEntitySet.getName());
 
                 try {
                     // SELECT to check exists
