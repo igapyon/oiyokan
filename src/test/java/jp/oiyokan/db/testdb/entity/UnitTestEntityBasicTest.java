@@ -26,7 +26,7 @@ import jp.oiyokan.util.OiyokanTestUtil;
 /**
  * Entityの基本的なテスト.
  */
-class TestODataEntityDmlTestDbTest {
+class UnitTestEntityBasicTest {
     /**
      * テストデータが利用する ID 範囲。
      */

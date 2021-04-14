@@ -26,7 +26,7 @@ import jp.oiyokan.util.OiyokanTestUtil;
 /**
  * フィルタの型に着眼したテスト.
  */
-class TestODataIdentityTestDbTest {
+class UnitTestTypeIdentityTest {
     @Test
     void test01() throws Exception {
         if (!OiyokanTestConstants.IS_TEST_ODATATEST)

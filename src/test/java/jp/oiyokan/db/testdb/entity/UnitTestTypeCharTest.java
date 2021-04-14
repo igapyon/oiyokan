@@ -27,7 +27,7 @@ import jp.oiyokan.util.OiyokanTestUtil;
 /**
  * Entityアクセスのフル桁に着眼したテスト.
  */
-class TestODataEntityCHARTestDbTest {
+class UnitTestTypeCharTest {
     /**
      * テストデータが利用する ID 範囲。
      */

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jp.oiyokan.db.sakila;
+package jp.oiyokan.db.testdb.query;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -25,21 +25,20 @@ import jp.oiyokan.basic.OiyoBasicUrlUtil;
 import jp.oiyokan.util.OiyokanTestUtil;
 
 /**
- * 実際に発生した事象のテストケース.
+ * フィルタの型に着眼したテスト.
  */
-class TestDbActualFailCaseTest {
+class UnitTestQueryNotTest {
     @Test
-    void test01() throws Exception {
-        if (!OiyokanTestConstants.IS_TEST_SAKILA)
+    void testNotA() throws Exception {
+        if (!OiyokanTestConstants.IS_TEST_ODATATEST)
             return;
 
-        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/SklFilmActors", OiyoBasicUrlUtil.encodeUrlQuery(
-                "$top=2001 &$filter=actor_id eq 1 and film_id eq 140 &$count=true &$select=actor_id,film_id,last_update"));
+        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1", OiyoBasicUrlUtil
+                .encodeUrlQuery("&$filter=not contains(StringVar255,'VARCHAR255') &$count=true &$select=ID"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         // System.err.println("result: " + result);
-        assertEquals(
-                "{\"@odata.context\":\"$metadata#SklFilmActors\",\"@odata.count\":1,\"value\":[{\"actor_id\":1,\"film_id\":140,\"last_update\":\"2006-02-15T01:05:03Z\"}]}",
+        assertEquals("{\"@odata.context\":\"$metadata#ODataTests1\",\"@odata.count\":1,\"value\":[{\"ID\":204}]}",
                 result);
         assertEquals(200, resp.getStatusCode());
     }

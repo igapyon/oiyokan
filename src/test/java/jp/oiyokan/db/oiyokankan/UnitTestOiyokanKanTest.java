@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jp.oiyokan.db.appinfo;
+package jp.oiyokan.db.oiyokankan;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -26,7 +26,7 @@ import jp.oiyokan.util.OiyokanTestUtil;
 /**
  * ODataAppInfos についての Simple な Call Test.
  */
-class TestDbCallAppInfoTest {
+class UnitTestOiyokanKanTest {
     @Test
     void testSimpleVersion() throws Exception {
         final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/Oiyokans", "$top=1&$skip=1");

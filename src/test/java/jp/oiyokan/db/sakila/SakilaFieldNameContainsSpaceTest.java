@@ -20,8 +20,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.apache.olingo.server.api.ODataResponse;
 import org.junit.jupiter.api.Test;
 
-import jp.app.ctrl.ThSakilaCtrl;
-import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanTestConstants;
 import jp.oiyokan.basic.OiyoBasicUrlUtil;
 import jp.oiyokan.util.OiyokanTestUtil;
@@ -29,30 +27,25 @@ import jp.oiyokan.util.OiyokanTestUtil;
 /**
  * OData サーバについて、おおざっぱな通過によるデグレードを検知.
  */
-class TestDbCallSakilaAllQueryTest {
+class SakilaFieldNameContainsSpaceTest {
+    /**
+     * zip code 対応
+     */
     @Test
-    void test01() throws Exception {
+    void test02() throws Exception {
         if (!OiyokanTestConstants.IS_TEST_SAKILA)
             return;
 
-        for (String[] entrys : ThSakilaCtrl.ODATA_ENTRY_INFOS) {
-            if (entrys[0].indexOf("$search") >= 0) {
-                if (!OiyokanConstants.IS_EXPERIMENTAL_SEARCH_ENABLED) {
-                    // 実験的 $search について無効化されているためテストから除外.
-                    continue;
-                }
-            }
+        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/SklStaffLists", OiyoBasicUrlUtil.encodeUrlQuery(
+                "$count=true &$top=20 &$select=zip_code &$orderby=zip_code &$filter=zip_code eq '00000'"));
+        final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
-            String[] entry = entrys[1].split("['?']");
+        // System.err.println("dec: " + OiyokanTestUtil.decodeUrlQuery(
+        // "$count=true&$top=20&$select=zip_code&$orderby=zip_code&$filter=zip_code%20eq%20%2700000%27"));
 
-            final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse(entry[0], entry[1]);
-            final String result = OiyokanTestUtil.stream2String(resp.getContent());
-
-            if (false) {
-                System.err.println("TRACE: " + OiyoBasicUrlUtil.decodeUrlQuery(entrys[1]));
-                System.err.println("[" + entrys[0] + "], [" + entrys[1] + "], result: " + result);
-            }
-            assertEquals(200, resp.getStatusCode());
-        }
+        // System.err.println("result: " + result);
+        assertEquals("{\"@odata.context\":\"$metadata#SklStaffLists\",\"@odata.count\":0,\"value\":[]}", result,
+                "DB上で空白を含む項目名を処理できることの確認。");
+        assertEquals(200, resp.getStatusCode());
     }
 }

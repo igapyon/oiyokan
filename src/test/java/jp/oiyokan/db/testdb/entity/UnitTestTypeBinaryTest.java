@@ -17,16 +17,23 @@ package jp.oiyokan.db.testdb.entity;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.io.InputStream;
+import java.sql.Connection;
+
 import org.apache.olingo.server.api.ODataResponse;
 import org.junit.jupiter.api.Test;
+import org.springframework.util.StreamUtils;
 
+import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanTestConstants;
+import jp.oiyokan.basic.OiyoBasicJdbcUtil;
+import jp.oiyokan.settings.OiyokanSettingsUtil;
 import jp.oiyokan.util.OiyokanTestUtil;
 
 /**
  * Binary 型に着眼したテスト.
  */
-class TestODataBinaryTestDbTest {
+class UnitTestTypeBinaryTest {
     /**
      * テストデータが利用する ID 範囲。
      */
@@ -56,6 +63,26 @@ class TestODataBinaryTestDbTest {
         // System.err.println(result);
         assertEquals(200, resp.getStatusCode(), "INSERTしたレコードが格納されていることを確認.");
 
+        {
+            // generic JDBC
+            try (Connection conn = OiyoBasicJdbcUtil.getConnection(
+                    OiyokanSettingsUtil.getOiyokanDatabase(OiyokanConstants.OIYOKAN_INTERNAL_TARGET_DB))) {
+
+                try (var stmt = conn.prepareStatement("SELECT Binary1 FROM ODataTest6 WHERE ID = " + TEST_ID)) {
+                    stmt.executeQuery();
+                    var rset = stmt.getResultSet();
+                    assertEquals(true, rset.next());
+
+                    try (InputStream inStream = rset.getBinaryStream(1)) {
+                        byte[] binary1 = StreamUtils.copyToByteArray(inStream);
+                        String val = new String(binary1, "UTF-8");
+                        // System.err.println(val);
+                        assertEquals("Tonari no kyaku.", val, "INSERT後の値の正しさを確認.");
+                    }
+                }
+            }
+        }
+
         // UPDATE (PATCH)
         resp = OiyokanTestUtil.callRequestPatch("/ODataTests6(" + TEST_ID + ")", "{\n" //
                 + "  \"Binary1\":\"SG91cnl1amku\"\n" //
@@ -77,7 +104,7 @@ class TestODataBinaryTestDbTest {
                 + "  \"Binary1\":\"S2lua2FrdWppLg==\"\n" //
                 + "}");
         result = OiyokanTestUtil.stream2String(resp.getContent());
-        System.err.println(result);
+        // System.err.println(result);
         assertEquals(204, resp.getStatusCode(), "UPDATE(PUT)できることを確認.");
 
         resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests6(" + TEST_ID + ")", null);
@@ -91,7 +118,7 @@ class TestODataBinaryTestDbTest {
         /// 通常のfilter
         resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests6", "$filter=ID eq " + TEST_ID);
         result = OiyokanTestUtil.stream2String(resp.getContent());
-        System.err.println("TRACE: " + result);
+        // System.err.println("TRACE: " + result);
         assertEquals("{\"@odata.context\":\"$metadata#ODataTests6\",\"value\":[{\"ID\":" + TEST_ID
                 + ",\"Name\":null,\"Description\":null,\"Binary1\":\"S2lua2FrdWppLg==\",\"VarBinary1\":\"\",\"LongVarBinary1\":\"\",\"Blob1\":\"\"}]}",
                 result, "通常のFILTER検索ができることを確認.");

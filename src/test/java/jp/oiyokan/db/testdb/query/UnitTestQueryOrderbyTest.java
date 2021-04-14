@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jp.oiyokan.db.testdb;
+package jp.oiyokan.db.testdb.query;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -27,7 +27,7 @@ import jp.oiyokan.util.OiyokanTestUtil;
 /**
  * ごく基本的な OData の挙動を確認.
  */
-class TestODataBasicAtTestDbTest {
+class UnitTestQueryOrderbyTest {
     @Test
     void testSimpleOrderBy() throws Exception {
         if (!OiyokanTestConstants.IS_TEST_ODATATEST)

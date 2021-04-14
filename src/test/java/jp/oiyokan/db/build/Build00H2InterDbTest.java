@@ -32,7 +32,7 @@ import jp.oiyokan.settings.OiyokanSettingsUtil;
 /**
  * テスト用の内部データベースを作成します。この内部データベースは動作の上で必要です。
  */
-class Build00InternalTargetDbTest {
+class Build00H2InterDbTest {
     private static final String[][] OIYOKAN_FILE_SQLS = new String[][] { //
             /*
              * Oiyokan の基本機能を確認およびビルド時の JUnitテストで利用. 変更するとビルドが動作しなくなる場合あり.

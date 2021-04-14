@@ -29,7 +29,7 @@ import jp.oiyokan.util.OiyokanTestUtil;
  * 
  * IS NULL 関連
  */
-class TestDbCheckNullBehaviorTest {
+class SakilaValueNullTest {
     /**
      * リテラルの null 対応
      * 

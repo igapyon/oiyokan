@@ -26,7 +26,7 @@ import jp.oiyokan.util.OiyokanTestUtil;
 /**
  * フィルタの型に着眼したテスト.
  */
-class TestODataSpaceTestDbTest {
+class UnitTestValueSpaceTest {
     /**
      * テストデータが利用する ID 範囲。
      */
