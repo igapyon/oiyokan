@@ -338,59 +338,6 @@ public class OiyoBasicJdbcEntityOneBuilder {
         }
     }
 
-    /////////////////////////
-    // UPDATE (PUT)
-
-    /**
-     * Update Entity data (PUT).
-     * 
-     * @param uriInfo       URI info.
-     * @param edmEntitySet  EdmEntitySet.
-     * @param keyPredicates Keys to update.
-     * @param requestEntity Entity date for update.
-     * @throws ODataApplicationException OData App exception occured.
-     */
-    public void updateEntityDataPut(UriInfo uriInfo, EdmEntitySet edmEntitySet, List<UriParameter> keyPredicates,
-            Entity requestEntity) throws ODataApplicationException {
-        final OiyokanCsdlEntitySet entitySet = findEntitySet(edmEntitySet);
-        if (entitySet == null) {
-            // [M214] No such EntitySet found (updateEntity(PUT))
-            System.err.println(OiyokanMessages.M214);
-            throw new ODataApplicationException(OiyokanMessages.M214, //
-                    OiyokanMessages.M214_CODE, Locale.ENGLISH);
-        }
-
-        final OiyoSqlInfo sqlInfo = new OiyoSqlInfo(entitySet);
-        new OiyoSqlUpdateOneBuilder(sqlInfo).buildUpdatePutDml(edmEntitySet, keyPredicates, requestEntity);
-
-        // データベースに接続.
-        try (Connection connTargetDb = OiyoBasicJdbcUtil.getConnection(sqlInfo.getEntitySet().getSettingsDatabase())) {
-            // Set auto commit OFF.
-            connTargetDb.setAutoCommit(false);
-            boolean isTranSuccessed = false;
-
-            try {
-                OiyoBasicJdbcUtil.executeDml(connTargetDb, sqlInfo, false);
-
-                // トランザクションを成功としてマーク.
-                isTranSuccessed = true;
-            } finally {
-                if (isTranSuccessed) {
-                    connTargetDb.commit();
-                } else {
-                    connTargetDb.rollback();
-                }
-                // Set auto commit ON.
-                connTargetDb.setAutoCommit(true);
-            }
-        } catch (SQLException ex) {
-            // [M205] Fail to execute SQL.
-            System.err.println(OiyokanMessages.M205 + ": " + ex.toString());
-            throw new ODataApplicationException(OiyokanMessages.M205, //
-                    OiyokanMessages.M205_CODE, Locale.ENGLISH);
-        }
-    }
-
     // TODO FIXME 以下のメソッドは共通関数化を検討すること.
     /**
      * Find EntitySet.

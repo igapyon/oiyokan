@@ -810,9 +810,10 @@ public class OiyoBasicJdbcUtil {
 
             return generatedKeys;
         } catch (SQLIntegrityConstraintViolationException ex) {
-            // [M202] Integrity constraint violation occured (DML). 一意制約違反.
+            // [M202] Integrity constraint violation occured (DML). 制約違反.
             System.err.println(OiyokanMessages.M202 + ": " + sql + ", " + ex.toString());
-            throw new ODataApplicationException(OiyokanMessages.M202 + ": " + sql, //
+            // 制約違反だけだと意味が不明であろうからメッセージも返却.
+            throw new ODataApplicationException(OiyokanMessages.M202 + ": " + sql + ": " + ex.getMessage(), //
                     OiyokanMessages.M202_CODE, Locale.ENGLISH);
         } catch (SQLTimeoutException ex) {
             // [M203] SQL timeout at execute.

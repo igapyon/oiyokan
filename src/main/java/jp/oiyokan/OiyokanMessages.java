@@ -41,7 +41,8 @@ public class OiyokanMessages {
     public static final String M014 = "[M014] NOT SUPPORTED: URI: $expand";
     public static final int M014_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
     public static final String M015 = "[M015] UNEXPECTED: An error occurred in SQL that counts the number of search results.";
-    // M016
+    public static final String M016 = "[M016] NOT SUPPORTED: PUT: use PATCH to update Entity.";
+    public static final int M016_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
     public static final String M017 = "[M017] Fail to execute SQL";
     public static final int M017_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
     public static final String M018 = "[M018] UNEXPECTED: Fail to create ID EntitySet name";
@@ -111,7 +112,7 @@ public class OiyokanMessages {
 
     public static final String M201 = "[M201] NO record processed. No Entity effects.";
     public static final int M201_CODE = HttpStatusCode.NOT_FOUND.getStatusCode();
-    public static final String M202 = "[M202] Integrity constraint violation occured (DML). 一意制約違反.";
+    public static final String M202 = "[M202] Integrity constraint violation occured (DML). 制約違反.";
     public static final int M202_CODE = HttpStatusCode.CONFLICT.getStatusCode();
     public static final String M203 = "[M203] SQL timeout at execute.";
     public static final int M203_CODE = HttpStatusCode.REQUEST_TIMEOUT.getStatusCode();

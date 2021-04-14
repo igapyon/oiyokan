@@ -37,7 +37,7 @@ class UnitTestTypeBinaryTest {
     /**
      * テストデータが利用する ID 範囲。
      */
-    private static final int TEST_ID = 11391;
+    private static final int TEST_ID = 11392;
 
     @Test
     void test01() throws Exception {
@@ -100,28 +100,12 @@ class UnitTestTypeBinaryTest {
                 result, "UPDATE(PATCH)後の値を確認.");
         assertEquals(200, resp.getStatusCode());
 
-        // UPDATE (PUT)
-        resp = OiyokanTestUtil.callRequestPut("/ODataTests6(" + TEST_ID + ")", "{\n" //
-                + "  \"Binary1\":\"S2lua2FrdWppLg==\"\n" //
-                + "}");
-        result = OiyokanTestUtil.stream2String(resp.getContent());
-        // System.err.println(result);
-        assertEquals(204, resp.getStatusCode(), "UPDATE(PUT)できることを確認.");
-
-        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests6(" + TEST_ID + ")", null);
-        result = OiyokanTestUtil.stream2String(resp.getContent());
-        assertEquals("{\"@odata.context\":\"$metadata#ODataTests6\",\"ID\":" + TEST_ID
-                + ",\"Name\":null,\"Description\":null" //
-                + ",\"Binary1\":\"S2lua2FrdWppLg==\",\"VarBinary1\":\"\",\"LongVarBinary1\":\"\",\"Blob1\":\"\"}",
-                result, "UPDATE(PUT)後の値を確認.");
-        assertEquals(200, resp.getStatusCode());
-
         /// 通常のfilter
         resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests6", "$filter=ID eq " + TEST_ID);
         result = OiyokanTestUtil.stream2String(resp.getContent());
         // System.err.println("TRACE: " + result);
         assertEquals("{\"@odata.context\":\"$metadata#ODataTests6\",\"value\":[{\"ID\":" + TEST_ID
-                + ",\"Name\":null,\"Description\":null,\"Binary1\":\"S2lua2FrdWppLg==\",\"VarBinary1\":\"\",\"LongVarBinary1\":\"\",\"Blob1\":\"\"}]}",
+                + ",\"Name\":\"Binary UnitTest\",\"Description\":\"Binary UnitTest table.\",\"Binary1\":\"SG91cnl1amku\",\"VarBinary1\":\"VG9uYXJpIG5vIGt5YWt1Lg==\",\"LongVarBinary1\":\"VG9uYXJpIG5vIGt5YWt1Lg==\",\"Blob1\":\"VG9uYXJpIG5vIGt5YWt1Lg==\"}]}",
                 result, "通常のFILTER検索ができることを確認.");
         assertEquals(200, resp.getStatusCode());
 
