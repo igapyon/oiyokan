@@ -54,8 +54,8 @@ public class OiyoSqlInsertOneBuilder {
      */
     public void buildInsertIntoDml(EdmEntitySet edmEntitySet, Entity requestEntity) throws ODataApplicationException {
         sqlInfo.getSqlBuilder().append("INSERT INTO ");
-        sqlInfo.getSqlBuilder()
-                .append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, sqlInfo.getEntitySet().getDbTableNameTargetIyo()));
+        sqlInfo.getSqlBuilder().append(
+                OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, sqlInfo.getEntitySet().getDbTableNameTargetIyo()));
         sqlInfo.getSqlBuilder().append(" (");
         boolean isFirst = true;
         for (Property prop : requestEntity.getProperties()) {

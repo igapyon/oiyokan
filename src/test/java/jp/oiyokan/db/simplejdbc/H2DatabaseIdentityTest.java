@@ -24,7 +24,7 @@ import java.sql.Statement;
 
 import org.junit.jupiter.api.Test;
 
-import jp.oiyokan.OiyokanTestConstants;
+import jp.oiyokan.OiyokanTestSettingConstants;
 
 /**
  * ごく基本的で大雑把な JDBC + h2 database 挙動の確認.
@@ -32,7 +32,7 @@ import jp.oiyokan.OiyokanTestConstants;
 class H2DatabaseIdentityTest {
     @Test
     void test01() throws Exception {
-        if (!OiyokanTestConstants.IS_TEST_ODATATEST)
+        if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
             return;
 
         try (Connection conn = DriverManager.getConnection("jdbc:h2:mem:identest")) {

@@ -22,7 +22,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 /**
- * 一番外側のレベルからの疎通確認
+ * Olingoとして一番上位に該当する OiyokanOdata4Register からの動作確認。
  */
 class OiyokanOdata4RegisterTest {
     @Test
