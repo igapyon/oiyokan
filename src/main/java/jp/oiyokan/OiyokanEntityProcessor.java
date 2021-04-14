@@ -193,7 +193,8 @@ public class OiyokanEntityProcessor implements EntityProcessor {
                         requestEntity);
             } else if (request.getMethod().equals(HttpMethod.PUT)) {
                 // 指定項目以外、キー以外は null 設定
-                new OiyoBasicJdbcEntityOneBuilder().updateEntityDataPut(uriInfo, edmEntitySet, keyPredicates, requestEntity);
+                new OiyoBasicJdbcEntityOneBuilder().updateEntityDataPut(uriInfo, edmEntitySet, keyPredicates,
+                        requestEntity);
             } else {
                 // [M216] UNEXPECTED: Must NOT pass this case.
                 System.err.println(OiyokanMessages.M216);

@@ -14,16 +14,12 @@ import java.time.format.DateTimeParseException;
  */
 public class OiyoBasicDateTimeUtil {
     private static final DateTimeFormatter[] OFPATTERNS_DATETIME = new DateTimeFormatter[] { //
-            DateTimeFormatter.ISO_DATE, //
             DateTimeFormatter.ISO_DATE_TIME, //
             DateTimeFormatter.ISO_INSTANT, //
-            DateTimeFormatter.ISO_LOCAL_DATE, //
             DateTimeFormatter.ISO_LOCAL_DATE_TIME, //
             DateTimeFormatter.ISO_LOCAL_TIME, //
-            DateTimeFormatter.ISO_OFFSET_DATE, //
             DateTimeFormatter.ISO_OFFSET_DATE_TIME, //
             DateTimeFormatter.ISO_OFFSET_TIME, //
-            DateTimeFormatter.ISO_ORDINAL_DATE, //
             DateTimeFormatter.ISO_TIME, //
             DateTimeFormatter.ISO_ZONED_DATE_TIME, //
             DateTimeFormatter.RFC_1123_DATE_TIME, //
@@ -53,7 +49,6 @@ public class OiyoBasicDateTimeUtil {
         if (modifiedInputDateString.length() > 10 && modifiedInputDateString.charAt(10) == ' ') {
             // T を埋め込み.
             modifiedInputDateString = inputDateString.substring(0, 10) + "T" + inputDateString.substring(11);
-            System.err.println("TRACE: " + modifiedInputDateString);
         }
 
         // パターン引き当て.
@@ -61,27 +56,27 @@ public class OiyoBasicDateTimeUtil {
             try {
                 return ZonedDateTime.parse(modifiedInputDateString, ofpattern);
             } catch (DateTimeParseException e) {
-                System.err.println(
-                        "TRACE: val(" + modifiedInputDateString + "), pat(" + ofpattern + "): " + e.toString());
+            }
+        }
+
+        for (DateTimeFormatter pattern : OFPATTERNS_DATE) {
+            try {
+                // 日付は、UTCで00:00:00 の値を戻す.
+                final LocalDate ld = LocalDate.parse(modifiedInputDateString, pattern);
+                return ZonedDateTime.of(ld.getYear(), ld.getMonth().getValue(), ld.getDayOfMonth(), 0, 0, 0, 0,
+                        ZoneId.of("UTC"));
+            } catch (DateTimeParseException e) {
             }
         }
 
         try {
-            LocalDate ld = LocalDate.parse(modifiedInputDateString, DateTimeFormatter.ISO_LOCAL_DATE);
-            return ZonedDateTime.of(ld.getYear(), ld.getMonth().getValue(), ld.getDayOfMonth(), 0, 0, 0, 0,
-                    ZoneId.of("UTC"));
-        } catch (DateTimeParseException e) {
-        }
-
-        try {
-            // デフォルト挙動もトライ.
+            // デフォルト挙動もだめ押しでトライ.
             return ZonedDateTime.parse(modifiedInputDateString);
         } catch (DateTimeParseException e) {
-            // System.err.println("TRACE: val(" + modifiedInputDateString + "): " +
-            // e.toString());
         }
 
         try {
+            // 旧式のパースにも挑戦
             for (String pattern : CLASSICPATTERNS) {
                 // 最後の手段として、旧式APIでのパース.
                 SimpleDateFormat sdf = new SimpleDateFormat(pattern);
@@ -91,7 +86,9 @@ public class OiyoBasicDateTimeUtil {
         } catch (ParseException e) {
         }
 
-        throw new IllegalArgumentException("パースできない[" + inputDateString + "]");
+        // TODO to be message
+        System.err.println("Illegal DateTime pattern: Fail to parse: [" + inputDateString + "]");
+        throw new IllegalArgumentException("Illegal DateTime pattern: Fail to parse: [" + inputDateString + "]");
     }
 
     public static ZonedDateTime date2ZonedDateTime(java.util.Date arg) {
