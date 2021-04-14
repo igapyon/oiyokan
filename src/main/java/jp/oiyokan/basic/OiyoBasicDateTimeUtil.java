@@ -3,16 +3,42 @@ package jp.oiyokan.basic;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 /**
  * Basic DateTime util for Oiyokan.
  */
 public class OiyoBasicDateTimeUtil {
-    // TODO ゾーン指定付きを追加
-    private static final String[] PATTERNS = new String[] { "yyyy-MM-dd HH:mm:ss.SSS", "yyyy-MM-dd HH:mm:ss",
-            "yyyy-MM-dd" };
+    private static final DateTimeFormatter[] OFPATTERNS_DATETIME = new DateTimeFormatter[] { //
+            DateTimeFormatter.ISO_DATE, //
+            DateTimeFormatter.ISO_DATE_TIME, //
+            DateTimeFormatter.ISO_INSTANT, //
+            DateTimeFormatter.ISO_LOCAL_DATE, //
+            DateTimeFormatter.ISO_LOCAL_DATE_TIME, //
+            DateTimeFormatter.ISO_LOCAL_TIME, //
+            DateTimeFormatter.ISO_OFFSET_DATE, //
+            DateTimeFormatter.ISO_OFFSET_DATE_TIME, //
+            DateTimeFormatter.ISO_OFFSET_TIME, //
+            DateTimeFormatter.ISO_ORDINAL_DATE, //
+            DateTimeFormatter.ISO_TIME, //
+            DateTimeFormatter.ISO_ZONED_DATE_TIME, //
+            DateTimeFormatter.RFC_1123_DATE_TIME, //
+    };
+
+    private static final DateTimeFormatter[] OFPATTERNS_DATE = new DateTimeFormatter[] { //
+            DateTimeFormatter.ISO_DATE, //
+            DateTimeFormatter.ISO_INSTANT, //
+            DateTimeFormatter.ISO_LOCAL_DATE, //
+            DateTimeFormatter.ISO_OFFSET_DATE, //
+            DateTimeFormatter.ISO_ORDINAL_DATE, //
+    };
+    private static final String[] CLASSICPATTERNS = new String[] { //
+            "yyyy-MM-dd'T'HH:mm:ss.SSS", //
+    };
 
     /**
      * Parse datetime string.
@@ -21,31 +47,48 @@ public class OiyoBasicDateTimeUtil {
      * @return Parsed DateTime.
      */
     public static ZonedDateTime parseStringDateTime(String inputDateString) {
-        for (String pattern : PATTERNS) {
+        String modifiedInputDateString = inputDateString;
+
+        // T のある状態に更新.
+        if (modifiedInputDateString.length() > 10 && modifiedInputDateString.charAt(10) == ' ') {
+            // T を埋め込み.
+            modifiedInputDateString = inputDateString.substring(0, 10) + "T" + inputDateString.substring(11);
+            System.err.println("TRACE: " + modifiedInputDateString);
+        }
+
+        // パターン引き当て.
+        for (DateTimeFormatter ofpattern : OFPATTERNS_DATETIME) {
             try {
-                SimpleDateFormat sdf = new SimpleDateFormat(pattern);
-                java.util.Date look = sdf.parse(inputDateString);
-                return date2ZonedDateTime(look);
-            } catch (ParseException e) {
+                return ZonedDateTime.parse(modifiedInputDateString, ofpattern);
+            } catch (DateTimeParseException e) {
+                System.err.println(
+                        "TRACE: val(" + modifiedInputDateString + "), pat(" + ofpattern + "): " + e.toString());
             }
         }
 
-        for (String pattern : PATTERNS) {
-            try {
-                String modifiedInputDateString = inputDateString;
-                if (modifiedInputDateString.length() > 10 && modifiedInputDateString.charAt(10) == 'T') {
-                    modifiedInputDateString = inputDateString.substring(0, 10) + " " + inputDateString.substring(11);
-                }
-                if (modifiedInputDateString.endsWith("Z")) {
-                    modifiedInputDateString = modifiedInputDateString.substring(0,
-                            modifiedInputDateString.length() - 1);
-                }
+        try {
+            LocalDate ld = LocalDate.parse(modifiedInputDateString, DateTimeFormatter.ISO_LOCAL_DATE);
+            return ZonedDateTime.of(ld.getYear(), ld.getMonth().getValue(), ld.getDayOfMonth(), 0, 0, 0, 0,
+                    ZoneId.of("UTC"));
+        } catch (DateTimeParseException e) {
+        }
 
+        try {
+            // デフォルト挙動もトライ.
+            return ZonedDateTime.parse(modifiedInputDateString);
+        } catch (DateTimeParseException e) {
+            // System.err.println("TRACE: val(" + modifiedInputDateString + "): " +
+            // e.toString());
+        }
+
+        try {
+            for (String pattern : CLASSICPATTERNS) {
+                // 最後の手段として、旧式APIでのパース.
                 SimpleDateFormat sdf = new SimpleDateFormat(pattern);
                 java.util.Date look = sdf.parse(modifiedInputDateString);
                 return date2ZonedDateTime(look);
-            } catch (ParseException e) {
             }
+        } catch (ParseException e) {
         }
 
         throw new IllegalArgumentException("パースできない[" + inputDateString + "]");

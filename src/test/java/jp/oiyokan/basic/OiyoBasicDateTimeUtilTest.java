@@ -1,5 +1,10 @@
 package jp.oiyokan.basic;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+
 import org.junit.jupiter.api.Test;
 
 /**
@@ -9,9 +14,24 @@ class OiyoBasicDateTimeUtilTest {
 
     @Test
     void test() {
-        OiyoBasicDateTimeUtil.parseStringDateTime("2021-04-10 19:12:49.082587");
 
-        OiyoBasicDateTimeUtil.parseStringDateTime("1970-01-01T10:12:49Z");
+        ZonedDateTime zdt = OiyoBasicDateTimeUtil.parseStringDateTime("2021-04-10T19:12:49.082Z");
+        // System.err.println(zdt.toString());
+
+        zdt = OiyoBasicDateTimeUtil.parseStringDateTime("2021-04-10 19:12:49.082Z");
+        // System.err.println(zdt.toString());
+
+        // TODO FIXME 時間がずれる!?
+        zdt = OiyoBasicDateTimeUtil.parseStringDateTime("2021-04-10T19:12:49.082587");
+        // System.err.println(zdt.toString());
+
+        zdt = OiyoBasicDateTimeUtil.parseStringDateTime("2021-04-10T19:12:49.082587Z");
+        // System.err.println(zdt.toString());
+
+        zdt = OiyoBasicDateTimeUtil.parseStringDateTime("2021-04-10T19:12:49Z");
+        // System.err.println(zdt.toString());
+
+        zdt = OiyoBasicDateTimeUtil.parseStringDateTime("2021-04-10");
+        // System.err.println(zdt.toString());
     }
-
 }
