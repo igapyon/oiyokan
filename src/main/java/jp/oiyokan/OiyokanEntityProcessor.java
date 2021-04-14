@@ -187,10 +187,13 @@ public class OiyokanEntityProcessor implements EntityProcessor {
             final Entity requestEntity = result.getEntity();
 
             if (request.getMethod().equals(HttpMethod.PATCH)) {
+                final boolean ifMatch = ("*".equals(request.getHeader("If-Match")));
+                final boolean ifNoneMatch = ("*".equals(request.getHeader("If-None-Match")));
+
                 // 指定項目のみ設定
                 // in case of PATCH, the existing property is not touched
                 new OiyoBasicJdbcEntityOneBuilder().updateEntityDataPatch(uriInfo, edmEntitySet, keyPredicates,
-                        requestEntity);
+                        requestEntity, ifMatch, ifNoneMatch);
             } else if (request.getMethod().equals(HttpMethod.PUT)) {
                 // [M016] NOT SUPPORTED: PUT: use PATCH to update Entity.
                 System.err.println(OiyokanMessages.M016);

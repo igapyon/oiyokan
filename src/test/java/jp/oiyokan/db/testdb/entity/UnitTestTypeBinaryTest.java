@@ -34,15 +34,12 @@ import jp.oiyokan.util.OiyokanTestUtil;
  * Binary 型に着眼したテスト.
  */
 class UnitTestTypeBinaryTest {
-    /**
-     * テストデータが利用する ID 範囲。
-     */
-    private static final int TEST_ID = 11392;
-
     @Test
     void test01() throws Exception {
         if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
             return;
+
+        final int TEST_ID = OiyokanTestUtil.getNextUniqueId();
 
         ODataResponse resp = OiyokanTestUtil.callRequestPost("/ODataTests6", "{\n" //
                 + "  \"ID\":" + TEST_ID + "\n" //
@@ -87,7 +84,7 @@ class UnitTestTypeBinaryTest {
         // UPDATE (PATCH)
         resp = OiyokanTestUtil.callRequestPatch("/ODataTests6(" + TEST_ID + ")", "{\n" //
                 + "  \"Binary1\":\"SG91cnl1amku\"\n" //
-                + "}");
+                + "}", false, false);
         result = OiyokanTestUtil.stream2String(resp.getContent());
         // System.err.println(result);
         assertEquals(204, resp.getStatusCode(), "UPDATE(PATCH)できることを確認.");

@@ -159,7 +159,7 @@ public class OiyoBasicJdbcEntityOneBuilder {
         }
 
         final OiyoSqlInfo sqlInfo = new OiyoSqlInfo(entitySet);
-        new OiyoSqlInsertOneBuilder(sqlInfo).buildInsertIntoDml(edmEntitySet, requestEntity);
+        new OiyoSqlInsertOneBuilder(sqlInfo).buildInsertIntoDml(edmEntitySet, null, requestEntity);
 
         // データベースに接続.
         boolean isTranSuccessed = false;
@@ -288,6 +288,7 @@ public class OiyoBasicJdbcEntityOneBuilder {
 
     ////////////////////////
     // UPDATE (PATCH)
+    // OiyokanはPUTをサポートしない
 
     /**
      * Update Entity data (PATCH).
@@ -296,10 +297,12 @@ public class OiyoBasicJdbcEntityOneBuilder {
      * @param edmEntitySet  EdmEntitySet.
      * @param keyPredicates Keys to update.
      * @param requestEntity Entity date for update.
+     * @param ifMatch       Header If-Match.
+     * @param ifNoneMatch   Header If-None-Match.
      * @throws ODataApplicationException OData App exception occured.
      */
     public void updateEntityDataPatch(UriInfo uriInfo, EdmEntitySet edmEntitySet, List<UriParameter> keyPredicates,
-            Entity requestEntity) throws ODataApplicationException {
+            Entity requestEntity, final boolean ifMatch, final boolean ifNoneMatch) throws ODataApplicationException {
         final OiyokanCsdlEntitySet entitySet = findEntitySet(edmEntitySet);
         if (entitySet == null) {
             // [M213] No such EntitySet found (updateEntity(PATCH))
@@ -309,13 +312,48 @@ public class OiyoBasicJdbcEntityOneBuilder {
         }
 
         final OiyoSqlInfo sqlInfo = new OiyoSqlInfo(entitySet);
-        new OiyoSqlUpdateOneBuilder(sqlInfo).buildUpdatePatchDml(edmEntitySet, keyPredicates, requestEntity);
 
         // データベースに接続.
         try (Connection connTargetDb = OiyoBasicJdbcUtil.getConnection(sqlInfo.getEntitySet().getSettingsDatabase())) {
             // Set auto commit OFF.
             connTargetDb.setAutoCommit(false);
             boolean isTranSuccessed = false;
+
+            if (ifMatch) {
+                // If-Match header が '*' 指定されたら UPDATE.
+                if (OiyokanConstants.IS_TRACE_ODATA_V4)
+                    System.err.println("OData v4: TRACE: PATCH: UPDATE (If-Match): " + edmEntitySet.getName());
+                new OiyoSqlUpdateOneBuilder(sqlInfo).buildUpdatePatchDml(edmEntitySet, keyPredicates, requestEntity);
+
+            } else if (ifNoneMatch) {
+                // If-None-Match header が '*' 指定されたら INSERT.
+                if (OiyokanConstants.IS_TRACE_ODATA_V4)
+                    System.err.println("OData v4: TRACE: PATCH: INSERT (If-None-Match): " + edmEntitySet.getName());
+                new OiyoSqlInsertOneBuilder(sqlInfo).buildInsertIntoDml(edmEntitySet, keyPredicates, requestEntity);
+
+            } else {
+                // If-Match header も If-None-Match header も指定がない場合は UPSERT.
+                if (OiyokanConstants.IS_TRACE_ODATA_V4)
+                    System.err.println("OData v4: TRACE: PATCH: UPSERT: " + edmEntitySet.getName());
+
+                try {
+                    // SELECT to check exists
+                    readEntityData(connTargetDb, uriInfo, edmEntitySet, keyPredicates);
+
+                    // UPDATE
+                    new OiyoSqlUpdateOneBuilder(sqlInfo).buildUpdatePatchDml(edmEntitySet, keyPredicates,
+                            requestEntity);
+                } catch (ODataApplicationException ex) {
+                    if (OiyokanMessages.M207_CODE != ex.getStatusCode()) {
+                        // そのまま throw.
+                        throw ex;
+                    }
+
+                    // INSERT
+                    new OiyoSqlInsertOneBuilder(sqlInfo).buildInsertIntoDml(edmEntitySet, keyPredicates, requestEntity);
+                }
+            }
+
             try {
                 OiyoBasicJdbcUtil.executeDml(connTargetDb, sqlInfo, false);
 

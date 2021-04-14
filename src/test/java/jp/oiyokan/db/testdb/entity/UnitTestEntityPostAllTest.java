@@ -27,16 +27,13 @@ import jp.oiyokan.util.OiyokanTestUtil;
  * Entityアクセスのフル設定に着眼したテスト.
  */
 class UnitTestEntityPostAllTest {
-    /**
-     * テストデータが利用する ID 範囲。
-     */
-    private static final int TEST_ID = 10018;
-
     @Test
     void test01() throws Exception {
         if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
             return;
 
+        final int TEST_ID = OiyokanTestUtil.getNextUniqueId();
+        
         // FULL INSERT
         ODataResponse resp = OiyokanTestUtil.callRequestPost("/ODataTests3", //
                 "{\n" //

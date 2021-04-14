@@ -15,10 +15,14 @@
  */
 package jp.oiyokan.basic.sql;
 
+import java.util.List;
+
 import org.apache.olingo.commons.api.data.Entity;
 import org.apache.olingo.commons.api.data.Property;
 import org.apache.olingo.commons.api.edm.EdmEntitySet;
+import org.apache.olingo.commons.api.edm.provider.CsdlProperty;
 import org.apache.olingo.server.api.ODataApplicationException;
+import org.apache.olingo.server.api.uri.UriParameter;
 
 import jp.oiyokan.basic.OiyoBasicJdbcUtil;
 import jp.oiyokan.settings.OiyokanNamingUtil;
@@ -49,15 +53,31 @@ public class OiyoSqlInsertOneBuilder {
      * Create DML for INSERT.
      * 
      * @param edmEntitySet  instance of EdmEntitySet.
-     * @param requestEntity entity to delete.
+     * @param keyPredicates (PATCH) key to insert.
+     * @param requestEntity entity to insert.
      * @throws ODataApplicationException OData App exception occured.
      */
-    public void buildInsertIntoDml(EdmEntitySet edmEntitySet, Entity requestEntity) throws ODataApplicationException {
+    public void buildInsertIntoDml(EdmEntitySet edmEntitySet, List<UriParameter> keyPredicates, Entity requestEntity)
+            throws ODataApplicationException {
         sqlInfo.getSqlBuilder().append("INSERT INTO ");
         sqlInfo.getSqlBuilder().append(
                 OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, sqlInfo.getEntitySet().getDbTableNameTargetIyo()));
         sqlInfo.getSqlBuilder().append(" (");
         boolean isFirst = true;
+
+        // PATCH(INSERT)
+        if (keyPredicates != null) {
+            for (UriParameter param : keyPredicates) {
+                if (isFirst) {
+                    isFirst = false;
+                } else {
+                    sqlInfo.getSqlBuilder().append(",");
+                }
+                sqlInfo.getSqlBuilder().append(
+                        OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyokanNamingUtil.entity2Db(param.getName())));
+            }
+        }
+
         for (Property prop : requestEntity.getProperties()) {
             if (isFirst) {
                 isFirst = false;
@@ -72,6 +92,21 @@ public class OiyoSqlInsertOneBuilder {
 
         sqlInfo.getSqlBuilder().append(") VALUES (");
         isFirst = true;
+
+        // PATCH(INSERT)
+        if (keyPredicates != null) {
+            for (UriParameter param : keyPredicates) {
+                if (isFirst) {
+                    isFirst = false;
+                } else {
+                    sqlInfo.getSqlBuilder().append(",");
+                }
+
+                CsdlProperty csdlProp = sqlInfo.getEntitySet().getEntityType().getProperty(param.getName());
+                OiyoBasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo, csdlProp.getType(), param.getText());
+            }
+        }
+
         for (Property prop : requestEntity.getProperties()) {
             if (isFirst) {
                 isFirst = false;
