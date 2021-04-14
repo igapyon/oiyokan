@@ -32,13 +32,12 @@ class UnitTestTypeIdentityTest {
         if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
             return;
 
-        // INSERT + DELETE
         ODataResponse resp = OiyokanTestUtil.callRequestPost("/ODataTests5", "{\n" //
                 + "  \"Name\":\"Name\"\n" //
                 + "}");
         String result = OiyokanTestUtil.stream2String(resp.getContent());
         // System.err.println(result);
-        assertEquals(201, resp.getStatusCode());
+        assertEquals(201, resp.getStatusCode(), "Iden1が引き当てられないとエラーになる.");
 
         int indexOf = result.indexOf("\",\"Iden1\":");
         String subString = result.substring(indexOf + "\",\"Iden1\":".length());

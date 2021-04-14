@@ -31,7 +31,7 @@ class UnitTestTypeCharTest {
     /**
      * テストデータが利用する ID 範囲。
      */
-    private static final int TEST_ID = 10023;
+    private static final int TEST_ID = 10123;
 
     @Test
     void test01() throws Exception {
@@ -102,7 +102,8 @@ class UnitTestTypeCharTest {
         System.err.println(result);
         assertEquals(204, resp.getStatusCode());
 
-        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests2(" + OiyoBasicUrlUtil.encodeUrlQuery(uri) + ")", null);
+        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests2(" + OiyoBasicUrlUtil.encodeUrlQuery(uri) + ")",
+                null);
         assertEquals(404, resp.getStatusCode());
     }
 
@@ -124,7 +125,8 @@ class UnitTestTypeCharTest {
                         + "}");
         String result = OiyokanTestUtil.stream2String(resp.getContent());
         System.err.println("TRACE: " + result);
-        assertEquals(201, resp.getStatusCode());
+        assertEquals(201, resp.getStatusCode(), //
+                "CHAR項目がINSERTできることの確認. MySQL ではここが失敗する。後方に半角スペースを付与が必要 (既知の問題)");
 
         resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests2", null);
         result = OiyokanTestUtil.stream2String(resp.getContent());
@@ -145,7 +147,8 @@ class UnitTestTypeCharTest {
         // System.err.println(result);
         assertEquals(204, resp.getStatusCode());
 
-        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests2(" + OiyoBasicUrlUtil.encodeUrlQuery(uri) + ")", null);
+        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests2(" + OiyoBasicUrlUtil.encodeUrlQuery(uri) + ")",
+                null);
         assertEquals(404, resp.getStatusCode());
     }
 }

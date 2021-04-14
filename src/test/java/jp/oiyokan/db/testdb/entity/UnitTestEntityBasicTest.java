@@ -46,8 +46,8 @@ class UnitTestEntityBasicTest {
                 + "  \"Name\":\"Name\",\n" //
                 + "  \"Description\":\"Description\"\n" + "}");
         String result = OiyokanTestUtil.stream2String(resp.getContent());
-        // System.err.println("TRACE: " + result);
-        assertEquals(201, resp.getStatusCode());
+        System.err.println("TRACE: " + result);
+        assertEquals(201, resp.getStatusCode(), "SQLServer2008でエラー。(既知の問題). varbinaryとtextと混同.");
 
         resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests3(" + TEST_ID + ")", null);
         assertEquals(200, resp.getStatusCode());
@@ -95,6 +95,8 @@ class UnitTestEntityBasicTest {
         resp = OiyokanTestUtil.callRequestPut("/ODataTests3(" + TEST_ID + ")", "{\n" //
                 + "  \"Name\":\"Name2\",\n" //
                 + "  \"Description\":\"Description2\"\n" + "}");
+        result = OiyokanTestUtil.stream2String(resp.getContent());
+        // System.err.println(result);
         assertEquals(204, resp.getStatusCode());
 
         resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests3(" + TEST_ID + ")", null);
@@ -127,7 +129,7 @@ class UnitTestEntityBasicTest {
         resp = OiyokanTestUtil.callRequestPut("/ODataTests3(9876543)", "{\n" //
                 + "  \"Name\":\"Name2\",\n" //
                 + "  \"Description\":\"Description2\"\n" + "}");
-        assertEquals(404, resp.getStatusCode());
+        assertEquals(404, resp.getStatusCode(), "SQLServer2008でエラー。(既知の問題)");
 
         resp = OiyokanTestUtil.callRequestDelete("/ODataTests3(9876543)");
         assertEquals(404, resp.getStatusCode());

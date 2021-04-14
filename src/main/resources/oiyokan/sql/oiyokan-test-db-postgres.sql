@@ -28,30 +28,12 @@ CREATE TABLE
 
 CREATE TABLE IF NOT EXISTS
   ODataTest2 (
-    ID INT NOT NULL
-    , Name VARCHAR(80) NOT NULL
-    , Description VARCHAR(250)
-    , Sbyte1 SMALLINT DEFAULT 127
-    , Int16a SMALLINT DEFAULT 32767
-    , Int32a INT DEFAULT 2147483647
-    , Int64a BIGINT DEFAULT 2147483647
-    , Decimal1 DECIMAL(6,2) DEFAULT 1234.56
+    Decimal1 DECIMAL(6,2) DEFAULT 1234.56
     , StringChar8 CHAR(8) DEFAULT 'CHAR_VAL'
     , StringVar255 VARCHAR(255) DEFAULT 'VARCHAR255'
-    , StringLongVar1 VARCHAR(2000) DEFAULT 'LONGVARCHAR'
-    , Clob1 TEXT DEFAULT 'CLOB'
-    , Boolean1 BOOLEAN DEFAULT FALSE NOT NULL
-    , Single1 REAL DEFAULT 123.456789
-    , Double1 DOUBLE PRECISION DEFAULT 123.4567890123
-    , Date1 DATE DEFAULT CURRENT_DATE NOT NULL
-    , DateTimeOffset1 TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
-    , TimeOfDay1 TIME DEFAULT CURRENT_TIME
-    , Binary1 bytea
-    , VarBinary1 bytea
-    , LongVarBinary1 bytea
-    , Blob1 bytea
-    , Uuid1 UUID DEFAULT gen_random_uuid()
-    , PRIMARY KEY(ID,Decimal1,StringVar255)
+    , Name VARCHAR(80) NOT NULL
+    , Description VARCHAR(250)
+    , PRIMARY KEY(Decimal1,StringChar8,StringVar255)
   );
 
 CREATE TABLE IF NOT EXISTS
@@ -96,6 +78,18 @@ CREATE TABLE IF NOT EXISTS
     , Name VARCHAR(80) DEFAULT 'Name1'
     , Value1 VARCHAR(255) DEFAULT 'VALUEVALUE12345'
     , PRIMARY KEY(Iden1)
+  );
+
+CREATE TABLE IF NOT EXISTS
+  ODataTest6 (
+    ID INT NOT NULL
+    , Name VARCHAR(80) DEFAULT 'Binary UnitTest'
+    , Description VARCHAR(250) DEFAULT 'Binary UnitTest table.'
+    , Binary1 bytea
+    , VarBinary1 bytea
+    , LongVarBinary1 bytea
+    , Blob1 bytea
+    , PRIMARY KEY(ID)
   );
 
 INSERT INTO ODataTest1 (ID, Name, Description) VALUES (

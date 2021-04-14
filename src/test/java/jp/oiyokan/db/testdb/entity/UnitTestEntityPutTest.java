@@ -66,7 +66,8 @@ class UnitTestEntityPutTest {
                         + "}");
         String result = OiyokanTestUtil.stream2String(resp.getContent());
         System.err.println("TRACE: " + result);
-        assertEquals(201, resp.getStatusCode());
+        assertEquals(201, resp.getStatusCode(), //
+                "Postgresにおいて、uuidのエラーで失敗する (既知の問題), MySQLでもUUIDの桁溢れエラー (既知の問題)");
 
         resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests3(" + TEST_ID + ")", null);
         assertEquals(200, resp.getStatusCode());

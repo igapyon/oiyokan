@@ -161,7 +161,7 @@ class UnitTestQueryBinaryTest {
 
         // System.err.println("result: " + result);
         assertEquals("{\"@odata.context\":\"$metadata#ODataTests1\",\"@odata.count\":204,\"value\":[{\"ID\":1}]}",
-                result);
+                result, "Postgresの場合にヒットできない (既知の問題)");
         assertEquals(200, resp.getStatusCode());
     }
 
@@ -200,13 +200,14 @@ class UnitTestQueryBinaryTest {
         if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
             return;
 
-        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1", OiyoBasicUrlUtil.encodeUrlQuery(
-                "&$filter=StringVar255 eq 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' or StringVar255 eq 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' and StringLongVar1 eq 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' or Clob1 eq 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' &$count=true &$select=ID"));
+        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1",
+                OiyoBasicUrlUtil.encodeUrlQuery(
+                        "&$filter=StringVar255 eq 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' or StringVar255 eq 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' and StringLongVar1 eq 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' or Clob1 eq 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' &$count=true &$select=ID"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         // System.err.println("result: " + result);
         assertEquals("{\"@odata.context\":\"$metadata#ODataTests1\",\"@odata.count\":1,\"value\":[{\"ID\":204}]}",
-                result);
+                result, "MSSQL2008でエラー(既知の問題)");
         assertEquals(200, resp.getStatusCode());
     }
 
@@ -230,13 +231,13 @@ class UnitTestQueryBinaryTest {
         if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
             return;
 
-        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1",
-                OiyoBasicUrlUtil.encodeUrlQuery("&$filter=Clob1 eq 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' &$count=true &$select=ID"));
+        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1", OiyoBasicUrlUtil
+                .encodeUrlQuery("&$filter=Clob1 eq 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' &$count=true &$select=ID"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         // System.err.println("result: " + result);
         assertEquals("{\"@odata.context\":\"$metadata#ODataTests1\",\"@odata.count\":1,\"value\":[{\"ID\":204}]}",
-                result);
+                result, "MSSQL2008でエラー(既知の問題)");
         assertEquals(200, resp.getStatusCode());
     }
 }
