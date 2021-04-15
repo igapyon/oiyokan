@@ -1,8 +1,31 @@
 # Oiyokan spec memo
 
-## Mapping memo at standard
+## Supported target RDBMS
 
-### OData v4 JSON format
+- PostgreSQL (13)
+- MySQL (8)
+- SQL Server (2008)
+- Oracle XE (18c)
+
+## Supported OData Method
+
+- GET
+- POST
+- PATCH
+- DELETE
+
+## Supported OData system query options
+
+- $select
+- $count
+- $filter
+- $orderby
+- $top
+- $skip
+
+# Mapping memo at standard
+
+## OData v4 JSON format
 
 see:
 https://docs.oasis-open.org/odata/odata-json-format/v4.01/odata-json-format-v4.01.html
@@ -18,10 +41,10 @@ https://docs.oasis-open.org/odata/odata-json-format/v4.01/odata-json-format-v4.0
 
 http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odata-v4.0-errata03-os-part3-csdl-complete.html#_Toc453752517
 
-### [OData-ABNF]
+## [OData-ABNF]
 
 - http://docs.oasis-open.org/odata/odata/v4.01/csprd03/abnf/odata-abnf-construction-rules.txt
 
-### JSON at RFC
+## JSON at RFC
 
 - https://tools.ietf.org/html/rfc8259

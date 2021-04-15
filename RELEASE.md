@@ -1,3 +1,19 @@
+# Release 1.3 (2021-04-15)
+
+## EN
+
+- Changed the behavior of PATCH to be correct
+- Removed PUT method support
+- Corresponding methods are now GET, POST, PATCH, DELETE.
+- Support for ROWID of getGeneratedKeys of ORACLE
+
+## JA
+
+- PATCH の挙動を正しくなるよう変更
+- PUT メソッド対応を除去
+- 対応メソッドは、GET, POST, PATCH, DELETE になった。
+- ORACLE の getGeneratedKeys の ROWID 対応
+
 # Release 1.2 (2021-04-11)
 
 ## EN
