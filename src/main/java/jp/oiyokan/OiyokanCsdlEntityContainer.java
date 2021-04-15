@@ -26,7 +26,7 @@ import org.apache.olingo.commons.api.edm.provider.CsdlEntitySet;
 import org.apache.olingo.commons.api.edm.provider.CsdlEntityType;
 import org.apache.olingo.server.api.ODataApplicationException;
 
-import jp.oiyokan.basic.BasicJdbcEntityTypeBuilder;
+import jp.oiyokan.basic.OiyoBasicJdbcEntityTypeBuilder;
 import jp.oiyokan.data.OiyokanKanDatabase;
 import jp.oiyokan.dto.OiyokanSettings;
 import jp.oiyokan.dto.OiyokanSettingsDatabase;
@@ -186,7 +186,7 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
 
         // 処理したことのない EntityType。これから型情報を構築。
         // 内部データベースをもとに Oiyo形式を構築するため、リソースの型によらず常に以下のクラスで処理.
-        BasicJdbcEntityTypeBuilder entityTypeBuilder = new BasicJdbcEntityTypeBuilder(
+        OiyoBasicJdbcEntityTypeBuilder entityTypeBuilder = new OiyoBasicJdbcEntityTypeBuilder(
                 getEntitySetByEntityNameFqnIyo(entityTypeName));
 
         // キャッシュに記憶.

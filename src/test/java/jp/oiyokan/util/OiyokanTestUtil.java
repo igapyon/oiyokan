@@ -126,7 +126,8 @@ public class OiyokanTestUtil {
     /////////////////
     // UPDATE
 
-    public static ODataResponse callRequestPatch(String rawODataPath, String bodyJson) throws Exception {
+    public static ODataResponse callRequestPatch(String rawODataPath, String bodyJson, final boolean ifMatch,
+            final boolean ifNoneMatch) throws Exception {
         final ODataHttpHandler handler = OiyokanTestUtil.getHandler();
         final ODataRequest req = new ODataRequest();
         req.setMethod(HttpMethod.PATCH);
@@ -134,23 +135,25 @@ public class OiyokanTestUtil {
         req.setRawODataPath(rawODataPath);
         req.setRawRequestUri(req.getRawBaseUri() + req.getRawODataPath());
         req.addHeader("Content-type", "application/json; odata.metadata=minimal");
+        if (ifMatch) {
+            req.addHeader("If-Match", "*");
+        }
+        if (ifNoneMatch) {
+            req.addHeader("If-None-Match", "*");
+        }
 
         req.setBody(new ByteArrayInputStream(bodyJson.getBytes("UTF-8")));
 
         return handler.process(req);
     }
 
-    public static ODataResponse callRequestPut(String rawODataPath, String bodyJson) throws Exception {
-        final ODataHttpHandler handler = OiyokanTestUtil.getHandler();
-        final ODataRequest req = new ODataRequest();
-        req.setMethod(HttpMethod.PUT);
-        req.setRawBaseUri("http://localhost:8080/odata4.svc");
-        req.setRawODataPath(rawODataPath);
-        req.setRawRequestUri(req.getRawBaseUri() + req.getRawODataPath());
-        req.addHeader("Content-type", "application/json; odata.metadata=minimal");
+    private static final Object lock = new Object();
+    private static volatile int nextUniqueId = 20000;
 
-        req.setBody(new ByteArrayInputStream(bodyJson.getBytes("UTF-8")));
-
-        return handler.process(req);
+    public static final int getNextUniqueId() {
+        synchronized (lock) {
+            return nextUniqueId++;
+        }
     }
+
 }

@@ -30,7 +30,7 @@ import org.apache.olingo.server.api.ODataApplicationException;
 
 import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanMessages;
-import jp.oiyokan.basic.BasicJdbcUtil;
+import jp.oiyokan.basic.OiyoBasicJdbcUtil;
 import jp.oiyokan.dto.OiyokanSettingsDatabase;
 import jp.oiyokan.settings.OiyokanSettingsUtil;
 
@@ -45,17 +45,17 @@ public class OiyokanKanDatabase {
             /*
              * Oiyokan の基本機能を確認およびビルド時の JUnitテストで利用. 変更するとビルドが動作しなくなる場合あり.
              */
-            { OiyokanConstants.OIYOKAN_INTERNAL_DB, "oiyokan-test-oiyo.sql" },
+            { OiyokanConstants.OIYOKAN_KAN_DB, "oiyokan-test-oiyo.sql" },
 
             /*
              * Sakila dvdrental サンプルDB に接続するための Oiyo 情報.
              */
-            { OiyokanConstants.OIYOKAN_INTERNAL_DB, "sample-sakila-oiyo.sql" },
+            { OiyokanConstants.OIYOKAN_KAN_DB, "sample-sakila-oiyo.sql" },
 
             /*
              * Oiyokan のターゲットデータベースの Oiyo情報を記述。github上では空白ファイルとする.
              */
-            { OiyokanConstants.OIYOKAN_INTERNAL_DB, "oiyokan-oiyo.sql" }, };
+            { OiyokanConstants.OIYOKAN_KAN_DB, "oiyokan-oiyo.sql" }, };
 
     private OiyokanKanDatabase() {
     }
@@ -72,9 +72,9 @@ public class OiyokanKanDatabase {
                     "OData v4: setup oiyokanKan database (Oiyokan: " + OiyokanConstants.VERSION + ")");
 
         OiyokanSettingsDatabase settingsInterDatabase = OiyokanSettingsUtil
-                .getOiyokanDatabase(OiyokanConstants.OIYOKAN_INTERNAL_DB);
+                .getOiyokanDatabase(OiyokanConstants.OIYOKAN_KAN_DB);
 
-        try (Connection connInterDb = BasicJdbcUtil.getConnection(settingsInterDatabase)) {
+        try (Connection connInterDb = OiyoBasicJdbcUtil.getConnection(settingsInterDatabase)) {
             // Internal Database の バージョン情報および Oiyokanテーブルを setup.
 
             // Oiyokan が動作する上で必要なテーブルのセットアップ.
@@ -115,7 +115,7 @@ public class OiyokanKanDatabase {
             ///////////////////////////////////////////
             // ODataAppInfos にバージョン情報などデータの追加
             try (var stmt = connInterDb.prepareStatement("INSERT INTO Oiyokan (KeyName, KeyValue) VALUES ("
-                    + BasicJdbcUtil.getQueryPlaceholderString(2) + ")")) {
+                    + OiyoBasicJdbcUtil.getQueryPlaceholderString(2) + ")")) {
                 stmt.setString(1, "Version");
                 stmt.setString(2, OiyokanConstants.VERSION);
                 stmt.executeUpdate();
@@ -138,7 +138,7 @@ public class OiyokanKanDatabase {
 
                 OiyokanSettingsDatabase lookDatabase = OiyokanSettingsUtil.getOiyokanDatabase(sqlFileDef[0]);
 
-                try (Connection connLoookDatabase = BasicJdbcUtil.getConnection(lookDatabase)) {
+                try (Connection connLoookDatabase = OiyoBasicJdbcUtil.getConnection(lookDatabase)) {
                     final String[] sqls = OiyokanResourceSqlUtil.loadOiyokanResourceSql("oiyokan/sql/" + sqlFileDef[1]);
                     for (String sql : sqls) {
                         try (var stmt = connLoookDatabase.prepareStatement(sql.trim())) {

@@ -1,12 +1,8 @@
-DROP TABLE ODataTest2;
-DROP TABLE ODataTest3;
-DROP TABLE "OData Test4";
-
-CREATE TABLE
+CREATE table
   ODataTest1 (
     ID INT NOT NULL
-    , Name VARCHAR(80) NOT NULL
-    , Description VARCHAR(250)
+    , Name VARCHAR(80) DEFAULT 'Types UnitTest' NOT NULL
+    , Description VARCHAR(250) DEFAULT 'Types UnitTest table.' NOT NULL
     , Sbyte1 SMALLINT DEFAULT 127
     , Int16a SMALLINT DEFAULT 32767
     , Int32a INT DEFAULT 2147483647
@@ -26,14 +22,23 @@ CREATE TABLE
     , VarBinary1 RAW(128)
     , LongVarBinary1 RAW(2000)
     , Blob1 BLOB
-    , Uuid1 RAW(16)
     , PRIMARY KEY(ID)
   );
 
 CREATE TABLE
   ODataTest2 (
+    Decimal1 DECIMAL(6,2) DEFAULT 1234.56
+    , StringChar8 CHAR(8) DEFAULT 'CHAR_VAL'
+    , StringVar255 VARCHAR(255) DEFAULT 'VARCHAR255'
+    , Name VARCHAR(80) DEFAULT 'Multi-col UnitTest' NOT NULL
+    , Description VARCHAR(250)
+    , PRIMARY KEY(Decimal1,StringChar8,StringVar255)
+  );
+
+CREATE TABLE
+  ODataTest3 (
     ID INT NOT NULL
-    , Name VARCHAR(80) NOT NULL
+    , Name VARCHAR(80) DEFAULT 'NULLABLE UnitTest'
     , Description VARCHAR(250)
     , Sbyte1 SMALLINT DEFAULT 127
     , Int16a SMALLINT DEFAULT 32767
@@ -43,38 +48,10 @@ CREATE TABLE
     , StringChar8 CHAR(8) DEFAULT 'CHAR_VAL'
     , StringVar255 VARCHAR(255) DEFAULT 'VARCHAR255'
     , StringLongVar1 VARCHAR(2000) DEFAULT 'LONGVARCHAR'
-    , Clob1 CLOB DEFAULT 'CLOB'
-    , Boolean1 NUMERIC(1,0) DEFAULT 0 NOT NULL
-    , Single1 REAL DEFAULT 123.456789
-    , Double1 FLOAT DEFAULT 123.4567890123
-    , Date1 DATE DEFAULT CURRENT_DATE NOT NULL
-    , DateTimeOffset1 TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
-    , TimeOfDay1 TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    , Binary1 RAW(128)
-    , VarBinary1 RAW(128)
-    , LongVarBinary1 RAW(2000)
-    , Blob1 BLOB
-    , Uuid1 RAW(16)
-    , PRIMARY KEY(ID,Decimal1,StringVar255)
-  );
-
-CREATE TABLE
-  ODataTest3 (
-    ID INT
-    , Name VARCHAR(80)
-    , Description VARCHAR(250)
-    , Sbyte1 SMALLINT DEFAULT 127
-    , Int16a SMALLINT DEFAULT 32767
-    , Int32a INT DEFAULT 2147483647
-    , Int64a INT DEFAULT 2147483647
-    , Decimal1 DECIMAL(6,2) DEFAULT 1234.56
-    , StringChar8 CHAR(8)
-    , StringVar255 VARCHAR(255)
-    , StringLongVar1 VARCHAR(2000)
     , Clob1 CLOB
     , Boolean1 NUMERIC(1,0)
-    , Single1 REAL
-    , Double1 FLOAT
+    , Single1 REAL DEFAULT 123.456789
+    , Double1 FLOAT DEFAULT 123.4567890123
     , Date1 DATE
     , DateTimeOffset1 TIMESTAMP
     , TimeOfDay1 TIMESTAMP
@@ -82,7 +59,6 @@ CREATE TABLE
     , VarBinary1 RAW(128)
     , LongVarBinary1 RAW(2000)
     , Blob1 BLOB
-    , Uuid1 RAW(16)
     , PRIMARY KEY(ID)
   );
 
@@ -97,11 +73,31 @@ CREATE TABLE
 CREATE TABLE
   ODataTest5 (
     Iden1 INT GENERATED ALWAYS AS IDENTITY
-    , Name VARCHAR(80) DEFAULT 'Name1'
+    , Name VARCHAR(80) DEFAULT 'IDENTITY UnitTest'
     , Value1 VARCHAR(255) DEFAULT 'VALUEVALUE12345'
     , PRIMARY KEY(Iden1)
   );
 
+CREATE TABLE
+  ODataTest6 (
+    ID INT NOT NULL
+    , Name VARCHAR(80) DEFAULT 'Binary UnitTest'
+    , Description VARCHAR(250) DEFAULT 'Binary UnitTest table.'
+    , Binary1 RAW(128)
+    , VarBinary1 RAW(128)
+    , LongVarBinary1 RAW(2000)
+    , Blob1 BLOB
+    , PRIMARY KEY(ID)
+  );
+
+CREATE TABLE
+  ODataTest7 (
+    ID INT NOT NULL
+    , Name VARCHAR(80) DEFAULT 'UUID UnitTest'
+    , Description VARCHAR(250) DEFAULT 'UUID UnitTest table.'
+    , Uuid1 RAW(16)
+    , PRIMARY KEY(ID)
+  );
 
 INSERT INTO ODataTest1 (ID, Name, Description) VALUES (
   1, 'MacBookPro16,2', 'MacBook Pro (13-inch, 2020, Thunderbolt 3ポートx 4)');

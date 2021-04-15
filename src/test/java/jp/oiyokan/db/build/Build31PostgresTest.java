@@ -20,7 +20,7 @@ import java.sql.SQLException;
 
 import org.junit.jupiter.api.Test;
 
-import jp.oiyokan.basic.BasicJdbcUtil;
+import jp.oiyokan.basic.OiyoBasicJdbcUtil;
 import jp.oiyokan.data.OiyokanResourceSqlUtil;
 import jp.oiyokan.dto.OiyokanSettingsDatabase;
 import jp.oiyokan.settings.OiyokanSettingsUtil;
@@ -31,6 +31,16 @@ import jp.oiyokan.settings.OiyokanSettingsUtil;
  * Postgres での単体テスト実施時に利用します。
  */
 class Build31PostgresTest {
+    private static final String[] DROP_TABLE_SQLS = new String[] { //
+            "DROP TABLE ODataTest1", //
+            "DROP TABLE ODataTest2", //
+            "DROP TABLE ODataTest3", //
+            "DROP TABLE \"OData Test4\"", //
+            "DROP TABLE ODataTest5", //
+            "DROP TABLE ODataTest6", //
+            "DROP TABLE ODataTest7", //
+    };
+
     @Test
     void test01() throws Exception {
         if (true)
@@ -38,7 +48,15 @@ class Build31PostgresTest {
 
         OiyokanSettingsDatabase settingsDatabase = OiyokanSettingsUtil.getOiyokanDatabase("postgres1");
 
-        try (Connection connTargetDb = BasicJdbcUtil.getConnection(settingsDatabase)) {
+        try (Connection connTargetDb = OiyoBasicJdbcUtil.getConnection(settingsDatabase)) {
+            for (String sql : DROP_TABLE_SQLS) {
+                try (var stmt = connTargetDb.prepareStatement(sql)) {
+                    stmt.executeUpdate();
+                } catch (SQLException ex) {
+                    System.err.println(ex.toString());
+                }
+            }
+
             String[] sqls = OiyokanResourceSqlUtil
                     .loadOiyokanResourceSql("oiyokan/sql/" + "oiyokan-test-db-postgres.sql");
             for (String sql : sqls) {

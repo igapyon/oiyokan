@@ -25,7 +25,7 @@ import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Test;
 
-import jp.oiyokan.basic.BasicJdbcUtil;
+import jp.oiyokan.basic.OiyoBasicJdbcUtil;
 import jp.oiyokan.data.OiyokanKanDatabase;
 import jp.oiyokan.dto.OiyokanSettingsDatabase;
 import jp.oiyokan.settings.OiyokanSettingsUtil;
@@ -34,7 +34,7 @@ import jp.oiyokan.settings.OiyokanSettingsUtil;
  * 内部データベース用のCSDL用内部テーブルのDDLをコマンドライン生成.
  */
 class GenOiyoGenericAllTest {
-    private static final String TARGET_SETTINGS_DATABASE = "oiyokanInternalTarget";
+    private static final String TARGET_UNITTEST_DATABASE = "oiyoUnitTestDb";
 
     /**
      * このテストを実施するかどうか。
@@ -54,9 +54,9 @@ class GenOiyoGenericAllTest {
             return;
         }
 
-        OiyokanSettingsDatabase settingsDatabase = OiyokanSettingsUtil.getOiyokanDatabase(TARGET_SETTINGS_DATABASE);
+        OiyokanSettingsDatabase settingsDatabase = OiyokanSettingsUtil.getOiyokanDatabase(TARGET_UNITTEST_DATABASE);
 
-        try (Connection connTargetDb = BasicJdbcUtil.getConnection(settingsDatabase)) {
+        try (Connection connTargetDb = OiyoBasicJdbcUtil.getConnection(settingsDatabase)) {
             final List<String> tableNameList = new ArrayList<>();
 
             ResultSet rset = connTargetDb.getMetaData().getTables(null, "%", "%", new String[] { "TABLE", "VIEW" });

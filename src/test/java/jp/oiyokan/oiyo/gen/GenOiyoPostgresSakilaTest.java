@@ -17,8 +17,8 @@ package jp.oiyokan.oiyo.gen;
 
 import java.sql.Connection;
 
-import jp.oiyokan.OiyokanTestConstants;
-import jp.oiyokan.basic.BasicJdbcUtil;
+import jp.oiyokan.OiyokanTestSettingConstants;
+import jp.oiyokan.basic.OiyoBasicJdbcUtil;
 import jp.oiyokan.data.OiyokanKanDatabase;
 import jp.oiyokan.dto.OiyokanSettingsDatabase;
 import jp.oiyokan.settings.OiyokanSettingsUtil;
@@ -34,12 +34,12 @@ class GenOiyoPostgresSakilaTest {
      */
     // @Test
     void test01() throws Exception {
-        if (!OiyokanTestConstants.IS_TEST_SAKILA)
+        if (!OiyokanTestSettingConstants.IS_TEST_SAKILA)
             return;
 
         OiyokanSettingsDatabase settingsDatabase = OiyokanSettingsUtil.getOiyokanDatabase("postgres1");
 
-        try (Connection connTargetDb = BasicJdbcUtil.getConnection(settingsDatabase)) {
+        try (Connection connTargetDb = OiyoBasicJdbcUtil.getConnection(settingsDatabase)) {
             System.err.println(OiyokanKanDatabase.generateCreateOiyoDdl(connTargetDb, "actor"));
 
             System.err.println(OiyokanKanDatabase.generateCreateOiyoDdl(connTargetDb, "actor_info"));

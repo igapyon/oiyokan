@@ -41,7 +41,7 @@ import org.apache.olingo.server.api.uri.UriResource;
 import org.apache.olingo.server.api.uri.UriResourceEntitySet;
 import org.apache.olingo.server.core.uri.queryoption.CountOptionImpl;
 
-import jp.oiyokan.basic.BasicJdbcEntityCollectionBuilder;
+import jp.oiyokan.basic.OiyoBasicJdbcEntityCollectionBuilder;
 
 /**
  * Oiyokan による EntityCollectionProcessor 実装.
@@ -161,7 +161,7 @@ public class OiyokanEntityCollectionProcessor implements EntityCollectionProcess
         case ORACLE:
         default:
             // 大抵のデータベース向けには BasicJdbcEntityCollectionBuilder を利用する。
-            return new BasicJdbcEntityCollectionBuilder();
+            return new OiyoBasicJdbcEntityCollectionBuilder();
         case BigQuery:
             // TODO FIXME BigQuery用の実装が必要.
             // [M999] NOT IMPLEMENTED: Generic NOT implemented message.
