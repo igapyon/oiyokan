@@ -77,7 +77,7 @@
 			"dbTableNameTarget": "Oiyokan"
 		},
 		{
-			"name": "oiyokan-test-database",
+			"name": "UnitTest-Types",
 			"description": "Oiyokan internal Target Test Entity.[FOR UNIT TEST].",
 			"entitySetName": "ODataTests1",
 			"entityName": "ODataTest1",
@@ -86,7 +86,7 @@
 			"dbTableNameTarget": "ODataTest1"
 		},
 		{
-			"name": "oiyokan-test-database2",
+			"name": "UnitTest-Multi-col",
 			"description": "Oiyokan internal Target Test Entity. 複数項目で一意のサンプル.",
 			"entitySetName": "ODataTests2",
 			"entityName": "ODataTest2",
@@ -95,7 +95,7 @@
 			"dbTableNameTarget": "ODataTest2"
 		},
 		{
-			"name": "oiyokan-test-database3",
+			"name": "UnitTest-NULLABLE",
 			"description": "Oiyokan internal Target Test Entity. キー以外がnull許容のサンプル.",
 			"entitySetName": "ODataTests3",
 			"entityName": "ODataTest3",
@@ -104,7 +104,7 @@
 			"dbTableNameTarget": "ODataTest3"
 		},
 		{
-			"name": "oiyokan-test-database4",
+			"name": "UnitTest-ColumnNameW/Space",
 			"description": "Oiyokan internal Target Test Entity. 空白含み項目.",
 			"entitySetName": "ODataTests4",
 			"entityName": "ODataTest4",
@@ -113,7 +113,7 @@
 			"dbTableNameTarget": "OData Test4"
 		},
 		{
-			"name": "oiyokan-test-database5",
+			"name": "UnitTest-IDENTITY",
 			"description": "Oiyokan internal Target Test Entity. 自動採番.",
 			"entitySetName": "ODataTests5",
 			"entityName": "ODataTest5",
@@ -122,7 +122,7 @@
 			"dbTableNameTarget": "ODataTest5"
 		},
 		{
-			"name": "oiyokan-test-database6",
+			"name": "UnitTest-Binary",
 			"description": "Oiyokan internal Target Test Entity. BINARY.",
 			"entitySetName": "ODataTests6",
 			"entityName": "ODataTest6",
@@ -131,7 +131,16 @@
 			"dbTableNameTarget": "ODataTest6"
 		},
 		{
-			"name": "oiyokan-test-database-fulltext",
+			"name": "UnitTest-UUID",
+			"description": "Oiyokan internal Target Test Entity. UUID.",
+			"entitySetName": "ODataTests7",
+			"entityName": "ODataTest7",
+			"databaseName": "oiyokanInternalTarget",
+			"dbTableNameLocal": "OiyoODataTest7",
+			"dbTableNameTarget": "ODataTest7"
+		},
+		{
+			"name": "UnitTest-Fulltext",
 			"description": "Oiyokan internal Target Test Entity (Fulltext - Experimental). Used for build unit test.",
 			"entitySetName": "ODataTestFulls1",
 			"entityName": "ODataTestFull1",

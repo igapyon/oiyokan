@@ -33,7 +33,7 @@ class UnitTestEntityPostAllTest {
             return;
 
         final int TEST_ID = OiyokanTestUtil.getNextUniqueId();
-        
+
         // FULL INSERT
         ODataResponse resp = OiyokanTestUtil.callRequestPost("/ODataTests3", //
                 "{\n" //
@@ -58,8 +58,7 @@ class UnitTestEntityPostAllTest {
                         + "  \"Binary1\": \"SGVsbG8gd29ybGQh\",\n" //
                         + "  \"VarBinary1\": \"SGVsbG8gd29ybGQh\",\n" //
                         + "  \"LongVarBinary1\": \"SGVsbG8gd29ybGQh\",\n" //
-                        + "  \"Blob1\": \"SGVsbG8gd29ybGQh\",\n" //
-                        + "  \"Uuid1\": \"8a98afad-72f0-40ae-a401-e92775ec02dd\"\n" //
+                        + "  \"Blob1\": \"SGVsbG8gd29ybGQh\"\n" //
                         + "}");
         String result = OiyokanTestUtil.stream2String(resp.getContent());
         System.err.println("TRACE: " + result);

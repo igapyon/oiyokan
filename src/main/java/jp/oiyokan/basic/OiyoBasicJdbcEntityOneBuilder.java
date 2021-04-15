@@ -74,6 +74,9 @@ public class OiyoBasicJdbcEntityOneBuilder {
             throw new ODataApplicationException(OiyokanMessages.M206, OiyokanMessages.M206_CODE, Locale.ENGLISH);
         }
 
+        if (OiyokanConstants.IS_TRACE_ODATA_V4)
+            System.err.println("OData v4: TRACE: ENTITY: READ: " + edmEntitySet.getName());
+
         final OiyoSqlInfo sqlInfo = new OiyoSqlInfo(entitySet);
         new OiyoSqlQueryOneBuilder(sqlInfo).buildSelectOneQuery(edmEntitySet, keyPredicates);
 
@@ -157,6 +160,9 @@ public class OiyoBasicJdbcEntityOneBuilder {
             throw new ODataApplicationException(OiyokanMessages.M211, //
                     OiyokanMessages.M211_CODE, Locale.ENGLISH);
         }
+
+        if (OiyokanConstants.IS_TRACE_ODATA_V4)
+            System.err.println("OData v4: TRACE: ENTITY: CREATE: " + edmEntitySet.getName());
 
         final OiyoSqlInfo sqlInfo = new OiyoSqlInfo(entitySet);
         new OiyoSqlInsertOneBuilder(sqlInfo).buildInsertIntoDml(edmEntitySet, null, requestEntity);
@@ -256,6 +262,9 @@ public class OiyoBasicJdbcEntityOneBuilder {
                     OiyokanMessages.M212_CODE, Locale.ENGLISH);
         }
 
+        if (OiyokanConstants.IS_TRACE_ODATA_V4)
+            System.err.println("OData v4: TRACE: ENTITY: DELETE: " + edmEntitySet.getName());
+
         final OiyoSqlInfo sqlInfo = new OiyoSqlInfo(entitySet);
         new OiyoSqlDeleteOneBuilder(sqlInfo).buildDeleteDml(edmEntitySet, keyPredicates);
 
@@ -322,19 +331,20 @@ public class OiyoBasicJdbcEntityOneBuilder {
             if (ifMatch) {
                 // If-Match header が '*' 指定されたら UPDATE.
                 if (OiyokanConstants.IS_TRACE_ODATA_V4)
-                    System.err.println("OData v4: TRACE: PATCH: UPDATE (If-Match): " + edmEntitySet.getName());
+                    System.err.println("OData v4: TRACE: ENTITY: PATCH: UPDATE (If-Match): " + edmEntitySet.getName());
                 new OiyoSqlUpdateOneBuilder(sqlInfo).buildUpdatePatchDml(edmEntitySet, keyPredicates, requestEntity);
 
             } else if (ifNoneMatch) {
                 // If-None-Match header が '*' 指定されたら INSERT.
                 if (OiyokanConstants.IS_TRACE_ODATA_V4)
-                    System.err.println("OData v4: TRACE: PATCH: INSERT (If-None-Match): " + edmEntitySet.getName());
+                    System.err.println(
+                            "OData v4: TRACE: ENTITY: PATCH: INSERT (If-None-Match): " + edmEntitySet.getName());
                 new OiyoSqlInsertOneBuilder(sqlInfo).buildInsertIntoDml(edmEntitySet, keyPredicates, requestEntity);
 
             } else {
                 // If-Match header も If-None-Match header も指定がない場合は UPSERT.
                 if (OiyokanConstants.IS_TRACE_ODATA_V4)
-                    System.err.println("OData v4: TRACE: PATCH: UPSERT: " + edmEntitySet.getName());
+                    System.err.println("OData v4: TRACE: ENTITY: PATCH: UPSERT: " + edmEntitySet.getName());
 
                 try {
                     // SELECT to check exists

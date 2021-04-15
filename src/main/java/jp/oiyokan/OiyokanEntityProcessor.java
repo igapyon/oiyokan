@@ -204,6 +204,13 @@ public class OiyokanEntityProcessor implements EntityProcessor {
                 throw new ODataApplicationException(OiyokanMessages.M216, OiyokanMessages.M216_CODE, Locale.ENGLISH);
             }
 
+            // TODO FIXME
+            // Upon successful completion the service responds with either 200 OK and a
+            // representation of the updated entity, or 204 No Content. The client may
+            // request that the response SHOULD include a body by specifying a Prefer header
+            // with a value of return=representation, or by specifying the system query
+            // options $select or $expand.
+
             response.setStatusCode(HttpStatusCode.NO_CONTENT.getStatusCode());
             response.setHeader(HttpHeader.CONTENT_TYPE, responseFormat.toContentTypeString());
 

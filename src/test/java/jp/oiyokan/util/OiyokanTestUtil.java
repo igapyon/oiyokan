@@ -148,7 +148,7 @@ public class OiyokanTestUtil {
     }
 
     private static final Object lock = new Object();
-    private static volatile int nextUniqueId = 10100;
+    private static volatile int nextUniqueId = 20000;
 
     public static final int getNextUniqueId() {
         synchronized (lock) {
