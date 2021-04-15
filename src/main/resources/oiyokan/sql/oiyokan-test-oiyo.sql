@@ -1,8 +1,8 @@
 CREATE TABLE IF NOT EXISTS
   OiyoODataTest1 (
     ID INT NOT NULL
-    , Name VARCHAR(80) DEFAULT 'UnitTest: Types' NOT NULL
-    , Description VARCHAR(250)
+    , Name VARCHAR(80) DEFAULT 'Types UnitTest' NOT NULL
+    , Description VARCHAR(250) DEFAULT 'Types UnitTest table.' NOT NULL
     , Sbyte1 TINYINT DEFAULT 127
     , Int16a SMALLINT DEFAULT 32767
     , Int32a INT DEFAULT 2147483647
@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS
     Decimal1 DECIMAL(6,2) DEFAULT 1234.56
     , StringChar8 CHAR(8) DEFAULT 'CHAR_VAL'
     , StringVar255 VARCHAR(255) DEFAULT 'VARCHAR255'
-    , Name VARCHAR(80) DEFAULT 'UnitTest: Multi col key' NOT NULL
+    , Name VARCHAR(80) DEFAULT 'Multi-col UnitTest' NOT NULL
     , Description VARCHAR(250)
     , PRIMARY KEY(Decimal1,StringChar8,StringVar255)
   );
@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS
 CREATE TABLE IF NOT EXISTS
   OiyoODataTest3 (
     ID INT NOT NULL
-    , Name VARCHAR(80) DEFAULT 'UnitTest: Nullable'
+    , Name VARCHAR(80) DEFAULT 'NULLABLE UnitTest'
     , Description VARCHAR(250)
     , Sbyte1 TINYINT DEFAULT 127
     , Int16a SMALLINT DEFAULT 32767
@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS
 CREATE TABLE IF NOT EXISTS
   OiyoODataTest4 (
     [I D] INT NOT NULL
-    , [Na me] VARCHAR(80) DEFAULT 'UnitTest: Col name w/space'
+    , [Na me] VARCHAR(80) DEFAULT 'Column name w/space UnitTest'
     , [Va lue1] VARCHAR(255) DEFAULT 'VALUEVALUE12345'
     , PRIMARY KEY([I D],[Na me])
   );
@@ -73,7 +73,7 @@ CREATE TABLE IF NOT EXISTS
 CREATE TABLE IF NOT EXISTS
   OiyoODataTest5 (
     Iden1 IDENTITY NOT NULL
-    , Name VARCHAR(80) DEFAULT 'UnitTest: IDENTITY'
+    , Name VARCHAR(80) DEFAULT 'IDENTITY UnitTest'
     , Value1 VARCHAR(255) DEFAULT 'VALUEVALUE12345'
     , PRIMARY KEY(Iden1)
   );
@@ -81,7 +81,7 @@ CREATE TABLE IF NOT EXISTS
 CREATE TABLE IF NOT EXISTS
   OiyoODataTest6 (
     ID INT NOT NULL
-    , Name VARCHAR(80) DEFAULT 'UnitTest: Binary'
+    , Name VARCHAR(80) DEFAULT 'Binary UnitTest'
     , Description VARCHAR(250) DEFAULT 'Binary UnitTest table.'
     , Binary1 BINARY(128) DEFAULT X'48656c6c6f20776f726c6421'
     , VarBinary1 VARBINARY(128) DEFAULT X'48656c6c6f20776f726c6421'
@@ -93,7 +93,7 @@ CREATE TABLE IF NOT EXISTS
 CREATE TABLE IF NOT EXISTS
   OiyoODataTest7 (
     ID INT NOT NULL
-    , Name VARCHAR(80) DEFAULT 'UnitTest: UUID'
+    , Name VARCHAR(80) DEFAULT 'UUID UnitTest'
     , Description VARCHAR(250) DEFAULT 'UUID UnitTest table.'
     , Uuid1 UUID DEFAULT random_uuid()
     , PRIMARY KEY(ID)
@@ -102,7 +102,7 @@ CREATE TABLE IF NOT EXISTS
 CREATE TABLE IF NOT EXISTS
   OiyoODataTestFulls1 (
     ID INT NOT NULL
-    , Name VARCHAR(80)  DEFAULT 'UnitTest: Fulltext (Experimental)' NOT NULL
+    , Name VARCHAR(80) DEFAULT 'Fulltext UnitTest (Experimental)' NOT NULL
     , Description VARCHAR(250)
     , Sbyte1 TINYINT DEFAULT 127
     , Int16a SMALLINT DEFAULT 32767

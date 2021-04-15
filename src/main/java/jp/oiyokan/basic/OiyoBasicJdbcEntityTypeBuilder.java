@@ -70,7 +70,7 @@ public class OiyoBasicJdbcEntityTypeBuilder {
         // 内部データベースである インメモリ作業データベースに接続.
         // EntityTypeはインメモリ内部データベースの情報をもとに構築.
         OiyokanSettingsDatabase settingsInternalDatabase = OiyokanSettingsUtil
-                .getOiyokanDatabase(OiyokanConstants.OIYOKAN_INTERNAL_DB);
+                .getOiyokanDatabase(OiyokanConstants.OIYOKAN_KAN_DB);
 
         try (Connection connInterDb = OiyoBasicJdbcUtil.getConnection(settingsInternalDatabase)) {
             // CSDL要素型として情報を組み上げ.

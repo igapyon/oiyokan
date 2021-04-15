@@ -37,7 +37,7 @@ class GenOiyoODataTestFulls1Test {
             return;
 
         OiyokanSettingsDatabase settingsDatabase = OiyokanSettingsUtil
-                .getOiyokanDatabase(OiyokanConstants.OIYOKAN_INTERNAL_TARGET_DB);
+                .getOiyokanDatabase(OiyokanConstants.OIYOKAN_UNITTEST_DB);
 
         try (Connection connTargetDb = OiyoBasicJdbcUtil.getConnection(settingsDatabase)) {
             // 内部データベースのテーブルをセットアップ.

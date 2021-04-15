@@ -34,7 +34,7 @@ import jp.oiyokan.settings.OiyokanSettingsUtil;
  * 内部データベース用のCSDL用内部テーブルのDDLをコマンドライン生成.
  */
 class GenOiyoGenericAllTest {
-    private static final String TARGET_SETTINGS_DATABASE = "oiyokanInternalTarget";
+    private static final String TARGET_UNITTEST_DATABASE = "oiyoUnitTestDb";
 
     /**
      * このテストを実施するかどうか。
@@ -54,7 +54,7 @@ class GenOiyoGenericAllTest {
             return;
         }
 
-        OiyokanSettingsDatabase settingsDatabase = OiyokanSettingsUtil.getOiyokanDatabase(TARGET_SETTINGS_DATABASE);
+        OiyokanSettingsDatabase settingsDatabase = OiyokanSettingsUtil.getOiyokanDatabase(TARGET_UNITTEST_DATABASE);
 
         try (Connection connTargetDb = OiyoBasicJdbcUtil.getConnection(settingsDatabase)) {
             final List<String> tableNameList = new ArrayList<>();
