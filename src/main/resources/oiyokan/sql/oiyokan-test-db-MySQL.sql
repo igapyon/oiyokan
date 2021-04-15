@@ -1,8 +1,8 @@
 CREATE TABLE IF NOT EXISTS
   ODataTest1 (
     ID INT NOT NULL
-    , Name VARCHAR(80) NOT NULL
-    , Description VARCHAR(250)
+    , Name VARCHAR(80) DEFAULT 'Types UnitTest' NOT NULL
+    , Description VARCHAR(250) DEFAULT 'Types UnitTest table.' NOT NULL
     , Sbyte1 TINYINT DEFAULT 127
     , Int16a SMALLINT DEFAULT 32767
     , Int32a INT DEFAULT 2147483647
@@ -22,7 +22,6 @@ CREATE TABLE IF NOT EXISTS
     , VarBinary1 VARBINARY(128) DEFAULT X'48656c6c6f20776f726c6421'
     , LongVarBinary1 VARBINARY(1024) DEFAULT X'48656c6c6f20776f726c6421'
     , Blob1 BLOB(128)
-    , Uuid1 BINARY(16)
     , PRIMARY KEY(ID)
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -31,15 +30,15 @@ CREATE TABLE IF NOT EXISTS
     Decimal1 DECIMAL(6,2) DEFAULT 1234.56
     , StringChar8 CHAR(8) DEFAULT 'CHAR_VAL'
     , StringVar255 VARCHAR(255) DEFAULT 'VARCHAR255'
-    , Name VARCHAR(80) NOT NULL
+    , Name VARCHAR(80) DEFAULT 'Multi-col UnitTest' NOT NULL
     , Description VARCHAR(250)
     , PRIMARY KEY(Decimal1,StringChar8,StringVar255)
-  );
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE IF NOT EXISTS
   ODataTest3 (
     ID INT NOT NULL
-    , Name VARCHAR(80)
+    , Name VARCHAR(80) DEFAULT 'NULLABLE UnitTest'
     , Description VARCHAR(250)
     , Sbyte1 TINYINT DEFAULT 127
     , Int16a SMALLINT DEFAULT 32767
@@ -60,14 +59,13 @@ CREATE TABLE IF NOT EXISTS
     , VarBinary1 VARBINARY(128) DEFAULT X'48656c6c6f20776f726c6421'
     , LongVarBinary1 VARBINARY(1024) DEFAULT X'48656c6c6f20776f726c6421'
     , Blob1 BLOB(128)
-    , Uuid1 BINARY(16)
     , PRIMARY KEY(ID)
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE IF NOT EXISTS
   `OData Test4` (
     `I D` INT NOT NULL
-    , `Na me` VARCHAR(80) DEFAULT 'Name1'
+    , `Na me` VARCHAR(80) DEFAULT 'Column name w/space UnitTest'
     , `Va lue1` VARCHAR(255) DEFAULT 'VALUEVALUE12345'
     , PRIMARY KEY(`I D`,`Na me`)
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -75,7 +73,7 @@ CREATE TABLE IF NOT EXISTS
 CREATE TABLE IF NOT EXISTS
   ODataTest5 (
     Iden1 INT AUTO_INCREMENT NOT NULL
-    , Name VARCHAR(80) DEFAULT 'Name1'
+    , Name VARCHAR(80) DEFAULT 'IDENTITY UnitTest'
     , Value1 VARCHAR(255) DEFAULT 'VALUEVALUE12345'
     , PRIMARY KEY(Iden1)
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -93,26 +91,13 @@ CREATE TABLE IF NOT EXISTS
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE IF NOT EXISTS
-  ODataTestFulls1 (
+  ODataTest7 (
     ID INT NOT NULL
-    , Name VARCHAR(80) NOT NULL
-    , Description VARCHAR(250)
-    , Sbyte1 TINYINT DEFAULT 127
-    , Int16a SMALLINT DEFAULT 32767
-    , Int32a INT DEFAULT 2147483647
-    , Int64a BIGINT DEFAULT 2147483647
-    , Decimal1 DECIMAL(6,2) DEFAULT 1234.56
-    , StringChar8 CHAR(8) DEFAULT 'CHAR_VAL'
-    , StringVar255 VARCHAR(255) DEFAULT 'VARCHAR255'
-    , StringVar65535 VARCHAR(1024) DEFAULT 'VARCHAR65535'
-    , Boolean1 BOOLEAN DEFAULT FALSE NOT NULL
-    , Single1 REAL DEFAULT 123.456789
-    , Double1 DOUBLE DEFAULT 123.4567890123
-    , Date1 DATE DEFAULT '2021-04-03' NOT NULL
-    , DateTimeOffset1 TIMESTAMP DEFAULT '2021-04-03 14:47:57' NOT NULL
-    , TimeOfDay1 TIME DEFAULT '14:47:57'
+    , Name VARCHAR(80) DEFAULT 'UUID UnitTest'
+    , Description VARCHAR(250) DEFAULT 'UUID UnitTest table.'
+    , Uuid1 BINARY(16)
     , PRIMARY KEY(ID)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 INSERT INTO ODataTest1 (ID, Name, Description) VALUES (
   1, 'MacBookPro16,2', 'MacBook Pro (13-inch, 2020, Thunderbolt 3ポートx 4)');
@@ -525,18 +510,3 @@ INSERT INTO ODataTest1 (ID, Name, Description) VALUES (
   203, 'DummyPC99', 'ダミーなPC99');
 INSERT INTO ODataTest1 (ID, Name, Description, StringVar255, StringLongVar1, Clob1) VALUES (
   204, 'StringTests', '文字列検索確認', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ');
-
-INSERT INTO ODataTestFulls1 (ID, Name, Description) VALUES (
-  1, 'MacBookPro16,2', 'MacBook Pro (13-inch, 2020, Thunderbolt 3ポートx 4)');
-INSERT INTO ODataTestFulls1 (ID, Name, Description) VALUES (
-  2, 'MacBookPro E2015', 'MacBook Pro (Retina, 13-inch, Early 2015');
-INSERT INTO ODataTestFulls1 (ID, Name, Description) VALUES (
-  3, 'Surface Laptop 2', 'Surface Laptop 2, 画面:13.5 インチ PixelSense ディスプレイ, インテル Core');
-INSERT INTO ODataTestFulls1 (ID, Name, Description) VALUES (
-  4, 'PopTablet1', '増殖タブレット Laptop Intel Core1');
-INSERT INTO ODataTestFulls1 (ID, Name, Description) VALUES (
-  5, 'PopTablet2', '増殖タブレット Laptop Intel Core2');
-INSERT INTO ODataTestFulls1 (ID, Name, Description) VALUES (
-  6, 'DummyPC1', 'ダミーなPC1');
-INSERT INTO ODataTestFulls1 (ID, Name, Description) VALUES (
-  7, 'DummyPC2', 'ダミーなPC2');

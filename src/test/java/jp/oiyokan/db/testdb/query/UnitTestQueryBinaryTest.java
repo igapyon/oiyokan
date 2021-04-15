@@ -207,7 +207,7 @@ class UnitTestQueryBinaryTest {
 
         // System.err.println("result: " + result);
         assertEquals("{\"@odata.context\":\"$metadata#ODataTests1\",\"@odata.count\":1,\"value\":[{\"ID\":204}]}",
-                result, "MSSQL2008でエラー(既知の問題)");
+                result, "MSSQL2008でエラー(既知の問題), ORACLEでエラー(既知の問題)");
         assertEquals(200, resp.getStatusCode());
     }
 
@@ -237,7 +237,7 @@ class UnitTestQueryBinaryTest {
 
         // System.err.println("result: " + result);
         assertEquals("{\"@odata.context\":\"$metadata#ODataTests1\",\"@odata.count\":1,\"value\":[{\"ID\":204}]}",
-                result, "MSSQL2008でエラー(既知の問題)");
+                result, "MSSQL2008でエラー(既知の問題), ORACLEでエラー(既知の問題)");
         assertEquals(200, resp.getStatusCode());
     }
 }

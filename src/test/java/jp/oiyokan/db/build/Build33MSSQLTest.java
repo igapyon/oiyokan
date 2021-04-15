@@ -36,7 +36,7 @@ class Build33MSSQLTest {
             "DROP TABLE [OData Test4]", //
             "DROP TABLE ODataTest5", //
             "DROP TABLE ODataTest6", //
-            "DROP TABLE ODataTestFulls1", //
+            "DROP TABLE ODataTest7", //
     };
 
     @Test

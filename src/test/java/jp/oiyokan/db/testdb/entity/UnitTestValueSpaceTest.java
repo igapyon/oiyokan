@@ -41,7 +41,7 @@ class UnitTestValueSpaceTest {
                 + "}");
         String result = OiyokanTestUtil.stream2String(resp.getContent());
         System.err.println(result);
-        assertEquals(201, resp.getStatusCode());
+        assertEquals(201, resp.getStatusCode(), "ORACLEでエラー(既知の問題)");
         assertEquals("{\"@odata.context\":\"$metadata#ODataTests4\",\"I_D\":" + TEST_ID
                 + ",\"Na_me\":\"Name\",\"Va_lue1\":\"VALUEVALUE12345\"}", result);
 
