@@ -31,8 +31,8 @@ import org.apache.olingo.server.api.ODataApplicationException;
 import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanMessages;
 import jp.oiyokan.basic.OiyoBasicJdbcUtil;
-import jp.oiyokan.dto.OiyokanSettingsDatabase;
-import jp.oiyokan.settings.OiyokanSettingsUtil;
+import jp.oiyokan.dto.Oiyo13SettingsDatabase;
+import jp.oiyokan.settings.OiyoSettingsUtil;
 
 /**
  * Oiyokan (OData v4 server) が動作する際に必要になる内部管理データベースのバージョン情報および Oiyo情報 をセットアップ.
@@ -71,7 +71,7 @@ public class OiyokanKanDatabase {
             System.err.println( //
                     "OData v4: setup oiyokanKan database (Oiyokan: " + OiyokanConstants.VERSION + ")");
 
-        OiyokanSettingsDatabase settingsInterDatabase = OiyokanSettingsUtil
+        Oiyo13SettingsDatabase settingsInterDatabase = OiyoSettingsUtil
                 .getOiyokanDatabase(OiyokanConstants.OIYOKAN_KAN_DB);
 
         try (Connection connInterDb = OiyoBasicJdbcUtil.getConnection(settingsInterDatabase)) {
@@ -136,7 +136,7 @@ public class OiyokanKanDatabase {
                 if (OiyokanConstants.IS_TRACE_ODATA_V4)
                     System.err.println("OData v4: load: db:" + sqlFileDef[0] + ", sql: " + sqlFileDef[1]);
 
-                OiyokanSettingsDatabase lookDatabase = OiyokanSettingsUtil.getOiyokanDatabase(sqlFileDef[0]);
+                Oiyo13SettingsDatabase lookDatabase = OiyoSettingsUtil.getOiyokanDatabase(sqlFileDef[0]);
 
                 try (Connection connLoookDatabase = OiyoBasicJdbcUtil.getConnection(lookDatabase)) {
                     final String[] sqls = OiyokanResourceSqlUtil.loadOiyokanResourceSql("oiyokan/sql/" + sqlFileDef[1]);

@@ -33,7 +33,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({ "name", "description", "entitySetName", "entityName", "databaseName", "dbTableNameLocal",
         "dbTableNameTarget" })
-public class OiyokanSettingsEntitySet {
+public class Oiyo13SettingsEntitySet {
     @JsonProperty("name")
     private String name;
 

@@ -32,7 +32,7 @@ import org.apache.olingo.server.core.uri.queryoption.expression.MemberImpl;
 import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanCsdlEntitySet;
 import jp.oiyokan.basic.OiyoBasicJdbcUtil;
-import jp.oiyokan.settings.OiyokanNamingUtil;
+import jp.oiyokan.settings.OiyoNamingUtil;
 
 /**
  * SQL文を構築するための簡易クラス.
@@ -159,7 +159,7 @@ public class OiyoSqlQueryListBuilder {
             }
 
             // もし空白を含む場合はエスケープ。
-            strColumns += OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyokanNamingUtil.entity2Db(prop.getName()));
+            strColumns += OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyoNamingUtil.entity2Db(prop.getName()));
         }
         sqlInfo.getSqlBuilder().append(strColumns);
     }
@@ -168,14 +168,14 @@ public class OiyoSqlQueryListBuilder {
         final OiyokanCsdlEntitySet iyoEntitySet = (OiyokanCsdlEntitySet) sqlInfo.getEntitySet();
         final List<String> keyTarget = new ArrayList<>();
         for (CsdlPropertyRef propRef : iyoEntitySet.getEntityType().getKey()) {
-            keyTarget.add(OiyokanNamingUtil.entity2Db(propRef.getName()));
+            keyTarget.add(OiyoNamingUtil.entity2Db(propRef.getName()));
         }
         int itemCount = 0;
         for (SelectItem item : uriInfo.getSelectOption().getSelectItems()) {
             for (UriResource res : item.getResourcePath().getUriResourceParts()) {
                 sqlInfo.getSqlBuilder().append(itemCount++ == 0 ? "" : ",");
                 sqlInfo.getSqlBuilder().append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo,
-                        OiyokanNamingUtil.entity2Db(OiyoBasicJdbcUtil.unescapeKakkoFieldName(res.toString()))));
+                        OiyoNamingUtil.entity2Db(OiyoBasicJdbcUtil.unescapeKakkoFieldName(res.toString()))));
                 for (int index = 0; index < keyTarget.size(); index++) {
                     if (keyTarget.get(index).equals(res.toString())) {
                         keyTarget.remove(index);
@@ -246,7 +246,7 @@ public class OiyoSqlQueryListBuilder {
                 sqlInfo.getSqlBuilder().append(",");
             }
 
-            sqlInfo.getSqlBuilder().append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyokanNamingUtil.entity2Db(
+            sqlInfo.getSqlBuilder().append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyoNamingUtil.entity2Db(
                     OiyoBasicJdbcUtil.unescapeKakkoFieldName(((MemberImpl) orderByItem.getExpression()).toString()))));
 
             if (orderByItem.isDescending()) {
@@ -265,7 +265,7 @@ public class OiyoSqlQueryListBuilder {
                 sqlInfo.getSqlBuilder().append(",");
             }
             sqlInfo.getSqlBuilder().append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo,
-                    OiyokanNamingUtil.entity2Db(OiyoBasicJdbcUtil.unescapeKakkoFieldName(look.getName()))));
+                    OiyoNamingUtil.entity2Db(OiyoBasicJdbcUtil.unescapeKakkoFieldName(look.getName()))));
         }
     }
 

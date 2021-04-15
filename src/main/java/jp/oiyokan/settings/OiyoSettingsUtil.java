@@ -29,20 +29,20 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanCsdlEntityContainer;
 import jp.oiyokan.OiyokanMessages;
-import jp.oiyokan.dto.OiyokanSettings;
-import jp.oiyokan.dto.OiyokanSettingsDatabase;
+import jp.oiyokan.dto.Oiyo13Settings;
+import jp.oiyokan.dto.Oiyo13SettingsDatabase;
 
 /**
  * oiyokan-settings.json ファイルに関する処理。
  */
-public class OiyokanSettingsUtil {
+public class OiyoSettingsUtil {
     /**
      * resources フォルダから設定ファイルを読み込み.
      * 
      * @return OiyokanSettings 設定情報.
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
-    public static OiyokanSettings loadOiyokanSettings() throws ODataApplicationException {
+    public static Oiyo13Settings loadOiyokanSettings() throws ODataApplicationException {
         if (OiyokanConstants.IS_TRACE_ODATA_V4)
             System.err.println("OData v4: resources: load: settings: oiyokan-settings.json");
 
@@ -52,7 +52,7 @@ public class OiyokanSettingsUtil {
             String strOiyokanSettings = StreamUtils.copyToString(inStream, Charset.forName("UTF-8"));
 
             ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(strOiyokanSettings, OiyokanSettings.class);
+            return mapper.readValue(strOiyokanSettings, Oiyo13Settings.class);
         } catch (IOException ex) {
             // [M024] UNEXPECTED: Fail to load Oiyokan settings
             System.err.println(OiyokanMessages.M024 + ": " + ex.toString());
@@ -67,9 +67,9 @@ public class OiyokanSettingsUtil {
      * @return OiyokanSettingsDatabase setting info.
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
-    public static OiyokanSettingsDatabase getOiyokanDatabase(String databaseDefName) throws ODataApplicationException {
-        final OiyokanSettings settingsOiyokan = OiyokanCsdlEntityContainer.getSettingsInstance();
-        for (OiyokanSettingsDatabase look : settingsOiyokan.getDatabaseList()) {
+    public static Oiyo13SettingsDatabase getOiyokanDatabase(String databaseDefName) throws ODataApplicationException {
+        final Oiyo13Settings settingsOiyokan = OiyokanCsdlEntityContainer.getSettingsInstance();
+        for (Oiyo13SettingsDatabase look : settingsOiyokan.getDatabaseList()) {
             if (databaseDefName.equals(look.getName())) {
                 return look;
             }

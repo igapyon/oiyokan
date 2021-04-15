@@ -23,8 +23,8 @@ import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanTestSettingConstants;
 import jp.oiyokan.basic.OiyoBasicJdbcUtil;
 import jp.oiyokan.data.OiyokanKanDatabase;
-import jp.oiyokan.dto.OiyokanSettingsDatabase;
-import jp.oiyokan.settings.OiyokanSettingsUtil;
+import jp.oiyokan.dto.Oiyo13SettingsDatabase;
+import jp.oiyokan.settings.OiyoSettingsUtil;
 
 /**
  * 内部データベース用のCSDL用内部テーブルのDDLをコマンドライン生成.
@@ -40,7 +40,7 @@ class GenOiyoODataTest1Test {
         if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
             return;
 
-        OiyokanSettingsDatabase settingsDatabase = OiyokanSettingsUtil
+        Oiyo13SettingsDatabase settingsDatabase = OiyoSettingsUtil
                 .getOiyokanDatabase(OiyokanConstants.OIYOKAN_UNITTEST_DB);
 
         try (Connection connTargetDb = OiyoBasicJdbcUtil.getConnection(settingsDatabase)) {

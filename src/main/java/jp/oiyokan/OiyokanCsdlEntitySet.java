@@ -23,9 +23,9 @@ import org.apache.olingo.commons.api.edm.provider.CsdlEntityType;
 import org.apache.olingo.server.api.ODataApplicationException;
 
 import jp.oiyokan.OiyokanConstants.DatabaseType;
-import jp.oiyokan.dto.OiyokanSettingsDatabase;
-import jp.oiyokan.dto.OiyokanSettingsEntitySet;
-import jp.oiyokan.settings.OiyokanSettingsUtil;
+import jp.oiyokan.dto.Oiyo13SettingsDatabase;
+import jp.oiyokan.dto.Oiyo13SettingsEntitySet;
+import jp.oiyokan.settings.OiyoSettingsUtil;
 
 /**
  * Oiyokan の CsdlEntitySet 実装.
@@ -40,7 +40,7 @@ public class OiyokanCsdlEntitySet extends CsdlEntitySet {
     /**
      * EntitySet の設定情報.
      */
-    private OiyokanSettingsEntitySet settingsEntitySet = null;
+    private Oiyo13SettingsEntitySet settingsEntitySet = null;
 
     /**
      * この EntitySet が接続する先のデータベースタイプを記憶.
@@ -57,7 +57,7 @@ public class OiyokanCsdlEntitySet extends CsdlEntitySet {
      * 
      * @return EntitySet設定情報.
      */
-    public OiyokanSettingsEntitySet getSettingsEntitySet() {
+    public Oiyo13SettingsEntitySet getSettingsEntitySet() {
         return settingsEntitySet;
     }
 
@@ -76,8 +76,8 @@ public class OiyokanCsdlEntitySet extends CsdlEntitySet {
      * @return Database設定情報.
      * @throws ODataApplicationException ODataアプリ例外.
      */
-    public OiyokanSettingsDatabase getSettingsDatabase() throws ODataApplicationException {
-        return OiyokanSettingsUtil.getOiyokanDatabase(settingsEntitySet.getDatabaseName());
+    public Oiyo13SettingsDatabase getSettingsDatabase() throws ODataApplicationException {
+        return OiyoSettingsUtil.getOiyokanDatabase(settingsEntitySet.getDatabaseName());
     }
 
     /**
@@ -105,7 +105,7 @@ public class OiyokanCsdlEntitySet extends CsdlEntitySet {
      * @param settingsEntitySet EntitySetの設定.
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
-    public OiyokanCsdlEntitySet(OiyokanCsdlEntityContainer entityContainer, OiyokanSettingsEntitySet settingsEntitySet)
+    public OiyokanCsdlEntitySet(OiyokanCsdlEntityContainer entityContainer, Oiyo13SettingsEntitySet settingsEntitySet)
             throws ODataApplicationException {
         setName(settingsEntitySet.getEntitySetName());
         this.csdlEntityContainer = entityContainer;

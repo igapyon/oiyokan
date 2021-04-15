@@ -25,7 +25,7 @@ import org.apache.olingo.server.api.ODataApplicationException;
 import org.apache.olingo.server.api.uri.UriParameter;
 
 import jp.oiyokan.basic.OiyoBasicJdbcUtil;
-import jp.oiyokan.settings.OiyokanNamingUtil;
+import jp.oiyokan.settings.OiyoNamingUtil;
 
 /**
  * データベースの1件レコードを更新.
@@ -72,7 +72,7 @@ public class OiyoSqlUpdateOneBuilder {
             }
 
             sqlInfo.getSqlBuilder().append(
-                    OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyokanNamingUtil.entity2Db(prop.getName())));
+                    OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyoNamingUtil.entity2Db(prop.getName())));
             sqlInfo.getSqlBuilder().append("=");
 
             OiyoBasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo, prop.getType(), prop.getValue());
@@ -88,7 +88,7 @@ public class OiyoSqlUpdateOneBuilder {
                 sqlInfo.getSqlBuilder().append(" AND ");
             }
             sqlInfo.getSqlBuilder().append(
-                    OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyokanNamingUtil.entity2Db(param.getName())));
+                    OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyoNamingUtil.entity2Db(param.getName())));
             sqlInfo.getSqlBuilder().append("=");
 
             CsdlProperty csdlProp = sqlInfo.getEntitySet().getEntityType().getProperty(param.getName());

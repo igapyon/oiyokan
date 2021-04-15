@@ -26,8 +26,8 @@ import org.junit.jupiter.api.Test;
 import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.basic.OiyoBasicJdbcUtil;
 import jp.oiyokan.data.OiyokanResourceSqlUtil;
-import jp.oiyokan.dto.OiyokanSettingsDatabase;
-import jp.oiyokan.settings.OiyokanSettingsUtil;
+import jp.oiyokan.dto.Oiyo13SettingsDatabase;
+import jp.oiyokan.settings.OiyoSettingsUtil;
 
 /**
  * テスト用の内部データベースを作成します。この内部データベースは動作の上で必要です。
@@ -62,7 +62,7 @@ class Build00H2InterDbTest {
             if (OiyokanConstants.IS_TRACE_ODATA_V4)
                 System.err.println("OData: load: internal db:" + sqlFileDef[0] + ", sql: " + sqlFileDef[1]);
 
-            OiyokanSettingsDatabase lookDatabase = OiyokanSettingsUtil.getOiyokanDatabase(sqlFileDef[0]);
+            Oiyo13SettingsDatabase lookDatabase = OiyoSettingsUtil.getOiyokanDatabase(sqlFileDef[0]);
 
             try (Connection connLoookDatabase = OiyoBasicJdbcUtil.getConnection(lookDatabase)) {
                 final String[] sqls = OiyokanResourceSqlUtil.loadOiyokanResourceSql("oiyokan/sql/" + sqlFileDef[1]);

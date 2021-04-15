@@ -28,10 +28,10 @@ import org.apache.olingo.server.api.ODataApplicationException;
 
 import jp.oiyokan.basic.OiyoBasicJdbcEntityTypeBuilder;
 import jp.oiyokan.data.OiyokanKanDatabase;
-import jp.oiyokan.dto.OiyokanSettings;
-import jp.oiyokan.dto.OiyokanSettingsDatabase;
-import jp.oiyokan.dto.OiyokanSettingsEntitySet;
-import jp.oiyokan.settings.OiyokanSettingsUtil;
+import jp.oiyokan.dto.Oiyo13Settings;
+import jp.oiyokan.dto.Oiyo13SettingsDatabase;
+import jp.oiyokan.dto.Oiyo13SettingsEntitySet;
+import jp.oiyokan.settings.OiyoSettingsUtil;
 
 /**
  * Oiyokan の CsdlEntityContainer 実装.
@@ -40,7 +40,7 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
     /**
      * OiyokanSettings を singleton に記憶.
      */
-    private static volatile OiyokanSettings settingsOiyokan = null;
+    private static volatile Oiyo13Settings settingsOiyokan = null;
 
     /**
      * CsdlEntityType をすでに取得済みであればそれをキャッシュとして利用.
@@ -53,10 +53,10 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
      * @return OiyokanSettings instance. 参照のみで利用.
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
-    public static synchronized OiyokanSettings getSettingsInstance() throws ODataApplicationException {
+    public static synchronized Oiyo13Settings getSettingsInstance() throws ODataApplicationException {
         // singleton by static synchronized.
         if (settingsOiyokan == null) {
-            settingsOiyokan = OiyokanSettingsUtil.loadOiyokanSettings();
+            settingsOiyokan = OiyoSettingsUtil.loadOiyokanSettings();
         }
 
         return settingsOiyokan;
@@ -87,7 +87,7 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
                 return;
             }
 
-            for (OiyokanSettingsDatabase settingsDatabase : getSettingsInstance().getDatabaseList()) {
+            for (Oiyo13SettingsDatabase settingsDatabase : getSettingsInstance().getDatabaseList()) {
                 if (OiyokanConstants.IS_TRACE_ODATA_V4)
                     System.err.println("OData v4: Check JDBC Driver: " + settingsDatabase.getJdbcDriver());
                 try {
@@ -117,7 +117,7 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
             // Oiyokan が動作する際に必要になる内部データベースのバージョン情報および Oiyo info をセットアップ.
             OiyokanKanDatabase.setupKanDatabase();
 
-            for (OiyokanSettingsEntitySet entitySetCnof : getSettingsInstance().getEntitySetList()) {
+            for (Oiyo13SettingsEntitySet entitySetCnof : getSettingsInstance().getEntitySetList()) {
                 // System.err.println("TRACE: entitySet: " + entitySetCnof.getEntitySetName() +
                 // ", dbname: "
                 // + entitySetCnof.getDatabaseName());

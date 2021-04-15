@@ -33,9 +33,9 @@ import org.apache.olingo.server.api.ODataApplicationException;
 import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanCsdlEntitySet;
 import jp.oiyokan.OiyokanMessages;
-import jp.oiyokan.dto.OiyokanSettingsDatabase;
-import jp.oiyokan.settings.OiyokanNamingUtil;
-import jp.oiyokan.settings.OiyokanSettingsUtil;
+import jp.oiyokan.dto.Oiyo13SettingsDatabase;
+import jp.oiyokan.settings.OiyoNamingUtil;
+import jp.oiyokan.settings.OiyoSettingsUtil;
 
 /**
  * 典型的で基本的な JDBC処理を利用した EntityType を構築。
@@ -69,7 +69,7 @@ public class OiyoBasicJdbcEntityTypeBuilder {
     public CsdlEntityType getEntityType() throws ODataApplicationException {
         // 内部データベースである インメモリ作業データベースに接続.
         // EntityTypeはインメモリ内部データベースの情報をもとに構築.
-        OiyokanSettingsDatabase settingsInternalDatabase = OiyokanSettingsUtil
+        Oiyo13SettingsDatabase settingsInternalDatabase = OiyoSettingsUtil
                 .getOiyokanDatabase(OiyokanConstants.OIYOKAN_KAN_DB);
 
         try (Connection connInterDb = OiyoBasicJdbcUtil.getConnection(settingsInternalDatabase)) {
@@ -102,7 +102,7 @@ public class OiyoBasicJdbcEntityTypeBuilder {
                     String colName = rsKey.getString("COLUMN_NAME");
 
                     CsdlPropertyRef propertyRef = new CsdlPropertyRef();
-                    propertyRef.setName(OiyokanNamingUtil.db2Entity(colName));
+                    propertyRef.setName(OiyoNamingUtil.db2Entity(colName));
                     keyRefList.add(propertyRef);
                 }
 

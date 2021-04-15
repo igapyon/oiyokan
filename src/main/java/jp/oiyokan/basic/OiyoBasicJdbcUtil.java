@@ -49,8 +49,8 @@ import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanCsdlEntitySet;
 import jp.oiyokan.OiyokanMessages;
 import jp.oiyokan.basic.sql.OiyoSqlInfo;
-import jp.oiyokan.dto.OiyokanSettingsDatabase;
-import jp.oiyokan.settings.OiyokanNamingUtil;
+import jp.oiyokan.dto.Oiyo13SettingsDatabase;
+import jp.oiyokan.settings.OiyoNamingUtil;
 
 /**
  * Oiyokan 関連の JDBC まわりユーティリティクラス.
@@ -66,7 +66,7 @@ public class OiyoBasicJdbcUtil {
      * @return データベース接続.
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
-    public static Connection getConnection(OiyokanSettingsDatabase settingsDatabase) throws ODataApplicationException {
+    public static Connection getConnection(Oiyo13SettingsDatabase settingsDatabase) throws ODataApplicationException {
         Connection conn;
         // OData server 起動シーケンスにてドライバ存在チェックは既に実施済み.
         // Class.forName(settingsDatabase.getJdbcDriver());
@@ -130,7 +130,7 @@ public class OiyoBasicJdbcUtil {
             throws ODataApplicationException, SQLException {
         // DB上の名称直接ではなく命名ユーティリティを通過させてから処理.
         final CsdlProperty csdlProp = new CsdlProperty()
-                .setName(OiyokanNamingUtil.db2Entity(rsmeta.getColumnName(column)));
+                .setName(OiyoNamingUtil.db2Entity(rsmeta.getColumnName(column)));
         switch (rsmeta.getColumnType(column)) {
         case Types.TINYINT:
             csdlProp.setType(EdmPrimitiveTypeKind.SByte.getFullQualifiedName());
@@ -243,7 +243,7 @@ public class OiyoBasicJdbcUtil {
     public static Property resultSet2Property(ResultSet rset, ResultSetMetaData rsmeta, int column,
             OiyokanCsdlEntitySet iyoEntitySet) throws ODataApplicationException, SQLException {
         // 基本的に CSDL で処理するが、やむを得ない場所のみ ResultSetMetaData を利用する
-        final String propName = OiyokanNamingUtil.db2Entity(rsmeta.getColumnName(column));
+        final String propName = OiyoNamingUtil.db2Entity(rsmeta.getColumnName(column));
 
         final CsdlProperty csdlProp = iyoEntitySet.getEntityType().getProperty(propName);
         if (csdlProp == null) {
