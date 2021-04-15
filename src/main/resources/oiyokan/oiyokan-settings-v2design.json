@@ -66,42 +66,43 @@
       "jdbcPass": "passwd123"
     }
   ],
-  "entitySetSettingFile": ["oiyokan-settings-add.json"],
   "entitySet": [
     {
       "name": "Oiyokans",
-      "dbEntityName": "Oiyokan",
       "description": "Oiyokan internal info. Do not change.",
-      "databaseName": "oiyokanKan",
+      "dbSettingName": "oiyokanKan",
       "canCreate": true,
       "canRead": true,
       "canUpdate": true,
       "canDelete": true,
       "entityType": {
         "name": "Oiyokan",
+		"dbName": "Oiyokan",
         "keyName": ["KeyName"],
         "property": [
           {
             "name": "KeyName",
-            "dbEntityName": "KeyName",
-            "type": "Edm.String",
+            "dbName": "KeyName",
+            "edmType": "Edm.String",
             "jdbcType": "Types.VARCHAR",
+            "dbType": "VARCHAR",
             "jdbcSetMethod": "setString",
             "nullable": false,
             "length": 20,
-            "fixLength": false,
+            "lengthFixed": false,
             "scale": null,
             "precision": null
           },
           {
             "name": "KeyValue",
-            "dbEntityName": "KeyValue",
-            "type": "Edm.String",
+            "dbName": "KeyValue",
+            "edmType": "Edm.String",
             "jdbcType": "Types.VARCHAR",
+            "dbType": "VARCHAR",
             "jdbcSetMethod": "setString",
             "nullable": true,
             "length": 255,
-            "fixLength": false,
+            "lengthFixed": false,
             "scale": null,
             "precision": null
           }
