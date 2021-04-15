@@ -36,7 +36,7 @@ import jp.oiyokan.dto.OiyokanNamingSettingsDb2Entity;
 /**
  * DBとEntityとの間の命名を調整するユーティリティ.
  */
-public class OiyokanNamingUtil {
+public class OiyoNamingUtil {
     private static final boolean IS_DEBUG_NAMING_UTIL = false;
 
     private static volatile Map<String, OiyokanNamingSettingsDb2Entity> db2entityMap = null;

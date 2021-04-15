@@ -32,7 +32,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({ "name", "type", "description", "jdbcDriver", "jdbcUrl", "jdbcUser", "jdbcPass" })
-public class OiyokanSettingsDatabase {
+public class Oiyo13SettingsDatabase {
     @JsonProperty("name")
     private String name;
 

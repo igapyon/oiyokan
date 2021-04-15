@@ -33,7 +33,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({ "namespace", "containerName", "database", "entitySet" })
-public class OiyokanSettings {
+public class Oiyo13Settings {
     @JsonProperty("namespace")
     private String namespace;
 
@@ -41,10 +41,10 @@ public class OiyokanSettings {
     private String containerName;
 
     @JsonProperty("database")
-    private List<OiyokanSettingsDatabase> databaseList = null;
+    private List<Oiyo13SettingsDatabase> databaseList = null;
 
     @JsonProperty("entitySet")
-    private List<OiyokanSettingsEntitySet> entitySetList = null;
+    private List<Oiyo13SettingsEntitySet> entitySetList = null;
 
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
@@ -70,22 +70,22 @@ public class OiyokanSettings {
     }
 
     @JsonProperty("database")
-    public List<OiyokanSettingsDatabase> getDatabaseList() {
+    public List<Oiyo13SettingsDatabase> getDatabaseList() {
         return databaseList;
     }
 
     @JsonProperty("database")
-    public void setDatabaseList(List<OiyokanSettingsDatabase> databaseList) {
+    public void setDatabaseList(List<Oiyo13SettingsDatabase> databaseList) {
         this.databaseList = databaseList;
     }
 
     @JsonProperty("entitySet")
-    public List<OiyokanSettingsEntitySet> getEntitySetList() {
+    public List<Oiyo13SettingsEntitySet> getEntitySetList() {
         return entitySetList;
     }
 
     @JsonProperty("entitySet")
-    public void setEntitySetList(List<OiyokanSettingsEntitySet> entitySetList) {
+    public void setEntitySetList(List<Oiyo13SettingsEntitySet> entitySetList) {
         this.entitySetList = entitySetList;
     }
 

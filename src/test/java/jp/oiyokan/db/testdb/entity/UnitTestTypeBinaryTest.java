@@ -27,7 +27,7 @@ import org.springframework.util.StreamUtils;
 import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanTestSettingConstants;
 import jp.oiyokan.basic.OiyoBasicJdbcUtil;
-import jp.oiyokan.settings.OiyokanSettingsUtil;
+import jp.oiyokan.settings.OiyoSettingsUtil;
 import jp.oiyokan.util.OiyokanTestUtil;
 
 /**
@@ -64,7 +64,7 @@ class UnitTestTypeBinaryTest {
         if (false/* ここは h2 database のときのみ通過が可能 */) {
             // generic JDBC
             try (Connection conn = OiyoBasicJdbcUtil
-                    .getConnection(OiyokanSettingsUtil.getOiyokanDatabase(OiyokanConstants.OIYOKAN_UNITTEST_DB))) {
+                    .getConnection(OiyoSettingsUtil.getOiyokanDatabase(OiyokanConstants.OIYOKAN_UNITTEST_DB))) {
 
                 try (var stmt = conn.prepareStatement("SELECT Binary1 FROM ODataTest6 WHERE ID = " + TEST_ID)) {
                     stmt.executeQuery();

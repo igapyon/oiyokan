@@ -27,7 +27,7 @@ import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanTestSettingConstants;
 import jp.oiyokan.basic.OiyoBasicJdbcUtil;
 import jp.oiyokan.data.OiyokanKanDatabase;
-import jp.oiyokan.settings.OiyokanSettingsUtil;
+import jp.oiyokan.settings.OiyoSettingsUtil;
 
 /**
  * ごく基本的で大雑把な JDBC + h2 database 挙動の確認.
@@ -39,7 +39,7 @@ class H2DatabaseTest {
             return;
 
         try (Connection conn = OiyoBasicJdbcUtil
-                .getConnection(OiyokanSettingsUtil.getOiyokanDatabase(OiyokanConstants.OIYOKAN_UNITTEST_DB))) {
+                .getConnection(OiyoSettingsUtil.getOiyokanDatabase(OiyokanConstants.OIYOKAN_UNITTEST_DB))) {
 
             try (var stmt = conn.prepareStatement("SELECT ID, Name, Description FROM ODataTest1 ORDER BY ID LIMIT 3")) {
                 stmt.executeQuery();
@@ -55,7 +55,7 @@ class H2DatabaseTest {
             return;
 
         try (Connection conn = OiyoBasicJdbcUtil
-                .getConnection(OiyokanSettingsUtil.getOiyokanDatabase(OiyokanConstants.OIYOKAN_UNITTEST_DB))) {
+                .getConnection(OiyoSettingsUtil.getOiyokanDatabase(OiyokanConstants.OIYOKAN_UNITTEST_DB))) {
 
             try (var stmt = conn.prepareStatement("SELECT ID, Name, Description" //
                     + ",Sbyte1,Int16a,Int32a,Int64a,Decimal1,StringChar8,StringVar255,Boolean1,Single1,Double1,DateTimeOffset1,TimeOfDay1" //
@@ -83,13 +83,13 @@ class H2DatabaseTest {
             return;
 
         try (Connection conn = OiyoBasicJdbcUtil
-                .getConnection(OiyokanSettingsUtil.getOiyokanDatabase(OiyokanConstants.OIYOKAN_KAN_DB))) {
+                .getConnection(OiyoSettingsUtil.getOiyokanDatabase(OiyokanConstants.OIYOKAN_KAN_DB))) {
             // 内部データベースのテーブルをセットアップ.
             OiyokanKanDatabase.setupKanDatabase();
         }
 
         try (Connection conn = OiyoBasicJdbcUtil
-                .getConnection(OiyokanSettingsUtil.getOiyokanDatabase(OiyokanConstants.OIYOKAN_UNITTEST_DB))) {
+                .getConnection(OiyoSettingsUtil.getOiyokanDatabase(OiyokanConstants.OIYOKAN_UNITTEST_DB))) {
 
             try (var stmt = conn.prepareStatement(
                     "SELECT address_id FROM address WHERE ((address2 IS NULL) AND (address = ?)) LIMIT 2001")) {
@@ -112,7 +112,7 @@ class H2DatabaseTest {
         if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
             return;
 
-        try (Connection conn = OiyoBasicJdbcUtil.getConnection(OiyokanSettingsUtil.getOiyokanDatabase("mysql1"))) {
+        try (Connection conn = OiyoBasicJdbcUtil.getConnection(OiyoSettingsUtil.getOiyokanDatabase("mysql1"))) {
 
             ResultSet rset = conn.getMetaData().getTables(null, "%", "%", new String[] { "TABLE", "VIEW" });
             for (; rset.next();) {
