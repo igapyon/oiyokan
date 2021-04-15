@@ -29,6 +29,16 @@ import jp.oiyokan.settings.OiyokanSettingsUtil;
  * テスト用の内部データベースを作成します。この内部データベースは動作の上で必要です。
  */
 class Build34ORACLETest {
+    private static final String[] DROP_TABLE_SQLS = new String[] { //
+            "DROP TABLE ODataTest1", //
+            "DROP TABLE ODataTest2", //
+            "DROP TABLE ODataTest3", //
+            "DROP TABLE \"OData Test4\"", //
+            "DROP TABLE ODataTest5", //
+            "DROP TABLE ODataTest6", //
+            "DROP TABLE ODataTest7", //
+    };
+
     @Test
     void test01() throws Exception {
         if (true)
@@ -37,6 +47,14 @@ class Build34ORACLETest {
         OiyokanSettingsDatabase settingsDatabase = OiyokanSettingsUtil.getOiyokanDatabase("oracle1");
 
         try (Connection connTargetDb = OiyoBasicJdbcUtil.getConnection(settingsDatabase)) {
+            for (String sql : DROP_TABLE_SQLS) {
+                try (var stmt = connTargetDb.prepareStatement(sql)) {
+                    stmt.executeUpdate();
+                } catch (SQLException ex) {
+                    System.err.println(ex.toString());
+                }
+            }
+
             try (var stmt = connTargetDb.prepareStatement("DROP TABLE ODataTest1")) {
                 stmt.executeUpdate();
             } catch (SQLException ex) {
