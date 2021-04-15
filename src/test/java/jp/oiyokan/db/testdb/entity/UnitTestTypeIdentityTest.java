@@ -38,7 +38,7 @@ class UnitTestTypeIdentityTest {
         String result = OiyokanTestUtil.stream2String(resp.getContent());
         // System.err.println(result);
         assertEquals(201, resp.getStatusCode(), //
-                "Iden1が引き当てられないとエラーになる.ORACLEでエラー(既知の問題)");
+                "Iden1が引き当てられないとエラーになる.");
 
         int indexOf = result.indexOf("\",\"Iden1\":");
         String subString = result.substring(indexOf + "\",\"Iden1\":".length());

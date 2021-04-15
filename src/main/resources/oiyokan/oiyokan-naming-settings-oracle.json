@@ -6,6 +6,11 @@
 			"description": "pg dvdrental"
 		},
 		{
+			"db": "I D",
+			"entity": "I_D",
+			"description": "Space test"
+		},
+		{
 			"db": "NA ME",
 			"entity": "Na_me",
 			"description": "Space test"
@@ -129,6 +134,21 @@
 			"db": "UUID1",
 			"entity": "Uuid1",
 			"description": "OdataTest1"
+		},
+		{
+			"db": "IDEN1",
+			"entity": "Iden1",
+			"description": "OdataTest6"
+		},
+		{
+			"db": "NAME",
+			"entity": "Name",
+			"description": "OdataTest6"
+		},
+		{
+			"db": "VALUE1",
+			"entity": "Value1",
+			"description": "OdataTest6"
 		}
 	]
 }

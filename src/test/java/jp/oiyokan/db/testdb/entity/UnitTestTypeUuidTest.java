@@ -39,9 +39,10 @@ class UnitTestTypeUuidTest {
                 + "  \"ID\":" + TEST_ID + "\n" //
                 + "}");
         String result = OiyokanTestUtil.stream2String(resp.getContent());
+        // System.err.println("TRACE: " + result);
         assertTrue(
                 result.startsWith("{\"@odata.context\":\"$metadata#ODataTests7\",\"ID\":" + TEST_ID
-                        + ",\"Name\":\"UUID UnitTest\",\"Description\":\"UUID UnitTest table.\",\"Uuid1\":\""), //
+                        + ",\"Name\":\"UUID UnitTest\",\"Description\":\"UUID UnitTest table.\",\"Uuid1\":"), //
                 "INSERTできることを確認. MySQLではエラー Binary1が固定長扱いで後方に自動埋め込みが発生(既知の問題。だが解決方法にアイデア現状なし), SQLServer2008でエラー(既知の問題), ORACLEでエラー(既知の問題)");
         assertEquals(201, resp.getStatusCode());
 
@@ -56,7 +57,7 @@ class UnitTestTypeUuidTest {
         System.err.println("TRACE: " + result);
         assertTrue(
                 result.startsWith("{\"@odata.context\":\"$metadata#ODataTests7\",\"value\":[{\"ID\":" + TEST_ID
-                        + ",\"Name\":\"UUID UnitTest\",\"Description\":\"UUID UnitTest table.\",\"Uuid1\":\""), //
+                        + ",\"Name\":\"UUID UnitTest\",\"Description\":\"UUID UnitTest table.\",\"Uuid1\":"), //
                 "通常のFILTER検索ができることを確認.");
         assertEquals(200, resp.getStatusCode());
 
