@@ -12,7 +12,14 @@ You can use Oiyokan to turn RDBMS into OData v4 services.
 - PostgreSQL (13)
 - MySQL (8)
 - SQL Server (2008)
-- Oracle XE (18c) (Beta)
+- Oracle XE (18c)
+
+## Supported OData Method
+
+- GET
+- POST
+- PATCH
+- DELETE
 
 ## Supported OData system query options
 
