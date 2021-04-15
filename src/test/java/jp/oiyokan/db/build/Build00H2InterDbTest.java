@@ -37,12 +37,12 @@ class Build00H2InterDbTest {
             /*
              * Oiyokan の基本機能を確認およびビルド時の JUnitテストで利用. 変更するとビルドが動作しなくなる場合あり.
              */
-            { OiyokanConstants.OIYOKAN_INTERNAL_TARGET_DB, "oiyokan-test-db-h2.sql" }, //
+            { OiyokanConstants.OIYOKAN_UNITTEST_DB, "oiyokan-test-db-h2.sql" }, //
 
             /*
              * Sakila dvdrental サンプルDB の内容そのもの.
              */
-            { OiyokanConstants.OIYOKAN_INTERNAL_TARGET_DB, "sample-sakila-db-h2.sql" }, //
+            { OiyokanConstants.OIYOKAN_UNITTEST_DB, "sample-sakila-db-h2.sql" }, //
     };
 
     /**

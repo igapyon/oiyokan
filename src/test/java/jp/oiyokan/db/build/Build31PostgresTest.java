@@ -38,6 +38,7 @@ class Build31PostgresTest {
             "DROP TABLE \"OData Test4\"", //
             "DROP TABLE ODataTest5", //
             "DROP TABLE ODataTest6", //
+            "DROP TABLE ODataTest7", //
     };
 
     @Test

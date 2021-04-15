@@ -45,17 +45,17 @@ public class OiyokanKanDatabase {
             /*
              * Oiyokan の基本機能を確認およびビルド時の JUnitテストで利用. 変更するとビルドが動作しなくなる場合あり.
              */
-            { OiyokanConstants.OIYOKAN_INTERNAL_DB, "oiyokan-test-oiyo.sql" },
+            { OiyokanConstants.OIYOKAN_KAN_DB, "oiyokan-test-oiyo.sql" },
 
             /*
              * Sakila dvdrental サンプルDB に接続するための Oiyo 情報.
              */
-            { OiyokanConstants.OIYOKAN_INTERNAL_DB, "sample-sakila-oiyo.sql" },
+            { OiyokanConstants.OIYOKAN_KAN_DB, "sample-sakila-oiyo.sql" },
 
             /*
              * Oiyokan のターゲットデータベースの Oiyo情報を記述。github上では空白ファイルとする.
              */
-            { OiyokanConstants.OIYOKAN_INTERNAL_DB, "oiyokan-oiyo.sql" }, };
+            { OiyokanConstants.OIYOKAN_KAN_DB, "oiyokan-oiyo.sql" }, };
 
     private OiyokanKanDatabase() {
     }
@@ -72,7 +72,7 @@ public class OiyokanKanDatabase {
                     "OData v4: setup oiyokanKan database (Oiyokan: " + OiyokanConstants.VERSION + ")");
 
         OiyokanSettingsDatabase settingsInterDatabase = OiyokanSettingsUtil
-                .getOiyokanDatabase(OiyokanConstants.OIYOKAN_INTERNAL_DB);
+                .getOiyokanDatabase(OiyokanConstants.OIYOKAN_KAN_DB);
 
         try (Connection connInterDb = OiyoBasicJdbcUtil.getConnection(settingsInterDatabase)) {
             // Internal Database の バージョン情報および Oiyokanテーブルを setup.

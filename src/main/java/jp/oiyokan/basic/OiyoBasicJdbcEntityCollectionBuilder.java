@@ -77,6 +77,9 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
             return entityCollection;
         }
 
+        if (OiyokanConstants.IS_TRACE_ODATA_V4)
+            System.err.println("OData v4: TRACE: QUERY: " + edmEntitySet.getName());
+
         //////////////////////////////////////////////
         // Oiyokan が対応しない処理を拒絶するための記述.
         if (uriInfo.getSearchOption() != null && !OiyokanConstants.IS_EXPERIMENTAL_SEARCH_ENABLED) {

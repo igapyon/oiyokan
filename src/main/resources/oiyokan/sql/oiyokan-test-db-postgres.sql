@@ -1,8 +1,8 @@
-CREATE TABLE
+CREATE TABLE IF NOT EXISTS
   ODataTest1 (
     ID INT NOT NULL
-    , Name VARCHAR(80) NOT NULL
-    , Description VARCHAR(250)
+    , Name VARCHAR(80) DEFAULT 'Types UnitTest' NOT NULL
+    , Description VARCHAR(250) DEFAULT 'Types UnitTest table.' NOT NULL
     , Sbyte1 SMALLINT DEFAULT 127
     , Int16a SMALLINT DEFAULT 32767
     , Int32a INT DEFAULT 2147483647
@@ -22,7 +22,6 @@ CREATE TABLE
     , VarBinary1 bytea
     , LongVarBinary1 bytea
     , Blob1 bytea
-    , Uuid1 UUID DEFAULT gen_random_uuid()
     , PRIMARY KEY(ID)
   );
 
@@ -31,15 +30,15 @@ CREATE TABLE IF NOT EXISTS
     Decimal1 DECIMAL(6,2) DEFAULT 1234.56
     , StringChar8 CHAR(8) DEFAULT 'CHAR_VAL'
     , StringVar255 VARCHAR(255) DEFAULT 'VARCHAR255'
-    , Name VARCHAR(80) NOT NULL
+    , Name VARCHAR(80) DEFAULT 'Multi-col UnitTest' NOT NULL
     , Description VARCHAR(250)
     , PRIMARY KEY(Decimal1,StringChar8,StringVar255)
   );
 
 CREATE TABLE IF NOT EXISTS
   ODataTest3 (
-    ID INT
-    , Name VARCHAR(80)
+    ID INT NOT NULL
+    , Name VARCHAR(80) DEFAULT 'NULLABLE UnitTest'
     , Description VARCHAR(250)
     , Sbyte1 SMALLINT DEFAULT 127
     , Int16a SMALLINT DEFAULT 32767
@@ -60,14 +59,13 @@ CREATE TABLE IF NOT EXISTS
     , VarBinary1 bytea
     , LongVarBinary1 bytea
     , Blob1 bytea
-    , Uuid1 UUID DEFAULT gen_random_uuid()
     , PRIMARY KEY(ID)
   );
 
 CREATE TABLE IF NOT EXISTS
   "OData Test4" (
     "I D" INT NOT NULL
-    , "Na me" VARCHAR(80) DEFAULT 'Name1'
+    , "Na me" VARCHAR(80) DEFAULT 'Column name w/space UnitTest'
     , "Va lue1" VARCHAR(255) DEFAULT 'VALUEVALUE12345'
     , PRIMARY KEY("I D","Na me")
   );
@@ -75,7 +73,7 @@ CREATE TABLE IF NOT EXISTS
 CREATE TABLE IF NOT EXISTS
   ODataTest5 (
     Iden1 SERIAL NOT NULL
-    , Name VARCHAR(80) DEFAULT 'Name1'
+    , Name VARCHAR(80) DEFAULT 'IDENTITY UnitTest'
     , Value1 VARCHAR(255) DEFAULT 'VALUEVALUE12345'
     , PRIMARY KEY(Iden1)
   );
@@ -89,6 +87,15 @@ CREATE TABLE IF NOT EXISTS
     , VarBinary1 bytea
     , LongVarBinary1 bytea
     , Blob1 bytea
+    , PRIMARY KEY(ID)
+  );
+
+CREATE TABLE IF NOT EXISTS
+  ODataTest7 (
+    ID INT NOT NULL
+    , Name VARCHAR(80) DEFAULT 'UUID UnitTest'
+    , Description VARCHAR(250) DEFAULT 'UUID UnitTest table.'
+    , Uuid1 UUID DEFAULT gen_random_uuid()
     , PRIMARY KEY(ID)
   );
 

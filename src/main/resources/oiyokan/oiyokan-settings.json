@@ -12,7 +12,7 @@
 			"jdbcPass": ""
 		},
 		{
-			"name": "oiyokanInternalTarget",
+			"name": "oiyoUnitTestDb",
 			"type": "h2",
 			"description": "Oiyokan internal Target Test DB. Used for build unit test.",
 			"jdbcDriver": "org.h2.Driver",
@@ -77,65 +77,74 @@
 			"dbTableNameTarget": "Oiyokan"
 		},
 		{
-			"name": "oiyokan-test-database",
+			"name": "UnitTest-Types",
 			"description": "Oiyokan internal Target Test Entity.[FOR UNIT TEST].",
 			"entitySetName": "ODataTests1",
 			"entityName": "ODataTest1",
-			"databaseName": "oiyokanInternalTarget",
+			"databaseName": "oiyoUnitTestDb",
 			"dbTableNameLocal": "OiyoODataTest1",
 			"dbTableNameTarget": "ODataTest1"
 		},
 		{
-			"name": "oiyokan-test-database2",
+			"name": "UnitTest-Multi-col",
 			"description": "Oiyokan internal Target Test Entity. 複数項目で一意のサンプル.",
 			"entitySetName": "ODataTests2",
 			"entityName": "ODataTest2",
-			"databaseName": "oiyokanInternalTarget",
+			"databaseName": "oiyoUnitTestDb",
 			"dbTableNameLocal": "OiyoODataTest2",
 			"dbTableNameTarget": "ODataTest2"
 		},
 		{
-			"name": "oiyokan-test-database3",
+			"name": "UnitTest-NULLABLE",
 			"description": "Oiyokan internal Target Test Entity. キー以外がnull許容のサンプル.",
 			"entitySetName": "ODataTests3",
 			"entityName": "ODataTest3",
-			"databaseName": "oiyokanInternalTarget",
+			"databaseName": "oiyoUnitTestDb",
 			"dbTableNameLocal": "OiyoODataTest3",
 			"dbTableNameTarget": "ODataTest3"
 		},
 		{
-			"name": "oiyokan-test-database4",
+			"name": "UnitTest-ColumnNameW/Space",
 			"description": "Oiyokan internal Target Test Entity. 空白含み項目.",
 			"entitySetName": "ODataTests4",
 			"entityName": "ODataTest4",
-			"databaseName": "oiyokanInternalTarget",
+			"databaseName": "oiyoUnitTestDb",
 			"dbTableNameLocal": "OiyoODataTest4",
 			"dbTableNameTarget": "OData Test4"
 		},
 		{
-			"name": "oiyokan-test-database5",
+			"name": "UnitTest-IDENTITY",
 			"description": "Oiyokan internal Target Test Entity. 自動採番.",
 			"entitySetName": "ODataTests5",
 			"entityName": "ODataTest5",
-			"databaseName": "oiyokanInternalTarget",
+			"databaseName": "oiyoUnitTestDb",
 			"dbTableNameLocal": "OiyoODataTest5",
 			"dbTableNameTarget": "ODataTest5"
 		},
 		{
-			"name": "oiyokan-test-database6",
+			"name": "UnitTest-Binary",
 			"description": "Oiyokan internal Target Test Entity. BINARY.",
 			"entitySetName": "ODataTests6",
 			"entityName": "ODataTest6",
-			"databaseName": "oiyokanInternalTarget",
+			"databaseName": "oiyoUnitTestDb",
 			"dbTableNameLocal": "OiyoODataTest6",
 			"dbTableNameTarget": "ODataTest6"
 		},
 		{
-			"name": "oiyokan-test-database-fulltext",
+			"name": "UnitTest-UUID",
+			"description": "Oiyokan internal Target Test Entity. UUID.",
+			"entitySetName": "ODataTests7",
+			"entityName": "ODataTest7",
+			"databaseName": "oiyoUnitTestDb",
+			"dbTableNameLocal": "OiyoODataTest7",
+			"dbTableNameTarget": "ODataTest7"
+		},
+		{
+			"name": "UnitTest-Fulltext",
 			"description": "Oiyokan internal Target Test Entity (Fulltext - Experimental). Used for build unit test.",
 			"entitySetName": "ODataTestFulls1",
 			"entityName": "ODataTestFull1",
-			"databaseName": "oiyokanInternalTarget",
+			"databaseName": "oiyoUnitTestDb",
 			"dbTableNameLocal": "OiyoODataTestFulls1",
 			"dbTableNameTarget": "ODataTestFulls1"
 		},
@@ -144,7 +153,7 @@
 			"description": "Sakila dvdrental sample db: actor",
 			"entitySetName": "SklActors",
 			"entityName": "SklActor",
-			"databaseName": "oiyokanInternalTarget",
+			"databaseName": "oiyoUnitTestDb",
 			"dbTableNameLocal": "Oiyoactor",
 			"dbTableNameTarget": "actor"
 		},
@@ -153,7 +162,7 @@
 			"description": "Sakila dvdrental sample db: actor_info",
 			"entitySetName": "SklActorInfos",
 			"entityName": "SklActoInfor",
-			"databaseName": "oiyokanInternalTarget",
+			"databaseName": "oiyoUnitTestDb",
 			"dbTableNameLocal": "Oiyoactor_info",
 			"dbTableNameTarget": "actor_info"
 		},
@@ -162,7 +171,7 @@
 			"description": "Sakila dvdrental sample db: address",
 			"entitySetName": "SklAddresses",
 			"entityName": "SklAddress",
-			"databaseName": "oiyokanInternalTarget",
+			"databaseName": "oiyoUnitTestDb",
 			"dbTableNameLocal": "Oiyoaddress",
 			"dbTableNameTarget": "address"
 		},
@@ -171,7 +180,7 @@
 			"description": "Sakila dvdrental sample db: category",
 			"entitySetName": "SklCategories",
 			"entityName": "SklCategory",
-			"databaseName": "oiyokanInternalTarget",
+			"databaseName": "oiyoUnitTestDb",
 			"dbTableNameLocal": "Oiyocategory",
 			"dbTableNameTarget": "category"
 		},
@@ -180,7 +189,7 @@
 			"description": "Sakila dvdrental sample db: city",
 			"entitySetName": "SklCities",
 			"entityName": "SklCity",
-			"databaseName": "oiyokanInternalTarget",
+			"databaseName": "oiyoUnitTestDb",
 			"dbTableNameLocal": "Oiyocity",
 			"dbTableNameTarget": "city"
 		},
@@ -189,7 +198,7 @@
 			"description": "Sakila dvdrental sample db: country",
 			"entitySetName": "SklCountries",
 			"entityName": "SklCountry",
-			"databaseName": "oiyokanInternalTarget",
+			"databaseName": "oiyoUnitTestDb",
 			"dbTableNameLocal": "Oiyocountry",
 			"dbTableNameTarget": "country"
 		},
@@ -198,7 +207,7 @@
 			"description": "Sakila dvdrental sample db: customer",
 			"entitySetName": "SklCustomers",
 			"entityName": "SklCustomer",
-			"databaseName": "oiyokanInternalTarget",
+			"databaseName": "oiyoUnitTestDb",
 			"dbTableNameLocal": "Oiyocustomer",
 			"dbTableNameTarget": "customer"
 		},
@@ -207,7 +216,7 @@
 			"description": "Sakila dvdrental sample db: customer_list",
 			"entitySetName": "SklCustomerLists",
 			"entityName": "SklCustomerList",
-			"databaseName": "oiyokanInternalTarget",
+			"databaseName": "oiyoUnitTestDb",
 			"dbTableNameLocal": "Oiyocustomer_list",
 			"dbTableNameTarget": "customer_list"
 		},
@@ -216,7 +225,7 @@
 			"description": "Sakila dvdrental sample db: film",
 			"entitySetName": "SklFilms",
 			"entityName": "SklFilm",
-			"databaseName": "oiyokanInternalTarget",
+			"databaseName": "oiyoUnitTestDb",
 			"dbTableNameLocal": "Oiyofilm",
 			"dbTableNameTarget": "film"
 		},
@@ -225,7 +234,7 @@
 			"description": "Sakila dvdrental sample db: film_actor",
 			"entitySetName": "SklFilmActors",
 			"entityName": "SklFilmActor",
-			"databaseName": "oiyokanInternalTarget",
+			"databaseName": "oiyoUnitTestDb",
 			"dbTableNameLocal": "Oiyofilm_actor",
 			"dbTableNameTarget": "film_actor"
 		},
@@ -234,7 +243,7 @@
 			"description": "Sakila dvdrental sample db: film_category",
 			"entitySetName": "SklFilmCategories",
 			"entityName": "SklFilmCategory",
-			"databaseName": "oiyokanInternalTarget",
+			"databaseName": "oiyoUnitTestDb",
 			"dbTableNameLocal": "Oiyofilm_category",
 			"dbTableNameTarget": "film_category"
 		},
@@ -243,7 +252,7 @@
 			"description": "Sakila dvdrental sample db: film_list",
 			"entitySetName": "SklFilmLists",
 			"entityName": "SklFilmList",
-			"databaseName": "oiyokanInternalTarget",
+			"databaseName": "oiyoUnitTestDb",
 			"dbTableNameLocal": "Oiyofilm_list",
 			"dbTableNameTarget": "film_list"
 		},
@@ -252,7 +261,7 @@
 			"description": "Sakila dvdrental sample db: inventory",
 			"entitySetName": "SklInventories",
 			"entityName": "SklInventory",
-			"databaseName": "oiyokanInternalTarget",
+			"databaseName": "oiyoUnitTestDb",
 			"dbTableNameLocal": "Oiyoinventory",
 			"dbTableNameTarget": "inventory"
 		},
@@ -261,7 +270,7 @@
 			"description": "Sakila dvdrental sample db: language",
 			"entitySetName": "SklLanguages",
 			"entityName": "SklLanguage",
-			"databaseName": "oiyokanInternalTarget",
+			"databaseName": "oiyoUnitTestDb",
 			"dbTableNameLocal": "Oiyolanguage",
 			"dbTableNameTarget": "language"
 		},
@@ -270,7 +279,7 @@
 			"description": "Sakila dvdrental sample db: nicer_but_slower_film_list",
 			"entitySetName": "SklNicerButSlowerFilmLists",
 			"entityName": "SklNicerButSlowerFilmList",
-			"databaseName": "oiyokanInternalTarget",
+			"databaseName": "oiyoUnitTestDb",
 			"dbTableNameLocal": "Oiyonicer_but_slower_film_list",
 			"dbTableNameTarget": "nicer_but_slower_film_list"
 		},
@@ -279,7 +288,7 @@
 			"description": "Sakila dvdrental sample db: payment",
 			"entitySetName": "SklPayments",
 			"entityName": "SklPayment",
-			"databaseName": "oiyokanInternalTarget",
+			"databaseName": "oiyoUnitTestDb",
 			"dbTableNameLocal": "Oiyopayment",
 			"dbTableNameTarget": "payment"
 		},
@@ -288,7 +297,7 @@
 			"description": "Sakila dvdrental sample db: rental",
 			"entitySetName": "SklRentals",
 			"entityName": "SklRental",
-			"databaseName": "oiyokanInternalTarget",
+			"databaseName": "oiyoUnitTestDb",
 			"dbTableNameLocal": "Oiyorental",
 			"dbTableNameTarget": "rental"
 		},
@@ -297,7 +306,7 @@
 			"description": "Sakila dvdrental sample db: sales_by_film_category",
 			"entitySetName": "SklSalesByFilmCategories",
 			"entityName": "SklSalesByFilmCategory",
-			"databaseName": "oiyokanInternalTarget",
+			"databaseName": "oiyoUnitTestDb",
 			"dbTableNameLocal": "Oiyosales_by_film_category",
 			"dbTableNameTarget": "sales_by_film_category"
 		},
@@ -306,7 +315,7 @@
 			"description": "Sakila dvdrental sample db: sales_by_store",
 			"entitySetName": "SklSalesByStores",
 			"entityName": "SklSalesByStore",
-			"databaseName": "oiyokanInternalTarget",
+			"databaseName": "oiyoUnitTestDb",
 			"dbTableNameLocal": "Oiyosales_by_store",
 			"dbTableNameTarget": "sales_by_store"
 		},
@@ -315,7 +324,7 @@
 			"description": "Sakila dvdrental sample db: staff",
 			"entitySetName": "SklStaffs",
 			"entityName": "SklStaff",
-			"databaseName": "oiyokanInternalTarget",
+			"databaseName": "oiyoUnitTestDb",
 			"dbTableNameLocal": "Oiyostaff",
 			"dbTableNameTarget": "staff"
 		},
@@ -324,7 +333,7 @@
 			"description": "Sakila dvdrental sample db: staff_list",
 			"entitySetName": "SklStaffLists",
 			"entityName": "SklStaffList",
-			"databaseName": "oiyokanInternalTarget",
+			"databaseName": "oiyoUnitTestDb",
 			"dbTableNameLocal": "Oiyostaff_list",
 			"dbTableNameTarget": "staff_list"
 		},
@@ -333,7 +342,7 @@
 			"description": "Sakila dvdrental sample db: store",
 			"entitySetName": "SklStores",
 			"entityName": "SklStore",
-			"databaseName": "oiyokanInternalTarget",
+			"databaseName": "oiyoUnitTestDb",
 			"dbTableNameLocal": "Oiyostore",
 			"dbTableNameTarget": "store"
 		}

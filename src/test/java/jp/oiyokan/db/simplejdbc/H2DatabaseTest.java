@@ -39,7 +39,7 @@ class H2DatabaseTest {
             return;
 
         try (Connection conn = OiyoBasicJdbcUtil
-                .getConnection(OiyokanSettingsUtil.getOiyokanDatabase(OiyokanConstants.OIYOKAN_INTERNAL_TARGET_DB))) {
+                .getConnection(OiyokanSettingsUtil.getOiyokanDatabase(OiyokanConstants.OIYOKAN_UNITTEST_DB))) {
 
             try (var stmt = conn.prepareStatement("SELECT ID, Name, Description FROM ODataTest1 ORDER BY ID LIMIT 3")) {
                 stmt.executeQuery();
@@ -55,7 +55,7 @@ class H2DatabaseTest {
             return;
 
         try (Connection conn = OiyoBasicJdbcUtil
-                .getConnection(OiyokanSettingsUtil.getOiyokanDatabase(OiyokanConstants.OIYOKAN_INTERNAL_TARGET_DB))) {
+                .getConnection(OiyokanSettingsUtil.getOiyokanDatabase(OiyokanConstants.OIYOKAN_UNITTEST_DB))) {
 
             try (var stmt = conn.prepareStatement("SELECT ID, Name, Description" //
                     + ",Sbyte1,Int16a,Int32a,Int64a,Decimal1,StringChar8,StringVar255,Boolean1,Single1,Double1,DateTimeOffset1,TimeOfDay1" //
@@ -83,13 +83,13 @@ class H2DatabaseTest {
             return;
 
         try (Connection conn = OiyoBasicJdbcUtil
-                .getConnection(OiyokanSettingsUtil.getOiyokanDatabase(OiyokanConstants.OIYOKAN_INTERNAL_DB))) {
+                .getConnection(OiyokanSettingsUtil.getOiyokanDatabase(OiyokanConstants.OIYOKAN_KAN_DB))) {
             // 内部データベースのテーブルをセットアップ.
             OiyokanKanDatabase.setupKanDatabase();
         }
 
         try (Connection conn = OiyoBasicJdbcUtil
-                .getConnection(OiyokanSettingsUtil.getOiyokanDatabase(OiyokanConstants.OIYOKAN_INTERNAL_TARGET_DB))) {
+                .getConnection(OiyokanSettingsUtil.getOiyokanDatabase(OiyokanConstants.OIYOKAN_UNITTEST_DB))) {
 
             try (var stmt = conn.prepareStatement(
                     "SELECT address_id FROM address WHERE ((address2 IS NULL) AND (address = ?)) LIMIT 2001")) {

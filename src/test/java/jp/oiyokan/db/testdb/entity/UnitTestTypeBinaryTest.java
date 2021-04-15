@@ -64,7 +64,7 @@ class UnitTestTypeBinaryTest {
         if (false/* ここは h2 database のときのみ通過が可能 */) {
             // generic JDBC
             try (Connection conn = OiyoBasicJdbcUtil.getConnection(
-                    OiyokanSettingsUtil.getOiyokanDatabase(OiyokanConstants.OIYOKAN_INTERNAL_TARGET_DB))) {
+                    OiyokanSettingsUtil.getOiyokanDatabase(OiyokanConstants.OIYOKAN_UNITTEST_DB))) {
 
                 try (var stmt = conn.prepareStatement("SELECT Binary1 FROM ODataTest6 WHERE ID = " + TEST_ID)) {
                     stmt.executeQuery();
