@@ -54,6 +54,7 @@ public class OiyoSettingsUtil {
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(strOiyokanSettings, Oiyo13Settings.class);
         } catch (IOException ex) {
+            ex.printStackTrace();
             // [M024] UNEXPECTED: Fail to load Oiyokan settings
             System.err.println(OiyokanMessages.M024 + ": " + ex.toString());
             throw new ODataApplicationException(OiyokanMessages.M024, 500, Locale.ENGLISH);
@@ -68,8 +69,15 @@ public class OiyoSettingsUtil {
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
     public static Oiyo13SettingsDatabase getOiyokanDatabase(String databaseDefName) throws ODataApplicationException {
+        if (databaseDefName == null) {
+            // TODO FIXME メッセージ番号採番。
+            // [M026] UNEXPECTED: Database settings NOT found
+            System.err.println(OiyokanMessages.M026 + ": " + databaseDefName);
+            throw new ODataApplicationException(OiyokanMessages.M026 + ": " + databaseDefName, 500, Locale.ENGLISH);
+        }
+
         final Oiyo13Settings settingsOiyokan = OiyokanCsdlEntityContainer.getSettingsInstance();
-        for (Oiyo13SettingsDatabase look : settingsOiyokan.getDatabaseList()) {
+        for (Oiyo13SettingsDatabase look : settingsOiyokan.getDatabase()) {
             if (databaseDefName.equals(look.getName())) {
                 return look;
             }

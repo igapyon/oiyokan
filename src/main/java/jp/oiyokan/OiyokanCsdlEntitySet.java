@@ -77,7 +77,7 @@ public class OiyokanCsdlEntitySet extends CsdlEntitySet {
      * @throws ODataApplicationException ODataアプリ例外.
      */
     public Oiyo13SettingsDatabase getSettingsDatabase() throws ODataApplicationException {
-        return OiyoSettingsUtil.getOiyokanDatabase(settingsEntitySet.getDatabaseName());
+        return OiyoSettingsUtil.getOiyokanDatabase(settingsEntitySet.getDbSettingName());
     }
 
     /**
@@ -107,7 +107,7 @@ public class OiyokanCsdlEntitySet extends CsdlEntitySet {
      */
     public OiyokanCsdlEntitySet(OiyokanCsdlEntityContainer entityContainer, Oiyo13SettingsEntitySet settingsEntitySet)
             throws ODataApplicationException {
-        setName(settingsEntitySet.getEntitySetName());
+        setName(settingsEntitySet.getName());
         this.csdlEntityContainer = entityContainer;
         this.settingsEntitySet = settingsEntitySet;
 
@@ -122,7 +122,7 @@ public class OiyokanCsdlEntitySet extends CsdlEntitySet {
                     + ", type:" + getSettingsDatabase().getType(), 500, Locale.ENGLISH);
         }
 
-        setType(new FullQualifiedName(entityContainer.getNamespaceIyo(), settingsEntitySet.getEntityName()));
+        setType(new FullQualifiedName(entityContainer.getNamespaceIyo(), settingsEntitySet.getEntityType().getName()));
     }
 
     /**
@@ -131,7 +131,7 @@ public class OiyokanCsdlEntitySet extends CsdlEntitySet {
      * @return エンティティ名. ODataTest1 相当.
      */
     public String getEntityNameIyo() {
-        return settingsEntitySet.getEntityName();
+        return settingsEntitySet.getEntityType().getName();
     }
 
     /**
@@ -150,7 +150,7 @@ public class OiyokanCsdlEntitySet extends CsdlEntitySet {
      * @return ローカルの Oiyoテーブル名.
      */
     public String getDbTableNameLocalOiyo() {
-        return settingsEntitySet.getDbTableNameLocal();
+        return "Oiyo" + settingsEntitySet.getEntityType().getDbName();
     }
 
     /**
@@ -159,6 +159,6 @@ public class OiyokanCsdlEntitySet extends CsdlEntitySet {
      * @return ターゲットのDBテーブル名.
      */
     public String getDbTableNameTargetIyo() {
-        return settingsEntitySet.getDbTableNameTarget();
+        return settingsEntitySet.getEntityType().getDbName();
     }
 }

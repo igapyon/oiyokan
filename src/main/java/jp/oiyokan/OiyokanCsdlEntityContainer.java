@@ -87,7 +87,7 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
                 return;
             }
 
-            for (Oiyo13SettingsDatabase settingsDatabase : getSettingsInstance().getDatabaseList()) {
+            for (Oiyo13SettingsDatabase settingsDatabase : getSettingsInstance().getDatabase()) {
                 if (OiyokanConstants.IS_TRACE_ODATA_V4)
                     System.err.println("OData v4: Check JDBC Driver: " + settingsDatabase.getJdbcDriver());
                 try {
@@ -117,7 +117,7 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
             // Oiyokan が動作する際に必要になる内部データベースのバージョン情報および Oiyo info をセットアップ.
             OiyokanKanDatabase.setupKanDatabase();
 
-            for (Oiyo13SettingsEntitySet entitySetCnof : getSettingsInstance().getEntitySetList()) {
+            for (Oiyo13SettingsEntitySet entitySetCnof : getSettingsInstance().getEntitySet()) {
                 // System.err.println("TRACE: entitySet: " + entitySetCnof.getEntitySetName() +
                 // ", dbname: "
                 // + entitySetCnof.getDatabaseName());

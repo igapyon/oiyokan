@@ -18,6 +18,8 @@ package jp.oiyokan.dto;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.annotation.Generated;
+
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -26,35 +28,29 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 /**
- * resources フォルダの oiyokan-settings.json の Javaインスタンス.
- * 
  * http://www.jsonschema2pojo.org/ を利用して自動生成.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({ "name", "description", "entitySetName", "entityName", "databaseName", "dbTableNameLocal",
-        "dbTableNameTarget" })
+@JsonPropertyOrder({ "name", "description", "dbSettingName", "canCreate", "canRead", "canUpdate", "canDelete",
+        "entityType" })
+@Generated("jsonschema2pojo")
 public class Oiyo13SettingsEntitySet {
     @JsonProperty("name")
     private String name;
-
     @JsonProperty("description")
     private String description;
-
-    @JsonProperty("entitySetName")
-    private String entitySetName;
-
-    @JsonProperty("entityName")
-    private String entityName;
-
-    @JsonProperty("databaseName")
-    private String databaseName;
-
-    @JsonProperty("dbTableNameLocal")
-    private String dbTableNameLocal;
-
-    @JsonProperty("dbTableNameTarget")
-    private String dbTableNameTarget;
-
+    @JsonProperty("dbSettingName")
+    private String dbSettingName;
+    @JsonProperty("canCreate")
+    private Boolean canCreate;
+    @JsonProperty("canRead")
+    private Boolean canRead;
+    @JsonProperty("canUpdate")
+    private Boolean canUpdate;
+    @JsonProperty("canDelete")
+    private Boolean canDelete;
+    @JsonProperty("entityType")
+    private Oiyo13SettingsEntityType entityType;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -78,54 +74,64 @@ public class Oiyo13SettingsEntitySet {
         this.description = description;
     }
 
-    @JsonProperty("entitySetName")
-    public String getEntitySetName() {
-        return entitySetName;
+    @JsonProperty("dbSettingName")
+    public String getDbSettingName() {
+        return dbSettingName;
     }
 
-    @JsonProperty("entitySetName")
-    public void setEntitySetName(String entitySetName) {
-        this.entitySetName = entitySetName;
+    @JsonProperty("dbSettingName")
+    public void setDbSettingName(String dbSettingName) {
+        this.dbSettingName = dbSettingName;
     }
 
-    @JsonProperty("entityName")
-    public String getEntityName() {
-        return entityName;
+    @JsonProperty("canCreate")
+    public Boolean getCanCreate() {
+        return canCreate;
     }
 
-    @JsonProperty("entityName")
-    public void setEntityName(String entityName) {
-        this.entityName = entityName;
+    @JsonProperty("canCreate")
+    public void setCanCreate(Boolean canCreate) {
+        this.canCreate = canCreate;
     }
 
-    @JsonProperty("databaseName")
-    public String getDatabaseName() {
-        return databaseName;
+    @JsonProperty("canRead")
+    public Boolean getCanRead() {
+        return canRead;
     }
 
-    @JsonProperty("databaseName")
-    public void setDatabaseName(String databaseName) {
-        this.databaseName = databaseName;
+    @JsonProperty("canRead")
+    public void setCanRead(Boolean canRead) {
+        this.canRead = canRead;
     }
 
-    @JsonProperty("dbTableNameLocal")
-    public String getDbTableNameLocal() {
-        return dbTableNameLocal;
+    @JsonProperty("canUpdate")
+    public Boolean getCanUpdate() {
+        return canUpdate;
     }
 
-    @JsonProperty("dbTableNameLocal")
-    public void setDbTableNameLocal(String dbTableNameLocal) {
-        this.dbTableNameLocal = dbTableNameLocal;
+    @JsonProperty("canUpdate")
+    public void setCanUpdate(Boolean canUpdate) {
+        this.canUpdate = canUpdate;
     }
 
-    @JsonProperty("dbTableNameTarget")
-    public String getDbTableNameTarget() {
-        return dbTableNameTarget;
+    @JsonProperty("canDelete")
+    public Boolean getCanDelete() {
+        return canDelete;
     }
 
-    @JsonProperty("dbTableNameTarget")
-    public void setDbTableNameTarget(String dbTableNameTarget) {
-        this.dbTableNameTarget = dbTableNameTarget;
+    @JsonProperty("canDelete")
+    public void setCanDelete(Boolean canDelete) {
+        this.canDelete = canDelete;
+    }
+
+    @JsonProperty("entityType")
+    public Oiyo13SettingsEntityType getEntityType() {
+        return entityType;
+    }
+
+    @JsonProperty("entityType")
+    public void setEntityType(Oiyo13SettingsEntityType entityType) {
+        this.entityType = entityType;
     }
 
     @JsonAnyGetter
@@ -137,5 +143,4 @@ public class Oiyo13SettingsEntitySet {
     public void setAdditionalProperty(String name, Object value) {
         this.additionalProperties.put(name, value);
     }
-
 }

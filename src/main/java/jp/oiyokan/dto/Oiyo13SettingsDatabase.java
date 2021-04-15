@@ -18,6 +18,8 @@ package jp.oiyokan.dto;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.annotation.Generated;
+
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -26,34 +28,27 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 /**
- * resources フォルダの oiyokan-settings.json の Javaインスタンス.
- * 
  * http://www.jsonschema2pojo.org/ を利用して自動生成.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({ "name", "type", "description", "jdbcDriver", "jdbcUrl", "jdbcUser", "jdbcPass" })
+@Generated("jsonschema2pojo")
 public class Oiyo13SettingsDatabase {
+
     @JsonProperty("name")
     private String name;
-
     @JsonProperty("type")
     private String type;
-
     @JsonProperty("description")
     private String description;
-
     @JsonProperty("jdbcDriver")
     private String jdbcDriver;
-
     @JsonProperty("jdbcUrl")
     private String jdbcUrl;
-
     @JsonProperty("jdbcUser")
     private String jdbcUser;
-
     @JsonProperty("jdbcPass")
     private String jdbcPass;
-
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 

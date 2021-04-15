@@ -19,6 +19,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Generated;
+
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -27,25 +29,21 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 /**
- * resources フォルダの oiyokan-settings.json の Javaインスタンス.
- * 
  * http://www.jsonschema2pojo.org/ を利用して自動生成.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({ "namespace", "containerName", "database", "entitySet" })
+@Generated("jsonschema2pojo")
 public class Oiyo13Settings {
+
     @JsonProperty("namespace")
     private String namespace;
-
     @JsonProperty("containerName")
     private String containerName;
-
     @JsonProperty("database")
-    private List<Oiyo13SettingsDatabase> databaseList = null;
-
+    private List<Oiyo13SettingsDatabase> database = null;
     @JsonProperty("entitySet")
-    private List<Oiyo13SettingsEntitySet> entitySetList = null;
-
+    private List<Oiyo13SettingsEntitySet> entitySet = null;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -70,23 +68,23 @@ public class Oiyo13Settings {
     }
 
     @JsonProperty("database")
-    public List<Oiyo13SettingsDatabase> getDatabaseList() {
-        return databaseList;
+    public List<Oiyo13SettingsDatabase> getDatabase() {
+        return database;
     }
 
     @JsonProperty("database")
-    public void setDatabaseList(List<Oiyo13SettingsDatabase> databaseList) {
-        this.databaseList = databaseList;
+    public void setDatabase(List<Oiyo13SettingsDatabase> database) {
+        this.database = database;
     }
 
     @JsonProperty("entitySet")
-    public List<Oiyo13SettingsEntitySet> getEntitySetList() {
-        return entitySetList;
+    public List<Oiyo13SettingsEntitySet> getEntitySet() {
+        return entitySet;
     }
 
     @JsonProperty("entitySet")
-    public void setEntitySetList(List<Oiyo13SettingsEntitySet> entitySetList) {
-        this.entitySetList = entitySetList;
+    public void setEntitySet(List<Oiyo13SettingsEntitySet> entitySet) {
+        this.entitySet = entitySet;
     }
 
     @JsonAnyGetter

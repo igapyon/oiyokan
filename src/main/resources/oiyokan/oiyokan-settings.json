@@ -1,350 +1,113 @@
 {
-	"namespace": "Oiyokan",
-	"containerName": "Container",
-	"database": [
-		{
-			"name": "oiyokanKan",
-			"type": "h2",
-			"description": "Oiyokan internal DB. Do not change.",
-			"jdbcDriver": "org.h2.Driver",
-			"jdbcUrl": "jdbc:h2:mem:oiyokan;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=FALSE;MODE=MSSQLServer",
-			"jdbcUser": "sa",
-			"jdbcPass": ""
-		},
-		{
-			"name": "oiyoUnitTestDb",
-			"type": "h2",
-			"description": "Oiyokan internal Target Test DB. Used for build unit test.",
-			"jdbcDriver": "org.h2.Driver",
-			"jdbcUrl": "jdbc:h2:file:./src/main/resources/db/oiyokan-internal;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=FALSE;MODE=MSSQLServer",
-			"jdbcUser": "sa",
-			"jdbcPass": ""
-		},
-		{
-			"name": "postgres1",
-			"type": "postgres",
-			"description": "Sample postgres settings. Change the settings to suit your environment.",
-			"jdbcDriver": "org.postgresql.Driver",
-			"jdbcUrl": "jdbc:postgresql://localhost:5432/dvdrental",
-			"jdbcUser": "",
-			"jdbcPass": ""
-		},
-		{
-			"name": "mysql1",
-			"type": "MySQL",
-			"description": "Sample MySQL settings. Change the settings to suit your environment.",
-			"jdbcDriver": "com.mysql.jdbc.Driver",
-			"jdbcUrl": "jdbc:mysql://localhost/mysql?useUnicode=true&characterEncoding=UTF-8&characterSetResults=UTF-8&useCursorFetch=true&defaultFetchSize=128&useServerPrepStmts=true&emulateUnsupportedPstmts=false",
-			"jdbcUser": "root",
-			"jdbcPass": "passwd123"
-		},
-		{
-			"name": "mysql2",
-			"type": "MySQL",
-			"description": "Sample MySQL settings for Sakila. Change the settings to suit your environment.",
-			"jdbcDriver": "com.mysql.jdbc.Driver",
-			"jdbcUrl": "jdbc:mysql://localhost/sakila?useUnicode=true&characterEncoding=UTF-8&characterSetResults=UTF-8&useCursorFetch=true&defaultFetchSize=128&useServerPrepStmts=true&emulateUnsupportedPstmts=false",
-			"jdbcUser": "root",
-			"jdbcPass": "passwd123"
-		},
-		{
-			"name": "mssql1",
-			"type": "MSSQL2008",
-			"description": "Sample MS SQL Server 2008 settings. Change the settings to suit your environment.",
-			"jdbcDriver": "com.microsoft.sqlserver.jdbc.SQLServerDriver",
-			"jdbcUrl": "jdbc:sqlserver://localhost\\SQLExpress;SelectMethod=cursor",
-			"jdbcUser": "sa",
-			"jdbcPass": "passwd123"
-		},
-		{
-			"name": "oracle1",
-			"type": "ORACLE",
-			"description": "Sample Oracle XE (18c) settings. Change the settings to suit your environment.",
-			"jdbcDriver": "oracle.jdbc.driver.OracleDriver",
-			"jdbcUrl": "jdbc:oracle:thin:@10.0.2.15:1521/xepdb1",
-			"jdbcUser": "orauser",
-			"jdbcPass": "passwd123"
-		}
-	],
-	"entitySet": [
-		{
-			"name": "oiyokan-kan",
-			"description": "Oiyokan internal info. Do not change.",
-			"entitySetName": "Oiyokans",
-			"entityName": "Oiyokan",
-			"databaseName": "oiyokanKan",
-			"dbTableNameLocal": "Oiyokan",
-			"dbTableNameTarget": "Oiyokan"
-		},
-		{
-			"name": "UnitTest-Types",
-			"description": "Oiyokan internal Target Test Entity.[FOR UNIT TEST].",
-			"entitySetName": "ODataTests1",
-			"entityName": "ODataTest1",
-			"databaseName": "oiyoUnitTestDb",
-			"dbTableNameLocal": "OiyoODataTest1",
-			"dbTableNameTarget": "ODataTest1"
-		},
-		{
-			"name": "UnitTest-Multi-col",
-			"description": "Oiyokan internal Target Test Entity. 複数項目で一意のサンプル.",
-			"entitySetName": "ODataTests2",
-			"entityName": "ODataTest2",
-			"databaseName": "oiyoUnitTestDb",
-			"dbTableNameLocal": "OiyoODataTest2",
-			"dbTableNameTarget": "ODataTest2"
-		},
-		{
-			"name": "UnitTest-NULLABLE",
-			"description": "Oiyokan internal Target Test Entity. キー以外がnull許容のサンプル.",
-			"entitySetName": "ODataTests3",
-			"entityName": "ODataTest3",
-			"databaseName": "oiyoUnitTestDb",
-			"dbTableNameLocal": "OiyoODataTest3",
-			"dbTableNameTarget": "ODataTest3"
-		},
-		{
-			"name": "UnitTest-ColumnNameW/Space",
-			"description": "Oiyokan internal Target Test Entity. 空白含み項目.",
-			"entitySetName": "ODataTests4",
-			"entityName": "ODataTest4",
-			"databaseName": "oiyoUnitTestDb",
-			"dbTableNameLocal": "OiyoODataTest4",
-			"dbTableNameTarget": "OData Test4"
-		},
-		{
-			"name": "UnitTest-IDENTITY",
-			"description": "Oiyokan internal Target Test Entity. 自動採番.",
-			"entitySetName": "ODataTests5",
-			"entityName": "ODataTest5",
-			"databaseName": "oiyoUnitTestDb",
-			"dbTableNameLocal": "OiyoODataTest5",
-			"dbTableNameTarget": "ODataTest5"
-		},
-		{
-			"name": "UnitTest-Binary",
-			"description": "Oiyokan internal Target Test Entity. BINARY.",
-			"entitySetName": "ODataTests6",
-			"entityName": "ODataTest6",
-			"databaseName": "oiyoUnitTestDb",
-			"dbTableNameLocal": "OiyoODataTest6",
-			"dbTableNameTarget": "ODataTest6"
-		},
-		{
-			"name": "UnitTest-UUID",
-			"description": "Oiyokan internal Target Test Entity. UUID.",
-			"entitySetName": "ODataTests7",
-			"entityName": "ODataTest7",
-			"databaseName": "oiyoUnitTestDb",
-			"dbTableNameLocal": "OiyoODataTest7",
-			"dbTableNameTarget": "ODataTest7"
-		},
-		{
-			"name": "UnitTest-Fulltext",
-			"description": "Oiyokan internal Target Test Entity (Fulltext - Experimental). Used for build unit test.",
-			"entitySetName": "ODataTestFulls1",
-			"entityName": "ODataTestFull1",
-			"databaseName": "oiyoUnitTestDb",
-			"dbTableNameLocal": "OiyoODataTestFulls1",
-			"dbTableNameTarget": "ODataTestFulls1"
-		},
-		{
-			"name": "sample-pg-dvdrental-actor",
-			"description": "Sakila dvdrental sample db: actor",
-			"entitySetName": "SklActors",
-			"entityName": "SklActor",
-			"databaseName": "oiyoUnitTestDb",
-			"dbTableNameLocal": "Oiyoactor",
-			"dbTableNameTarget": "actor"
-		},
-		{
-			"name": "sample-pg-dvdrental-actor_info",
-			"description": "Sakila dvdrental sample db: actor_info",
-			"entitySetName": "SklActorInfos",
-			"entityName": "SklActoInfor",
-			"databaseName": "oiyoUnitTestDb",
-			"dbTableNameLocal": "Oiyoactor_info",
-			"dbTableNameTarget": "actor_info"
-		},
-		{
-			"name": "sample-pg-dvdrental-address",
-			"description": "Sakila dvdrental sample db: address",
-			"entitySetName": "SklAddresses",
-			"entityName": "SklAddress",
-			"databaseName": "oiyoUnitTestDb",
-			"dbTableNameLocal": "Oiyoaddress",
-			"dbTableNameTarget": "address"
-		},
-		{
-			"name": "sample-pg-dvdrental-category",
-			"description": "Sakila dvdrental sample db: category",
-			"entitySetName": "SklCategories",
-			"entityName": "SklCategory",
-			"databaseName": "oiyoUnitTestDb",
-			"dbTableNameLocal": "Oiyocategory",
-			"dbTableNameTarget": "category"
-		},
-		{
-			"name": "sample-pg-dvdrental-city",
-			"description": "Sakila dvdrental sample db: city",
-			"entitySetName": "SklCities",
-			"entityName": "SklCity",
-			"databaseName": "oiyoUnitTestDb",
-			"dbTableNameLocal": "Oiyocity",
-			"dbTableNameTarget": "city"
-		},
-		{
-			"name": "sample-pg-dvdrental-country",
-			"description": "Sakila dvdrental sample db: country",
-			"entitySetName": "SklCountries",
-			"entityName": "SklCountry",
-			"databaseName": "oiyoUnitTestDb",
-			"dbTableNameLocal": "Oiyocountry",
-			"dbTableNameTarget": "country"
-		},
-		{
-			"name": "sample-pg-dvdrental-customer",
-			"description": "Sakila dvdrental sample db: customer",
-			"entitySetName": "SklCustomers",
-			"entityName": "SklCustomer",
-			"databaseName": "oiyoUnitTestDb",
-			"dbTableNameLocal": "Oiyocustomer",
-			"dbTableNameTarget": "customer"
-		},
-		{
-			"name": "sample-pg-dvdrental-customer_list",
-			"description": "Sakila dvdrental sample db: customer_list",
-			"entitySetName": "SklCustomerLists",
-			"entityName": "SklCustomerList",
-			"databaseName": "oiyoUnitTestDb",
-			"dbTableNameLocal": "Oiyocustomer_list",
-			"dbTableNameTarget": "customer_list"
-		},
-		{
-			"name": "sample-pg-dvdrental-film",
-			"description": "Sakila dvdrental sample db: film",
-			"entitySetName": "SklFilms",
-			"entityName": "SklFilm",
-			"databaseName": "oiyoUnitTestDb",
-			"dbTableNameLocal": "Oiyofilm",
-			"dbTableNameTarget": "film"
-		},
-		{
-			"name": "sample-pg-dvdrental-film_actor",
-			"description": "Sakila dvdrental sample db: film_actor",
-			"entitySetName": "SklFilmActors",
-			"entityName": "SklFilmActor",
-			"databaseName": "oiyoUnitTestDb",
-			"dbTableNameLocal": "Oiyofilm_actor",
-			"dbTableNameTarget": "film_actor"
-		},
-		{
-			"name": "sample-pg-dvdrental-film_category",
-			"description": "Sakila dvdrental sample db: film_category",
-			"entitySetName": "SklFilmCategories",
-			"entityName": "SklFilmCategory",
-			"databaseName": "oiyoUnitTestDb",
-			"dbTableNameLocal": "Oiyofilm_category",
-			"dbTableNameTarget": "film_category"
-		},
-		{
-			"name": "sample-pg-dvdrental-film_list",
-			"description": "Sakila dvdrental sample db: film_list",
-			"entitySetName": "SklFilmLists",
-			"entityName": "SklFilmList",
-			"databaseName": "oiyoUnitTestDb",
-			"dbTableNameLocal": "Oiyofilm_list",
-			"dbTableNameTarget": "film_list"
-		},
-		{
-			"name": "sample-pg-dvdrental-inventory",
-			"description": "Sakila dvdrental sample db: inventory",
-			"entitySetName": "SklInventories",
-			"entityName": "SklInventory",
-			"databaseName": "oiyoUnitTestDb",
-			"dbTableNameLocal": "Oiyoinventory",
-			"dbTableNameTarget": "inventory"
-		},
-		{
-			"name": "sample-pg-dvdrental-language",
-			"description": "Sakila dvdrental sample db: language",
-			"entitySetName": "SklLanguages",
-			"entityName": "SklLanguage",
-			"databaseName": "oiyoUnitTestDb",
-			"dbTableNameLocal": "Oiyolanguage",
-			"dbTableNameTarget": "language"
-		},
-		{
-			"name": "sample-pg-dvdrental-nicer_but_slower_film_list",
-			"description": "Sakila dvdrental sample db: nicer_but_slower_film_list",
-			"entitySetName": "SklNicerButSlowerFilmLists",
-			"entityName": "SklNicerButSlowerFilmList",
-			"databaseName": "oiyoUnitTestDb",
-			"dbTableNameLocal": "Oiyonicer_but_slower_film_list",
-			"dbTableNameTarget": "nicer_but_slower_film_list"
-		},
-		{
-			"name": "sample-pg-dvdrental-payment",
-			"description": "Sakila dvdrental sample db: payment",
-			"entitySetName": "SklPayments",
-			"entityName": "SklPayment",
-			"databaseName": "oiyoUnitTestDb",
-			"dbTableNameLocal": "Oiyopayment",
-			"dbTableNameTarget": "payment"
-		},
-		{
-			"name": "sample-pg-dvdrental-rental",
-			"description": "Sakila dvdrental sample db: rental",
-			"entitySetName": "SklRentals",
-			"entityName": "SklRental",
-			"databaseName": "oiyoUnitTestDb",
-			"dbTableNameLocal": "Oiyorental",
-			"dbTableNameTarget": "rental"
-		},
-		{
-			"name": "sample-pg-dvdrental-sales_by_film_category",
-			"description": "Sakila dvdrental sample db: sales_by_film_category",
-			"entitySetName": "SklSalesByFilmCategories",
-			"entityName": "SklSalesByFilmCategory",
-			"databaseName": "oiyoUnitTestDb",
-			"dbTableNameLocal": "Oiyosales_by_film_category",
-			"dbTableNameTarget": "sales_by_film_category"
-		},
-		{
-			"name": "sample-pg-dvdrental-sales_by_store",
-			"description": "Sakila dvdrental sample db: sales_by_store",
-			"entitySetName": "SklSalesByStores",
-			"entityName": "SklSalesByStore",
-			"databaseName": "oiyoUnitTestDb",
-			"dbTableNameLocal": "Oiyosales_by_store",
-			"dbTableNameTarget": "sales_by_store"
-		},
-		{
-			"name": "sample-pg-dvdrental-staff",
-			"description": "Sakila dvdrental sample db: staff",
-			"entitySetName": "SklStaffs",
-			"entityName": "SklStaff",
-			"databaseName": "oiyoUnitTestDb",
-			"dbTableNameLocal": "Oiyostaff",
-			"dbTableNameTarget": "staff"
-		},
-		{
-			"name": "sample-pg-dvdrental-staff_list",
-			"description": "Sakila dvdrental sample db: staff_list",
-			"entitySetName": "SklStaffLists",
-			"entityName": "SklStaffList",
-			"databaseName": "oiyoUnitTestDb",
-			"dbTableNameLocal": "Oiyostaff_list",
-			"dbTableNameTarget": "staff_list"
-		},
-		{
-			"name": "sample-pg-dvdrental-store",
-			"description": "Sakila dvdrental sample db: store",
-			"entitySetName": "SklStores",
-			"entityName": "SklStore",
-			"databaseName": "oiyoUnitTestDb",
-			"dbTableNameLocal": "Oiyostore",
-			"dbTableNameTarget": "store"
-		}
-	]
+  "namespace": "Oiyokan",
+  "containerName": "Container",
+  "database": [
+    {
+      "name": "oiyokanKan",
+      "type": "h2",
+      "description": "Oiyokan internal DB. Do not change.",
+      "jdbcDriver": "org.h2.Driver",
+      "jdbcUrl": "jdbc:h2:mem:oiyokan;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=FALSE;MODE=MSSQLServer",
+      "jdbcUser": "sa",
+      "jdbcPass": ""
+    },
+    {
+      "name": "oiyoUnitTestDb",
+      "type": "h2",
+      "description": "Oiyokan internal Target Test DB. Used for build unit test.",
+      "jdbcDriver": "org.h2.Driver",
+      "jdbcUrl": "jdbc:h2:file:./src/main/resources/db/oiyokan-internal;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=FALSE;MODE=MSSQLServer",
+      "jdbcUser": "sa",
+      "jdbcPass": ""
+    },
+    {
+      "name": "postgres1",
+      "type": "postgres",
+      "description": "Sample postgres settings. Change the settings to suit your environment.",
+      "jdbcDriver": "org.postgresql.Driver",
+      "jdbcUrl": "jdbc:postgresql://localhost:5432/dvdrental",
+      "jdbcUser": "",
+      "jdbcPass": ""
+    },
+    {
+      "name": "mysql1",
+      "type": "MySQL",
+      "description": "Sample MySQL settings. Change the settings to suit your environment.",
+      "jdbcDriver": "com.mysql.jdbc.Driver",
+      "jdbcUrl": "jdbc:mysql://localhost/mysql?useUnicode=true&characterEncoding=UTF-8&characterSetResults=UTF-8&useCursorFetch=true&defaultFetchSize=128&useServerPrepStmts=true&emulateUnsupportedPstmts=false",
+      "jdbcUser": "root",
+      "jdbcPass": "passwd123"
+    },
+    {
+      "name": "mysql2",
+      "type": "MySQL",
+      "description": "Sample MySQL settings for Sakila. Change the settings to suit your environment.",
+      "jdbcDriver": "com.mysql.jdbc.Driver",
+      "jdbcUrl": "jdbc:mysql://localhost/sakila?useUnicode=true&characterEncoding=UTF-8&characterSetResults=UTF-8&useCursorFetch=true&defaultFetchSize=128&useServerPrepStmts=true&emulateUnsupportedPstmts=false",
+      "jdbcUser": "root",
+      "jdbcPass": "passwd123"
+    },
+    {
+      "name": "mssql1",
+      "type": "MSSQL2008",
+      "description": "Sample MS SQL Server 2008 settings. Change the settings to suit your environment.",
+      "jdbcDriver": "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+      "jdbcUrl": "jdbc:sqlserver://localhost\\SQLExpress;SelectMethod=cursor",
+      "jdbcUser": "sa",
+      "jdbcPass": "passwd123"
+    },
+    {
+      "name": "oracle1",
+      "type": "ORACLE",
+      "description": "Sample Oracle XE (18c) settings. Change the settings to suit your environment.",
+      "jdbcDriver": "oracle.jdbc.driver.OracleDriver",
+      "jdbcUrl": "jdbc:oracle:thin:@10.0.2.15:1521/xepdb1",
+      "jdbcUser": "orauser",
+      "jdbcPass": "passwd123"
+    }
+  ],
+  "entitySet": [
+    {
+      "name": "Oiyokans",
+      "description": "Oiyokan internal info. Do not change.",
+      "dbSettingName": "oiyokanKan",
+      "canCreate": true,
+      "canRead": true,
+      "canUpdate": true,
+      "canDelete": true,
+      "entityType": {
+        "name": "Oiyokan",
+        "dbName": "Oiyokan",
+        "keyName": ["KeyName"],
+        "property": [
+          {
+            "name": "KeyName",
+            "dbName": "KeyName",
+            "edmType": "Edm.String",
+            "jdbcType": "Types.VARCHAR",
+            "dbType": "VARCHAR",
+            "jdbcSetMethod": "setString",
+            "nullable": false,
+            "length": 20,
+            "lengthFixed": false,
+            "scale": null,
+            "precision": null
+          },
+          {
+            "name": "KeyValue",
+            "dbName": "KeyValue",
+            "edmType": "Edm.String",
+            "jdbcType": "Types.VARCHAR",
+            "dbType": "VARCHAR",
+            "jdbcSetMethod": "setString",
+            "nullable": true,
+            "length": 255,
+            "lengthFixed": false,
+            "scale": null,
+            "precision": null
+          }
+        ]
+      }
+    }
+  ]
 }
