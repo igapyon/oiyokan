@@ -31,19 +31,16 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
  * http://www.jsonschema2pojo.org/ を利用して自動生成.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({ "name", "dbEntityName", "description", "databaseName", "canCreate", "canRead", "canUpdate",
-        "canDelete", "entityType" })
+@JsonPropertyOrder({ "name", "description", "dbSettingName", "canCreate", "canRead", "canUpdate", "canDelete",
+        "entityType" })
 @Generated("jsonschema2pojo")
 public class Oiyo14SettingsEntitySet {
-
     @JsonProperty("name")
     private String name;
-    @JsonProperty("dbEntityName")
-    private String dbEntityName;
     @JsonProperty("description")
     private String description;
-    @JsonProperty("databaseName")
-    private String databaseName;
+    @JsonProperty("dbSettingName")
+    private String dbSettingName;
     @JsonProperty("canCreate")
     private Boolean canCreate;
     @JsonProperty("canRead")
@@ -67,16 +64,6 @@ public class Oiyo14SettingsEntitySet {
         this.name = name;
     }
 
-    @JsonProperty("dbEntityName")
-    public String getDbEntityName() {
-        return dbEntityName;
-    }
-
-    @JsonProperty("dbEntityName")
-    public void setDbEntityName(String dbEntityName) {
-        this.dbEntityName = dbEntityName;
-    }
-
     @JsonProperty("description")
     public String getDescription() {
         return description;
@@ -87,14 +74,14 @@ public class Oiyo14SettingsEntitySet {
         this.description = description;
     }
 
-    @JsonProperty("databaseName")
-    public String getDatabaseName() {
-        return databaseName;
+    @JsonProperty("dbSettingName")
+    public String getDbSettingName() {
+        return dbSettingName;
     }
 
-    @JsonProperty("databaseName")
-    public void setDatabaseName(String databaseName) {
-        this.databaseName = databaseName;
+    @JsonProperty("dbSettingName")
+    public void setDbSettingName(String dbSettingName) {
+        this.dbSettingName = dbSettingName;
     }
 
     @JsonProperty("canCreate")

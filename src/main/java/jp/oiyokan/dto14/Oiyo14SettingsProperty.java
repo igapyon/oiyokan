@@ -31,27 +31,28 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
  * http://www.jsonschema2pojo.org/ を利用して自動生成.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({ "name", "dbEntityName", "type", "jdbcType", "jdbcSetMethod", "nullable", "length", "fixLength",
-        "scale", "precision" })
+@JsonPropertyOrder({ "name", "dbName", "edmType", "jdbcType", "dbType", "jdbcSetMethod", "nullable", "length",
+        "lengthFixed", "scale", "precision" })
 @Generated("jsonschema2pojo")
 public class Oiyo14SettingsProperty {
-
     @JsonProperty("name")
     private String name;
-    @JsonProperty("dbEntityName")
-    private String dbEntityName;
-    @JsonProperty("type")
-    private String type;
+    @JsonProperty("dbName")
+    private String dbName;
+    @JsonProperty("edmType")
+    private String edmType;
     @JsonProperty("jdbcType")
     private String jdbcType;
+    @JsonProperty("dbType")
+    private String dbType;
     @JsonProperty("jdbcSetMethod")
     private String jdbcSetMethod;
     @JsonProperty("nullable")
     private Boolean nullable;
     @JsonProperty("length")
     private Integer length;
-    @JsonProperty("fixLength")
-    private Boolean fixLength;
+    @JsonProperty("lengthFixed")
+    private Boolean lengthFixed;
     @JsonProperty("scale")
     private Object scale;
     @JsonProperty("precision")
@@ -69,24 +70,24 @@ public class Oiyo14SettingsProperty {
         this.name = name;
     }
 
-    @JsonProperty("dbEntityName")
-    public String getDbEntityName() {
-        return dbEntityName;
+    @JsonProperty("dbName")
+    public String getDbName() {
+        return dbName;
     }
 
-    @JsonProperty("dbEntityName")
-    public void setDbEntityName(String dbEntityName) {
-        this.dbEntityName = dbEntityName;
+    @JsonProperty("dbName")
+    public void setDbName(String dbName) {
+        this.dbName = dbName;
     }
 
-    @JsonProperty("type")
-    public String getType() {
-        return type;
+    @JsonProperty("edmType")
+    public String getEdmType() {
+        return edmType;
     }
 
-    @JsonProperty("type")
-    public void setType(String type) {
-        this.type = type;
+    @JsonProperty("edmType")
+    public void setEdmType(String edmType) {
+        this.edmType = edmType;
     }
 
     @JsonProperty("jdbcType")
@@ -97,6 +98,16 @@ public class Oiyo14SettingsProperty {
     @JsonProperty("jdbcType")
     public void setJdbcType(String jdbcType) {
         this.jdbcType = jdbcType;
+    }
+
+    @JsonProperty("dbType")
+    public String getDbType() {
+        return dbType;
+    }
+
+    @JsonProperty("dbType")
+    public void setDbType(String dbType) {
+        this.dbType = dbType;
     }
 
     @JsonProperty("jdbcSetMethod")
@@ -129,14 +140,14 @@ public class Oiyo14SettingsProperty {
         this.length = length;
     }
 
-    @JsonProperty("fixLength")
-    public Boolean getFixLength() {
-        return fixLength;
+    @JsonProperty("lengthFixed")
+    public Boolean getLengthFixed() {
+        return lengthFixed;
     }
 
-    @JsonProperty("fixLength")
-    public void setFixLength(Boolean fixLength) {
-        this.fixLength = fixLength;
+    @JsonProperty("lengthFixed")
+    public void setLengthFixed(Boolean lengthFixed) {
+        this.lengthFixed = lengthFixed;
     }
 
     @JsonProperty("scale")
@@ -168,4 +179,5 @@ public class Oiyo14SettingsProperty {
     public void setAdditionalProperty(String name, Object value) {
         this.additionalProperties.put(name, value);
     }
+
 }

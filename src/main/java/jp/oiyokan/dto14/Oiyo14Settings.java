@@ -32,7 +32,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
  * http://www.jsonschema2pojo.org/ を利用して自動生成.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({ "namespace", "containerName", "database", "entitySetSettingFile", "entitySet" })
+@JsonPropertyOrder({ "namespace", "containerName", "database", "entitySet" })
 @Generated("jsonschema2pojo")
 public class Oiyo14Settings {
 
@@ -42,8 +42,6 @@ public class Oiyo14Settings {
     private String containerName;
     @JsonProperty("database")
     private List<Oiyo14SettingsDatabase> database = null;
-    @JsonProperty("entitySetSettingFile")
-    private List<String> entitySetSettingFile = null;
     @JsonProperty("entitySet")
     private List<Oiyo14SettingsEntitySet> entitySet = null;
     @JsonIgnore
@@ -77,16 +75,6 @@ public class Oiyo14Settings {
     @JsonProperty("database")
     public void setDatabase(List<Oiyo14SettingsDatabase> database) {
         this.database = database;
-    }
-
-    @JsonProperty("entitySetSettingFile")
-    public List<String> getEntitySetSettingFile() {
-        return entitySetSettingFile;
-    }
-
-    @JsonProperty("entitySetSettingFile")
-    public void setEntitySetSettingFile(List<String> entitySetSettingFile) {
-        this.entitySetSettingFile = entitySetSettingFile;
     }
 
     @JsonProperty("entitySet")

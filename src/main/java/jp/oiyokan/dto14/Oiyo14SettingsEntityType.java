@@ -32,12 +32,14 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
  * http://www.jsonschema2pojo.org/ を利用して自動生成.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({ "name", "keyName", "property" })
+@JsonPropertyOrder({ "name", "dbName", "keyName", "property" })
 @Generated("jsonschema2pojo")
 public class Oiyo14SettingsEntityType {
 
     @JsonProperty("name")
     private String name;
+    @JsonProperty("dbName")
+    private String dbName;
     @JsonProperty("keyName")
     private List<String> keyName = null;
     @JsonProperty("property")
@@ -53,6 +55,16 @@ public class Oiyo14SettingsEntityType {
     @JsonProperty("name")
     public void setName(String name) {
         this.name = name;
+    }
+
+    @JsonProperty("dbName")
+    public String getDbName() {
+        return dbName;
+    }
+
+    @JsonProperty("dbName")
+    public void setDbName(String dbName) {
+        this.dbName = dbName;
     }
 
     @JsonProperty("keyName")
