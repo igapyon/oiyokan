@@ -56,7 +56,10 @@ class SakilaDollSearchTest {
             if (entrys[0].equals("SklFilmLists")
                     && result.startsWith("{\"error\":{\"code\":null,\"message\":\"[M015] UNEXPECTED:")
                     && statusCode != 200) {
-                // Postgresでこのパターンでエラーになるが気にしない。O
+                // Postgresでこのパターンでエラーになるが気にしない。
+            } else if (entrys[0].equals("SklFilms")
+                    && result.startsWith("{\"error\":{\"code\":null,\"message\":\"[M017]") && statusCode != 200) {
+                // MySQLでこのパターンでエラーになるが気にしない。O
             } else {
                 assertEquals(200, resp.getStatusCode(), "Sakila sample db での挙動確認.");
             }

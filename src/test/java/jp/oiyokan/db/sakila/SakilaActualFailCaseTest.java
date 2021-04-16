@@ -41,7 +41,7 @@ class SakilaActualFailCaseTest {
         // System.err.println("result: " + result);
         assertEquals(
                 "{\"@odata.context\":\"$metadata#SklFilmActors\",\"@odata.count\":1,\"value\":[{\"actor_id\":1,\"film_id\":140,\"last_update\":\"2006-02-15T01:05:03Z\"}]}",
-                result);
+                result, "MySQLで時間の差異（未解析）");
         assertEquals(200, resp.getStatusCode());
     }
 }
