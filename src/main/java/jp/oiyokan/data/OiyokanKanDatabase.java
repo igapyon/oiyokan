@@ -43,25 +43,6 @@ import jp.oiyokan.settings.OiyoSettingsUtil;
  * Oiyokan (OData v4 server) が動作する際に必要になる内部管理データベースのバージョン情報および Oiyo情報 をセットアップ.
  */
 public class OiyokanKanDatabase {
-    /**
-     * Oiyokan の設定情報を記述したファイル.
-     */
-    private static final String[][] OIYOKAN_FILE_SQLS = new String[][] { //
-            /*
-             * Oiyokan の基本機能を確認およびビルド時の JUnitテストで利用. 変更するとビルドが動作しなくなる場合あり.
-             */
-            { OiyokanConstants.OIYOKAN_KAN_DB, "oiyokan-test-oiyo.sql" },
-
-            /*
-             * Sakila dvdrental サンプルDB に接続するための Oiyo 情報.
-             */
-            { OiyokanConstants.OIYOKAN_KAN_DB, "sample-sakila-oiyo.sql" },
-
-            /*
-             * Oiyokan のターゲットデータベースの Oiyo情報を記述。github上では空白ファイルとする.
-             */
-            { OiyokanConstants.OIYOKAN_KAN_DB, "oiyokan-oiyo.sql" }, };
-
     private OiyokanKanDatabase() {
     }
 
@@ -135,32 +116,6 @@ public class OiyokanKanDatabase {
                 // [M029] UNEXPECTED: Fail to execute SQL for local internal table
                 System.err.println(OiyokanMessages.M029 + ": " + ex.toString());
                 throw new ODataApplicationException(OiyokanMessages.M029, 500, Locale.ENGLISH);
-            }
-
-            for (String[] sqlFileDef : OIYOKAN_FILE_SQLS) {
-                if (OiyokanConstants.IS_TRACE_ODATA_V4)
-                    System.err.println("OData v4: load: db:" + sqlFileDef[0] + ", sql: " + sqlFileDef[1]);
-
-                OiyoSettingsDatabase lookDatabase = OiyoSettingsUtil.getOiyokanDatabase(sqlFileDef[0]);
-
-                try (Connection connLoookDatabase = OiyoBasicJdbcUtil.getConnection(lookDatabase)) {
-                    final String[] sqls = OiyokanResourceSqlUtil.loadOiyokanResourceSql("oiyokan/sql/" + sqlFileDef[1]);
-                    for (String sql : sqls) {
-                        try (var stmt = connLoookDatabase.prepareStatement(sql.trim())) {
-                            // System.err.println("SQL: " + sql);
-                            stmt.executeUpdate();
-                            connLoookDatabase.commit();
-                        } catch (SQLException ex) {
-                            // [M030] UNEXPECTED: Fail to execute SQL for local internal table(2)
-                            System.err.println(OiyokanMessages.M030 + ": " + ex.toString());
-                            throw new ODataApplicationException(OiyokanMessages.M030, 500, Locale.ENGLISH);
-                        }
-                    }
-                } catch (SQLException ex) {
-                    // [M031] UNEXPECTED: Fail to execute Dabaase
-                    System.err.println(OiyokanMessages.M031 + ": " + ex.toString());
-                    throw new ODataApplicationException(OiyokanMessages.M031, 500, Locale.ENGLISH);
-                }
             }
 
             // 新規作成.

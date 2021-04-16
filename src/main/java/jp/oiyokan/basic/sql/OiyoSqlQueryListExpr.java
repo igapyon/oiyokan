@@ -34,7 +34,7 @@ import org.apache.olingo.server.core.uri.queryoption.expression.UnaryImpl;
 
 import jp.oiyokan.OiyokanMessages;
 import jp.oiyokan.basic.OiyoBasicJdbcUtil;
-import jp.oiyokan.settings.OiyoNamingUtil;
+import jp.oiyokan.settings.OiyoSettingsUtil;
 
 /**
  * SQL文を構築するための簡易クラスの、Expression を SQLに変換する処理.
@@ -255,8 +255,9 @@ public class OiyoSqlQueryListExpr {
 
     private void expandMember(MemberImpl impl) throws ODataApplicationException {
         // そのままSQLのメンバーとせず、項目名エスケープを除去.
+        final String unescapedName = OiyoBasicJdbcUtil.unescapeKakkoFieldName(impl.toString());
         sqlInfo.getSqlBuilder().append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo,
-                OiyoNamingUtil.entity2Db(OiyoBasicJdbcUtil.unescapeKakkoFieldName(impl.toString()))));
+                OiyoSettingsUtil.getOiyoEntityProperty(sqlInfo.getEntitySet().getName(), unescapedName).getDbName()));
     }
 
     /**

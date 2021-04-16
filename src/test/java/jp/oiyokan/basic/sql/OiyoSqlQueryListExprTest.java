@@ -54,7 +54,7 @@ class OiyoSqlQueryListExprTest {
         localTemplateEntityContainer.ensureBuild();
         // アプリ情報が入っている内部DBをベースに処理。つまり h2 database 前提としての振る舞いをおこなう。
         final OiyokanCsdlEntitySet entitySet = (OiyokanCsdlEntitySet) localTemplateEntityContainer
-                .getEntitySet("Oiyokans");
+                .getEntitySet("ODataTests1");
 
         // EntityType をロード済み状態にする.
         localTemplateEntityContainer.getEntityType(entitySet.getTypeFQN());

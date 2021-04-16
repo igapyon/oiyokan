@@ -51,7 +51,7 @@ import jp.oiyokan.OiyokanMessages;
 import jp.oiyokan.basic.sql.OiyoSqlInfo;
 import jp.oiyokan.dto.OiyoSettingsDatabase;
 import jp.oiyokan.dto.OiyoSettingsProperty;
-import jp.oiyokan.settings.OiyoNamingUtil;
+import jp.oiyokan.settings.OiyoSettingsUtil;
 
 /**
  * Oiyokan 関連の JDBC まわりユーティリティクラス.
@@ -215,7 +215,22 @@ public class OiyoBasicJdbcUtil {
     public static Property resultSet2Property(ResultSet rset, ResultSetMetaData rsmeta, int column,
             OiyokanCsdlEntitySet iyoEntitySet) throws ODataApplicationException, SQLException {
         // 基本的に CSDL で処理するが、やむを得ない場所のみ ResultSetMetaData を利用する
-        final String propName = OiyoNamingUtil.db2Entity(rsmeta.getColumnName(column));
+        String propName = null;
+        for (OiyoSettingsProperty prop : OiyoSettingsUtil.getOiyoEntitySet(iyoEntitySet.getName()).getEntityType()
+                .getProperty()) {
+            if (rsmeta.getColumnName(column).equals(prop.getDbName())) {
+                propName = prop.getName();
+            }
+        }
+        if (propName == null) {
+            // [M041] Fail to find Property from DB name.
+            System.err.println(OiyokanMessages.M041 + "EntitySet:" + iyoEntitySet.getName() + " DB:"
+                    + rsmeta.getColumnName(column));
+            throw new ODataApplicationException(
+                    OiyokanMessages.M041 + "EntitySet:" + iyoEntitySet.getName() + " DB:"
+                            + rsmeta.getColumnName(column), //
+                    500, Locale.ENGLISH);
+        }
 
         final CsdlProperty csdlProp = iyoEntitySet.getEntityType().getProperty(propName);
         if (csdlProp == null) {
