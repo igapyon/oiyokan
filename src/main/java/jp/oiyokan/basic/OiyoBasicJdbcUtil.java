@@ -121,10 +121,8 @@ public class OiyoBasicJdbcUtil {
      * see:
      * https://olingo.apache.org/javadoc/odata4/org/apache/olingo/commons/api/edm/EdmPrimitiveType.html
      * 
-     * @param rsmeta ResultSetMetaDataインスタンス.
-     * @param column 項目番号.
+     * @param oiyoProp Property setting info.
      * @return CsdlProperty 情報.
-     * @throws SQLException              SQL例外が発生した場合.
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
     public static CsdlProperty resultSetMetaData2CsdlProperty(OiyoSettingsProperty oiyoProp)

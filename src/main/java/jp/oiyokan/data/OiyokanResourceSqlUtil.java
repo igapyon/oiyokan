@@ -38,6 +38,7 @@ public class OiyokanResourceSqlUtil {
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
     public static String[] loadOiyokanResourceSql(final String resourceSqlFileName) throws ODataApplicationException {
+        // このメソッドは、テストデータベースを生成する際に呼び出されます。
         // resources から読み込み。
         final ClassPathResource cpres = new ClassPathResource(resourceSqlFileName);
         try (InputStream inStream = cpres.getInputStream()) {

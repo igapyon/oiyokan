@@ -48,3 +48,8 @@ http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part3-csdl/odat
 ## JSON at RFC
 
 - https://tools.ietf.org/html/rfc8259
+
+# 仕様メモ
+
+- Sakila DB定義の create_date が Postgres版と MySQL 版とで型が違う.
+    これにより、同一の Oiyo ファイルでアクセスすると "The types 'Edm.DateTimeOffset' and 'Edm.Date' are not compatible. が発生する。

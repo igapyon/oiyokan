@@ -33,7 +33,6 @@ You can use Oiyokan to turn RDBMS into OData v4 services.
 ## Sample implementation using Oiyokan
 
 - Oiyokan provides OData server sample of Sakila DVD rental.
-- Metadata of OData sample is provided at $metadata.
 
 # Try the Oiyokan OData v4 sample server
 
@@ -64,16 +63,6 @@ mvn clean install spring-boot:run
 src/main/resources/oiyokan/oiyokan-settings.json
 ```
 
-## oiyokan-oiyo.sql を設定
-
-oiyokan-oiyo.sql ファイルに ターゲットDBの Oiyo情報をあらわす SQL/DDL文を記述.
-
-```sh
-src/main/resources/oiyokan/sql/oiyokan-oiyo.sql
-```
-
-記述内容については oiyokan-test-oiyo-postgres.sql を参考にする。
-
 ## 設定変更後は Spring Boot を再起動
 
 Spring Boot を再起動することにより設定情報の更新を反映。
@@ -86,19 +75,10 @@ oiyokan プロジェクトは、OData v4 server のシンプルなサンプル(h
 
 ## Olingo による OData v4 server チュートリアル
 
+OData v4 / Apache Olingo そのものの学習には Apache Olingo サイトの参照が有益です。
+
 - https://olingo.apache.org/doc/odata4/index.html
-
-## 直接は関係のないリソース
-
-### 参考: 別バージョンながら役立つ OData 2情報
-
-- https://www.odata.org/documentation/odata-version-2-0/uri-conventions/
 
 ### 参考: h2情報
 
 - http://www.h2database.com/html/functions.html
-
-# 仕様メモ
-
-- Sakila DB定義の create_date が Postgres版と MySQL 版とで型が違う.
-    これにより、同一の Oiyo ファイルでアクセスすると "The types 'Edm.DateTimeOffset' and 'Edm.Date' are not compatible. が発生する。
