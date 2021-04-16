@@ -605,8 +605,8 @@ public class OiyokanKanDatabase {
             final ResultSet rsKey = dbmeta.getPrimaryKeys(null, null, tableName);
             for (; rsKey.next();) {
                 String colName = rsKey.getString("COLUMN_NAME");
-                // TODO FIXME 処理の共通化
-                colName.replaceAll(" ", "_");
+                // TODO FIXME 処理の共通化の検討.
+                colName = colName.replaceAll(" ", "_");
                 entitySet.getEntityType().getKeyName().add(colName);
             }
         }
