@@ -103,6 +103,6 @@ class OiyoSqlQueryListExprTest {
         assertEquals("((INSTR(Description,?) - 1) <> -1)", getExprString("/ODataTests1", //
                 OiyoBasicUrlUtil.encodeUrlQuery(
                         "$top=51&$filter= indexof(Description,'増殖タブレット7') ne -1 &$orderby=ID &$count=true &$select=Description,ID,Name")),
-                "Postgres/ORACLEの場合大文字小文字の差異が出る");
+                "Postgres/ORACLEの場合、命令の差異、大文字小文字の差異が出る");
     }
 }
