@@ -1006,7 +1006,8 @@
             "dbName": "actor_id",
             "edmType": "Edm.Int32",
             "jdbcType": "Types.INTEGER",
-            "dbType": "INTEGER"
+            "dbType": "INTEGER",
+            "nullable": true
           },
           {
             "name": "first_name",
@@ -1014,6 +1015,7 @@
             "edmType": "Edm.String",
             "jdbcType": "Types.VARCHAR",
             "dbType": "VARCHAR",
+            "nullable": true,
             "maxLength": 45
           },
           {
@@ -1022,6 +1024,7 @@
             "edmType": "Edm.String",
             "jdbcType": "Types.VARCHAR",
             "dbType": "VARCHAR",
+            "nullable": true,
             "maxLength": 45
           },
           {
@@ -1029,7 +1032,8 @@
             "dbName": "film_info",
             "edmType": "Edm.String",
             "jdbcType": "Types.VARCHAR",
-            "dbType": "VARCHAR"
+            "dbType": "VARCHAR",
+            "nullable": true
           }
         ]
       }
@@ -1070,6 +1074,7 @@
             "edmType": "Edm.String",
             "jdbcType": "Types.VARCHAR",
             "dbType": "VARCHAR",
+            "nullable": true,
             "maxLength": 50
           },
           {
@@ -1095,6 +1100,7 @@
             "edmType": "Edm.String",
             "jdbcType": "Types.VARCHAR",
             "dbType": "VARCHAR",
+            "nullable": true,
             "maxLength": 10
           },
           {
@@ -1301,6 +1307,7 @@
             "edmType": "Edm.String",
             "jdbcType": "Types.VARCHAR",
             "dbType": "VARCHAR",
+            "nullable": true,
             "maxLength": 50
           },
           {
@@ -1332,14 +1339,16 @@
             "dbName": "last_update",
             "edmType": "Edm.DateTimeOffset",
             "jdbcType": "Types.TIMESTAMP",
-            "dbType": "TIMESTAMP"
+            "dbType": "TIMESTAMP",
+            "nullable": true
           },
           {
             "name": "active",
             "dbName": "active",
             "edmType": "Edm.Int32",
             "jdbcType": "Types.INTEGER",
-            "dbType": "INTEGER"
+            "dbType": "INTEGER",
+            "nullable": true
           }
         ]
       }
@@ -1362,14 +1371,16 @@
             "dbName": "id",
             "edmType": "Edm.Int32",
             "jdbcType": "Types.INTEGER",
-            "dbType": "INTEGER"
+            "dbType": "INTEGER",
+            "nullable": true
           },
           {
             "name": "name",
             "dbName": "name",
             "edmType": "Edm.String",
             "jdbcType": "Types.VARCHAR",
-            "dbType": "VARCHAR"
+            "dbType": "VARCHAR",
+            "nullable": true
           },
           {
             "name": "address",
@@ -1377,6 +1388,7 @@
             "edmType": "Edm.String",
             "jdbcType": "Types.VARCHAR",
             "dbType": "VARCHAR",
+            "nullable": true,
             "maxLength": 50
           },
           {
@@ -1385,6 +1397,7 @@
             "edmType": "Edm.String",
             "jdbcType": "Types.VARCHAR",
             "dbType": "VARCHAR",
+            "nullable": true,
             "maxLength": 10
           },
           {
@@ -1393,6 +1406,7 @@
             "edmType": "Edm.String",
             "jdbcType": "Types.VARCHAR",
             "dbType": "VARCHAR",
+            "nullable": true,
             "maxLength": 20
           },
           {
@@ -1401,6 +1415,7 @@
             "edmType": "Edm.String",
             "jdbcType": "Types.VARCHAR",
             "dbType": "VARCHAR",
+            "nullable": true,
             "maxLength": 50
           },
           {
@@ -1409,6 +1424,7 @@
             "edmType": "Edm.String",
             "jdbcType": "Types.VARCHAR",
             "dbType": "VARCHAR",
+            "nullable": true,
             "maxLength": 50
           },
           {
@@ -1416,14 +1432,16 @@
             "dbName": "notes",
             "edmType": "Edm.String",
             "jdbcType": "Types.CLOB",
-            "dbType": "CLOB"
+            "dbType": "CLOB",
+            "nullable": true
           },
           {
             "name": "sid",
             "dbName": "sid",
             "edmType": "Edm.Int16",
             "jdbcType": "Types.SMALLINT",
-            "dbType": "SMALLINT"
+            "dbType": "SMALLINT",
+            "nullable": true
           }
         ]
       }
@@ -1463,14 +1481,16 @@
             "dbName": "description",
             "edmType": "Edm.String",
             "jdbcType": "Types.CLOB",
-            "dbType": "CLOB"
+            "dbType": "CLOB",
+            "nullable": true
           },
           {
             "name": "release_year",
             "dbName": "release_year",
             "edmType": "Edm.Int16",
             "jdbcType": "Types.SMALLINT",
-            "dbType": "SMALLINT"
+            "dbType": "SMALLINT",
+            "nullable": true
           },
           {
             "name": "language_id",
@@ -1503,7 +1523,8 @@
             "dbName": "length",
             "edmType": "Edm.Int16",
             "jdbcType": "Types.SMALLINT",
-            "dbType": "SMALLINT"
+            "dbType": "SMALLINT",
+            "nullable": true
           },
           {
             "name": "replacement_cost",
@@ -1521,6 +1542,7 @@
             "edmType": "Edm.String",
             "jdbcType": "Types.VARCHAR",
             "dbType": "VARCHAR",
+            "nullable": true,
             "maxLength": 10
           },
           {
@@ -1536,7 +1558,8 @@
             "dbName": "special_features",
             "edmType": "Edm.String",
             "jdbcType": "Types.CLOB",
-            "dbType": "CLOB"
+            "dbType": "CLOB",
+            "nullable": true
           },
           {
             "name": "fulltext",
@@ -1647,7 +1670,8 @@
             "dbName": "fid",
             "edmType": "Edm.Int32",
             "jdbcType": "Types.INTEGER",
-            "dbType": "INTEGER"
+            "dbType": "INTEGER",
+            "nullable": true
           },
           {
             "name": "title",
@@ -1655,6 +1679,7 @@
             "edmType": "Edm.String",
             "jdbcType": "Types.VARCHAR",
             "dbType": "VARCHAR",
+            "nullable": true,
             "maxLength": 255
           },
           {
@@ -1662,7 +1687,8 @@
             "dbName": "description",
             "edmType": "Edm.String",
             "jdbcType": "Types.CLOB",
-            "dbType": "CLOB"
+            "dbType": "CLOB",
+            "nullable": true
           },
           {
             "name": "category",
@@ -1670,6 +1696,7 @@
             "edmType": "Edm.String",
             "jdbcType": "Types.VARCHAR",
             "dbType": "VARCHAR",
+            "nullable": true,
             "maxLength": 25
           },
           {
@@ -1678,6 +1705,7 @@
             "edmType": "Edm.Decimal",
             "jdbcType": "Types.DECIMAL",
             "dbType": "DECIMAL",
+            "nullable": true,
             "precision": 4,
             "scale": 2
           },
@@ -1686,7 +1714,8 @@
             "dbName": "length",
             "edmType": "Edm.Int16",
             "jdbcType": "Types.SMALLINT",
-            "dbType": "SMALLINT"
+            "dbType": "SMALLINT",
+            "nullable": true
           },
           {
             "name": "rating",
@@ -1694,6 +1723,7 @@
             "edmType": "Edm.String",
             "jdbcType": "Types.VARCHAR",
             "dbType": "VARCHAR",
+            "nullable": true,
             "maxLength": 10
           },
           {
@@ -1701,7 +1731,8 @@
             "dbName": "actors",
             "edmType": "Edm.String",
             "jdbcType": "Types.VARCHAR",
-            "dbType": "VARCHAR"
+            "dbType": "VARCHAR",
+            "nullable": true
           }
         ]
       }
@@ -1814,7 +1845,8 @@
             "dbName": "fid",
             "edmType": "Edm.Int32",
             "jdbcType": "Types.INTEGER",
-            "dbType": "INTEGER"
+            "dbType": "INTEGER",
+            "nullable": true
           },
           {
             "name": "title",
@@ -1822,6 +1854,7 @@
             "edmType": "Edm.String",
             "jdbcType": "Types.VARCHAR",
             "dbType": "VARCHAR",
+            "nullable": true,
             "maxLength": 255
           },
           {
@@ -1829,7 +1862,8 @@
             "dbName": "description",
             "edmType": "Edm.String",
             "jdbcType": "Types.CLOB",
-            "dbType": "CLOB"
+            "dbType": "CLOB",
+            "nullable": true
           },
           {
             "name": "category",
@@ -1837,6 +1871,7 @@
             "edmType": "Edm.String",
             "jdbcType": "Types.VARCHAR",
             "dbType": "VARCHAR",
+            "nullable": true,
             "maxLength": 25
           },
           {
@@ -1845,6 +1880,7 @@
             "edmType": "Edm.Decimal",
             "jdbcType": "Types.DECIMAL",
             "dbType": "DECIMAL",
+            "nullable": true,
             "precision": 4,
             "scale": 2
           },
@@ -1853,7 +1889,8 @@
             "dbName": "length",
             "edmType": "Edm.Int16",
             "jdbcType": "Types.SMALLINT",
-            "dbType": "SMALLINT"
+            "dbType": "SMALLINT",
+            "nullable": true
           },
           {
             "name": "rating",
@@ -1861,6 +1898,7 @@
             "edmType": "Edm.String",
             "jdbcType": "Types.VARCHAR",
             "dbType": "VARCHAR",
+            "nullable": true,
             "maxLength": 10
           },
           {
@@ -1868,7 +1906,8 @@
             "dbName": "actors",
             "edmType": "Edm.String",
             "jdbcType": "Types.VARCHAR",
-            "dbType": "VARCHAR"
+            "dbType": "VARCHAR",
+            "nullable": true
           }
         ]
       }
@@ -1989,7 +2028,8 @@
             "dbName": "return_date",
             "edmType": "Edm.DateTimeOffset",
             "jdbcType": "Types.TIMESTAMP",
-            "dbType": "TIMESTAMP"
+            "dbType": "TIMESTAMP",
+            "nullable": true
           },
           {
             "name": "staff_id",
@@ -2029,6 +2069,7 @@
             "edmType": "Edm.String",
             "jdbcType": "Types.VARCHAR",
             "dbType": "VARCHAR",
+            "nullable": true,
             "maxLength": 25
           },
           {
@@ -2037,6 +2078,7 @@
             "edmType": "Edm.Decimal",
             "jdbcType": "Types.DECIMAL",
             "dbType": "DECIMAL",
+            "nullable": true,
             "precision": 2147483647,
             "scale": 2147483647
           }
@@ -2061,14 +2103,16 @@
             "dbName": "store",
             "edmType": "Edm.String",
             "jdbcType": "Types.VARCHAR",
-            "dbType": "VARCHAR"
+            "dbType": "VARCHAR",
+            "nullable": true
           },
           {
             "name": "manager",
             "dbName": "manager",
             "edmType": "Edm.String",
             "jdbcType": "Types.VARCHAR",
-            "dbType": "VARCHAR"
+            "dbType": "VARCHAR",
+            "nullable": true
           },
           {
             "name": "total_sales",
@@ -2076,6 +2120,7 @@
             "edmType": "Edm.Decimal",
             "jdbcType": "Types.DECIMAL",
             "dbType": "DECIMAL",
+            "nullable": true,
             "precision": 2147483647,
             "scale": 2147483647
           }
@@ -2135,6 +2180,7 @@
             "edmType": "Edm.String",
             "jdbcType": "Types.VARCHAR",
             "dbType": "VARCHAR",
+            "nullable": true,
             "maxLength": 50
           },
           {
@@ -2168,6 +2214,7 @@
             "edmType": "Edm.String",
             "jdbcType": "Types.VARCHAR",
             "dbType": "VARCHAR",
+            "nullable": true,
             "maxLength": 40
           },
           {
@@ -2183,7 +2230,8 @@
             "dbName": "picture",
             "edmType": "Edm.Binary",
             "jdbcType": "Types.VARBINARY",
-            "dbType": "VARBINARY"
+            "dbType": "VARBINARY",
+            "nullable": true
           }
         ]
       }
@@ -2206,14 +2254,16 @@
             "dbName": "id",
             "edmType": "Edm.Int32",
             "jdbcType": "Types.INTEGER",
-            "dbType": "INTEGER"
+            "dbType": "INTEGER",
+            "nullable": true
           },
           {
             "name": "name",
             "dbName": "name",
             "edmType": "Edm.String",
             "jdbcType": "Types.VARCHAR",
-            "dbType": "VARCHAR"
+            "dbType": "VARCHAR",
+            "nullable": true
           },
           {
             "name": "address",
@@ -2221,6 +2271,7 @@
             "edmType": "Edm.String",
             "jdbcType": "Types.VARCHAR",
             "dbType": "VARCHAR",
+            "nullable": true,
             "maxLength": 50
           },
           {
@@ -2229,6 +2280,7 @@
             "edmType": "Edm.String",
             "jdbcType": "Types.VARCHAR",
             "dbType": "VARCHAR",
+            "nullable": true,
             "maxLength": 10
           },
           {
@@ -2237,6 +2289,7 @@
             "edmType": "Edm.String",
             "jdbcType": "Types.VARCHAR",
             "dbType": "VARCHAR",
+            "nullable": true,
             "maxLength": 20
           },
           {
@@ -2245,6 +2298,7 @@
             "edmType": "Edm.String",
             "jdbcType": "Types.VARCHAR",
             "dbType": "VARCHAR",
+            "nullable": true,
             "maxLength": 50
           },
           {
@@ -2253,6 +2307,7 @@
             "edmType": "Edm.String",
             "jdbcType": "Types.VARCHAR",
             "dbType": "VARCHAR",
+            "nullable": true,
             "maxLength": 50
           },
           {
@@ -2260,13 +2315,14 @@
             "dbName": "sid",
             "edmType": "Edm.Int16",
             "jdbcType": "Types.SMALLINT",
-            "dbType": "SMALLINT"
+            "dbType": "SMALLINT",
+            "nullable": true
           }
         ]
       }
     },
     {
-      "name": "SklStores",
+      "name": "stores",
       "description": "Description.",
       "dbSettingName": "oiyoUnitTestDb",
       "canCreate": true,
@@ -2274,7 +2330,7 @@
       "canUpdate": true,
       "canDelete": true,
       "entityType": {
-        "name": "SklStore",
+        "name": "store",
         "dbName": "store",
         "keyName": ["store_id"],
         "property": [

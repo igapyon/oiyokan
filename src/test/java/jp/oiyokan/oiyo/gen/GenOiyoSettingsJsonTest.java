@@ -214,8 +214,70 @@ class GenOiyoSettingsJsonTest {
                 if (iyoEntitySet.getName().equals("actors")) {
                     iyoEntitySet.setName("SklActors");
                     iyoEntitySet.getEntityType().setName("SklActor");
+                } else if (iyoEntitySet.getName().equals("actor_infos")) {
+                    iyoEntitySet.setName("SklActorInfos");
+                    iyoEntitySet.getEntityType().setName("SklActorInfo");
+                } else if (iyoEntitySet.getName().equals("addresss")) {
+                    iyoEntitySet.setName("SklAddresses");
+                    iyoEntitySet.getEntityType().setName("SklAddress");
+                } else if (iyoEntitySet.getName().equals("categorys")) {
+                    iyoEntitySet.setName("SklCategories");
+                    iyoEntitySet.getEntityType().setName("SklCategory");
+                } else if (iyoEntitySet.getName().equals("citys")) {
+                    iyoEntitySet.setName("SklCities");
+                    iyoEntitySet.getEntityType().setName("SklCity");
+                } else if (iyoEntitySet.getName().equals("countrys")) {
+                    iyoEntitySet.setName("SklCountries");
+                    iyoEntitySet.getEntityType().setName("SklCountry");
+                } else if (iyoEntitySet.getName().equals("customers")) {
+                    iyoEntitySet.setName("SklCustomers");
+                    iyoEntitySet.getEntityType().setName("SklCustomer");
+                } else if (iyoEntitySet.getName().equals("customer_lists")) {
+                    iyoEntitySet.setName("SklCustomerLists");
+                    iyoEntitySet.getEntityType().setName("SklCustomerList");
+                } else if (iyoEntitySet.getName().equals("films")) {
+                    iyoEntitySet.setName("SklFilms");
+                    iyoEntitySet.getEntityType().setName("SklFilm");
+                } else if (iyoEntitySet.getName().equals("film_actors")) {
+                    iyoEntitySet.setName("SklFilmActors");
+                    iyoEntitySet.getEntityType().setName("SklFilmActor");
+                } else if (iyoEntitySet.getName().equals("film_categorys")) {
+                    iyoEntitySet.setName("SklFilmCategories");
+                    iyoEntitySet.getEntityType().setName("SklFilmCategory");
+                } else if (iyoEntitySet.getName().equals("film_lists")) {
+                    iyoEntitySet.setName("SklFilmLists");
+                    iyoEntitySet.getEntityType().setName("SklFilmList");
+                } else if (iyoEntitySet.getName().equals("inventorys")) {
+                    iyoEntitySet.setName("SklInventories");
+                    iyoEntitySet.getEntityType().setName("SklInventory");
+                } else if (iyoEntitySet.getName().equals("languages")) {
+                    iyoEntitySet.setName("SklLanguages");
+                    iyoEntitySet.getEntityType().setName("SklLanguage");
+                } else if (iyoEntitySet.getName().equals("nicer_but_slower_film_lists")) {
+                    iyoEntitySet.setName("SklNicerButSlowerFilmLists");
+                    iyoEntitySet.getEntityType().setName("SklNicerButSlowerFilmList");
+                } else if (iyoEntitySet.getName().equals("payments")) {
+                    iyoEntitySet.setName("SklPayments");
+                    iyoEntitySet.getEntityType().setName("SklPayment");
+                } else if (iyoEntitySet.getName().equals("rentals")) {
+                    iyoEntitySet.setName("SklRentals");
+                    iyoEntitySet.getEntityType().setName("SklRental");
+                } else if (iyoEntitySet.getName().equals("sales_by_film_categorys")) {
+                    iyoEntitySet.setName("SklSalesByFilmCategories");
+                    iyoEntitySet.getEntityType().setName("SklSalesByFilmCategory");
+                } else if (iyoEntitySet.getName().equals("sales_by_stores")) {
+                    iyoEntitySet.setName("SklSalesByStores");
+                    iyoEntitySet.getEntityType().setName("SklSalesByStore");
+                } else if (iyoEntitySet.getName().equals("staffs")) {
+                    iyoEntitySet.setName("SklStaffs");
+                    iyoEntitySet.getEntityType().setName("SklStaff");
+                } else if (iyoEntitySet.getName().equals("staff_lists")) {
+                    iyoEntitySet.setName("SklStaffLists");
+                    iyoEntitySet.getEntityType().setName("SklStaffList");
+                } else if (iyoEntitySet.getName().equals("store")) {
+                    iyoEntitySet.setName("SklStores");
+                    iyoEntitySet.getEntityType().setName("SklStore");
                 }
-
             }
 
             StringWriter writer = new StringWriter();
