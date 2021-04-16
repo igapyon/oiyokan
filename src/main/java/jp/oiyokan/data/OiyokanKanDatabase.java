@@ -345,8 +345,8 @@ public class OiyokanKanDatabase {
         return sqlBuilder.toString();
     }
 
-    public static OiyoSettingsEntitySet generateCreateOiyoJson(Connection connTargetDb, String tableName)
-            throws SQLException {
+    public static OiyoSettingsEntitySet generateCreateOiyoJson(Connection connTargetDb, String tableName,
+            OiyokanConstants.DatabaseType databaseType) throws SQLException, ODataApplicationException {
         final OiyoSettingsEntitySet entitySet = new OiyoSettingsEntitySet();
         entitySet.setEntityType(new OiyoSettingsEntityType());
 
@@ -375,7 +375,8 @@ public class OiyokanKanDatabase {
         entitySet.getEntityType().setKeyName(new ArrayList<String>());
 
         // TODO FIXME テーブル名エスケープが暫定対処。
-        try (PreparedStatement stmt = connTargetDb.prepareStatement("SELECT * FROM " + "[" + tableName + "]")) {
+        try (PreparedStatement stmt = connTargetDb
+                .prepareStatement("SELECT * FROM " + OiyoBasicJdbcUtil.escapeKakkoFieldName(databaseType, tableName))) {
             ResultSetMetaData rsmeta = stmt.getMetaData();
             final int columnCount = rsmeta.getColumnCount();
             for (int column = 1; column <= columnCount; column++) {

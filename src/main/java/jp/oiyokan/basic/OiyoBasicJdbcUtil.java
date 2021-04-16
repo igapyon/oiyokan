@@ -218,7 +218,8 @@ public class OiyoBasicJdbcUtil {
         String propName = null;
         for (OiyoSettingsProperty prop : OiyoSettingsUtil.getOiyoEntitySet(iyoEntitySet.getName()).getEntityType()
                 .getProperty()) {
-            if (rsmeta.getColumnName(column).equals(prop.getDbName())) {
+            // 大文字小文字を無視。
+            if (rsmeta.getColumnName(column).equalsIgnoreCase(prop.getDbName())) {
                 propName = prop.getName();
             }
         }
@@ -705,7 +706,12 @@ public class OiyoBasicJdbcUtil {
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
     public static String escapeKakkoFieldName(OiyoSqlInfo sqlInfo, String fieldName) throws ODataApplicationException {
-        switch (sqlInfo.getEntitySet().getDatabaseType()) {
+        return escapeKakkoFieldName(sqlInfo.getEntitySet().getDatabaseType(), fieldName);
+    }
+
+    public static String escapeKakkoFieldName(OiyokanConstants.DatabaseType databaseType, String fieldName)
+            throws ODataApplicationException {
+        switch (databaseType) {
         case h2:
         case MSSQL2008:
             if (fieldName.indexOf(" ") <= 0 && fieldName.indexOf(".") <= 0) {
@@ -732,8 +738,8 @@ public class OiyoBasicJdbcUtil {
 
         default:
             // [M020] NOT SUPPORTED: Database type
-            System.err.println(OiyokanMessages.M020 + ": " + sqlInfo.getSettingsDatabase().getType());
-            throw new ODataApplicationException(OiyokanMessages.M020 + ": " + sqlInfo.getSettingsDatabase().getType(),
+            System.err.println(OiyokanMessages.M020 + ": " + databaseType);
+            throw new ODataApplicationException(OiyokanMessages.M020 + ": " + databaseType, //
                     500, Locale.ENGLISH);
         }
     }

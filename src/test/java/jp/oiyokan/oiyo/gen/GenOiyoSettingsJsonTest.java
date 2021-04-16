@@ -29,6 +29,7 @@ import org.junit.jupiter.api.Test;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
+import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.basic.OiyoBasicJdbcUtil;
 import jp.oiyokan.data.OiyokanKanDatabase;
 import jp.oiyokan.dto.OiyoSettings;
@@ -204,7 +205,8 @@ class GenOiyoSettingsJsonTest {
 
             for (String tableName : tableNameList) {
                 // System.err.println("tabname: "+tableName);
-                oiyoSettings.getEntitySet().add(OiyokanKanDatabase.generateCreateOiyoJson(connTargetDb, tableName));
+                oiyoSettings.getEntitySet().add(OiyokanKanDatabase.generateCreateOiyoJson(connTargetDb, tableName,
+                        OiyokanConstants.DatabaseType.valueOf(settingsDatabase.getType())));
             }
 
             StringWriter writer = new StringWriter();

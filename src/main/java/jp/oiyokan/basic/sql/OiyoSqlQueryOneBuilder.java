@@ -22,6 +22,7 @@ import org.apache.olingo.commons.api.edm.provider.CsdlProperty;
 import org.apache.olingo.server.api.ODataApplicationException;
 import org.apache.olingo.server.api.uri.UriParameter;
 
+import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.basic.OiyoBasicJdbcUtil;
 import jp.oiyokan.settings.OiyoSettingsUtil;
 
@@ -71,8 +72,14 @@ public class OiyoSqlQueryOneBuilder {
             } else {
                 sqlInfo.getSqlBuilder().append(" AND ");
             }
-            sqlInfo.getSqlBuilder().append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyoSettingsUtil
-                    .getOiyoEntityProperty(sqlInfo.getEntitySet().getName(), param.getName()).getDbName()));
+            if ("ROWID".equalsIgnoreCase(param.getName()) //
+                    && OiyokanConstants.DatabaseType.ORACLE == sqlInfo.getEntitySet().getDatabaseType()) {
+                // ORACLE ROWID special.
+                sqlInfo.getSqlBuilder().append(param.getName());
+            } else {
+                sqlInfo.getSqlBuilder().append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyoSettingsUtil
+                        .getOiyoEntityProperty(sqlInfo.getEntitySet().getName(), param.getName()).getDbName()));
+            }
             sqlInfo.getSqlBuilder().append("=");
 
             CsdlProperty csdlProp = sqlInfo.getEntitySet().getEntityType().getProperty(param.getName());
