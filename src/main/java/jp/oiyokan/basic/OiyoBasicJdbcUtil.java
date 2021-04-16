@@ -49,7 +49,8 @@ import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanCsdlEntitySet;
 import jp.oiyokan.OiyokanMessages;
 import jp.oiyokan.basic.sql.OiyoSqlInfo;
-import jp.oiyokan.dto.Oiyo13SettingsDatabase;
+import jp.oiyokan.dto.OiyoSettingsDatabase;
+import jp.oiyokan.dto.OiyoSettingsProperty;
 import jp.oiyokan.settings.OiyoNamingUtil;
 
 /**
@@ -66,7 +67,7 @@ public class OiyoBasicJdbcUtil {
      * @return データベース接続.
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
-    public static Connection getConnection(Oiyo13SettingsDatabase settingsDatabase) throws ODataApplicationException {
+    public static Connection getConnection(OiyoSettingsDatabase settingsDatabase) throws ODataApplicationException {
         Connection conn;
         // OData server 起動シーケンスにてドライバ存在チェックは既に実施済み.
         // Class.forName(settingsDatabase.getJdbcDriver());
@@ -126,105 +127,76 @@ public class OiyoBasicJdbcUtil {
      * @throws SQLException              SQL例外が発生した場合.
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
-    public static CsdlProperty resultSetMetaData2CsdlProperty(ResultSetMetaData rsmeta, int column)
-            throws ODataApplicationException, SQLException {
+    public static CsdlProperty resultSetMetaData2CsdlProperty(OiyoSettingsProperty oiyoProp)
+            throws ODataApplicationException {
         // DB上の名称直接ではなく命名ユーティリティを通過させてから処理.
-        final CsdlProperty csdlProp = new CsdlProperty()
-                .setName(OiyoNamingUtil.db2Entity(rsmeta.getColumnName(column)));
-        switch (rsmeta.getColumnType(column)) {
-        case Types.TINYINT:
+        final CsdlProperty csdlProp = new CsdlProperty().setName(oiyoProp.getName());
+        if (EdmPrimitiveTypeKind.SByte.getFullQualifiedName().getFullQualifiedNameAsString()
+                .equals(oiyoProp.getEdmType())) {
             csdlProp.setType(EdmPrimitiveTypeKind.SByte.getFullQualifiedName());
-            break;
-        case Types.SMALLINT:
+        } else if (EdmPrimitiveTypeKind.Int16.getFullQualifiedName().getFullQualifiedNameAsString()
+                .equals(oiyoProp.getEdmType())) {
             csdlProp.setType(EdmPrimitiveTypeKind.Int16.getFullQualifiedName());
-            break;
-        case Types.INTEGER: /* INT */
+        } else if (EdmPrimitiveTypeKind.Int32.getFullQualifiedName().getFullQualifiedNameAsString()
+                .equals(oiyoProp.getEdmType())) {
             csdlProp.setType(EdmPrimitiveTypeKind.Int32.getFullQualifiedName());
-            break;
-        case Types.BIGINT:
+        } else if (EdmPrimitiveTypeKind.Int64.getFullQualifiedName().getFullQualifiedNameAsString()
+                .equals(oiyoProp.getEdmType())) {
             csdlProp.setType(EdmPrimitiveTypeKind.Int64.getFullQualifiedName());
-            break;
-        case Types.DECIMAL:
+        } else if (EdmPrimitiveTypeKind.Decimal.getFullQualifiedName().getFullQualifiedNameAsString()
+                .equals(oiyoProp.getEdmType())) {
             csdlProp.setType(EdmPrimitiveTypeKind.Decimal.getFullQualifiedName());
-            csdlProp.setScale(rsmeta.getScale(column));
-            csdlProp.setPrecision(rsmeta.getPrecision(column));
-            break;
-        case Types.NUMERIC:
-            // postgres で発生.
-            csdlProp.setType(EdmPrimitiveTypeKind.Decimal.getFullQualifiedName());
-            csdlProp.setScale(rsmeta.getScale(column));
-            csdlProp.setPrecision(rsmeta.getPrecision(column));
-            break;
-        case Types.BOOLEAN:
+        } else if (EdmPrimitiveTypeKind.Boolean.getFullQualifiedName().getFullQualifiedNameAsString()
+                .equals(oiyoProp.getEdmType())) {
             csdlProp.setType(EdmPrimitiveTypeKind.Boolean.getFullQualifiedName());
-            break;
-        case Types.BIT:
-            // postgres / SQL Server で発生.
-            csdlProp.setType(EdmPrimitiveTypeKind.Boolean.getFullQualifiedName());
-            break;
-        case Types.REAL:
+        } else if (EdmPrimitiveTypeKind.Single.getFullQualifiedName().getFullQualifiedNameAsString()
+                .equals(oiyoProp.getEdmType())) {
             csdlProp.setType(EdmPrimitiveTypeKind.Single.getFullQualifiedName());
-            break;
-        case Types.DOUBLE:
+        } else if (EdmPrimitiveTypeKind.Double.getFullQualifiedName().getFullQualifiedNameAsString()
+                .equals(oiyoProp.getEdmType())) {
             csdlProp.setType(EdmPrimitiveTypeKind.Double.getFullQualifiedName());
-            break;
-        case Types.DATE:
+        } else if (EdmPrimitiveTypeKind.Date.getFullQualifiedName().getFullQualifiedNameAsString()
+                .equals(oiyoProp.getEdmType())) {
             csdlProp.setType(EdmPrimitiveTypeKind.Date.getFullQualifiedName());
-            break;
-        case Types.TIMESTAMP:
+        } else if (EdmPrimitiveTypeKind.DateTimeOffset.getFullQualifiedName().getFullQualifiedNameAsString()
+                .equals(oiyoProp.getEdmType())) {
             csdlProp.setType(EdmPrimitiveTypeKind.DateTimeOffset.getFullQualifiedName());
-            break;
-        case Types.TIME:
+        } else if (EdmPrimitiveTypeKind.TimeOfDay.getFullQualifiedName().getFullQualifiedNameAsString()
+                .equals(oiyoProp.getEdmType())) {
             csdlProp.setType(EdmPrimitiveTypeKind.TimeOfDay.getFullQualifiedName());
-            break;
-        case Types.CHAR:
-        case Types.VARCHAR:
-        case Types.LONGVARCHAR:
-        case Types.LONGNVARCHAR:
-        case Types.CLOB:
+        } else if (EdmPrimitiveTypeKind.String.getFullQualifiedName().getFullQualifiedNameAsString()
+                .equals(oiyoProp.getEdmType())) {
             csdlProp.setType(EdmPrimitiveTypeKind.String.getFullQualifiedName());
-            if (rsmeta.getColumnDisplaySize(column) > 0 && rsmeta.getColumnDisplaySize(column) != Integer.MAX_VALUE) {
-                csdlProp.setMaxLength(rsmeta.getColumnDisplaySize(column));
-            }
-            break;
-        case Types.BINARY:
-        case Types.VARBINARY:
-        case Types.LONGVARBINARY:
-        case Types.BLOB:
-            if ("UUID".equalsIgnoreCase(rsmeta.getColumnTypeName(column))) {
-                csdlProp.setType(EdmPrimitiveTypeKind.Guid.getFullQualifiedName());
-            } else {
-                csdlProp.setType(EdmPrimitiveTypeKind.Binary.getFullQualifiedName());
-                if (rsmeta.getColumnDisplaySize(column) > 0
-                        && rsmeta.getColumnDisplaySize(column) != Integer.MAX_VALUE) {
-                    csdlProp.setMaxLength(rsmeta.getColumnDisplaySize(column));
-                }
-            }
-            break;
-        default:
+        } else if (EdmPrimitiveTypeKind.Binary.getFullQualifiedName().getFullQualifiedNameAsString()
+                .equals(oiyoProp.getEdmType())) {
+            csdlProp.setType(EdmPrimitiveTypeKind.Binary.getFullQualifiedName());
+        } else if (EdmPrimitiveTypeKind.Guid.getFullQualifiedName().getFullQualifiedNameAsString()
+                .equals(oiyoProp.getEdmType())) {
+            csdlProp.setType(EdmPrimitiveTypeKind.Guid.getFullQualifiedName());
+        } else {
+
             // [M006] NOT SUPPORTED: CSDL: JDBC Type
-            System.err.println(OiyokanMessages.M006 + ": " + rsmeta.getColumnType(column));
-            throw new ODataApplicationException(OiyokanMessages.M006 + ": " + rsmeta.getColumnType(column), //
+            System.err.println(OiyokanMessages.M006 + ": " + oiyoProp.getEdmType());
+            throw new ODataApplicationException(OiyokanMessages.M006 + ": " + oiyoProp.getEdmType(), //
                     500, Locale.ENGLISH);
         }
 
+        if (oiyoProp.getMaxLength() != null) {
+            csdlProp.setMaxLength(oiyoProp.getMaxLength());
+        }
+        if (oiyoProp.getPrecision() != null) {
+            csdlProp.setPrecision(oiyoProp.getPrecision());
+        }
+        if (oiyoProp.getScale() != null) {
+            csdlProp.setScale(oiyoProp.getScale());
+        }
+
         // NULL許容かどうか。不明な場合は設定しない。
-        switch (rsmeta.isNullable(column)) {
-        case ResultSetMetaData.columnNullable:
-            csdlProp.setNullable(true);
-            break;
-        case ResultSetMetaData.columnNoNulls:
-            csdlProp.setNullable(false);
-            break;
-        default:
-            // なにもしない.
-            break;
+        if (oiyoProp.getNullable() != null) {
+            csdlProp.setNullable(oiyoProp.getNullable());
         }
 
         // TODO デフォルト値の取得???
-
-        // System.err.println("TRACE: " + csdlProp.getName() + ": " +
-        // csdlProp.getType());
 
         return csdlProp;
     }

@@ -33,10 +33,10 @@ import org.apache.olingo.server.api.ODataApplicationException;
 import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanMessages;
 import jp.oiyokan.basic.OiyoBasicJdbcUtil;
-import jp.oiyokan.dto.Oiyo13SettingsDatabase;
-import jp.oiyokan.dto.Oiyo13SettingsEntitySet;
-import jp.oiyokan.dto.Oiyo13SettingsEntityType;
-import jp.oiyokan.dto.Oiyo13SettingsProperty;
+import jp.oiyokan.dto.OiyoSettingsDatabase;
+import jp.oiyokan.dto.OiyoSettingsEntitySet;
+import jp.oiyokan.dto.OiyoSettingsEntityType;
+import jp.oiyokan.dto.OiyoSettingsProperty;
 import jp.oiyokan.settings.OiyoSettingsUtil;
 
 /**
@@ -76,7 +76,7 @@ public class OiyokanKanDatabase {
             System.err.println( //
                     "OData v4: setup oiyokanKan database (Oiyokan: " + OiyokanConstants.VERSION + ")");
 
-        Oiyo13SettingsDatabase settingsInterDatabase = OiyoSettingsUtil
+        OiyoSettingsDatabase settingsInterDatabase = OiyoSettingsUtil
                 .getOiyokanDatabase(OiyokanConstants.OIYOKAN_KAN_DB);
 
         try (Connection connInterDb = OiyoBasicJdbcUtil.getConnection(settingsInterDatabase)) {
@@ -141,7 +141,7 @@ public class OiyokanKanDatabase {
                 if (OiyokanConstants.IS_TRACE_ODATA_V4)
                     System.err.println("OData v4: load: db:" + sqlFileDef[0] + ", sql: " + sqlFileDef[1]);
 
-                Oiyo13SettingsDatabase lookDatabase = OiyoSettingsUtil.getOiyokanDatabase(sqlFileDef[0]);
+                OiyoSettingsDatabase lookDatabase = OiyoSettingsUtil.getOiyokanDatabase(sqlFileDef[0]);
 
                 try (Connection connLoookDatabase = OiyoBasicJdbcUtil.getConnection(lookDatabase)) {
                     final String[] sqls = OiyokanResourceSqlUtil.loadOiyokanResourceSql("oiyokan/sql/" + sqlFileDef[1]);
@@ -390,10 +390,10 @@ public class OiyokanKanDatabase {
         return sqlBuilder.toString();
     }
 
-    public static Oiyo13SettingsEntitySet generateCreateOiyoJson(Connection connTargetDb, String tableName)
+    public static OiyoSettingsEntitySet generateCreateOiyoJson(Connection connTargetDb, String tableName)
             throws SQLException {
-        final Oiyo13SettingsEntitySet entitySet = new Oiyo13SettingsEntitySet();
-        entitySet.setEntityType(new Oiyo13SettingsEntityType());
+        final OiyoSettingsEntitySet entitySet = new OiyoSettingsEntitySet();
+        entitySet.setEntityType(new OiyoSettingsEntityType());
 
         final Map<String, String> defaultValueMap = new HashMap<>();
         {
@@ -405,16 +405,18 @@ public class OiyokanKanDatabase {
             }
         }
 
-        entitySet.setName(tableName + "s");
-        entitySet.setDbSettingName("localdb");
-        entitySet.setDescription("Desc");
+        // TODO FIXME 処理の共通化
+        entitySet.setName(tableName.replaceAll(" ", "") + "s");
+        entitySet.setDbSettingName("oiyoUnitTestDb");
+        entitySet.setDescription("Description.");
         entitySet.setCanCreate(true);
         entitySet.setCanRead(true);
         entitySet.setCanUpdate(true);
         entitySet.setCanDelete(true);
-        entitySet.setDescription("Desc");
-        entitySet.getEntityType().setName(tableName);
-        entitySet.getEntityType().setProperty(new ArrayList<Oiyo13SettingsProperty>());
+        // TODO FIXME 処理の共通化
+        entitySet.getEntityType().setName(tableName.replaceAll(" ", "_"));
+        entitySet.getEntityType().setDbName(tableName);
+        entitySet.getEntityType().setProperty(new ArrayList<OiyoSettingsProperty>());
         entitySet.getEntityType().setKeyName(new ArrayList<String>());
 
         // TODO FIXME テーブル名エスケープが暫定対処。
@@ -422,11 +424,12 @@ public class OiyokanKanDatabase {
             ResultSetMetaData rsmeta = stmt.getMetaData();
             final int columnCount = rsmeta.getColumnCount();
             for (int column = 1; column <= columnCount; column++) {
-                final Oiyo13SettingsProperty property = new Oiyo13SettingsProperty();
+                final OiyoSettingsProperty property = new OiyoSettingsProperty();
                 entitySet.getEntityType().getProperty().add(property);
 
                 String columnName = rsmeta.getColumnName(column);
-                property.setDbType(columnName);
+                property.setName(columnName.replaceAll(" ", "_"));
+                property.setDbName(columnName);
                 property.setDbType(rsmeta.getColumnTypeName(column));
 
                 switch (rsmeta.getColumnType(column)) {
@@ -640,6 +643,8 @@ public class OiyokanKanDatabase {
             final ResultSet rsKey = dbmeta.getPrimaryKeys(null, null, tableName);
             for (; rsKey.next();) {
                 String colName = rsKey.getString("COLUMN_NAME");
+                // TODO FIXME 処理の共通化
+                colName.replaceAll(" ", "_");
                 entitySet.getEntityType().getKeyName().add(colName);
             }
         }

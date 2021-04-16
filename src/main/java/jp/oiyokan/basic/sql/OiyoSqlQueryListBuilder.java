@@ -203,7 +203,20 @@ public class OiyoSqlQueryListBuilder {
             ///////////////////////////////////
             // SQL Server / ORACLE 用特殊記述
             // 現在、無条件にサブクエリ展開
-            sqlInfo.getSqlBuilder().append(" FROM (SELECT ROW_NUMBER()");
+        	String topfilter="";
+        	if(OiyokanConstants.DatabaseType.MSSQL2008==sqlInfo.getEntitySet().getDatabaseType())        	{
+        		if(uriInfo.getTopOption()!=null) {
+        			int total=uriInfo.getTopOption().getValue();
+        			if(uriInfo.getSkipOption()!=null) {
+        				total+=uriInfo.getSkipOption().getValue();
+        			}
+        			topfilter="TOP "+ (total+1)+" ";
+        		}
+        		
+        	}
+        	
+        	
+            sqlInfo.getSqlBuilder().append(" FROM (SELECT "+topfilter+"ROW_NUMBER()");
             if (uriInfo.getOrderByOption() != null) {
                 sqlInfo.getSqlBuilder().append(" OVER (");
                 sqlInfo.getSqlBuilder().append("ORDER BY ");

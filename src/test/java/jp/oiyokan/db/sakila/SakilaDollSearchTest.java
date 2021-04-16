@@ -48,7 +48,7 @@ class SakilaDollSearchTest {
             final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse(entry[0], entry[1]);
             final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
-            if (false) {
+            if (true) {
                 System.err.println("TRACE: " + OiyoBasicUrlUtil.decodeUrlQuery(entrys[1]));
                 System.err.println("[" + entrys[0] + "], [" + entrys[1] + "], result: " + result);
             }

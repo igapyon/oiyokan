@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Test;
 
 import jp.oiyokan.basic.OiyoBasicJdbcUtil;
 import jp.oiyokan.data.OiyokanResourceSqlUtil;
-import jp.oiyokan.dto.Oiyo13SettingsDatabase;
+import jp.oiyokan.dto.OiyoSettingsDatabase;
 import jp.oiyokan.settings.OiyoSettingsUtil;
 
 /**
@@ -44,7 +44,7 @@ class Build34ORACLETest {
         if (true)
             return;
 
-        Oiyo13SettingsDatabase settingsDatabase = OiyoSettingsUtil.getOiyokanDatabase("oracle1");
+        OiyoSettingsDatabase settingsDatabase = OiyoSettingsUtil.getOiyokanDatabase("oracle1");
 
         try (Connection connTargetDb = OiyoBasicJdbcUtil.getConnection(settingsDatabase)) {
             for (String sql : DROP_TABLE_SQLS) {

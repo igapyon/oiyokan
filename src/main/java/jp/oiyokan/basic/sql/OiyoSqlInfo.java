@@ -21,7 +21,7 @@ import java.util.List;
 import org.apache.olingo.server.api.ODataApplicationException;
 
 import jp.oiyokan.OiyokanCsdlEntitySet;
-import jp.oiyokan.dto.Oiyo13SettingsDatabase;
+import jp.oiyokan.dto.OiyoSettingsDatabase;
 
 /**
  * SQL文を構築するための簡易クラスの、SQL構築のデータ構造.
@@ -78,7 +78,7 @@ public class OiyoSqlInfo {
      * @return OiyokanSettingsDatabase インスタンス.
      * @throws ODataApplicationException ODataアプリ例外が発生.
      */
-    public Oiyo13SettingsDatabase getSettingsDatabase() throws ODataApplicationException {
+    public OiyoSettingsDatabase getSettingsDatabase() throws ODataApplicationException {
         return entitySet.getSettingsDatabase();
     }
 }
