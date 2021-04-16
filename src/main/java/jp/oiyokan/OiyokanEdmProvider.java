@@ -181,6 +181,7 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
             // テンプレートを念押しビルド.
             localTemplateEntityContainer.ensureBuild();
 
+            // entityContainerNameが nullのときにも応答するのが正しい仕様.
             if (entityContainerName == null
                     || entityContainerName.equals(localTemplateEntityContainer.getContainerFqnIyo())) {
                 final CsdlEntityContainerInfo entityContainerInfo = new CsdlEntityContainerInfo();
