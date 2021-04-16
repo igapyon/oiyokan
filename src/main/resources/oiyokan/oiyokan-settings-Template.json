@@ -75,6 +75,7 @@
       "canRead": true,
       "canUpdate": true,
       "canDelete": true,
+      "omitCountAll": false,
       "entityType": {
         "name": "Oiyokan",
         "dbName": "Oiyokan",

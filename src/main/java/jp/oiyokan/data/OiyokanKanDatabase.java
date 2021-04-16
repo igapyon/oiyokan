@@ -589,8 +589,14 @@ public class OiyokanKanDatabase {
                 // sqlBuilder.append(" DEFAULT " + defaultValueMap.get(columnName));
                 // }
 
-                if (ResultSetMetaData.columnNoNulls == rsmeta.isNullable(column)) {
+                final int nullableVal = rsmeta.isNullable(column);
+                if (ResultSetMetaData.columnNoNulls == nullableVal) {
                     property.setNullable(false);
+                } else if (ResultSetMetaData.columnNullable == nullableVal) {
+                    property.setNullable(true);
+                } else if (ResultSetMetaData.columnNullableUnknown == nullableVal) {
+                    // 不明は null.
+                    property.setNullable(null);
                 }
             }
 

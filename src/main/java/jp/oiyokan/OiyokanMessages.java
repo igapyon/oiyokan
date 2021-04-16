@@ -75,6 +75,16 @@ public class OiyokanMessages {
     public static final String M039 = "[M039] UNEXPECTED: EntitySet settings NOT found.";
     public static final String M040 = "[M040] UNEXPECTED: EntitySet Property settings NOT found.";
     public static final String M041 = "[M041] UNEXPECTED: Fail to find Property from DB name.";
+    public static final String M042 = "[M042] INFO: Skip count all by omitCountAll option.";
+
+    public static final String M051 = "[M051] WARN: No Create access by canCreate==false.";
+    public static final int M051_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
+    public static final String M052 = "[M052] WARN: No Read access by canRead==false.";
+    public static final int M052_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
+    public static final String M053 = "[M053] WARN: No Update access by canUpdate==false.";
+    public static final int M053_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
+    public static final String M054 = "[M054] WARN: No Delete access by canDelete==false.";
+    public static final int M054_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
 
     ///////////////////
     // Expression

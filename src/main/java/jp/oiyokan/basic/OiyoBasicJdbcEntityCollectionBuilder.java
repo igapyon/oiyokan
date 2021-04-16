@@ -39,7 +39,9 @@ import jp.oiyokan.OiyokanEdmProvider;
 import jp.oiyokan.OiyokanEntityCollectionBuilderInterface;
 import jp.oiyokan.OiyokanMessages;
 import jp.oiyokan.basic.sql.OiyoSqlQueryListBuilder;
+import jp.oiyokan.dto.OiyoSettingsEntitySet;
 import jp.oiyokan.h2.data.OiyoExperimentalH2FullTextSearch;
+import jp.oiyokan.settings.OiyoSettingsUtil;
 
 /**
  * 実際に返却するデータ本体を組み上げるクラス.
@@ -116,17 +118,27 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
                 return entityCollection;
             }
 
-            // 件数カウントがONの場合はカウント処理を実行。
+            final OiyoSettingsEntitySet oiyoEntitySet = OiyoSettingsUtil.getOiyoEntitySet(edmEntitySet.getName());
+
             if (uriInfo.getCountOption() != null && uriInfo.getCountOption().getValue()) {
-                // $count.
-                processCountQuery(entitySet, uriInfo, connTargetDb, entityCollection);
+                // 件数カウントがONの場合は基本的にカウント処理を実行。
+                if (uriInfo.getFilterOption() == null //
+                        && oiyoEntitySet.getOmitCountAll() != null && oiyoEntitySet.getOmitCountAll().booleanValue()) {
+                    // ただし、条件のない件数カウントの場合、つまり全件カウントについては、、omitCountAll が true の場合には検索をスキップ.
+                    System.err.println(OiyokanMessages.M042);
+                } else {
+                    // $count.
+                    processCountQuery(entitySet, uriInfo, connTargetDb, entityCollection);
+                }
             }
 
             // 実際のデータ取得処理を実行。
             processCollectionQuery(entitySet, uriInfo, connTargetDb, entityCollection);
 
             return entityCollection;
-        } catch (SQLException ex) {
+        } catch (
+
+        SQLException ex) {
             // [M015] UNEXPECTED: An error occurred in SQL that counts the number of search
             // results.
             System.err.println(OiyokanMessages.M015 + ": " + ex.toString());
