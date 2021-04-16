@@ -190,6 +190,7 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
 
             return null;
         } catch (RuntimeException ex) {
+            ex.printStackTrace();
             System.err.println("OiyokanEdmProvider#getEntityContainerInfo: exception: " + ex.toString());
             throw ex;
         }

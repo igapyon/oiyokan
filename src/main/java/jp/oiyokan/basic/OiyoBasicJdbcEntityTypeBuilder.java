@@ -15,15 +15,8 @@
  */
 package jp.oiyokan.basic;
 
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import org.apache.olingo.commons.api.edm.provider.CsdlEntityType;
 import org.apache.olingo.commons.api.edm.provider.CsdlProperty;
@@ -32,9 +25,8 @@ import org.apache.olingo.server.api.ODataApplicationException;
 
 import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanCsdlEntitySet;
-import jp.oiyokan.OiyokanMessages;
-import jp.oiyokan.dto.Oiyo13SettingsDatabase;
-import jp.oiyokan.settings.OiyoNamingUtil;
+import jp.oiyokan.dto.OiyoSettingsEntitySet;
+import jp.oiyokan.dto.OiyoSettingsProperty;
 import jp.oiyokan.settings.OiyoSettingsUtil;
 
 /**
@@ -67,64 +59,49 @@ public class OiyoBasicJdbcEntityTypeBuilder {
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
     public CsdlEntityType getEntityType() throws ODataApplicationException {
-        // 内部データベースである インメモリ作業データベースに接続.
-        // EntityTypeはインメモリ内部データベースの情報をもとに構築.
-        Oiyo13SettingsDatabase settingsInternalDatabase = OiyoSettingsUtil
-                .getOiyokanDatabase(OiyokanConstants.OIYOKAN_KAN_DB);
+        // TODO JSONベースに切り替え
 
-        try (Connection connInterDb = OiyoBasicJdbcUtil.getConnection(settingsInternalDatabase)) {
-            // CSDL要素型として情報を組み上げ.
-            final CsdlEntityType entityType = new CsdlEntityType();
-            entityType.setName(entitySet.getEntityNameIyo());
+        // CSDL要素型として情報を組み上げ.
+        final CsdlEntityType entityType = new CsdlEntityType();
+        entityType.setName(entitySet.getEntityNameIyo());
 
-            // 基本的な動作: 内部データベースである h2 データベースから該当する Oiyo による情報取得.
-            final List<CsdlProperty> propertyList = new ArrayList<>();
-            entityType.setProperties(propertyList);
+        // 基本的な動作: 内部データベースである h2 データベースから該当する Oiyo による情報取得.
+        final List<CsdlProperty> propertyList = new ArrayList<>();
+        entityType.setProperties(propertyList);
 
-            // SELECT * について、この箇所のみ記述を許容。
-            // DatabaseMetaData では情報を取りづらい場合があるためこちら ResultSetMetaData を使用。
-            final String sql = "SELECT * FROM " + entitySet.getDbTableNameLocalOiyo() + " LIMIT 1";
-            if (OiyokanConstants.IS_TRACE_ODATA_V4)
-                System.err.println("OData v4: TRACE: Entity: SQL: " + sql);
-            try (PreparedStatement stmt = connInterDb.prepareStatement(sql)) {
-                ResultSetMetaData rsmeta = stmt.getMetaData();
-                final int columnCount = rsmeta.getColumnCount();
-                for (int column = 1; column <= columnCount; column++) {
-                    propertyList.add(OiyoBasicJdbcUtil.resultSetMetaData2CsdlProperty(rsmeta, column));
-                }
+        OiyoSettingsEntitySet oiyoEntitySet = OiyoSettingsUtil.getOiyokanEntitySet(entitySet.getName());
 
-                // テーブルのキー情報
-                final List<CsdlPropertyRef> keyRefList = new ArrayList<>();
-                final DatabaseMetaData dbmeta = connInterDb.getMetaData();
-                final ResultSet rsKey = dbmeta.getPrimaryKeys(null, null, entitySet.getDbTableNameLocalOiyo());
-                for (; rsKey.next();) {
-                    // キー名はここでは利用する必要がない: rsKey.getString("PK_NAME");
-                    String colName = rsKey.getString("COLUMN_NAME");
-
-                    CsdlPropertyRef propertyRef = new CsdlPropertyRef();
-                    propertyRef.setName(OiyoNamingUtil.db2Entity(colName));
-                    keyRefList.add(propertyRef);
-                }
-
-                if (keyRefList.size() == 0) {
-                    // キーがないものは OData 的に不都合があるため警告する。
-                    if (OiyokanConstants.IS_TRACE_ODATA_V4) {
-                        System.err.println("OData v4: WARNING: No ID: " + entitySet.getName());
-                        System.err.println("OData v4: WARNING: Set primary key on Oiyo table: "
-                                + entitySet.getDbTableNameLocalOiyo());
-                    }
-                }
-
-                entityType.setKey(keyRefList);
-            }
-
-            // 構築結果を記憶。
-            entitySet.setEntityType(entityType);
-            return entityType;
-        } catch (SQLException ex) {
-            // [M019] UNEXPECTED: Fail to get database meta
-            System.err.println(OiyokanMessages.M019 + ": " + ex.toString());
-            throw new ODataApplicationException(OiyokanMessages.M019, OiyokanMessages.M019_CODE, Locale.ENGLISH);
+        for (OiyoSettingsProperty oiyoProp : oiyoEntitySet.getEntityType().getProperty()) {
+            propertyList.add(OiyoBasicJdbcUtil.resultSetMetaData2CsdlProperty(oiyoProp));
         }
+
+        // テーブルのキー情報
+        final List<CsdlPropertyRef> keyRefList = new ArrayList<>();
+        for (String key : oiyoEntitySet.getEntityType().getKeyName()) {
+            CsdlPropertyRef propertyRef = new CsdlPropertyRef();
+            propertyRef.setName(key);
+            keyRefList.add(propertyRef);
+        }
+
+        if (keyRefList.size() == 0) {
+            // キーがないものは OData 的に不都合があるため警告する。
+            if (OiyokanConstants.IS_TRACE_ODATA_V4) {
+                System.err.println("OData v4: WARNING: No ID: " + entitySet.getName());
+                System.err.println(
+                        "OData v4: WARNING: Set primary key on Oiyo table: " + entitySet.getDbTableNameLocalOiyo());
+            }
+        }
+
+        entityType.setKey(keyRefList);
+
+        // 構築結果を記憶。
+        entitySet.setEntityType(entityType);
+        return entityType;
+        // } catch (SQLException ex) {
+        // // [M019] UNEXPECTED: Fail to get database meta
+        // System.err.println(OiyokanMessages.M019 + ": " + ex.toString());
+        // throw new ODataApplicationException(OiyokanMessages.M019,
+        // OiyokanMessages.M019_CODE, Locale.ENGLISH);
+        // }
     }
 }
