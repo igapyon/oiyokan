@@ -32,6 +32,7 @@ import jp.oiyokan.OiyokanMessages;
 import jp.oiyokan.dto.OiyoSettings;
 import jp.oiyokan.dto.OiyoSettingsDatabase;
 import jp.oiyokan.dto.OiyoSettingsEntitySet;
+import jp.oiyokan.dto.OiyoSettingsProperty;
 
 /**
  * oiyokan-settings.json ファイルに関する処理。
@@ -71,7 +72,6 @@ public class OiyoSettingsUtil {
      */
     public static OiyoSettingsDatabase getOiyokanDatabase(String databaseDefName) throws ODataApplicationException {
         if (databaseDefName == null) {
-            // TODO FIXME メッセージ番号採番。
             // [M026] UNEXPECTED: Database settings NOT found
             System.err.println(OiyokanMessages.M026 + ": " + databaseDefName);
             throw new ODataApplicationException(OiyokanMessages.M026 + ": " + databaseDefName, 500, Locale.ENGLISH);
@@ -89,12 +89,11 @@ public class OiyoSettingsUtil {
         throw new ODataApplicationException(OiyokanMessages.M026 + ": " + databaseDefName, 500, Locale.ENGLISH);
     }
 
-    public static OiyoSettingsEntitySet getOiyokanEntitySet(String entitySetName) throws ODataApplicationException {
+    public static OiyoSettingsEntitySet getOiyoEntitySet(String entitySetName) throws ODataApplicationException {
         if (entitySetName == null) {
-            // TODO FIXME メッセージ番号採番。
-            // [M026] UNEXPECTED: Database settings NOT found
-            System.err.println(OiyokanMessages.M026 + ": " + entitySetName);
-            throw new ODataApplicationException(OiyokanMessages.M026 + ": " + entitySetName, 500, Locale.ENGLISH);
+            // [M038] UNEXPECTED: null parameter given as EntitySet.
+            System.err.println(OiyokanMessages.M038 + ": " + entitySetName);
+            throw new ODataApplicationException(OiyokanMessages.M038 + ": " + entitySetName, 500, Locale.ENGLISH);
         }
 
         final OiyoSettings settingsOiyokan = OiyokanCsdlEntityContainer.getSettingsInstance();
@@ -104,9 +103,25 @@ public class OiyoSettingsUtil {
             }
         }
 
-        // TODO FIXME メッセージ番号採番。
-        // [M026] UNEXPECTED: Database settings NOT found
-        System.err.println(OiyokanMessages.M026 + ": " + entitySetName);
-        throw new ODataApplicationException(OiyokanMessages.M026 + ": " + entitySetName, 500, Locale.ENGLISH);
+        // [M039] UNEXPECTED: EntitySet settings NOT found.
+        System.err.println(OiyokanMessages.M039 + ": " + entitySetName);
+        throw new ODataApplicationException(OiyokanMessages.M039 + ": " + entitySetName, 500, Locale.ENGLISH);
+    }
+
+    public static OiyoSettingsProperty getOiyoEntityProperty(String entitySetName, String propertyName)
+            throws ODataApplicationException {
+        OiyoSettingsEntitySet entitySet = getOiyoEntitySet(entitySetName);
+
+        for (OiyoSettingsProperty prop : entitySet.getEntityType().getProperty()) {
+            if (prop.getName().equals(propertyName)) {
+                return prop;
+            }
+        }
+
+        // [M040] UNEXPECTED: EntitySet Property settings NOT found.
+        System.err.println(OiyokanMessages.M040 + ": entitySet:" + entitySetName + ", property:" + propertyName);
+        throw new ODataApplicationException(
+                OiyokanMessages.M040 + ": entitySet:" + entitySetName + ", property:" + propertyName, //
+                500, Locale.ENGLISH);
     }
 }

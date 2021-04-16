@@ -69,7 +69,7 @@ public class OiyoBasicJdbcEntityTypeBuilder {
         final List<CsdlProperty> propertyList = new ArrayList<>();
         entityType.setProperties(propertyList);
 
-        OiyoSettingsEntitySet oiyoEntitySet = OiyoSettingsUtil.getOiyokanEntitySet(entitySet.getName());
+        OiyoSettingsEntitySet oiyoEntitySet = OiyoSettingsUtil.getOiyoEntitySet(entitySet.getName());
 
         for (OiyoSettingsProperty oiyoProp : oiyoEntitySet.getEntityType().getProperty()) {
             propertyList.add(OiyoBasicJdbcUtil.resultSetMetaData2CsdlProperty(oiyoProp));

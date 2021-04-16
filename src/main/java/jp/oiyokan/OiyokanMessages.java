@@ -71,6 +71,10 @@ public class OiyokanMessages {
     public static final int M036_CODE = HttpStatusCode.REQUEST_TIMEOUT.getStatusCode();
     public static final String M037 = "[M037] NOT SUPPORTED: Parameter Type";
     public static final int M037_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
+    public static final String M038 = "[M038] UNEXPECTED: null parameter given as EntitySet.";
+    public static final String M039 = "[M039] UNEXPECTED: EntitySet settings NOT found.";
+    public static final String M040 = "[M040] UNEXPECTED: EntitySet Property settings NOT found.";
+    public static final String M041 = "[M041] UNEXPECTED: Fail to find Property from DB name.";
 
     ///////////////////
     // Expression
