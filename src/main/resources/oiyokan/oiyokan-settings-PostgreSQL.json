@@ -13,11 +13,11 @@
     },
     {
       "name": "oiyoUnitTestDb",
-      "type": "postgres",
-      "description": "Sample postgres settings. Change the settings to suit your environment.",
-      "jdbcDriver": "org.postgresql.Driver",
-      "jdbcUrl": "jdbc:postgresql://localhost:5432/dvdrental",
-      "jdbcUser": "",
+      "type": "h2",
+      "description": "Oiyokan internal Target Test DB. Used for build unit test.",
+      "jdbcDriver": "org.h2.Driver",
+      "jdbcUrl": "jdbc:h2:file:./src/main/resources/db/oiyokan-internal;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=FALSE;MODE=MSSQLServer",
+      "jdbcUser": "sa",
       "jdbcPass": ""
     },
     {
@@ -112,7 +112,7 @@
     {
       "name": "ODataTests1",
       "description": "Description.",
-      "dbSettingName": "oiyoUnitTestDb",
+      "dbSettingName": "postgres1",
       "canCreate": true,
       "canRead": true,
       "canUpdate": true,
@@ -298,7 +298,7 @@
     {
       "name": "ODataTests2",
       "description": "Description.",
-      "dbSettingName": "oiyoUnitTestDb",
+      "dbSettingName": "postgres1",
       "canCreate": true,
       "canRead": true,
       "canUpdate": true,
@@ -360,7 +360,7 @@
     {
       "name": "ODataTests3",
       "description": "Description.",
-      "dbSettingName": "oiyoUnitTestDb",
+      "dbSettingName": "postgres1",
       "canCreate": true,
       "canRead": true,
       "canUpdate": true,
@@ -541,7 +541,7 @@
     {
       "name": "ODataTests4",
       "description": "Description.",
-      "dbSettingName": "oiyoUnitTestDb",
+      "dbSettingName": "postgres1",
       "canCreate": true,
       "canRead": true,
       "canUpdate": true,
@@ -582,7 +582,7 @@
     {
       "name": "ODataTests5",
       "description": "Description.",
-      "dbSettingName": "oiyoUnitTestDb",
+      "dbSettingName": "postgres1",
       "canCreate": true,
       "canRead": true,
       "canUpdate": true,
@@ -622,7 +622,7 @@
     {
       "name": "ODataTests6",
       "description": "Description.",
-      "dbSettingName": "oiyoUnitTestDb",
+      "dbSettingName": "postgres1",
       "canCreate": true,
       "canRead": true,
       "canUpdate": true,
@@ -693,7 +693,7 @@
     {
       "name": "ODataTests7",
       "description": "Description.",
-      "dbSettingName": "oiyoUnitTestDb",
+      "dbSettingName": "postgres1",
       "canCreate": true,
       "canRead": true,
       "canUpdate": true,
@@ -880,7 +880,7 @@
     {
       "name": "SklActors",
       "description": "Description.",
-      "dbSettingName": "oiyoUnitTestDb",
+      "dbSettingName": "postgres1",
       "canCreate": true,
       "canRead": true,
       "canUpdate": true,
@@ -930,7 +930,7 @@
     {
       "name": "SklActorInfos",
       "description": "Description.",
-      "dbSettingName": "oiyoUnitTestDb",
+      "dbSettingName": "postgres1",
       "canCreate": true,
       "canRead": true,
       "canUpdate": true,
@@ -976,7 +976,7 @@
     {
       "name": "SklAddresses",
       "description": "Description.",
-      "dbSettingName": "oiyoUnitTestDb",
+      "dbSettingName": "postgres1",
       "canCreate": true,
       "canRead": true,
       "canUpdate": true,
@@ -1059,7 +1059,7 @@
     {
       "name": "SklCategories",
       "description": "Description.",
-      "dbSettingName": "oiyoUnitTestDb",
+      "dbSettingName": "postgres1",
       "canCreate": true,
       "canRead": true,
       "canUpdate": true,
@@ -1100,7 +1100,7 @@
     {
       "name": "SklCities",
       "description": "Description.",
-      "dbSettingName": "oiyoUnitTestDb",
+      "dbSettingName": "postgres1",
       "canCreate": true,
       "canRead": true,
       "canUpdate": true,
@@ -1149,7 +1149,7 @@
     {
       "name": "SklCountries",
       "description": "Description.",
-      "dbSettingName": "oiyoUnitTestDb",
+      "dbSettingName": "postgres1",
       "canCreate": true,
       "canRead": true,
       "canUpdate": true,
@@ -1190,7 +1190,7 @@
     {
       "name": "SklCustomers",
       "description": "Description.",
-      "dbSettingName": "oiyoUnitTestDb",
+      "dbSettingName": "postgres1",
       "canCreate": true,
       "canRead": true,
       "canUpdate": true,
@@ -1286,7 +1286,7 @@
     {
       "name": "SklCustomerLists",
       "description": "Description.",
-      "dbSettingName": "oiyoUnitTestDb",
+      "dbSettingName": "postgres1",
       "canCreate": true,
       "canRead": true,
       "canUpdate": true,
@@ -1370,7 +1370,7 @@
     {
       "name": "SklFilms",
       "description": "Description.",
-      "dbSettingName": "oiyoUnitTestDb",
+      "dbSettingName": "postgres1",
       "canCreate": true,
       "canRead": true,
       "canUpdate": true,
@@ -1491,7 +1491,7 @@
     {
       "name": "SklFilmActors",
       "description": "Description.",
-      "dbSettingName": "oiyoUnitTestDb",
+      "dbSettingName": "postgres1",
       "canCreate": true,
       "canRead": true,
       "canUpdate": true,
@@ -1531,7 +1531,7 @@
     {
       "name": "SklFilmCategories",
       "description": "Description.",
-      "dbSettingName": "oiyoUnitTestDb",
+      "dbSettingName": "postgres1",
       "canCreate": true,
       "canRead": true,
       "canUpdate": true,
@@ -1571,7 +1571,7 @@
     {
       "name": "SklFilmLists",
       "description": "Description.",
-      "dbSettingName": "oiyoUnitTestDb",
+      "dbSettingName": "postgres1",
       "canCreate": true,
       "canRead": true,
       "canUpdate": true,
@@ -1648,7 +1648,7 @@
     {
       "name": "SklInventories",
       "description": "Description.",
-      "dbSettingName": "oiyoUnitTestDb",
+      "dbSettingName": "postgres1",
       "canCreate": true,
       "canRead": true,
       "canUpdate": true,
@@ -1696,7 +1696,7 @@
     {
       "name": "SklLanguages",
       "description": "Description.",
-      "dbSettingName": "oiyoUnitTestDb",
+      "dbSettingName": "postgres1",
       "canCreate": true,
       "canRead": true,
       "canUpdate": true,
@@ -1738,7 +1738,7 @@
     {
       "name": "SklNicerButSlowerFilmLists",
       "description": "Description.",
-      "dbSettingName": "oiyoUnitTestDb",
+      "dbSettingName": "postgres1",
       "canCreate": true,
       "canRead": true,
       "canUpdate": true,
@@ -1815,7 +1815,7 @@
     {
       "name": "SklPayments",
       "description": "Description.",
-      "dbSettingName": "oiyoUnitTestDb",
+      "dbSettingName": "postgres1",
       "canCreate": true,
       "canRead": true,
       "canUpdate": true,
@@ -1881,7 +1881,7 @@
     {
       "name": "SklRentals",
       "description": "Description.",
-      "dbSettingName": "oiyoUnitTestDb",
+      "dbSettingName": "postgres1",
       "canCreate": true,
       "canRead": true,
       "canUpdate": true,
@@ -1952,7 +1952,7 @@
     {
       "name": "SklSalesByFilmCategories",
       "description": "Description.",
-      "dbSettingName": "oiyoUnitTestDb",
+      "dbSettingName": "postgres1",
       "canCreate": true,
       "canRead": true,
       "canUpdate": true,
@@ -1985,7 +1985,7 @@
     {
       "name": "SklSalesByStores",
       "description": "Description.",
-      "dbSettingName": "oiyoUnitTestDb",
+      "dbSettingName": "postgres1",
       "canCreate": true,
       "canRead": true,
       "canUpdate": true,
@@ -2024,7 +2024,7 @@
     {
       "name": "SklStaffs",
       "description": "Description.",
-      "dbSettingName": "oiyoUnitTestDb",
+      "dbSettingName": "postgres1",
       "canCreate": true,
       "canRead": true,
       "canUpdate": true,
@@ -2130,7 +2130,7 @@
     {
       "name": "SklStaffLists",
       "description": "Description.",
-      "dbSettingName": "oiyoUnitTestDb",
+      "dbSettingName": "postgres1",
       "canCreate": true,
       "canRead": true,
       "canUpdate": true,
@@ -2207,7 +2207,7 @@
     {
       "name": "SklStores",
       "description": "Description.",
-      "dbSettingName": "oiyoUnitTestDb",
+      "dbSettingName": "postgres1",
       "canCreate": true,
       "canRead": true,
       "canUpdate": true,
