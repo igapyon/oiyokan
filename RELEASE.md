@@ -1,3 +1,19 @@
+# Release 1.4 (2021-04-17)
+
+## EN
+
+- Checked the contents of the Oiyokan setting file `oiyokan-settings.json`, and updated it to a format that is conscious of Edm standard.
+- Added the feature to control authz CRUD authority for each EntitySet.
+- Added the feature to avoid record count by unconditional SELECT COUNT (*).
+- Rough test for supported RDBMSs.
+
+## JA
+
+- Oiyokan 動作設定ファイル `oiyokan-settings.json` の内容を見直し、Edm を意識した形式に更新。
+- EntitySet ごとの CRUD 権限を制御する機能の追加。
+- 条件なし SELECT COUNT(*) による全件カウントを EntitySet ごとに抑止する機能を追加。
+- 対応 RDBMS に対する疎通テストの実施。
+
 # Release 1.3 (2021-04-15)
 
 ## EN
