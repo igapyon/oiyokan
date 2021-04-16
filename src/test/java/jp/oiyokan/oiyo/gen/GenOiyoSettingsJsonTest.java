@@ -34,6 +34,7 @@ import jp.oiyokan.basic.OiyoBasicJdbcUtil;
 import jp.oiyokan.data.OiyokanKanDatabase;
 import jp.oiyokan.dto.OiyoSettings;
 import jp.oiyokan.dto.OiyoSettingsDatabase;
+import jp.oiyokan.dto.OiyoSettingsEntitySet;
 import jp.oiyokan.settings.OiyoSettingsUtil;
 
 /**
@@ -207,6 +208,14 @@ class GenOiyoSettingsJsonTest {
                 // System.err.println("tabname: "+tableName);
                 oiyoSettings.getEntitySet().add(OiyokanKanDatabase.generateCreateOiyoJson(connTargetDb, tableName,
                         OiyokanConstants.DatabaseType.valueOf(settingsDatabase.getType())));
+            }
+
+            for (OiyoSettingsEntitySet iyoEntitySet : oiyoSettings.getEntitySet()) {
+                if (iyoEntitySet.getName().equals("actors")) {
+                    iyoEntitySet.setName("SklActors");
+                    iyoEntitySet.getEntityType().setName("SklActor");
+                }
+
             }
 
             StringWriter writer = new StringWriter();
