@@ -62,6 +62,7 @@ class GenOiyoSettingsJsonTest {
         }
 
         OiyoSettingsDatabase settingsDatabase = OiyoSettingsUtil.getOiyokanDatabase(TARGET_UNITTEST_DATABASE);
+        System.err.println("確認対象データベース: " + settingsDatabase.getName());
 
         try (Connection connTargetDb = OiyoBasicJdbcUtil.getConnection(settingsDatabase)) {
             final List<String> tableNameList = new ArrayList<>();
@@ -189,17 +190,9 @@ class GenOiyoSettingsJsonTest {
                 }
 
                 tableNameList.add(tableName);
-
-                if (SHOW_JDBCINFO) {
-                    System.err.println("");
-                }
-
             }
 
             Collections.sort(tableNameList);
-
-            System.err.println("Oiyo候補: " + settingsDatabase.getName());
-            System.err.println("");
 
             final OiyoSettings oiyoSettings = new OiyoSettings();
             oiyoSettings.setEntitySet(new ArrayList<>());
@@ -287,8 +280,9 @@ class GenOiyoSettingsJsonTest {
             writer.flush();
 
             new File("./target/").mkdirs();
-            FileUtils.writeStringToFile(new File("./target/GenOiyoGenericAllTest-output.json"), writer.toString(),
-                    "UTF-8");
+            final File generateFile = new File("./target/auto-generated-oiyokan-settings.json");
+            FileUtils.writeStringToFile(generateFile, writer.toString(), "UTF-8");
+            System.err.println("sample oiyokan setting file generated: " + generateFile.getCanonicalPath());
         }
     }
 }
