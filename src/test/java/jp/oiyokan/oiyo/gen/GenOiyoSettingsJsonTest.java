@@ -274,7 +274,7 @@ class GenOiyoSettingsJsonTest {
                 } else if (iyoEntitySet.getName().equals("staff_lists")) {
                     iyoEntitySet.setName("SklStaffLists");
                     iyoEntitySet.getEntityType().setName("SklStaffList");
-                } else if (iyoEntitySet.getName().equals("store")) {
+                } else if (iyoEntitySet.getName().equals("stores")) {
                     iyoEntitySet.setName("SklStores");
                     iyoEntitySet.getEntityType().setName("SklStore");
                 }

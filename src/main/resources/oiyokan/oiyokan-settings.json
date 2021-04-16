@@ -2322,7 +2322,7 @@
       }
     },
     {
-      "name": "stores",
+      "name": "SklStores",
       "description": "Description.",
       "dbSettingName": "oiyoUnitTestDb",
       "canCreate": true,
@@ -2330,7 +2330,7 @@
       "canUpdate": true,
       "canDelete": true,
       "entityType": {
-        "name": "store",
+        "name": "SklStore",
         "dbName": "store",
         "keyName": ["store_id"],
         "property": [
