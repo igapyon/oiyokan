@@ -90,9 +90,7 @@
             "jdbcSetMethod": "setString",
             "nullable": false,
             "maxLength": 20,
-            "lengthFixed": false,
-            "precision": null,
-            "scale": null
+            "lengthFixed": false
           },
           {
             "name": "KeyValue",
@@ -103,9 +101,7 @@
             "jdbcSetMethod": "setString",
             "nullable": true,
             "maxLength": 255,
-            "lengthFixed": false,
-            "precision": null,
-            "scale": null
+            "lengthFixed": false
           }
         ]
       }
@@ -586,7 +582,7 @@
       "canUpdate": true,
       "canDelete": true,
       "entityType": {
-        "name": "OData_Test4",
+        "name": "ODataTest4",
         "dbName": "OData Test4",
         "keyName": ["I_D", "Na_me"],
         "property": [

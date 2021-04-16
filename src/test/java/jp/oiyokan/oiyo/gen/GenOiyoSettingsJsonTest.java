@@ -35,6 +35,8 @@ import jp.oiyokan.data.OiyokanKanDatabase;
 import jp.oiyokan.dto.OiyoSettings;
 import jp.oiyokan.dto.OiyoSettingsDatabase;
 import jp.oiyokan.dto.OiyoSettingsEntitySet;
+import jp.oiyokan.dto.OiyoSettingsEntityType;
+import jp.oiyokan.dto.OiyoSettingsProperty;
 import jp.oiyokan.settings.OiyoSettingsUtil;
 
 /**
@@ -197,10 +199,137 @@ class GenOiyoSettingsJsonTest {
             final OiyoSettings oiyoSettings = new OiyoSettings();
             oiyoSettings.setEntitySet(new ArrayList<>());
 
+            if (true) {
+                // データベース設定も生成.
+                oiyoSettings.setNamespace("Oiyokan");
+                oiyoSettings.setContainerName("Container");
+                oiyoSettings.setDatabase(new ArrayList<>());
+
+                final String[][] DATABASE_SETTINGS = new String[][] {
+                        { "oiyokanKan", "h2", "Oiyokan internal DB. Do not change.", //
+                                "org.h2.Driver", //
+                                "jdbc:h2:mem:oiyokan;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=FALSE;MODE=MSSQLServer", //
+                                "sa", "" }, //
+                        { "oiyoUnitTestDb", "h2", "Oiyokan internal Target Test DB. Used for build unit test.", //
+                                "org.h2.Driver", //
+                                "jdbc:h2:file:./src/main/resources/db/oiyokan-internal;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=FALSE;MODE=MSSQLServer", //
+                                "sa", "" }, //
+                        { "postgres1", "postgres",
+                                "Sample postgres settings. Change the settings to suit your environment.", //
+                                "org.postgresql.Driver", //
+                                "jdbc:postgresql://localhost:5432/dvdrental", //
+                                "", "" }, //
+                        { "mysql1", "MySQL", "Sample MySQL settings. Change the settings to suit your environment.", //
+                                "com.mysql.jdbc.Driver", //
+                                "jdbc:mysql://localhost/mysql?useUnicode=true&characterEncoding=UTF-8&characterSetResults=UTF-8&useCursorFetch=true&defaultFetchSize=128&useServerPrepStmts=true&emulateUnsupportedPstmts=false", //
+                                "root", "passwd123" }, //
+                        { "mysql2", "MySQL",
+                                "Sample MySQL settings for Sakila. Change the settings to suit your environment.", //
+                                "com.mysql.jdbc.Driver", //
+                                "jdbc:mysql://localhost/sakila?useUnicode=true&characterEncoding=UTF-8&characterSetResults=UTF-8&useCursorFetch=true&defaultFetchSize=128&useServerPrepStmts=true&emulateUnsupportedPstmts=false", //
+                                "root", "passwd123" }, //
+                        { "mssql1", "MSSQL2008",
+                                "Sample MS SQL Server 2008 settings. Change the settings to suit your environment.", //
+                                "com.microsoft.sqlserver.jdbc.SQLServerDriver", //
+                                "jdbc:sqlserver://localhost\\SQLExpress;SelectMethod=cursor", //
+                                "sa", "passwd123" }, //
+                        { "oracle1", "ORACLE",
+                                "Sample Oracle XE (18c) settings. Change the settings to suit your environment.", //
+                                "oracle.jdbc.driver.OracleDriver", //
+                                "jdbc:oracle:thin:@10.0.2.15:1521/xepdb1", //
+                                "orauser", "passwd123" }, //
+                };
+
+                for (String[] databaseSetting : DATABASE_SETTINGS) {
+                    OiyoSettingsDatabase database = new OiyoSettingsDatabase();
+                    oiyoSettings.getDatabase().add(database);
+                    database.setName(databaseSetting[0]);
+                    database.setType(databaseSetting[1]);
+                    database.setDescription(databaseSetting[2]);
+                    database.setJdbcDriver(databaseSetting[3]);
+                    database.setJdbcUrl(databaseSetting[4]);
+                    database.setJdbcUser(databaseSetting[5]);
+                    database.setJdbcPass(databaseSetting[6]);
+                }
+
+            }
+
+            if (true) {
+                OiyoSettingsEntitySet eset = new OiyoSettingsEntitySet();
+                oiyoSettings.getEntitySet().add(eset);
+                eset.setName("Oiyokans");
+                eset.setDescription("Oiyokan internal info. Do not change.");
+                eset.setDbSettingName("oiyokanKan");
+                eset.setCanCreate(false);
+                eset.setCanRead(true);
+                eset.setCanUpdate(false);
+                eset.setCanDelete(false);
+                eset.setOmitCountAll(true);
+                eset.setEntityType(new OiyoSettingsEntityType());
+                eset.getEntityType().setName("Oiyokan");
+                eset.getEntityType().setDbName("Oiyokan");
+                eset.getEntityType().setKeyName(new ArrayList<>());
+                eset.getEntityType().getKeyName().add("KeyName");
+                eset.getEntityType().setProperty(new ArrayList<>());
+
+                OiyoSettingsProperty prop = new OiyoSettingsProperty();
+                eset.getEntityType().getProperty().add(prop);
+                prop.setName("KeyName");
+                prop.setDbName("KeyName");
+                prop.setEdmType("Edm.String");
+                prop.setJdbcType("Types.VARCHAR");
+                prop.setDbType("VARCHAR");
+                prop.setJdbcSetMethod("setString");
+                prop.setNullable(false);
+                prop.setLength(20);
+                prop.setLengthFixed(false);
+                prop.setPrecision(null);
+                prop.setScale(null);
+
+                prop = new OiyoSettingsProperty();
+                eset.getEntityType().getProperty().add(prop);
+                prop.setName("KeyValue");
+                prop.setDbName("KeyValue");
+                prop.setEdmType("Edm.String");
+                prop.setJdbcType("Types.VARCHAR");
+                prop.setDbType("VARCHAR");
+                prop.setJdbcSetMethod("setString");
+                prop.setNullable(true);
+                prop.setLength(255);
+                prop.setLengthFixed(false);
+                prop.setPrecision(null);
+                prop.setScale(null);
+            }
+
             for (String tableName : tableNameList) {
                 // System.err.println("tabname: "+tableName);
                 oiyoSettings.getEntitySet().add(OiyokanKanDatabase.generateCreateOiyoJson(connTargetDb, tableName,
                         OiyokanConstants.DatabaseType.valueOf(settingsDatabase.getType())));
+            }
+
+            for (OiyoSettingsEntitySet iyoEntitySet : oiyoSettings.getEntitySet()) {
+                if ("ODataTest1".equals(iyoEntitySet.getEntityType().getDbName())) {
+                    iyoEntitySet.setName("ODataTests1");
+                }
+                if ("ODataTest2".equals(iyoEntitySet.getEntityType().getDbName())) {
+                    iyoEntitySet.setName("ODataTests2");
+                }
+                if ("ODataTest3".equals(iyoEntitySet.getEntityType().getDbName())) {
+                    iyoEntitySet.setName("ODataTests3");
+                }
+                if ("OData Test4".equals(iyoEntitySet.getEntityType().getDbName())) {
+                    iyoEntitySet.setName("ODataTests4");
+                    iyoEntitySet.getEntityType().setName("ODataTest4");
+                }
+                if ("ODataTest5".equals(iyoEntitySet.getEntityType().getDbName())) {
+                    iyoEntitySet.setName("ODataTests5");
+                }
+                if ("ODataTest6".equals(iyoEntitySet.getEntityType().getDbName())) {
+                    iyoEntitySet.setName("ODataTests6");
+                }
+                if ("ODataTest7".equals(iyoEntitySet.getEntityType().getDbName())) {
+                    iyoEntitySet.setName("ODataTests7");
+                }
             }
 
             for (OiyoSettingsEntitySet iyoEntitySet : oiyoSettings.getEntitySet()) {
