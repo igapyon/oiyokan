@@ -54,14 +54,12 @@ public class OiyoSqlInfo {
         this.entitySet = entitySet;
     }
 
-    /**
-     * 処理対象のエンティティ名を設定.
-     * 
-     * @return 処理対象のエンティティ名.
-     * @deprecated これは利用しない方向性で。
-     */
-    public OiyokanCsdlEntitySet getEntitySet() {
-        return entitySet;
+    public OiyoInfo getOiyoInfo() {
+        return oiyoInfo;
+    }
+
+    public String getEntitySetName() {
+        return entitySetName;
     }
 
     /**

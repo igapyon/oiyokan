@@ -20,7 +20,6 @@ import java.util.List;
 import org.apache.olingo.commons.api.data.Entity;
 import org.apache.olingo.commons.api.data.Property;
 import org.apache.olingo.commons.api.edm.EdmEntitySet;
-import org.apache.olingo.commons.api.edm.provider.CsdlProperty;
 import org.apache.olingo.server.api.ODataApplicationException;
 import org.apache.olingo.server.api.uri.UriParameter;
 
@@ -28,6 +27,8 @@ import jp.oiyokan.basic.OiyoBasicJdbcUtil;
 import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.common.OiyoInfoUtil;
 import jp.oiyokan.common.OiyoSqlInfo;
+import jp.oiyokan.dto.OiyoSettingsEntitySet;
+import jp.oiyokan.dto.OiyoSettingsProperty;
 
 /**
  * データベースに1件レコードを追加.
@@ -67,9 +68,11 @@ public class OiyoSqlInsertOneBuilder {
      */
     public void buildInsertIntoDml(EdmEntitySet edmEntitySet, List<UriParameter> keyPredicates, Entity requestEntity)
             throws ODataApplicationException {
+        final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, edmEntitySet.getName());
+
         sqlInfo.getSqlBuilder().append("INSERT INTO ");
-        sqlInfo.getSqlBuilder().append(
-                OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, sqlInfo.getEntitySet().getDbTableNameTargetIyo()));
+        sqlInfo.getSqlBuilder()
+                .append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, entitySet.getEntityType().getDbName()));
         sqlInfo.getSqlBuilder().append(" (");
         boolean isFirst = true;
 
@@ -93,8 +96,8 @@ public class OiyoSqlInsertOneBuilder {
                 sqlInfo.getSqlBuilder().append(",");
             }
 
-            final String colName = OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyoInfoUtil
-                    .getOiyoEntityProperty(oiyoInfo, edmEntitySet.getName(), prop.getName()).getDbName());
+            final String colName = OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo,
+                    OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, edmEntitySet.getName(), prop.getName()).getDbName());
             sqlInfo.getSqlBuilder().append(colName);
         }
 
@@ -110,8 +113,9 @@ public class OiyoSqlInsertOneBuilder {
                     sqlInfo.getSqlBuilder().append(",");
                 }
 
-                CsdlProperty csdlProp = sqlInfo.getEntitySet().getEntityType().getProperty(param.getName());
-                OiyoBasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo, csdlProp.getType(), param.getText());
+                final OiyoSettingsProperty prop = OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, edmEntitySet.getName(),
+                        param.getName());
+                OiyoBasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo, prop.getEdmType(), param.getText());
             }
         }
 

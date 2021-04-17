@@ -32,11 +32,14 @@ import org.apache.olingo.server.core.uri.queryoption.expression.MethodImpl;
 import org.apache.olingo.server.core.uri.queryoption.expression.TypeLiteralImpl;
 import org.apache.olingo.server.core.uri.queryoption.expression.UnaryImpl;
 
+import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanMessages;
 import jp.oiyokan.basic.OiyoBasicJdbcUtil;
 import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.common.OiyoInfoUtil;
 import jp.oiyokan.common.OiyoSqlInfo;
+import jp.oiyokan.dto.OiyoSettingsDatabase;
+import jp.oiyokan.dto.OiyoSettingsEntitySet;
 
 /**
  * SQL文を構築するための簡易クラスの、Expression を SQLに変換する処理.
@@ -262,10 +265,12 @@ public class OiyoSqlQueryListExpr {
     }
 
     private void expandMember(MemberImpl impl) throws ODataApplicationException {
+        final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, sqlInfo.getEntitySetName());
+
         // そのままSQLのメンバーとせず、項目名エスケープを除去.
         final String unescapedName = OiyoBasicJdbcUtil.unescapeKakkoFieldName(impl.toString());
-        sqlInfo.getSqlBuilder().append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyoInfoUtil
-                .getOiyoEntityProperty(oiyoInfo, sqlInfo.getEntitySet().getName(), unescapedName).getDbName()));
+        sqlInfo.getSqlBuilder().append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo,
+                OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, entitySet.getName(), unescapedName).getDbName()));
     }
 
     /**
@@ -275,10 +280,14 @@ public class OiyoSqlQueryListExpr {
      * @throws ODataApplicationException ODataアプリ例外が発生.
      */
     private void expandMethod(MethodImpl impl) throws ODataApplicationException {
+        final OiyoSettingsDatabase database = OiyoInfoUtil.getOiyoDatabaseByEntitySetName(sqlInfo.getOiyoInfo(),
+                sqlInfo.getEntitySetName());
+        final OiyokanConstants.DatabaseType databaseType = OiyokanConstants.DatabaseType.valueOf(database.getType());
+
         // CONTAINS
         if (impl.getMethod() == MethodKind.CONTAINS) {
             // h2 database の POSITION/INSTR は 1 オリジンで発見せずが0 なので 1 を減らしています。
-            switch (sqlInfo.getEntitySet().getDatabaseType()) {
+            switch (databaseType) {
             default:
                 sqlInfo.getSqlBuilder().append("(INSTR(");
                 expand(impl.getParameters().get(0));
@@ -305,7 +314,7 @@ public class OiyoSqlQueryListExpr {
 
         // STARTSWITH
         if (impl.getMethod() == MethodKind.STARTSWITH) {
-            switch (sqlInfo.getEntitySet().getDatabaseType()) {
+            switch (databaseType) {
             default:
                 // h2 database の POSITION/INSTR は 1 オリジンで発見せずが0 なので 1 を減らしています。
                 sqlInfo.getSqlBuilder().append("(INSTR(");
@@ -333,7 +342,7 @@ public class OiyoSqlQueryListExpr {
 
         // ENDSWITH
         if (impl.getMethod() == MethodKind.ENDSWITH) {
-            switch (sqlInfo.getEntitySet().getDatabaseType()) {
+            switch (databaseType) {
             case postgres:
             default:
                 sqlInfo.getSqlBuilder().append("(RIGHT(");
@@ -367,7 +376,7 @@ public class OiyoSqlQueryListExpr {
 
         // LENGTH
         if (impl.getMethod() == MethodKind.LENGTH) {
-            switch (sqlInfo.getEntitySet().getDatabaseType()) {
+            switch (databaseType) {
             case postgres:
             default:
                 sqlInfo.getSqlBuilder().append("(LENGTH(");
@@ -385,7 +394,7 @@ public class OiyoSqlQueryListExpr {
 
         // INDEXOF
         if (impl.getMethod() == MethodKind.INDEXOF) {
-            switch (sqlInfo.getEntitySet().getDatabaseType()) {
+            switch (databaseType) {
             default:
                 // h2 database の POSITION/INSTR は 1 オリジンで発見せずが0 なので 1 を減らしています。
                 // postgresにINSTRがあるか確認
@@ -414,7 +423,7 @@ public class OiyoSqlQueryListExpr {
 
         // SUBSTRING
         if (impl.getMethod() == MethodKind.SUBSTRING) {
-            switch (sqlInfo.getEntitySet().getDatabaseType()) {
+            switch (databaseType) {
             default:
                 sqlInfo.getSqlBuilder().append("(SUBSTRING(");
                 expand(impl.getParameters().get(0));
@@ -463,7 +472,7 @@ public class OiyoSqlQueryListExpr {
 
         // TRIM
         if (impl.getMethod() == MethodKind.TRIM) {
-            switch (sqlInfo.getEntitySet().getDatabaseType()) {
+            switch (databaseType) {
             case postgres:
             default:
                 sqlInfo.getSqlBuilder().append("TRIM(");
@@ -481,7 +490,7 @@ public class OiyoSqlQueryListExpr {
 
         // CONCAT
         if (impl.getMethod() == MethodKind.CONCAT) {
-            switch (sqlInfo.getEntitySet().getDatabaseType()) {
+            switch (databaseType) {
             case postgres:
             default:
                 sqlInfo.getSqlBuilder().append("CONCAT(");
@@ -676,7 +685,7 @@ public class OiyoSqlQueryListExpr {
 
         // SUBSTRINGOF
         if (impl.getMethod() == MethodKind.SUBSTRINGOF) {
-            switch (sqlInfo.getEntitySet().getDatabaseType()) {
+            switch (databaseType) {
             default:
                 sqlInfo.getSqlBuilder().append("(INSTR(");
                 expand(impl.getParameters().get(0));
