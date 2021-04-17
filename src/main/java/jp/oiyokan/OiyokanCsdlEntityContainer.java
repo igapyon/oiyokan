@@ -116,17 +116,6 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
         return OiyokanEdmProvider.getOiyoInfoInstance().getSettings().getNamespace();
     }
 
-    /**
-     * EDMコンテナ名のFQN(完全修飾名).
-     * 
-     * @return EDMコンテナ名のFQN(完全修飾名).
-     * @throws ODataApplicationException ODataアプリ例外が発生した場合.
-     * @deprecated
-     */
-    public FullQualifiedName getContainerFqnIyo() throws ODataApplicationException {
-        return new FullQualifiedName(getNamespaceIyo(),
-                OiyokanEdmProvider.getOiyoInfoInstance().getSettings().getContainerName());
-    }
 
     /**
      * エンティティ名FQNをもとに エンティティセットを取得.

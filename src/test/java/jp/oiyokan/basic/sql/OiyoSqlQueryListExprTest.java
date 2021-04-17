@@ -28,13 +28,13 @@ import org.apache.olingo.server.core.uri.parser.Parser;
 import org.junit.jupiter.api.Test;
 
 import jp.oiyokan.OiyokanCsdlEntityContainer;
-import jp.oiyokan.OiyokanCsdlEntitySet;
 import jp.oiyokan.OiyokanEdmProvider;
 import jp.oiyokan.OiyokanTestSettingConstants;
 import jp.oiyokan.basic.OiyoBasicUrlUtil;
 import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.common.OiyoInfoUtil;
 import jp.oiyokan.common.OiyoSqlInfo;
+import jp.oiyokan.dto.OiyoSettingsEntitySet;
 
 /**
  * OiyoSqlQueryListExpr のテスト.
@@ -57,14 +57,8 @@ class OiyoSqlQueryListExprTest {
         OData odata = OData.newInstance();
         ServiceMetadata edm = odata.createServiceMetadata(new OiyokanEdmProvider(), new ArrayList<>());
 
-        localTemplateEntityContainer.ensureBuild();
         // アプリ情報が入っている内部DBをベースに処理。つまり h2 database 前提としての振る舞いをおこなう。
-        final OiyokanCsdlEntitySet entitySet = (OiyokanCsdlEntitySet) localTemplateEntityContainer
-                .getEntitySet("ODataTests1");
-
-        // EntityType をロード済み状態にする.
-        localTemplateEntityContainer.getEntityType(entitySet.getTypeFQN());
-
+        OiyoSettingsEntitySet entitySet=   OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, "ODataTests1");
         if (entitySet == null) {
             final String message = "ERROR: Fail to load Oiyokans EntitySet.";
             System.err.println(message);
