@@ -9,6 +9,7 @@ You can use Oiyokan to turn RDBMS into OData v4 services.
 
 ## Supported target RDBMS
 
+- h2 database (1.4)
 - PostgreSQL (13)
 - MySQL (8)
 - SQL Server (2008)
