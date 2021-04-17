@@ -50,11 +50,12 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
     /**
      * OiyoInfo (OiyokanSettings 設定情報を含む) を singleton に取得.
      * 
+     * このパッケージからのみアクセスを許容。
+     * 
      * @return OiyoInfo OiyokanSettings instanceを含む. 参照のみで利用.
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
-     * @deprecated なるべく呼ばないで...
      */
-    public static synchronized OiyoInfo getOiyoInfoInstance() throws ODataApplicationException {
+    static synchronized OiyoInfo getOiyoInfoInstance() throws ODataApplicationException {
         // singleton by static synchronized.
         if (oiyoInfo == null) {
             oiyoInfo = new OiyoInfo();

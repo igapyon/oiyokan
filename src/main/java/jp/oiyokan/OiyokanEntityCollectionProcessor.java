@@ -43,7 +43,6 @@ import org.apache.olingo.server.core.uri.queryoption.CountOptionImpl;
 
 import jp.oiyokan.basic.OiyoBasicJdbcEntityCollectionBuilder;
 import jp.oiyokan.common.OiyoInfo;
-import jp.oiyokan.settings.OiyoSettingsUtil;
 
 /**
  * Oiyokan による EntityCollectionProcessor 実装.
@@ -88,9 +87,8 @@ public class OiyokanEntityCollectionProcessor implements EntityCollectionProcess
             UriInfo uriInfo, ContentType responseFormat) //
             throws ODataApplicationException, SerializerException {
         try {
-            // TODO FIXME シングルトン化の検討
-            final OiyoInfo oiyoInfo = new OiyoInfo();
-            oiyoInfo.setSettings(OiyoSettingsUtil.loadOiyokanSettings());
+            // シングルトンな OiyoInfo を利用。
+            final OiyoInfo oiyoInfo = OiyokanCsdlEntityContainer.getOiyoInfoInstance();
 
             // URI情報からURIリソースの指定を取得.
             List<UriResource> resourcePaths = uriInfo.getUriResourceParts();
