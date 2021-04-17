@@ -281,7 +281,7 @@ class GenOiyoSettingsJsonTest {
                 prop.setDbType("VARCHAR");
                 prop.setJdbcSetMethod("setString");
                 prop.setNullable(false);
-                prop.setLength(20);
+                prop.setMaxLength(20);
                 prop.setLengthFixed(false);
                 prop.setPrecision(null);
                 prop.setScale(null);
@@ -295,7 +295,7 @@ class GenOiyoSettingsJsonTest {
                 prop.setDbType("VARCHAR");
                 prop.setJdbcSetMethod("setString");
                 prop.setNullable(true);
-                prop.setLength(255);
+                prop.setMaxLength(255);
                 prop.setLengthFixed(false);
                 prop.setPrecision(null);
                 prop.setScale(null);

@@ -136,7 +136,7 @@ public class OiyoSettingsProperty {
     }
 
     @JsonProperty("maxLength")
-    public void setLength(Integer maxLength) {
+    public void setMaxLength(Integer maxLength) {
         this.maxLength = maxLength;
     }
 
