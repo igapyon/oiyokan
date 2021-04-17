@@ -31,7 +31,6 @@ import org.apache.olingo.commons.api.data.Entity;
 import org.apache.olingo.commons.api.data.Property;
 import org.apache.olingo.commons.api.edm.EdmEntitySet;
 import org.apache.olingo.commons.api.edm.provider.CsdlEntitySet;
-import org.apache.olingo.commons.api.edm.provider.CsdlPropertyRef;
 import org.apache.olingo.server.api.ODataApplicationException;
 import org.apache.olingo.server.api.uri.UriInfo;
 import org.apache.olingo.server.api.uri.UriParameter;
@@ -50,6 +49,7 @@ import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.common.OiyoInfoUtil;
 import jp.oiyokan.common.OiyoSqlInfo;
 import jp.oiyokan.dto.OiyoSettingsDatabase;
+import jp.oiyokan.dto.OiyoSettingsEntitySet;
 
 /**
  * Entity 1件の検索に関する基本的なJDBC処理
@@ -79,12 +79,7 @@ public class OiyoBasicJdbcEntityOneBuilder {
      */
     public Entity readEntityData(Connection connTargetDb, UriInfo uriInfo, EdmEntitySet edmEntitySet,
             List<UriParameter> keyPredicates) throws ODataApplicationException {
-        final OiyokanCsdlEntitySet entitySet = findEntitySet(edmEntitySet);
-        if (entitySet == null) {
-            // [M206] No such EntitySet found (readEntity)
-            System.err.println(OiyokanMessages.M206);
-            throw new ODataApplicationException(OiyokanMessages.M206, OiyokanMessages.M206_CODE, Locale.ENGLISH);
-        }
+        final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, edmEntitySet.getName());
 
         if (OiyokanConstants.IS_TRACE_ODATA_V4)
             System.err.println("OData v4: TRACE: ENTITY: READ: " + edmEntitySet.getName());
@@ -165,13 +160,7 @@ public class OiyoBasicJdbcEntityOneBuilder {
      */
     public Entity createEntityData(UriInfo uriInfo, EdmEntitySet edmEntitySet, Entity requestEntity)
             throws ODataApplicationException {
-        final OiyokanCsdlEntitySet entitySet = findEntitySet(edmEntitySet);
-        if (entitySet == null) {
-            // [M211] No such EntitySet found (createEntity)
-            System.err.println(OiyokanMessages.M211);
-            throw new ODataApplicationException(OiyokanMessages.M211, //
-                    OiyokanMessages.M211_CODE, Locale.ENGLISH);
-        }
+        final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, edmEntitySet.getName());
 
         if (OiyokanConstants.IS_TRACE_ODATA_V4)
             System.err.println("OData v4: TRACE: ENTITY: CREATE: " + edmEntitySet.getName());
@@ -200,10 +189,10 @@ public class OiyoBasicJdbcEntityOneBuilder {
                     newParam.setText(generatedKeys.get(0));
                     keyPredicates.add(newParam);
                 } else {
-                    for (CsdlPropertyRef propKey : entitySet.getEntityType().getKey()) {
+                    for (String keyName : entitySet.getEntityType().getKeyName()) {
                         String propValue = null;
                         for (Property look : requestEntity.getProperties()) {
-                            if (look.getName().equals(propKey.getName())) {
+                            if (look.getName().equals(keyName)) {
                                 if (look.getValue() instanceof java.util.Calendar) {
                                     // TODO この箇所がどのようなケースで動作するのか調査。
                                     java.util.Calendar cal = (java.util.Calendar) look.getValue();
@@ -217,12 +206,12 @@ public class OiyoBasicJdbcEntityOneBuilder {
                             }
                         }
                         if (propValue == null) {
-                            System.err.println("TRACE: propKey:" + propKey.getName() + "に対応する入力なし.");
+                            System.err.println("TRACE: propKey:" + keyName + "に対応する入力なし.");
                             if (generatedKeys.size() == 0) {
                                 // [M217] UNEXPECTED: Can't retrieve PreparedStatement#getGeneratedKeys: Fail to
                                 // map auto generated key field.
-                                System.err.println(OiyokanMessages.M217 + ": " + propKey.getName());
-                                throw new ODataApplicationException(OiyokanMessages.M217 + ": " + propKey.getName(), //
+                                System.err.println(OiyokanMessages.M217 + ": " + keyName);
+                                throw new ODataApplicationException(OiyokanMessages.M217 + ": " + keyName, //
                                         OiyokanMessages.M217_CODE, Locale.ENGLISH);
                             }
                             propValue = generatedKeys.get(0);
@@ -230,7 +219,7 @@ public class OiyoBasicJdbcEntityOneBuilder {
                         }
 
                         final UriParameterImpl newParam = new UriParameterImpl();
-                        newParam.setName(propKey.getName());
+                        newParam.setName(keyName);
                         newParam.setText(propValue);
                         keyPredicates.add(newParam);
                     }

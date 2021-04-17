@@ -50,6 +50,7 @@ import jp.oiyokan.basic.OiyoBasicJdbcEntityOneBuilder;
 import jp.oiyokan.basic.OiyoBasicJdbcUtil;
 import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.common.OiyoInfoUtil;
+import jp.oiyokan.dto.OiyoSettingsDatabase;
 import jp.oiyokan.dto.OiyoSettingsEntitySet;
 
 /**
@@ -84,12 +85,8 @@ public class OiyokanEntityProcessor implements EntityProcessor {
             List<UriParameter> keyPredicates = uriResourceEntitySet.getKeyPredicates();
 
             // データベースに接続.
-            final OiyokanCsdlEntitySet entitySetOldStyle = OiyoBasicJdbcEntityOneBuilder.findEntitySet(edmEntitySet);
-            if (entitySetOldStyle == null) {
-                // [M211] No such EntitySet found (createEntity)
-                System.err.println(OiyokanMessages.M211);
-                throw new ODataApplicationException(OiyokanMessages.M211, 500, Locale.ENGLISH);
-            }
+            final OiyoSettingsDatabase database = OiyoInfoUtil.getOiyoDatabaseByEntitySetName(oiyoInfo,
+                    edmEntitySet.getName());
 
             final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, edmEntitySet.getName());
             if (entitySet.getCanRead() != null && entitySet.getCanRead() == false) {
@@ -100,8 +97,7 @@ public class OiyokanEntityProcessor implements EntityProcessor {
             }
 
             Entity entity = null;
-            try (Connection connTargetDb = OiyoBasicJdbcUtil
-                    .getConnection(entitySetOldStyle.getSettingsDatabase(oiyoInfo))) {
+            try (Connection connTargetDb = OiyoBasicJdbcUtil.getConnection(database)) {
                 entity = new OiyoBasicJdbcEntityOneBuilder(oiyoInfo).readEntityData(connTargetDb, uriInfo, edmEntitySet,
                         keyPredicates);
             } catch (SQLException ex) {
