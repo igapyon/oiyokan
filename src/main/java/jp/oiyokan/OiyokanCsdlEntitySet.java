@@ -83,25 +83,4 @@ public class OiyokanCsdlEntitySet extends CsdlEntitySet {
 
         setType(new FullQualifiedName(entityContainer.getNamespaceIyo(), settingsEntitySet.getEntityType().getName()));
     }
-
-    /**
-     * エンティティ名. ODataTest1 相当.
-     * 
-     * @return エンティティ名. ODataTest1 相当.
-     * @deprecated
-     */
-    public String getEntityNameIyo() {
-        return settingsEntitySet.getEntityType().getName();
-    }
-
-    /**
-     * エンティティのFQNを取得.
-     * 
-     * @return エンティティのFQN(完全修飾名).
-     * @throws ODataApplicationException ODataアプリ例外が発生した場合.
-     * @deprecated
-     */
-    public FullQualifiedName getEntityNameFqnIyo() throws ODataApplicationException {
-        return new FullQualifiedName(csdlEntityContainer.getNamespaceIyo(), getEntityNameIyo());
-    }
 }
