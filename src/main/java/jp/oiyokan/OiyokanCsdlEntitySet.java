@@ -19,7 +19,6 @@ import java.util.Locale;
 
 import org.apache.olingo.commons.api.edm.FullQualifiedName;
 import org.apache.olingo.commons.api.edm.provider.CsdlEntitySet;
-import org.apache.olingo.commons.api.edm.provider.CsdlEntityType;
 import org.apache.olingo.server.api.ODataApplicationException;
 
 import jp.oiyokan.common.OiyoInfo;
@@ -45,11 +44,6 @@ public class OiyokanCsdlEntitySet extends CsdlEntitySet {
     private OiyoSettingsEntitySet settingsEntitySet = null;
 
     /**
-     * この EntitySet から導出された EntityType.
-     */
-    private CsdlEntityType entityType = null;
-
-    /**
      * Database設定情報を取得.
      * 
      * @return Database設定情報.
@@ -58,25 +52,6 @@ public class OiyokanCsdlEntitySet extends CsdlEntitySet {
      */
     public OiyoSettingsDatabase getSettingsDatabase(OiyoInfo oiyoInfo) throws ODataApplicationException {
         return OiyoInfoUtil.getOiyoDatabaseByName(oiyoInfo, settingsEntitySet.getDbSettingName());
-    }
-
-    /**
-     * CsdlEntityType を設定.
-     * 
-     * @param entityType CsdlEntityTypeインスタンス.
-     */
-    public void setEntityType(CsdlEntityType entityType) {
-        this.entityType = entityType;
-    }
-
-    /**
-     * CsdlEntityType を取得。
-     * 
-     * @return CsdlEntityTypeインスタンス.
-     * @deprecated
-     */
-    public CsdlEntityType getEntityType() {
-        return entityType;
     }
 
     /**

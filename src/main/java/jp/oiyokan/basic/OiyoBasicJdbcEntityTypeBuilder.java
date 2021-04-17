@@ -100,8 +100,6 @@ public class OiyoBasicJdbcEntityTypeBuilder {
 
         entityType.setKey(keyRefList);
 
-        // 構築結果を記憶。
-        entitySet.setEntityType(entityType);
         return entityType;
         // } catch (SQLException ex) {
         // // [M019] UNEXPECTED: Fail to get database meta

@@ -65,7 +65,7 @@ class OiyoSqlQueryListExprTest {
         // EntityType をロード済み状態にする.
         localTemplateEntityContainer.getEntityType(entitySet.getTypeFQN());
 
-        if (entitySet == null || entitySet.getEntityType() == null) {
+        if (entitySet == null) {
             final String message = "ERROR: Fail to load Oiyokans EntitySet.";
             System.err.println(message);
             throw new ODataApplicationException(message, 500, Locale.ENGLISH);
