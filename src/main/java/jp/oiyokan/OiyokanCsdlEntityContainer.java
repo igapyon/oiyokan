@@ -156,6 +156,7 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
      * @param entityNameFQN エンティティ名FQN.
      * @return エンティティセット.
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
+     * @deprecated
      */
     public OiyokanCsdlEntitySet getEntitySetByEntityNameFqnIyo(FullQualifiedName entityNameFQN)
             throws ODataApplicationException {
@@ -175,6 +176,7 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
      * @param entityTypeName 型名.
      * @return 指定の型名の CsdlEntityType.
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
+     * @deprecated
      */
     public CsdlEntityType getEntityType(FullQualifiedName entityTypeName) throws ODataApplicationException {
         if (getEntitySetByEntityNameFqnIyo(entityTypeName) == null) {
