@@ -32,7 +32,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({ "name", "dbName", "edmType", "jdbcType", "dbType", "jdbcSetMethod", "nullable", "maxLength",
-        "lengthFixed", "precision", "scale" })
+        "lengthFixed", "precision", "scale", "dbDefault" })
 @Generated("jsonschema2pojo")
 public class OiyoSettingsProperty {
     @JsonProperty("name")
@@ -53,10 +53,12 @@ public class OiyoSettingsProperty {
     private Integer maxLength;
     @JsonProperty("lengthFixed")
     private Boolean lengthFixed;
-    @JsonProperty("scale")
-    private Integer scale;
     @JsonProperty("precision")
     private Integer precision;
+    @JsonProperty("scale")
+    private Integer scale;
+    @JsonProperty("dbDefault")
+    private String dbDefault;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -136,7 +138,7 @@ public class OiyoSettingsProperty {
     }
 
     @JsonProperty("maxLength")
-    public void setLength(Integer maxLength) {
+    public void setMaxLength(Integer maxLength) {
         this.maxLength = maxLength;
     }
 
@@ -150,6 +152,16 @@ public class OiyoSettingsProperty {
         this.lengthFixed = lengthFixed;
     }
 
+    @JsonProperty("precision")
+    public Integer getPrecision() {
+        return precision;
+    }
+
+    @JsonProperty("precision")
+    public void setPrecision(Integer precision) {
+        this.precision = precision;
+    }
+
     @JsonProperty("scale")
     public Integer getScale() {
         return scale;
@@ -160,14 +172,14 @@ public class OiyoSettingsProperty {
         this.scale = scale;
     }
 
-    @JsonProperty("precision")
-    public Integer getPrecision() {
-        return precision;
+    @JsonProperty("dbDefault")
+    public String getDbDefault() {
+        return dbDefault;
     }
 
-    @JsonProperty("precision")
-    public void setPrecision(Integer precision) {
-        this.precision = precision;
+    @JsonProperty("dbDefault")
+    public void setDbDefault(String dbDefault) {
+        this.dbDefault = dbDefault;
     }
 
     @JsonAnyGetter

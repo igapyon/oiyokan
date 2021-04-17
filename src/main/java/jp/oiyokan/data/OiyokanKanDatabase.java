@@ -469,7 +469,7 @@ public class OiyokanKanDatabase {
                     property.setEdmType(
                             EdmPrimitiveTypeKind.String.getFullQualifiedName().getFullQualifiedNameAsString());
                     property.setLengthFixed(true);
-                    property.setLength(rsmeta.getColumnDisplaySize(column));
+                    property.setMaxLength(rsmeta.getColumnDisplaySize(column));
                     break;
                 case Types.VARCHAR:
                     property.setJdbcType("Types.VARCHAR");
@@ -477,7 +477,7 @@ public class OiyokanKanDatabase {
                             EdmPrimitiveTypeKind.String.getFullQualifiedName().getFullQualifiedNameAsString());
                     if (rsmeta.getColumnDisplaySize(column) > 0
                             && rsmeta.getColumnDisplaySize(column) != Integer.MAX_VALUE) {
-                        property.setLength(rsmeta.getColumnDisplaySize(column));
+                        property.setMaxLength(rsmeta.getColumnDisplaySize(column));
                     }
                     break;
                 case Types.LONGVARCHAR:
@@ -486,7 +486,7 @@ public class OiyokanKanDatabase {
                             EdmPrimitiveTypeKind.String.getFullQualifiedName().getFullQualifiedNameAsString());
                     if (rsmeta.getColumnDisplaySize(column) > 0
                             && rsmeta.getColumnDisplaySize(column) != Integer.MAX_VALUE) {
-                        property.setLength(rsmeta.getColumnDisplaySize(column));
+                        property.setMaxLength(rsmeta.getColumnDisplaySize(column));
                     }
                     break;
                 case Types.LONGNVARCHAR:
@@ -495,7 +495,7 @@ public class OiyokanKanDatabase {
                             EdmPrimitiveTypeKind.String.getFullQualifiedName().getFullQualifiedNameAsString());
                     if (rsmeta.getColumnDisplaySize(column) > 0
                             && rsmeta.getColumnDisplaySize(column) != Integer.MAX_VALUE) {
-                        property.setLength(rsmeta.getColumnDisplaySize(column));
+                        property.setMaxLength(rsmeta.getColumnDisplaySize(column));
                     }
                     break;
                 case Types.CLOB:
@@ -504,7 +504,7 @@ public class OiyokanKanDatabase {
                             EdmPrimitiveTypeKind.String.getFullQualifiedName().getFullQualifiedNameAsString());
                     if (rsmeta.getColumnDisplaySize(column) > 0
                             && rsmeta.getColumnDisplaySize(column) != Integer.MAX_VALUE) {
-                        property.setLength(rsmeta.getColumnDisplaySize(column));
+                        property.setMaxLength(rsmeta.getColumnDisplaySize(column));
                     }
                     break;
                 case Types.BINARY:
@@ -518,7 +518,7 @@ public class OiyokanKanDatabase {
                     } else {
                         if (rsmeta.getColumnDisplaySize(column) > 0
                                 && rsmeta.getColumnDisplaySize(column) != Integer.MAX_VALUE) {
-                            property.setLength(rsmeta.getColumnDisplaySize(column));
+                            property.setMaxLength(rsmeta.getColumnDisplaySize(column));
                         }
                     }
                     break;
@@ -533,7 +533,7 @@ public class OiyokanKanDatabase {
                     } else {
                         if (rsmeta.getColumnDisplaySize(column) > 0
                                 && rsmeta.getColumnDisplaySize(column) != Integer.MAX_VALUE) {
-                            property.setLength(rsmeta.getColumnDisplaySize(column));
+                            property.setMaxLength(rsmeta.getColumnDisplaySize(column));
                         }
                     }
                     break;
@@ -548,7 +548,7 @@ public class OiyokanKanDatabase {
                     } else {
                         if (rsmeta.getColumnDisplaySize(column) > 0
                                 && rsmeta.getColumnDisplaySize(column) != Integer.MAX_VALUE) {
-                            property.setLength(rsmeta.getColumnDisplaySize(column));
+                            property.setMaxLength(rsmeta.getColumnDisplaySize(column));
                         }
                     }
                     break;
@@ -563,7 +563,7 @@ public class OiyokanKanDatabase {
                     } else {
                         if (rsmeta.getColumnDisplaySize(column) > 0
                                 && rsmeta.getColumnDisplaySize(column) != Integer.MAX_VALUE) {
-                            property.setLength(rsmeta.getColumnDisplaySize(column));
+                            property.setMaxLength(rsmeta.getColumnDisplaySize(column));
                         }
                     }
                     break;
@@ -585,9 +585,9 @@ public class OiyokanKanDatabase {
                     break;
                 }
 
-                // if (defaultValueMap.get(columnName) != null) {
-                // sqlBuilder.append(" DEFAULT " + defaultValueMap.get(columnName));
-                // }
+                if (defaultValueMap.get(columnName) != null) {
+                    property.setDbDefault(defaultValueMap.get(columnName));
+                }
 
                 final int nullableVal = rsmeta.isNullable(column);
                 if (ResultSetMetaData.columnNoNulls == nullableVal) {
@@ -598,6 +598,7 @@ public class OiyokanKanDatabase {
                     // 不明は null.
                     property.setNullable(null);
                 }
+
             }
 
             // テーブルのキー情報

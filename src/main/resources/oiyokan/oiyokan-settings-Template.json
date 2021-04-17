@@ -105,7 +105,8 @@
             "maxLength": 255,
             "lengthFixed": false,
             "precision": null,
-            "scale": null
+            "scale": null,
+            "dbDefault": "Value"
           }
         ]
       }

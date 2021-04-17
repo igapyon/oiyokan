@@ -27,7 +27,7 @@ import jp.oiyokan.settings.OiyoSettingsUtil;
 /**
  * 内部データベース用のCSDL用内部テーブルのDDLをコマンドライン生成.
  */
-class GenTableODataTestFulls1Test {
+class ZzzGenTableODataTestFulls1Test {
     /**
      * Oiyoテーブルのスキーマを取得したい場合にのみ JUnit を実行する。
      */

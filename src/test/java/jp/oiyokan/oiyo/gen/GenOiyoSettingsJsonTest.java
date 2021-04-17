@@ -281,7 +281,7 @@ class GenOiyoSettingsJsonTest {
                 prop.setDbType("VARCHAR");
                 prop.setJdbcSetMethod("setString");
                 prop.setNullable(false);
-                prop.setLength(20);
+                prop.setMaxLength(20);
                 prop.setLengthFixed(false);
                 prop.setPrecision(null);
                 prop.setScale(null);
@@ -295,7 +295,7 @@ class GenOiyoSettingsJsonTest {
                 prop.setDbType("VARCHAR");
                 prop.setJdbcSetMethod("setString");
                 prop.setNullable(true);
-                prop.setLength(255);
+                prop.setMaxLength(255);
                 prop.setLengthFixed(false);
                 prop.setPrecision(null);
                 prop.setScale(null);
@@ -408,8 +408,8 @@ class GenOiyoSettingsJsonTest {
             mapper.writeValue(writer, oiyoSettings);
             writer.flush();
 
-            new File("./target/").mkdirs();
-            final File generateFile = new File("./target/auto-generated-oiyokan-settings.json");
+            new File("./target/generated-oiyokan").mkdirs();
+            final File generateFile = new File("./target/generated-oiyokan/auto-generated-oiyokan-settings.json");
             FileUtils.writeStringToFile(generateFile, writer.toString(), "UTF-8");
             System.err.println("sample oiyokan setting file generated: " + generateFile.getCanonicalPath());
         }

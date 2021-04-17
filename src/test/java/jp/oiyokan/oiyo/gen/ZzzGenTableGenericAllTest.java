@@ -33,7 +33,7 @@ import jp.oiyokan.settings.OiyoSettingsUtil;
 /**
  * 内部データベース用のCSDL用内部テーブルのDDLをコマンドライン生成.
  */
-class GenTableGenericAllTest {
+class ZzzGenTableGenericAllTest {
     private static final String TARGET_UNITTEST_DATABASE = "oiyoUnitTestDb";
 
     /**
