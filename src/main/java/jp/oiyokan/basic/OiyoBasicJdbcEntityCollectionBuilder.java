@@ -76,7 +76,7 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
             return entityCollection;
         }
 
-        OiyokanCsdlEntitySet csdlEntitySet = null;
+        CsdlEntitySet csdlEntitySet = null;
         for (CsdlEntitySet look : provider.getEntityContainer().getEntitySets()) {
             if (edmEntitySet.getName().equals(look.getName())) {
                 csdlEntitySet = (OiyokanCsdlEntitySet) look;
@@ -158,7 +158,7 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
         }
     }
 
-    private void processCountQuery(OiyokanCsdlEntitySet entitySet, UriInfo uriInfo, Connection connTargetDb,
+    private void processCountQuery(CsdlEntitySet entitySet, UriInfo uriInfo, Connection connTargetDb,
             EntityCollection entityCollection) throws ODataApplicationException {
         // 件数をカウントして設定。
         OiyoSqlQueryListBuilder basicSqlBuilder = new OiyoSqlQueryListBuilder(oiyoInfo, entitySet.getName());
@@ -216,7 +216,7 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
      * @param entityCollection result of search.
      * @throws ODataApplicationException OData App Exception occured.
      */
-    public void processCollectionQuery(OiyokanCsdlEntitySet csdlEntitySet, UriInfo uriInfo, Connection connTargetDb,
+    public void processCollectionQuery(CsdlEntitySet csdlEntitySet, UriInfo uriInfo, Connection connTargetDb,
             EntityCollection entityCollection) throws ODataApplicationException {
         OiyoSqlQueryListBuilder basicSqlBuilder = new OiyoSqlQueryListBuilder(oiyoInfo, csdlEntitySet.getName());
 
