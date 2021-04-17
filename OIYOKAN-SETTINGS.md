@@ -21,37 +21,37 @@ src/main/resources/iyokan/oiyokan-settings.json
 
 #### container section
 
-| key            | description                      |
-| -------------- | -------------------------------- |
-| namespace      | namespace name like `Oiyokan`    |
-| containerName  | container name like `Container`  |
+| key            | description                                                       |
+| -------------- | ----------------------------------------------------------------- |
+| namespace      | Name of namespace. ex: `Oiyokan`                                  |
+| containerName  | Name of container. ex: `Container`                                |
 
 
 #### database section
 
 | key            | description                                                       |
 | -------------- | ----------------------------------------------------------------- |
-| name           | database setting name. ex `oiyokanKan`                            |
-| type           | `h2`, xxxx                                                        |
-| description    | description of this database                                      |
-| jdbcDriver     | class name of JDBC driver. ex: `org.h2.Driver`                    |
+| name           | Name of database setting. ex `oiyokanKan`                         |
+| type           | Database Type. ex: `h2`, `postgres`, `MySQL`, `MSSQL2008`, `ORACLE` |
+| description    | Description of this database setting.                             |
+| jdbcDriver     | Classname of JDBC driver. ex: `org.h2.Driver`                     |
 | jdbcUrl        | JDBC url to connect. ex: `jdbc:h2:mem:oiyokan;DB_CLOSE_DELAY=-1;` |
-| jdbcUser       | JDBC user name.                                                   |
-| jdbcPass       | JDBC password                                                     |
+| jdbcUser       | JDBC user name. ex: `user1`                                       |
+| jdbcPass       | JDBC password.                                                    |
 
 #### entitySet section
 
 | key            | description                                                       |
 | -------------- | ----------------------------------------------------------------- |
 | name           | Name of EntitySet                                                 |
-| description    | description of this EntitySet                                     |
+| description    | Description of this EntitySet                                     |
 | dbSettingName  | Name of database setting                                          |
-| canCreate      | CRUD authz. Default true.                                         |
-| canRead        | CRUD authz. Only true supported. Default true.                    |
-| canUpdate      | CRUD authz. Default true.                                         |
-| canDelete      | CRUD authz. Default true.                                         |
-| omitCountAll   | Ignore $count in the case of NO conditional query. Default false. |
-| entityType     | List of EntityType.                                               |
+| canCreate      | CRUD authz of Create. Default:`true`.                             |
+| canRead        | CRUD authz of Read. true supported only. Default:`true`.          |
+| canUpdate      | CRUD authz of Update. Default:`true`.                             |
+| canDelete      | CRUD authz of Delete. Default:`true`.                             |
+| omitCountAll   | Ignore `$count` in the case of NO conditional query. Default:`false`. |
+| entityType     | List of entityType.                                               |
 
 #### entityType - sub section
 
@@ -66,14 +66,14 @@ src/main/resources/iyokan/oiyokan-settings.json
 
 | key            | description                                                       |
 | -------------- | ----------------------------------------------------------------- |
-| name           | Name of Property                                                  |
+| name           | Name of property                                                  |
 | dbName         | Column name on Database. ex: `Types.VARCHAR`                      |
 | edmType        | Column name on Database. ex: `Edm.String`                         |
 | dbType         | Type name on Database. ex: `VARCHAR`                              |
-| jdbcSetMethod  | Hint method name of JDBC API. ex: `setString`                     |
-| nullable       | true:Nullable, false:NOT NULL, null:Unknown                       |
-| maxLength      | Length of string                                                  |
-| lengthFixed    | for CHAR                                                          |
-| precision      | precision of decimal.                                             |
-| scale          | scale of decimal.                                                 |
+| jdbcSetMethod  | (reserved) Hint method name of JDBC API. ex: `setString`          |
+| nullable       | true:Nullable, false:NOT NULL, null:Unknown. Default:`null`.      |
+| maxLength      | Length of string field.                                           |
+| lengthFixed    | Set field fixed. For CHAR type. Default:`null`.                   |
+| precision      | precision of decimal. Default:`null`.                             |
+| scale          | scale of decimal. Default:`null`.                                 |
 
