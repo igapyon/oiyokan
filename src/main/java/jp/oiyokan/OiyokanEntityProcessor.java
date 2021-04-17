@@ -57,11 +57,21 @@ import jp.oiyokan.dto.OiyoSettingsEntitySet;
  * Oiyokan による Entity Processor
  */
 public class OiyokanEntityProcessor implements EntityProcessor {
+    /**
+     * デバッグ出力の有無.
+     * 
+     * OData Server の挙動のデバッグで困ったときにはこれを true にすること。
+     */
+    private static final boolean IS_DEBUG = false;
+
     private OData odata;
     private ServiceMetadata serviceMetadata;
 
     @Override
     public void init(OData odata, ServiceMetadata serviceMetadata) {
+        if (IS_DEBUG)
+            System.err.println("OiyokanEntityProcessor#init");
+
         this.odata = odata;
         this.serviceMetadata = serviceMetadata;
     }
@@ -69,6 +79,9 @@ public class OiyokanEntityProcessor implements EntityProcessor {
     @Override
     public void readEntity(ODataRequest request, ODataResponse response, UriInfo uriInfo, ContentType responseFormat)
             throws ODataApplicationException, ODataLibraryException {
+        if (IS_DEBUG)
+            System.err.println("OiyokanEntityProcessor#readEntity: " + request.getRawRequestUri());
+
         try {
             // シングルトンな OiyoInfo を利用。
             final OiyoInfo oiyoInfo = OiyokanCsdlEntityContainer.getOiyoInfoInstance();
@@ -132,6 +145,9 @@ public class OiyokanEntityProcessor implements EntityProcessor {
     @Override
     public void createEntity(ODataRequest request, ODataResponse response, UriInfo uriInfo, ContentType requestFormat,
             ContentType responseFormat) throws ODataApplicationException, ODataLibraryException {
+        if (IS_DEBUG)
+            System.err.println("OiyokanEntityProcessor#createEntity: " + request.getRawRequestUri());
+
         try {
             // シングルトンな OiyoInfo を利用。
             final OiyoInfo oiyoInfo = OiyokanCsdlEntityContainer.getOiyoInfoInstance();
@@ -192,6 +208,9 @@ public class OiyokanEntityProcessor implements EntityProcessor {
     @Override
     public void updateEntity(ODataRequest request, ODataResponse response, UriInfo uriInfo, ContentType requestFormat,
             ContentType responseFormat) throws ODataApplicationException, ODataLibraryException {
+        if (IS_DEBUG)
+            System.err.println("OiyokanEntityProcessor#updateEntity: " + request.getRawRequestUri());
+
         try {
             // シングルトンな OiyoInfo を利用。
             final OiyoInfo oiyoInfo = OiyokanCsdlEntityContainer.getOiyoInfoInstance();
@@ -258,6 +277,9 @@ public class OiyokanEntityProcessor implements EntityProcessor {
     @Override
     public void deleteEntity(ODataRequest request, ODataResponse response, UriInfo uriInfo)
             throws ODataApplicationException, ODataLibraryException {
+        if (IS_DEBUG)
+            System.err.println("OiyokanEntityProcessor#deleteEntity: " + request.getRawRequestUri());
+
         try {
             // シングルトンな OiyoInfo を利用。
             final OiyoInfo oiyoInfo = OiyokanCsdlEntityContainer.getOiyoInfoInstance();

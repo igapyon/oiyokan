@@ -66,11 +66,11 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
             CsdlEntityType look = localTemplateEntityContainer.getEntityType(entityTypeName);
             if (IS_DEBUG) {
                 System.err.println("csdlEntityType: " + look.getName());
-                for (CsdlProperty prop : look.getProperties()) {
-                    System.err.println("  csdlProperty: " + prop.getName());
-                }
                 for (CsdlPropertyRef key : look.getKey()) {
-                    System.err.println("  CsdlPropertyRef: " + key.getName());
+                    System.err.println("  key: " + key.getName());
+                }
+                for (CsdlProperty prop : look.getProperties()) {
+                    System.err.println("  prop: " + prop.getName());
                 }
             }
             return look;

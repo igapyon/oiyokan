@@ -996,7 +996,7 @@
       "entityType": {
         "name": "SklActorInfo",
         "dbName": "actor_info",
-        "keyName": [],
+        "keyName": ["actor_id"],
         "property": [
           {
             "name": "actor_id",
@@ -1361,7 +1361,7 @@
       "entityType": {
         "name": "SklCustomerList",
         "dbName": "customer_list",
-        "keyName": [],
+        "keyName": ["id"],
         "property": [
           {
             "name": "id",
@@ -1660,7 +1660,7 @@
       "entityType": {
         "name": "SklFilmList",
         "dbName": "film_list",
-        "keyName": [],
+        "keyName": ["fid"],
         "property": [
           {
             "name": "fid",
@@ -1835,7 +1835,7 @@
       "entityType": {
         "name": "SklNicerButSlowerFilmList",
         "dbName": "nicer_but_slower_film_list",
-        "keyName": [],
+        "keyName": ["fid"],
         "property": [
           {
             "name": "fid",
@@ -2058,7 +2058,7 @@
       "entityType": {
         "name": "SklSalesByFilmCategory",
         "dbName": "sales_by_film_category",
-        "keyName": [],
+        "keyName": ["category"],
         "property": [
           {
             "name": "category",
@@ -2093,7 +2093,7 @@
       "entityType": {
         "name": "SklSalesByStore",
         "dbName": "sales_by_store",
-        "keyName": [],
+        "keyName": ["store"],
         "property": [
           {
             "name": "store",
@@ -2244,7 +2244,7 @@
       "entityType": {
         "name": "SklStaffList",
         "dbName": "staff_list",
-        "keyName": [],
+        "keyName": ["id"],
         "property": [
           {
             "name": "id",
