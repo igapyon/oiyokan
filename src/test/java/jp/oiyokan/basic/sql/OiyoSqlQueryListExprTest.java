@@ -32,6 +32,8 @@ import jp.oiyokan.OiyokanCsdlEntitySet;
 import jp.oiyokan.OiyokanEdmProvider;
 import jp.oiyokan.OiyokanTestSettingConstants;
 import jp.oiyokan.basic.OiyoBasicUrlUtil;
+import jp.oiyokan.common.OiyoInfo;
+import jp.oiyokan.settings.OiyoSettingsUtil;
 
 /**
  * OiyoSqlQueryListExpr のテスト.
@@ -48,6 +50,9 @@ class OiyoSqlQueryListExprTest {
      * @throws Exception 例外が発生した場合.
      */
     private String getExprString(String rawODataPath, String rawQueryPath) throws Exception {
+        final OiyoInfo oiyoInfo = new OiyoInfo();
+        oiyoInfo.setSettings(OiyoSettingsUtil.loadOiyokanSettings());
+
         OData odata = OData.newInstance();
         ServiceMetadata edm = odata.createServiceMetadata(new OiyokanEdmProvider(), new ArrayList<>());
 
@@ -67,8 +72,8 @@ class OiyoSqlQueryListExprTest {
 
         final Parser parser = new Parser(edm.getEdm(), odata);
         final UriInfo uriInfo = parser.parseUri(rawODataPath, rawQueryPath, "", "http://localhost:8080/odata4.svc/");
-        OiyoSqlInfo sqlInfo = new OiyoSqlInfo(entitySet);
-        new OiyoSqlQueryListExpr(sqlInfo).expand(uriInfo.getFilterOption().getExpression());
+        OiyoSqlInfo sqlInfo = new OiyoSqlInfo(oiyoInfo, entitySet);
+        new OiyoSqlQueryListExpr(oiyoInfo, sqlInfo).expand(uriInfo.getFilterOption().getExpression());
         return sqlInfo.getSqlBuilder().toString();
     }
 

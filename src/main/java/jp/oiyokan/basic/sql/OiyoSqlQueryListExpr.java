@@ -34,6 +34,7 @@ import org.apache.olingo.server.core.uri.queryoption.expression.UnaryImpl;
 
 import jp.oiyokan.OiyokanMessages;
 import jp.oiyokan.basic.OiyoBasicJdbcUtil;
+import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.settings.OiyoSettingsUtil;
 
 /**
@@ -41,6 +42,11 @@ import jp.oiyokan.settings.OiyoSettingsUtil;
  */
 public class OiyoSqlQueryListExpr {
     private static final boolean IS_DEBUG_EXPAND_LITERAL = false;
+
+    /**
+     * Oiyokan Info.
+     */
+    private OiyoInfo oiyoInfo;
 
     /**
      * SQL構築のデータ構造.
@@ -52,7 +58,8 @@ public class OiyoSqlQueryListExpr {
      * 
      * @param sqlInfo SQL構築のデータ構造.
      */
-    public OiyoSqlQueryListExpr(OiyoSqlInfo sqlInfo) {
+    public OiyoSqlQueryListExpr(OiyoInfo oiyoInfo, OiyoSqlInfo sqlInfo) {
+        this.oiyoInfo = oiyoInfo;
         this.sqlInfo = sqlInfo;
     }
 
@@ -256,8 +263,8 @@ public class OiyoSqlQueryListExpr {
     private void expandMember(MemberImpl impl) throws ODataApplicationException {
         // そのままSQLのメンバーとせず、項目名エスケープを除去.
         final String unescapedName = OiyoBasicJdbcUtil.unescapeKakkoFieldName(impl.toString());
-        sqlInfo.getSqlBuilder().append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo,
-                OiyoSettingsUtil.getOiyoEntityProperty(sqlInfo.getEntitySet().getName(), unescapedName).getDbName()));
+        sqlInfo.getSqlBuilder().append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyoSettingsUtil
+                .getOiyoEntityProperty(oiyoInfo, sqlInfo.getEntitySet().getName(), unescapedName).getDbName()));
     }
 
     /**

@@ -33,6 +33,7 @@ import org.apache.olingo.server.api.ODataApplicationException;
 import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanMessages;
 import jp.oiyokan.basic.OiyoBasicJdbcUtil;
+import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.dto.OiyoSettingsDatabase;
 import jp.oiyokan.dto.OiyoSettingsEntitySet;
 import jp.oiyokan.dto.OiyoSettingsEntityType;
@@ -55,13 +56,13 @@ public class OiyokanKanDatabase {
      * @return true:新規作成, false:既に存在.
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
-    public static synchronized boolean setupKanDatabase() throws ODataApplicationException {
+    public static synchronized boolean setupKanDatabase(OiyoInfo oiyoInfo) throws ODataApplicationException {
         if (OiyokanConstants.IS_TRACE_ODATA_V4)
             System.err.println( //
                     "OData v4: setup oiyokanKan database (Oiyokan: " + OiyokanConstants.VERSION + ")");
 
-        OiyoSettingsDatabase settingsInterDatabase = OiyoSettingsUtil
-                .getOiyokanDatabase(OiyokanConstants.OIYOKAN_KAN_DB);
+        OiyoSettingsDatabase settingsInterDatabase = OiyoSettingsUtil.getOiyokanDatabase(oiyoInfo,
+                OiyokanConstants.OIYOKAN_KAN_DB);
 
         try (Connection connInterDb = OiyoBasicJdbcUtil.getConnection(settingsInterDatabase)) {
             // Internal Database の バージョン情報および Oiyokanテーブルを setup.

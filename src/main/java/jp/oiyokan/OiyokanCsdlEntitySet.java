@@ -23,6 +23,7 @@ import org.apache.olingo.commons.api.edm.provider.CsdlEntityType;
 import org.apache.olingo.server.api.ODataApplicationException;
 
 import jp.oiyokan.OiyokanConstants.DatabaseType;
+import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.dto.OiyoSettingsDatabase;
 import jp.oiyokan.dto.OiyoSettingsEntitySet;
 import jp.oiyokan.settings.OiyoSettingsUtil;
@@ -76,8 +77,8 @@ public class OiyokanCsdlEntitySet extends CsdlEntitySet {
      * @return Database設定情報.
      * @throws ODataApplicationException ODataアプリ例外.
      */
-    public OiyoSettingsDatabase getSettingsDatabase() throws ODataApplicationException {
-        return OiyoSettingsUtil.getOiyokanDatabase(settingsEntitySet.getDbSettingName());
+    public OiyoSettingsDatabase getSettingsDatabase(OiyoInfo oiyoInfo) throws ODataApplicationException {
+        return OiyoSettingsUtil.getOiyokanDatabase(oiyoInfo, settingsEntitySet.getDbSettingName());
     }
 
     /**
@@ -105,21 +106,23 @@ public class OiyokanCsdlEntitySet extends CsdlEntitySet {
      * @param settingsEntitySet EntitySetの設定.
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
-    public OiyokanCsdlEntitySet(OiyokanCsdlEntityContainer entityContainer, OiyoSettingsEntitySet settingsEntitySet)
-            throws ODataApplicationException {
+    public OiyokanCsdlEntitySet(OiyoInfo oiyoInfo, OiyokanCsdlEntityContainer entityContainer,
+            OiyoSettingsEntitySet settingsEntitySet) throws ODataApplicationException {
         setName(settingsEntitySet.getName());
         this.csdlEntityContainer = entityContainer;
         this.settingsEntitySet = settingsEntitySet;
 
         try {
             // 指定のデータベース名の文字列が妥当かどうかチェックして値として設定。
-            databaseType = OiyokanConstants.DatabaseType.valueOf(getSettingsDatabase().getType());
+            databaseType = OiyokanConstants.DatabaseType.valueOf(getSettingsDatabase(oiyoInfo).getType());
         } catch (IllegalArgumentException ex) {
             // [M002] UNEXPECTED: Illegal data type in database settings
-            System.err.println(OiyokanMessages.M002 + ": dbname:" + getSettingsDatabase().getName() //
-                    + ", type:" + getSettingsDatabase().getType());
-            throw new ODataApplicationException(OiyokanMessages.M002 + ": dbname:" + getSettingsDatabase().getName() //
-                    + ", type:" + getSettingsDatabase().getType(), 500, Locale.ENGLISH);
+            System.err.println(OiyokanMessages.M002 + ": dbname:" + getSettingsDatabase(oiyoInfo).getName() //
+                    + ", type:" + getSettingsDatabase(oiyoInfo).getType());
+            throw new ODataApplicationException(
+                    OiyokanMessages.M002 + ": dbname:" + getSettingsDatabase(oiyoInfo).getName() //
+                            + ", type:" + getSettingsDatabase(oiyoInfo).getType(),
+                    500, Locale.ENGLISH);
         }
 
         setType(new FullQualifiedName(entityContainer.getNamespaceIyo(), settingsEntitySet.getEntityType().getName()));

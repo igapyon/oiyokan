@@ -25,6 +25,7 @@ import org.junit.jupiter.api.Test;
 
 import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.basic.OiyoBasicJdbcUtil;
+import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.data.OiyokanResourceSqlUtil;
 import jp.oiyokan.dto.OiyoSettingsDatabase;
 import jp.oiyokan.settings.OiyoSettingsUtil;
@@ -58,11 +59,14 @@ class Build00H2InterDbTest {
             return;
         }
 
+        final OiyoInfo oiyoInfo = new OiyoInfo();
+        oiyoInfo.setSettings(OiyoSettingsUtil.loadOiyokanSettings());
+
         for (String[] sqlFileDef : OIYOKAN_FILE_SQLS) {
             if (OiyokanConstants.IS_TRACE_ODATA_V4)
                 System.err.println("OData: load: internal db:" + sqlFileDef[0] + ", sql: " + sqlFileDef[1]);
 
-            OiyoSettingsDatabase lookDatabase = OiyoSettingsUtil.getOiyokanDatabase(sqlFileDef[0]);
+            OiyoSettingsDatabase lookDatabase = OiyoSettingsUtil.getOiyokanDatabase(oiyoInfo, sqlFileDef[0]);
 
             try (Connection connLoookDatabase = OiyoBasicJdbcUtil.getConnection(lookDatabase)) {
                 final String[] sqls = OiyokanResourceSqlUtil.loadOiyokanResourceSql("oiyokan/sql/" + sqlFileDef[1]);

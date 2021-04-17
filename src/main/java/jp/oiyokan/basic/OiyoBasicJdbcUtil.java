@@ -65,6 +65,7 @@ import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanCsdlEntitySet;
 import jp.oiyokan.OiyokanMessages;
 import jp.oiyokan.basic.sql.OiyoSqlInfo;
+import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.dto.OiyoSettingsDatabase;
 import jp.oiyokan.dto.OiyoSettingsProperty;
 import jp.oiyokan.settings.OiyoSettingsUtil;
@@ -228,12 +229,12 @@ public class OiyoBasicJdbcUtil {
      * @throws SQLException              SQL例外が発生した場合.
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
-    public static Property resultSet2Property(ResultSet rset, ResultSetMetaData rsmeta, int column,
+    public static Property resultSet2Property(OiyoInfo oiyoInfo, ResultSet rset, ResultSetMetaData rsmeta, int column,
             OiyokanCsdlEntitySet iyoEntitySet) throws ODataApplicationException, SQLException {
         // 基本的に CSDL で処理するが、やむを得ない場所のみ ResultSetMetaData を利用する
         String propName = null;
-        for (OiyoSettingsProperty prop : OiyoSettingsUtil.getOiyoEntitySet(iyoEntitySet.getName()).getEntityType()
-                .getProperty()) {
+        for (OiyoSettingsProperty prop : OiyoSettingsUtil.getOiyoEntitySet(oiyoInfo, iyoEntitySet.getName())
+                .getEntityType().getProperty()) {
             // 大文字小文字を無視。
             if (rsmeta.getColumnName(column).equalsIgnoreCase(prop.getDbName())) {
                 propName = prop.getName();
