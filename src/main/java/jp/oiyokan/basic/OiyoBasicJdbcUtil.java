@@ -40,8 +40,24 @@ import java.util.UUID;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.olingo.commons.api.data.Property;
 import org.apache.olingo.commons.api.data.ValueType;
+import org.apache.olingo.commons.api.edm.EdmPrimitiveType;
 import org.apache.olingo.commons.api.edm.EdmPrimitiveTypeKind;
 import org.apache.olingo.commons.api.edm.provider.CsdlProperty;
+import org.apache.olingo.commons.core.edm.primitivetype.EdmBinary;
+import org.apache.olingo.commons.core.edm.primitivetype.EdmBoolean;
+import org.apache.olingo.commons.core.edm.primitivetype.EdmByte;
+import org.apache.olingo.commons.core.edm.primitivetype.EdmDate;
+import org.apache.olingo.commons.core.edm.primitivetype.EdmDateTimeOffset;
+import org.apache.olingo.commons.core.edm.primitivetype.EdmDecimal;
+import org.apache.olingo.commons.core.edm.primitivetype.EdmDouble;
+import org.apache.olingo.commons.core.edm.primitivetype.EdmGuid;
+import org.apache.olingo.commons.core.edm.primitivetype.EdmInt16;
+import org.apache.olingo.commons.core.edm.primitivetype.EdmInt32;
+import org.apache.olingo.commons.core.edm.primitivetype.EdmInt64;
+import org.apache.olingo.commons.core.edm.primitivetype.EdmSByte;
+import org.apache.olingo.commons.core.edm.primitivetype.EdmSingle;
+import org.apache.olingo.commons.core.edm.primitivetype.EdmString;
+import org.apache.olingo.commons.core.edm.primitivetype.EdmTimeOfDay;
 import org.apache.olingo.server.api.ODataApplicationException;
 import org.springframework.util.StreamUtils;
 
@@ -52,6 +68,7 @@ import jp.oiyokan.basic.sql.OiyoSqlInfo;
 import jp.oiyokan.dto.OiyoSettingsDatabase;
 import jp.oiyokan.dto.OiyoSettingsProperty;
 import jp.oiyokan.settings.OiyoSettingsUtil;
+import jp.oiyokan.util.OiyoEdmUtil;
 
 /**
  * Oiyokan 関連の JDBC まわりユーティリティクラス.
@@ -450,7 +467,8 @@ public class OiyoBasicJdbcUtil {
             sqlInfo.getSqlParamList().add(inputParam);
             return;
         }
-        if ("Edm.SByte".equals(csdlType)) {
+        final EdmPrimitiveType edmType = OiyoEdmUtil.string2EdmType(csdlType);
+        if (EdmSByte.getInstance() == edmType) {
             if (IS_DEBUG_EXPAND_LITERAL)
                 System.err.println("TRACE: EdmSByte: " + inputParam);
             if (inputParam instanceof Byte //
@@ -464,7 +482,7 @@ public class OiyoBasicJdbcUtil {
             }
             return;
         }
-        if ("Edm.Byte".equals(csdlType)) {
+        if (EdmByte.getInstance() == edmType) {
             if (IS_DEBUG_EXPAND_LITERAL)
                 System.err.println("TRACE: EdmByte: " + inputParam);
             // 符号なしByteはJavaには該当する型がないので Shortで代用.
@@ -479,7 +497,7 @@ public class OiyoBasicJdbcUtil {
             }
             return;
         }
-        if ("Edm.Int16".equals(csdlType)) {
+        if (EdmInt16.getInstance() == edmType) {
             if (IS_DEBUG_EXPAND_LITERAL)
                 System.err.println("TRACE: EdmInt16: " + inputParam);
             if (inputParam instanceof Byte //
@@ -493,7 +511,7 @@ public class OiyoBasicJdbcUtil {
             }
             return;
         }
-        if ("Edm.Int32".equals(csdlType)) {
+        if (EdmInt32.getInstance() == edmType) {
             if (IS_DEBUG_EXPAND_LITERAL)
                 System.err.println("TRACE: EdmInt32: " + inputParam);
             if (inputParam instanceof Byte //
@@ -507,7 +525,7 @@ public class OiyoBasicJdbcUtil {
             }
             return;
         }
-        if ("Edm.Int64".equals(csdlType)) {
+        if (EdmInt64.getInstance() == edmType) {
             if (IS_DEBUG_EXPAND_LITERAL)
                 System.err.println("TRACE: EdmInt64: " + inputParam);
             if (inputParam instanceof Byte //
@@ -521,7 +539,7 @@ public class OiyoBasicJdbcUtil {
             }
             return;
         }
-        if ("Edm.Decimal".equals(csdlType)) {
+        if (EdmDecimal.getInstance() == edmType) {
             if (IS_DEBUG_EXPAND_LITERAL)
                 System.err.println("TRACE: EdmDecimal: " + inputParam);
             if (inputParam instanceof BigDecimal) {
@@ -533,7 +551,7 @@ public class OiyoBasicJdbcUtil {
             }
             return;
         }
-        if ("Edm.Boolean".equals(csdlType)) {
+        if (EdmBoolean.getInstance() == edmType) {
             if (IS_DEBUG_EXPAND_LITERAL)
                 System.err.println("TRACE: EdmBoolean: " + inputParam);
             if (inputParam instanceof Boolean) {
@@ -545,7 +563,7 @@ public class OiyoBasicJdbcUtil {
             }
             return;
         }
-        if ("Edm.Single".equals(csdlType)) {
+        if (EdmSingle.getInstance() == edmType) {
             if (IS_DEBUG_EXPAND_LITERAL)
                 System.err.println("TRACE: EdmSingle: " + inputParam);
             if (inputParam instanceof Float //
@@ -559,7 +577,7 @@ public class OiyoBasicJdbcUtil {
             }
             return;
         }
-        if ("Edm.Double".equals(csdlType)) {
+        if (EdmDouble.getInstance() == edmType) {
             if (IS_DEBUG_EXPAND_LITERAL)
                 System.err.println("TRACE: EdmDouble: " + inputParam);
             if (inputParam instanceof Double //
@@ -573,7 +591,7 @@ public class OiyoBasicJdbcUtil {
             }
             return;
         }
-        if ("Edm.Date".equals(csdlType)) {
+        if (EdmDate.getInstance() == edmType) {
             if (IS_DEBUG_EXPAND_LITERAL)
                 System.err.println("TRACE: EdmDate: " + inputParam);
             if (inputParam instanceof java.sql.Date //
@@ -588,7 +606,7 @@ public class OiyoBasicJdbcUtil {
             }
             return;
         }
-        if ("Edm.DateTimeOffset".equals(csdlType)) {
+        if (EdmDateTimeOffset.getInstance() == edmType) {
             if (IS_DEBUG_EXPAND_LITERAL)
                 System.err.println("TRACE: EdmDateTimeOffset: " + inputParam);
             if (inputParam instanceof java.sql.Date //
@@ -606,7 +624,7 @@ public class OiyoBasicJdbcUtil {
             }
             return;
         }
-        if ("Edm.TimeOfDay".equals(csdlType)) {
+        if (EdmTimeOfDay.getInstance() == edmType) {
             if (IS_DEBUG_EXPAND_LITERAL)
                 System.err.println("TRACE: EdmTimeOfDay: " + inputParam);
             if (inputParam instanceof java.sql.Time) {
@@ -625,7 +643,7 @@ public class OiyoBasicJdbcUtil {
             }
             return;
         }
-        if ("Edm.String".equals(csdlType)) {
+        if (EdmString.getInstance() == edmType) {
             if (IS_DEBUG_EXPAND_LITERAL)
                 System.err.println("TRACE: EdmString: " + inputParam);
             String value = String.valueOf(inputParam);
@@ -644,7 +662,7 @@ public class OiyoBasicJdbcUtil {
             }
             return;
         }
-        if ("Edm.Binary".equals(csdlType)) {
+        if (EdmBinary.getInstance() == edmType) {
             if (IS_DEBUG_EXPAND_LITERAL)
                 System.err.println("TRACE: EdmBinary: " + inputParam);
             if (inputParam instanceof byte[] //
@@ -658,7 +676,7 @@ public class OiyoBasicJdbcUtil {
             }
             return;
         }
-        if ("Edm.Guid".equals(csdlType)) {
+        if (EdmGuid.getInstance() == edmType) {
             if (IS_DEBUG_EXPAND_LITERAL)
                 System.err.println("TRACE: EdmGuid: " + inputParam);
             if (inputParam instanceof byte[] //
