@@ -69,9 +69,8 @@ public class OiyokanEntityProcessor implements EntityProcessor {
     public void readEntity(ODataRequest request, ODataResponse response, UriInfo uriInfo, ContentType responseFormat)
             throws ODataApplicationException, ODataLibraryException {
         try {
-            // TODO FIXME シングルトン化の検討
-            final OiyoInfo oiyoInfo = new OiyoInfo();
-            oiyoInfo.setSettings(OiyoSettingsUtil.loadOiyokanSettings());
+            // シングルトンな OiyoInfo を利用。
+            final OiyoInfo oiyoInfo = OiyokanCsdlEntityContainer.getOiyoInfoInstance();
 
             // 1. retrieve the Entity Type
             List<UriResource> resourcePaths = uriInfo.getUriResourceParts();
@@ -138,9 +137,8 @@ public class OiyokanEntityProcessor implements EntityProcessor {
     public void createEntity(ODataRequest request, ODataResponse response, UriInfo uriInfo, ContentType requestFormat,
             ContentType responseFormat) throws ODataApplicationException, ODataLibraryException {
         try {
-            // TODO FIXME シングルトン化の検討
-            final OiyoInfo oiyoInfo = new OiyoInfo();
-            oiyoInfo.setSettings(OiyoSettingsUtil.loadOiyokanSettings());
+            // シングルトンな OiyoInfo を利用。
+            final OiyoInfo oiyoInfo = OiyokanCsdlEntityContainer.getOiyoInfoInstance();
 
             // https://olingo.apache.org/doc/odata4/tutorials/write/tutorial_write.html
 
@@ -200,8 +198,8 @@ public class OiyokanEntityProcessor implements EntityProcessor {
     public void updateEntity(ODataRequest request, ODataResponse response, UriInfo uriInfo, ContentType requestFormat,
             ContentType responseFormat) throws ODataApplicationException, ODataLibraryException {
         try {
-            final OiyoInfo oiyoInfo = new OiyoInfo();
-            oiyoInfo.setSettings(OiyoSettingsUtil.loadOiyokanSettings());
+            // シングルトンな OiyoInfo を利用。
+            final OiyoInfo oiyoInfo = OiyokanCsdlEntityContainer.getOiyoInfoInstance();
 
             List<UriResource> resourcePaths = uriInfo.getUriResourceParts();
 
@@ -267,8 +265,8 @@ public class OiyokanEntityProcessor implements EntityProcessor {
     public void deleteEntity(ODataRequest request, ODataResponse response, UriInfo uriInfo)
             throws ODataApplicationException, ODataLibraryException {
         try {
-            final OiyoInfo oiyoInfo = new OiyoInfo();
-            oiyoInfo.setSettings(OiyoSettingsUtil.loadOiyokanSettings());
+            // シングルトンな OiyoInfo を利用。
+            final OiyoInfo oiyoInfo = OiyokanCsdlEntityContainer.getOiyoInfoInstance();
 
             // 1. Retrieve the entity set which belongs to the requested entity
             List<UriResource> resourcePaths = uriInfo.getUriResourceParts();
