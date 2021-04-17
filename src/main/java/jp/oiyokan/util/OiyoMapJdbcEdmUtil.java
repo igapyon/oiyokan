@@ -17,6 +17,7 @@ package jp.oiyokan.util;
 
 import java.sql.Types;
 
+import org.apache.olingo.commons.api.edm.EdmPrimitiveType;
 import org.apache.olingo.commons.core.edm.primitivetype.EdmBinary;
 import org.apache.olingo.commons.core.edm.primitivetype.EdmBoolean;
 import org.apache.olingo.commons.core.edm.primitivetype.EdmDate;
@@ -30,7 +31,6 @@ import org.apache.olingo.commons.core.edm.primitivetype.EdmSByte;
 import org.apache.olingo.commons.core.edm.primitivetype.EdmSingle;
 import org.apache.olingo.commons.core.edm.primitivetype.EdmString;
 import org.apache.olingo.commons.core.edm.primitivetype.EdmTimeOfDay;
-import org.apache.olingo.commons.core.edm.primitivetype.SingletonPrimitiveType;
 
 import jp.oiyokan.OiyokanMessages;
 
@@ -45,7 +45,7 @@ public class OiyoMapJdbcEdmUtil {
      * @return String java.sql.Types.
      * @throws IllegalArgumentException Non supported value.
      */
-    public static SingletonPrimitiveType jdbcTypes2Edm(final int types) throws IllegalArgumentException {
+    public static EdmPrimitiveType jdbcTypes2Edm(final int types) throws IllegalArgumentException {
         switch (types) {
         case Types.BIT: // -7
             return EdmBoolean.getInstance();

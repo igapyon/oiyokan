@@ -40,8 +40,24 @@ import java.util.UUID;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.olingo.commons.api.data.Property;
 import org.apache.olingo.commons.api.data.ValueType;
+import org.apache.olingo.commons.api.edm.EdmPrimitiveType;
 import org.apache.olingo.commons.api.edm.EdmPrimitiveTypeKind;
 import org.apache.olingo.commons.api.edm.provider.CsdlProperty;
+import org.apache.olingo.commons.core.edm.primitivetype.EdmBinary;
+import org.apache.olingo.commons.core.edm.primitivetype.EdmBoolean;
+import org.apache.olingo.commons.core.edm.primitivetype.EdmByte;
+import org.apache.olingo.commons.core.edm.primitivetype.EdmDate;
+import org.apache.olingo.commons.core.edm.primitivetype.EdmDateTimeOffset;
+import org.apache.olingo.commons.core.edm.primitivetype.EdmDecimal;
+import org.apache.olingo.commons.core.edm.primitivetype.EdmDouble;
+import org.apache.olingo.commons.core.edm.primitivetype.EdmGuid;
+import org.apache.olingo.commons.core.edm.primitivetype.EdmInt16;
+import org.apache.olingo.commons.core.edm.primitivetype.EdmInt32;
+import org.apache.olingo.commons.core.edm.primitivetype.EdmInt64;
+import org.apache.olingo.commons.core.edm.primitivetype.EdmSByte;
+import org.apache.olingo.commons.core.edm.primitivetype.EdmSingle;
+import org.apache.olingo.commons.core.edm.primitivetype.EdmString;
+import org.apache.olingo.commons.core.edm.primitivetype.EdmTimeOfDay;
 import org.apache.olingo.server.api.ODataApplicationException;
 import org.springframework.util.StreamUtils;
 
@@ -52,6 +68,7 @@ import jp.oiyokan.basic.sql.OiyoSqlInfo;
 import jp.oiyokan.dto.OiyoSettingsDatabase;
 import jp.oiyokan.dto.OiyoSettingsProperty;
 import jp.oiyokan.settings.OiyoSettingsUtil;
+import jp.oiyokan.util.OiyoEdmUtil;
 
 /**
  * Oiyokan 関連の JDBC まわりユーティリティクラス.
@@ -246,38 +263,40 @@ public class OiyoBasicJdbcUtil {
             throw new ODataApplicationException(OiyokanMessages.M034 + ": colname:" + rsmeta.getColumnName(column)
                     + ", propname(should):" + propName, 500, Locale.ENGLISH);
         }
-        if ("Edm.SByte".equals(csdlProp.getType())) {
-            return new Property("Edm.SByte", propName, ValueType.PRIMITIVE, rset.getByte(column));
-        } else if ("Edm.Byte".equals(csdlProp.getType())) {
+        final String edmTypeName = csdlProp.getType();
+        final EdmPrimitiveType edmType = OiyoEdmUtil.string2EdmType(edmTypeName);
+        if (EdmSByte.getInstance() == edmType) {
+            return new Property(edmTypeName, propName, ValueType.PRIMITIVE, rset.getByte(column));
+        } else if (EdmByte.getInstance() == edmType) {
             // 符号なしのバイト. h2 database には該当なし.
             // Edm.Byteに相当する型がJavaにないので Shortで代替.
-            return new Property("Edm.Byte", propName, ValueType.PRIMITIVE, rset.getShort(column));
-        } else if ("Edm.Int16".equals(csdlProp.getType())) {
-            return new Property("Edm.Int16", propName, ValueType.PRIMITIVE, rset.getShort(column));
-        } else if ("Edm.Int32".equals(csdlProp.getType())) {
-            return new Property("Edm.Int32", propName, ValueType.PRIMITIVE, rset.getInt(column));
-        } else if ("Edm.Int64".equals(csdlProp.getType())) {
-            return new Property("Edm.Int64", propName, ValueType.PRIMITIVE, rset.getLong(column));
-        } else if ("Edm.Decimal".equals(csdlProp.getType())) {
-            return new Property("Edm.Decimal", propName, ValueType.PRIMITIVE, rset.getBigDecimal(column));
-        } else if ("Edm.Boolean".equals(csdlProp.getType())) {
-            return new Property("Edm.Boolean", propName, ValueType.PRIMITIVE, rset.getBoolean(column));
-        } else if ("Edm.Single".equals(csdlProp.getType())) {
-            return new Property("Edm.Single", propName, ValueType.PRIMITIVE, rset.getFloat(column));
-        } else if ("Edm.Double".equals(csdlProp.getType())) {
-            return new Property("Edm.Double", propName, ValueType.PRIMITIVE, rset.getDouble(column));
-        } else if ("Edm.Date".equals(csdlProp.getType())) {
-            return new Property("Edm.Date", propName, ValueType.PRIMITIVE, rset.getDate(column));
-        } else if ("Edm.DateTimeOffset".equals(csdlProp.getType())) {
-            return new Property("Edm.DateTimeOffset", propName, ValueType.PRIMITIVE, rset.getTimestamp(column));
-        } else if ("Edm.TimeOfDay".equals(csdlProp.getType())) {
-            return new Property("Edm.TimeOfDay", propName, ValueType.PRIMITIVE, rset.getTime(column));
-        } else if ("Edm.String".equals(csdlProp.getType())) {
+            return new Property(edmTypeName, propName, ValueType.PRIMITIVE, rset.getShort(column));
+        } else if (EdmInt16.getInstance() == edmType) {
+            return new Property(edmTypeName, propName, ValueType.PRIMITIVE, rset.getShort(column));
+        } else if (EdmInt32.getInstance() == edmType) {
+            return new Property(edmTypeName, propName, ValueType.PRIMITIVE, rset.getInt(column));
+        } else if (EdmInt64.getInstance() == edmType) {
+            return new Property(edmTypeName, propName, ValueType.PRIMITIVE, rset.getLong(column));
+        } else if (EdmDecimal.getInstance() == edmType) {
+            return new Property(edmTypeName, propName, ValueType.PRIMITIVE, rset.getBigDecimal(column));
+        } else if (EdmBoolean.getInstance() == edmType) {
+            return new Property(edmTypeName, propName, ValueType.PRIMITIVE, rset.getBoolean(column));
+        } else if (EdmSingle.getInstance() == edmType) {
+            return new Property(edmTypeName, propName, ValueType.PRIMITIVE, rset.getFloat(column));
+        } else if (EdmDouble.getInstance() == edmType) {
+            return new Property(edmTypeName, propName, ValueType.PRIMITIVE, rset.getDouble(column));
+        } else if (EdmDate.getInstance() == edmType) {
+            return new Property(edmTypeName, propName, ValueType.PRIMITIVE, rset.getDate(column));
+        } else if (EdmDateTimeOffset.getInstance() == edmType) {
+            return new Property(edmTypeName, propName, ValueType.PRIMITIVE, rset.getTimestamp(column));
+        } else if (EdmTimeOfDay.getInstance() == edmType) {
+            return new Property(edmTypeName, propName, ValueType.PRIMITIVE, rset.getTime(column));
+        } else if (EdmString.getInstance() == edmType) {
             // 基本的に CSDL で処理するが、やむを得ない場所のみ ResultSetMetaData を利用する
             // TODO FIXME ただしこれは事前に CSDL に記憶可能。
             if (Types.CLOB == rsmeta.getColumnType(column)) {
                 try {
-                    return new Property("Edm.String", propName, ValueType.PRIMITIVE,
+                    return new Property(edmTypeName, propName, ValueType.PRIMITIVE,
                             StreamUtils.copyToString(rset.getAsciiStream(column), Charset.forName("UTF-8")));
                 } catch (IOException ex) {
                     // [M007] UNEXPECTED: fail to read from CLOB
@@ -287,11 +306,11 @@ public class OiyoBasicJdbcUtil {
                             500, Locale.ENGLISH);
                 }
             } else {
-                return new Property("Edm.String", propName, ValueType.PRIMITIVE, rset.getString(column));
+                return new Property(edmTypeName, propName, ValueType.PRIMITIVE, rset.getString(column));
             }
-        } else if ("Edm.Binary".equals(csdlProp.getType())) {
+        } else if (EdmBinary.getInstance() == edmType) {
             try {
-                return new Property("Edm.Binary", propName, ValueType.PRIMITIVE,
+                return new Property(edmTypeName, propName, ValueType.PRIMITIVE,
                         StreamUtils.copyToByteArray(rset.getBinaryStream(column)));
             } catch (IOException ex) {
                 // [M008] UNEXPECTED: fail to read from binary
@@ -299,19 +318,19 @@ public class OiyoBasicJdbcUtil {
                 throw new ODataApplicationException(OiyokanMessages.M008 + ": " + rsmeta.getColumnName(column), //
                         500, Locale.ENGLISH);
             }
-        } else if ("Edm.Guid".equals(csdlProp.getType())) {
+        } else if (EdmGuid.getInstance() == edmType) {
             // Guid については UUID として読み込む。
             final Object obj = rset.getObject(column);
             if (obj == null) {
                 // UUID に null が与えられた場合、そのままnullをセット. (null対応)
-                return new Property("Edm.Guid", propName, ValueType.PRIMITIVE, null);
+                return new Property(edmTypeName, propName, ValueType.PRIMITIVE, null);
             } else if (obj instanceof java.util.UUID) {
                 // h2 database で通過
-                return new Property("Edm.Guid", propName, ValueType.PRIMITIVE, (java.util.UUID) obj);
+                return new Property(edmTypeName, propName, ValueType.PRIMITIVE, (java.util.UUID) obj);
             } else if (obj instanceof String) {
                 // SQL Server 2008 で通過
                 java.util.UUID look = UUID.fromString((String) obj);
-                return new Property("Edm.Guid", propName, ValueType.PRIMITIVE, look);
+                return new Property(edmTypeName, propName, ValueType.PRIMITIVE, look);
             } else {
                 // [M033] NOT SUPPORTED: unknown UUID object given
                 System.err.println(OiyokanMessages.M033 + ": type[" + csdlProp.getType() + "], "
@@ -322,10 +341,9 @@ public class OiyoBasicJdbcUtil {
         } else {
             // ARRAY と OTHER には対応しない。そもそもここ通過しないのじゃないの?
             // [M009] UNEXPECTED: missing impl
-            System.err.println(
-                    OiyokanMessages.M009 + ": type[" + csdlProp.getType() + "], " + rsmeta.getColumnName(column));
+            System.err.println(OiyokanMessages.M009 + ": type[" + edmTypeName + "], " + rsmeta.getColumnName(column));
             throw new ODataApplicationException(
-                    OiyokanMessages.M009 + ": type[" + csdlProp.getType() + "], " + rsmeta.getColumnName(column), //
+                    OiyokanMessages.M009 + ": type[" + edmTypeName + "], " + rsmeta.getColumnName(column), //
                     500, Locale.ENGLISH);
         }
     }
@@ -450,7 +468,8 @@ public class OiyoBasicJdbcUtil {
             sqlInfo.getSqlParamList().add(inputParam);
             return;
         }
-        if ("Edm.SByte".equals(csdlType)) {
+        final EdmPrimitiveType edmType = OiyoEdmUtil.string2EdmType(csdlType);
+        if (EdmSByte.getInstance() == edmType) {
             if (IS_DEBUG_EXPAND_LITERAL)
                 System.err.println("TRACE: EdmSByte: " + inputParam);
             if (inputParam instanceof Byte //
@@ -464,7 +483,7 @@ public class OiyoBasicJdbcUtil {
             }
             return;
         }
-        if ("Edm.Byte".equals(csdlType)) {
+        if (EdmByte.getInstance() == edmType) {
             if (IS_DEBUG_EXPAND_LITERAL)
                 System.err.println("TRACE: EdmByte: " + inputParam);
             // 符号なしByteはJavaには該当する型がないので Shortで代用.
@@ -479,7 +498,7 @@ public class OiyoBasicJdbcUtil {
             }
             return;
         }
-        if ("Edm.Int16".equals(csdlType)) {
+        if (EdmInt16.getInstance() == edmType) {
             if (IS_DEBUG_EXPAND_LITERAL)
                 System.err.println("TRACE: EdmInt16: " + inputParam);
             if (inputParam instanceof Byte //
@@ -493,7 +512,7 @@ public class OiyoBasicJdbcUtil {
             }
             return;
         }
-        if ("Edm.Int32".equals(csdlType)) {
+        if (EdmInt32.getInstance() == edmType) {
             if (IS_DEBUG_EXPAND_LITERAL)
                 System.err.println("TRACE: EdmInt32: " + inputParam);
             if (inputParam instanceof Byte //
@@ -507,7 +526,7 @@ public class OiyoBasicJdbcUtil {
             }
             return;
         }
-        if ("Edm.Int64".equals(csdlType)) {
+        if (EdmInt64.getInstance() == edmType) {
             if (IS_DEBUG_EXPAND_LITERAL)
                 System.err.println("TRACE: EdmInt64: " + inputParam);
             if (inputParam instanceof Byte //
@@ -521,7 +540,7 @@ public class OiyoBasicJdbcUtil {
             }
             return;
         }
-        if ("Edm.Decimal".equals(csdlType)) {
+        if (EdmDecimal.getInstance() == edmType) {
             if (IS_DEBUG_EXPAND_LITERAL)
                 System.err.println("TRACE: EdmDecimal: " + inputParam);
             if (inputParam instanceof BigDecimal) {
@@ -533,7 +552,7 @@ public class OiyoBasicJdbcUtil {
             }
             return;
         }
-        if ("Edm.Boolean".equals(csdlType)) {
+        if (EdmBoolean.getInstance() == edmType) {
             if (IS_DEBUG_EXPAND_LITERAL)
                 System.err.println("TRACE: EdmBoolean: " + inputParam);
             if (inputParam instanceof Boolean) {
@@ -545,7 +564,7 @@ public class OiyoBasicJdbcUtil {
             }
             return;
         }
-        if ("Edm.Single".equals(csdlType)) {
+        if (EdmSingle.getInstance() == edmType) {
             if (IS_DEBUG_EXPAND_LITERAL)
                 System.err.println("TRACE: EdmSingle: " + inputParam);
             if (inputParam instanceof Float //
@@ -559,7 +578,7 @@ public class OiyoBasicJdbcUtil {
             }
             return;
         }
-        if ("Edm.Double".equals(csdlType)) {
+        if (EdmDouble.getInstance() == edmType) {
             if (IS_DEBUG_EXPAND_LITERAL)
                 System.err.println("TRACE: EdmDouble: " + inputParam);
             if (inputParam instanceof Double //
@@ -573,7 +592,7 @@ public class OiyoBasicJdbcUtil {
             }
             return;
         }
-        if ("Edm.Date".equals(csdlType)) {
+        if (EdmDate.getInstance() == edmType) {
             if (IS_DEBUG_EXPAND_LITERAL)
                 System.err.println("TRACE: EdmDate: " + inputParam);
             if (inputParam instanceof java.sql.Date //
@@ -588,7 +607,7 @@ public class OiyoBasicJdbcUtil {
             }
             return;
         }
-        if ("Edm.DateTimeOffset".equals(csdlType)) {
+        if (EdmDateTimeOffset.getInstance() == edmType) {
             if (IS_DEBUG_EXPAND_LITERAL)
                 System.err.println("TRACE: EdmDateTimeOffset: " + inputParam);
             if (inputParam instanceof java.sql.Date //
@@ -606,7 +625,7 @@ public class OiyoBasicJdbcUtil {
             }
             return;
         }
-        if ("Edm.TimeOfDay".equals(csdlType)) {
+        if (EdmTimeOfDay.getInstance() == edmType) {
             if (IS_DEBUG_EXPAND_LITERAL)
                 System.err.println("TRACE: EdmTimeOfDay: " + inputParam);
             if (inputParam instanceof java.sql.Time) {
@@ -625,7 +644,7 @@ public class OiyoBasicJdbcUtil {
             }
             return;
         }
-        if ("Edm.String".equals(csdlType)) {
+        if (EdmString.getInstance() == edmType) {
             if (IS_DEBUG_EXPAND_LITERAL)
                 System.err.println("TRACE: EdmString: " + inputParam);
             String value = String.valueOf(inputParam);
@@ -644,7 +663,7 @@ public class OiyoBasicJdbcUtil {
             }
             return;
         }
-        if ("Edm.Binary".equals(csdlType)) {
+        if (EdmBinary.getInstance() == edmType) {
             if (IS_DEBUG_EXPAND_LITERAL)
                 System.err.println("TRACE: EdmBinary: " + inputParam);
             if (inputParam instanceof byte[] //
@@ -658,7 +677,7 @@ public class OiyoBasicJdbcUtil {
             }
             return;
         }
-        if ("Edm.Guid".equals(csdlType)) {
+        if (EdmGuid.getInstance() == edmType) {
             if (IS_DEBUG_EXPAND_LITERAL)
                 System.err.println("TRACE: EdmGuid: " + inputParam);
             if (inputParam instanceof byte[] //

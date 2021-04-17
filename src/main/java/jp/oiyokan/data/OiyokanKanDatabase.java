@@ -27,7 +27,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import org.apache.olingo.commons.api.edm.EdmPrimitiveTypeKind;
+import org.apache.olingo.commons.api.edm.EdmPrimitiveType;
 import org.apache.olingo.server.api.ODataApplicationException;
 
 import jp.oiyokan.OiyokanConstants;
@@ -38,6 +38,9 @@ import jp.oiyokan.dto.OiyoSettingsEntitySet;
 import jp.oiyokan.dto.OiyoSettingsEntityType;
 import jp.oiyokan.dto.OiyoSettingsProperty;
 import jp.oiyokan.settings.OiyoSettingsUtil;
+import jp.oiyokan.util.OiyoEdmUtil;
+import jp.oiyokan.util.OiyoJdbcUtil;
+import jp.oiyokan.util.OiyoMapJdbcEdmUtil;
 
 /**
  * Oiyokan (OData v4 server) が動作する際に必要になる内部管理データベースのバージョン情報および Oiyo情報 をセットアップ.
@@ -388,31 +391,16 @@ public class OiyokanKanDatabase {
                 property.setDbName(columnName);
                 property.setDbType(rsmeta.getColumnTypeName(column));
 
+                final int jdbcTypes = rsmeta.getColumnType(column);
+                property.setJdbcType(OiyoJdbcUtil.types2String(jdbcTypes));
+                try {
+                    EdmPrimitiveType edmType = OiyoMapJdbcEdmUtil.jdbcTypes2Edm(jdbcTypes);
+                    property.setEdmType(OiyoEdmUtil.edmType2String(edmType));
+                } catch (IllegalArgumentException ex) {
+                    property.setEdmType("NOT.SUPPORTED");
+                }
                 switch (rsmeta.getColumnType(column)) {
-                case Types.TINYINT:
-                    property.setJdbcType("Types.TINYINT");
-                    property.setEdmType(
-                            EdmPrimitiveTypeKind.SByte.getFullQualifiedName().getFullQualifiedNameAsString());
-                    break;
-                case Types.SMALLINT:
-                    property.setJdbcType("Types.SMALLINT");
-                    property.setEdmType(
-                            EdmPrimitiveTypeKind.Int16.getFullQualifiedName().getFullQualifiedNameAsString());
-                    break;
-                case Types.INTEGER: /* INT */
-                    property.setJdbcType("Types.INTEGER");
-                    property.setEdmType(
-                            EdmPrimitiveTypeKind.Int32.getFullQualifiedName().getFullQualifiedNameAsString());
-                    break;
-                case Types.BIGINT:
-                    property.setJdbcType("Types.BIGINT");
-                    property.setEdmType(
-                            EdmPrimitiveTypeKind.Int64.getFullQualifiedName().getFullQualifiedNameAsString());
-                    break;
                 case Types.DECIMAL:
-                    property.setJdbcType("Types.DECIMAL");
-                    property.setEdmType(
-                            EdmPrimitiveTypeKind.Decimal.getFullQualifiedName().getFullQualifiedNameAsString());
                     if (rsmeta.getPrecision(column) > 0) {
                         property.setPrecision(rsmeta.getPrecision(column));
                         property.setScale(rsmeta.getScale(column));
@@ -420,101 +408,44 @@ public class OiyokanKanDatabase {
                     break;
                 case Types.NUMERIC:
                     // postgres で発生.
-                    property.setJdbcType("Types.NUMERIC");
-                    property.setEdmType(
-                            EdmPrimitiveTypeKind.Decimal.getFullQualifiedName().getFullQualifiedNameAsString());
                     if (rsmeta.getPrecision(column) > 0) {
                         property.setPrecision(rsmeta.getPrecision(column));
                         property.setScale(rsmeta.getScale(column));
                     }
                     break;
-                case Types.BOOLEAN:
-                    property.setJdbcType("Types.BOOLEAN");
-                    property.setEdmType(
-                            EdmPrimitiveTypeKind.Boolean.getFullQualifiedName().getFullQualifiedNameAsString());
-                    break;
-                case Types.BIT:
-                    // postgres で発生.
-                    property.setJdbcType("Types.BIT");
-                    property.setEdmType(
-                            EdmPrimitiveTypeKind.Boolean.getFullQualifiedName().getFullQualifiedNameAsString());
-                    break;
-                case Types.REAL:
-                    property.setJdbcType("Types.REAL");
-                    property.setEdmType(
-                            EdmPrimitiveTypeKind.Single.getFullQualifiedName().getFullQualifiedNameAsString());
-                    break;
-                case Types.DOUBLE:
-                    property.setJdbcType("Types.DOUBLE");
-                    property.setEdmType(
-                            EdmPrimitiveTypeKind.Double.getFullQualifiedName().getFullQualifiedNameAsString());
-                    break;
-                case Types.DATE:
-                    property.setJdbcType("Types.DATE");
-                    property.setEdmType(
-                            EdmPrimitiveTypeKind.Date.getFullQualifiedName().getFullQualifiedNameAsString());
-                    break;
-                case Types.TIMESTAMP:
-                    property.setJdbcType("Types.TIMESTAMP");
-                    property.setEdmType(
-                            EdmPrimitiveTypeKind.DateTimeOffset.getFullQualifiedName().getFullQualifiedNameAsString());
-                    break;
-                case Types.TIME:
-                    property.setJdbcType("Types.TIME");
-                    property.setEdmType(
-                            EdmPrimitiveTypeKind.TimeOfDay.getFullQualifiedName().getFullQualifiedNameAsString());
-                    break;
                 case Types.CHAR:
-                    property.setJdbcType("Types.CHAR");
-                    property.setEdmType(
-                            EdmPrimitiveTypeKind.String.getFullQualifiedName().getFullQualifiedNameAsString());
                     property.setLengthFixed(true);
                     property.setMaxLength(rsmeta.getColumnDisplaySize(column));
                     break;
                 case Types.VARCHAR:
-                    property.setJdbcType("Types.VARCHAR");
-                    property.setEdmType(
-                            EdmPrimitiveTypeKind.String.getFullQualifiedName().getFullQualifiedNameAsString());
                     if (rsmeta.getColumnDisplaySize(column) > 0
                             && rsmeta.getColumnDisplaySize(column) != Integer.MAX_VALUE) {
                         property.setMaxLength(rsmeta.getColumnDisplaySize(column));
                     }
                     break;
                 case Types.LONGVARCHAR:
-                    property.setJdbcType("Types.LONGVARCHAR");
-                    property.setEdmType(
-                            EdmPrimitiveTypeKind.String.getFullQualifiedName().getFullQualifiedNameAsString());
                     if (rsmeta.getColumnDisplaySize(column) > 0
                             && rsmeta.getColumnDisplaySize(column) != Integer.MAX_VALUE) {
                         property.setMaxLength(rsmeta.getColumnDisplaySize(column));
                     }
                     break;
                 case Types.LONGNVARCHAR:
-                    property.setJdbcType("Types.LONGNVARCHAR");
-                    property.setEdmType(
-                            EdmPrimitiveTypeKind.String.getFullQualifiedName().getFullQualifiedNameAsString());
                     if (rsmeta.getColumnDisplaySize(column) > 0
                             && rsmeta.getColumnDisplaySize(column) != Integer.MAX_VALUE) {
                         property.setMaxLength(rsmeta.getColumnDisplaySize(column));
                     }
                     break;
                 case Types.CLOB:
-                    property.setJdbcType("Types.CLOB");
-                    property.setEdmType(
-                            EdmPrimitiveTypeKind.String.getFullQualifiedName().getFullQualifiedNameAsString());
                     if (rsmeta.getColumnDisplaySize(column) > 0
                             && rsmeta.getColumnDisplaySize(column) != Integer.MAX_VALUE) {
                         property.setMaxLength(rsmeta.getColumnDisplaySize(column));
                     }
                     break;
                 case Types.BINARY:
-                    property.setJdbcType("Types.BINARY");
-                    property.setEdmType(
-                            EdmPrimitiveTypeKind.Binary.getFullQualifiedName().getFullQualifiedNameAsString());
                     if ("UUID".equalsIgnoreCase(rsmeta.getColumnTypeName(column))) {
+                        // TODO FIXME 対応調査.
                         // 型名が UUID の時だけ特殊な挙動をする.
-                        property.setEdmType(
-                                EdmPrimitiveTypeKind.Guid.getFullQualifiedName().getFullQualifiedNameAsString());
+                        property.setEdmType("Edm.Guid");
                     } else {
                         if (rsmeta.getColumnDisplaySize(column) > 0
                                 && rsmeta.getColumnDisplaySize(column) != Integer.MAX_VALUE) {
@@ -523,13 +454,9 @@ public class OiyokanKanDatabase {
                     }
                     break;
                 case Types.VARBINARY:
-                    property.setJdbcType("Types.VARBINARY");
-                    property.setEdmType(
-                            EdmPrimitiveTypeKind.Binary.getFullQualifiedName().getFullQualifiedNameAsString());
                     if ("UUID".equalsIgnoreCase(rsmeta.getColumnTypeName(column))) {
                         // 型名が UUID の時だけ特殊な挙動をする.
-                        property.setEdmType(
-                                EdmPrimitiveTypeKind.Guid.getFullQualifiedName().getFullQualifiedNameAsString());
+                        property.setEdmType("Edm.Guid");
                     } else {
                         if (rsmeta.getColumnDisplaySize(column) > 0
                                 && rsmeta.getColumnDisplaySize(column) != Integer.MAX_VALUE) {
@@ -538,13 +465,9 @@ public class OiyokanKanDatabase {
                     }
                     break;
                 case Types.LONGVARBINARY:
-                    property.setJdbcType("Types.LONGVARBINARY");
-                    property.setEdmType(
-                            EdmPrimitiveTypeKind.Binary.getFullQualifiedName().getFullQualifiedNameAsString());
                     if ("UUID".equalsIgnoreCase(rsmeta.getColumnTypeName(column))) {
                         // 型名が UUID の時だけ特殊な挙動をする.
-                        property.setEdmType(
-                                EdmPrimitiveTypeKind.Guid.getFullQualifiedName().getFullQualifiedNameAsString());
+                        property.setEdmType("Edm.Guid");
                     } else {
                         if (rsmeta.getColumnDisplaySize(column) > 0
                                 && rsmeta.getColumnDisplaySize(column) != Integer.MAX_VALUE) {
@@ -553,13 +476,9 @@ public class OiyokanKanDatabase {
                     }
                     break;
                 case Types.BLOB:
-                    property.setJdbcType("Types.BLOB");
-                    property.setEdmType(
-                            EdmPrimitiveTypeKind.Binary.getFullQualifiedName().getFullQualifiedNameAsString());
                     if ("UUID".equalsIgnoreCase(rsmeta.getColumnTypeName(column))) {
                         // 型名が UUID の時だけ特殊な挙動をする.
-                        property.setEdmType(
-                                EdmPrimitiveTypeKind.Guid.getFullQualifiedName().getFullQualifiedNameAsString());
+                        property.setEdmType("Edm.Guid");
                     } else {
                         if (rsmeta.getColumnDisplaySize(column) > 0
                                 && rsmeta.getColumnDisplaySize(column) != Integer.MAX_VALUE) {
@@ -569,19 +488,9 @@ public class OiyokanKanDatabase {
                     break;
                 case Types.ARRAY:
                     // postgres で発生. 対応しない.
-                    property.setJdbcType("Types.ARRAY");
-                    property.setEdmType("NOT_SUPPORT_ARRAY");
                     break;
                 case Types.OTHER:
                     // postgres で発生. 対応しない.
-                    property.setJdbcType("Types.ARRAY");
-                    property.setEdmType("NOT_SUPPORT_OTHER");
-                    break;
-                default:
-                    // [M021] NOT SUPPORTED: JDBC Type
-                    System.err.println(OiyokanMessages.M021 + ": " + rsmeta.getColumnType(column));
-                    new ODataApplicationException(OiyokanMessages.M021 + ": " + rsmeta.getColumnType(column), //
-                            500, Locale.ENGLISH);
                     break;
                 }
 

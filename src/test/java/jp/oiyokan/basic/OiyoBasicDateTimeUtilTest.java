@@ -13,7 +13,7 @@ class OiyoBasicDateTimeUtilTest {
     void test() {
         ZonedDateTime zdt = OiyoBasicDateTimeUtil.parseStringDateTime("2021-04-10T19:12:49.082Z");
         // System.err.println(zdt.toString());
-
+        
         zdt = OiyoBasicDateTimeUtil.parseStringDateTime("2021-04-10 19:12:49.082Z");
         // System.err.println(zdt.toString());
 

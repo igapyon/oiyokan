@@ -78,7 +78,7 @@ class GenTargetDdlFromOiyoSettingsTest {
                     sql.append(", ");
                 }
                 sql.append(OiyoBasicJdbcUtil.escapeKakkoFieldName(databaseType, prop.getDbName()));
-                if (prop.getDbDefault() != null && prop.getDbDefault().startsWith("NEXT VALUE FOR")) {
+                if (prop.getDbDefault() != null && prop.getDbDefault().indexOf("NEXT VALUE FOR") >= 0) {
                     // h2 database 特殊ルール
                     sql.append(" IDENTITY");
                 } else {
