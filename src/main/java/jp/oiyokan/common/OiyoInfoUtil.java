@@ -128,6 +128,8 @@ public class OiyoInfoUtil {
             }
         }
 
+        new Exception("ここはどこ").printStackTrace();
+        
         // [M040] UNEXPECTED: EntitySet Property settings NOT found.
         System.err.println(OiyokanMessages.M040 + ": entitySet:" + entitySetName + ", property:" + propertyName);
         throw new ODataApplicationException(

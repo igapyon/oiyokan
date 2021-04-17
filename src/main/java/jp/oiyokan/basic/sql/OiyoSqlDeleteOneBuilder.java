@@ -18,7 +18,6 @@ package jp.oiyokan.basic.sql;
 import java.util.List;
 
 import org.apache.olingo.commons.api.edm.EdmEntitySet;
-import org.apache.olingo.commons.api.edm.provider.CsdlProperty;
 import org.apache.olingo.server.api.ODataApplicationException;
 import org.apache.olingo.server.api.uri.UriParameter;
 
@@ -26,6 +25,8 @@ import jp.oiyokan.basic.OiyoBasicJdbcUtil;
 import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.common.OiyoInfoUtil;
 import jp.oiyokan.common.OiyoSqlInfo;
+import jp.oiyokan.dto.OiyoSettingsEntitySet;
+import jp.oiyokan.dto.OiyoSettingsProperty;
 
 /**
  * データベースから1件レコードを削除.
@@ -64,9 +65,11 @@ public class OiyoSqlDeleteOneBuilder {
      */
     public void buildDeleteDml(EdmEntitySet edmEntitySet, List<UriParameter> keyPredicates)
             throws ODataApplicationException {
+        final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, edmEntitySet.getName());
+
         sqlInfo.getSqlBuilder().append("DELETE FROM ");
-        sqlInfo.getSqlBuilder().append(
-                OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, sqlInfo.getEntitySet().getDbTableNameTargetIyo()));
+        sqlInfo.getSqlBuilder()
+                .append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, entitySet.getEntityType().getDbName()));
         sqlInfo.getSqlBuilder().append(" WHERE ");
         boolean isFirst = true;
 
@@ -77,12 +80,13 @@ public class OiyoSqlDeleteOneBuilder {
                 sqlInfo.getSqlBuilder().append(" AND ");
             }
 
-            CsdlProperty csdlProp = sqlInfo.getEntitySet().getEntityType().getProperty(param.getName());
+            final OiyoSettingsProperty prop = OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, edmEntitySet.getName(),
+                    param.getName());
 
-            sqlInfo.getSqlBuilder().append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyoInfoUtil
-                    .getOiyoEntityProperty(oiyoInfo, edmEntitySet.getName(), csdlProp.getName()).getDbName()));
+            sqlInfo.getSqlBuilder().append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo,
+                    OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, edmEntitySet.getName(), prop.getName()).getDbName()));
             sqlInfo.getSqlBuilder().append("=");
-            OiyoBasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo, csdlProp.getType(), param.getText());
+            OiyoBasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo, prop.getEdmType(), param.getText());
         }
     }
 }

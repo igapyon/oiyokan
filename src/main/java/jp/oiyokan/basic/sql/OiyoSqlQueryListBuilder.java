@@ -18,9 +18,6 @@ package jp.oiyokan.basic.sql;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.olingo.commons.api.edm.provider.CsdlEntityType;
-import org.apache.olingo.commons.api.edm.provider.CsdlProperty;
-import org.apache.olingo.commons.api.edm.provider.CsdlPropertyRef;
 import org.apache.olingo.server.api.ODataApplicationException;
 import org.apache.olingo.server.api.uri.UriInfo;
 import org.apache.olingo.server.api.uri.UriResource;
@@ -35,7 +32,9 @@ import jp.oiyokan.basic.OiyoBasicJdbcUtil;
 import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.common.OiyoInfoUtil;
 import jp.oiyokan.common.OiyoSqlInfo;
+import jp.oiyokan.dto.OiyoSettingsDatabase;
 import jp.oiyokan.dto.OiyoSettingsEntitySet;
+import jp.oiyokan.dto.OiyoSettingsProperty;
 
 /**
  * SQL文を構築するための簡易クラス.
@@ -93,6 +92,8 @@ public class OiyoSqlQueryListBuilder {
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
     public void buildSelectQuery(UriInfo uriInfo) throws ODataApplicationException {
+        final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, entitySetName);
+
         sqlInfo.getSqlBuilder().append("SELECT ");
 
         expandSelect(uriInfo);
@@ -103,8 +104,12 @@ public class OiyoSqlQueryListBuilder {
         // 現状の実装では指定があろうがなかろうが件数はカウントする実装となっている.
         // TODO FIXME 現状でも常にカウントしているかどうか確認すること。
 
-        if (OiyokanConstants.DatabaseType.MSSQL2008 == sqlInfo.getEntitySet().getDatabaseType() //
-                || OiyokanConstants.DatabaseType.ORACLE == sqlInfo.getEntitySet().getDatabaseType()) {
+        final OiyoSettingsDatabase database = OiyoInfoUtil.getOiyoDatabaseByEntitySetName(sqlInfo.getOiyoInfo(),
+                sqlInfo.getEntitySetName());
+        final OiyokanConstants.DatabaseType databaseType = OiyokanConstants.DatabaseType.valueOf(database.getType());
+
+        if (OiyokanConstants.DatabaseType.MSSQL2008 == databaseType //
+                || OiyokanConstants.DatabaseType.ORACLE == databaseType) {
             sqlInfo.getSqlBuilder().append(" WHERE ");
             expandRowNumberBetween(uriInfo);
             // SQL Server検索は WHERE絞り込みは既にサブクエリにて適用済み.
@@ -117,8 +122,8 @@ public class OiyoSqlQueryListBuilder {
             }
         }
 
-        if (OiyokanConstants.DatabaseType.MSSQL2008 == sqlInfo.getEntitySet().getDatabaseType() //
-                || OiyokanConstants.DatabaseType.ORACLE == sqlInfo.getEntitySet().getDatabaseType()) {
+        if (OiyokanConstants.DatabaseType.MSSQL2008 == databaseType //
+                || OiyokanConstants.DatabaseType.ORACLE == databaseType) {
             // 必ず rownum4between 順でソート.
             sqlInfo.getSqlBuilder().append(" ORDER BY rownum4between");
         } else {
@@ -163,11 +168,11 @@ public class OiyoSqlQueryListBuilder {
     }
 
     private void expandSelectWild(UriInfo uriInfo) throws ODataApplicationException {
+        final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, sqlInfo.getEntitySetName());
+
         // アスタリスクは利用せず、項目を指定する。
-        OiyokanCsdlEntitySet entitySet = (OiyokanCsdlEntitySet) sqlInfo.getEntitySet();
-        CsdlEntityType entityType = entitySet.getEntityType();
         String strColumns = "";
-        for (CsdlProperty prop : entityType.getProperties()) {
+        for (OiyoSettingsProperty prop : entitySet.getEntityType().getProperty()) {
             if (strColumns.length() > 0) {
                 strColumns += ",";
             }
@@ -180,19 +185,19 @@ public class OiyoSqlQueryListBuilder {
     }
 
     private void expandSelectEach(UriInfo uriInfo) throws ODataApplicationException {
-        final OiyokanCsdlEntitySet iyoEntitySet = (OiyokanCsdlEntitySet) sqlInfo.getEntitySet();
+        final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, sqlInfo.getEntitySetName());
+
         final List<String> keyTarget = new ArrayList<>();
-        for (CsdlPropertyRef propRef : iyoEntitySet.getEntityType().getKey()) {
-            keyTarget.add(OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, iyoEntitySet.getName(), propRef.getName())
-                    .getDbName());
+        for (String keyName : entitySet.getEntityType().getKeyName()) {
+            keyTarget.add(OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, entitySet.getName(), keyName).getName());
         }
         int itemCount = 0;
         for (SelectItem item : uriInfo.getSelectOption().getSelectItems()) {
             for (UriResource res : item.getResourcePath().getUriResourceParts()) {
                 sqlInfo.getSqlBuilder().append(itemCount++ == 0 ? "" : ",");
                 final String unescapedName = OiyoBasicJdbcUtil.unescapeKakkoFieldName(res.toString());
-                sqlInfo.getSqlBuilder().append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyoInfoUtil
-                        .getOiyoEntityProperty(oiyoInfo, sqlInfo.getEntitySet().getName(), unescapedName).getDbName()));
+                sqlInfo.getSqlBuilder().append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo,
+                        OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, entitySet.getName(), unescapedName).getDbName()));
                 for (int index = 0; index < keyTarget.size(); index++) {
                     if (keyTarget.get(index).equals(res.toString())) {
                         keyTarget.remove(index);
@@ -209,11 +214,17 @@ public class OiyoSqlQueryListBuilder {
     }
 
     private void expandFrom(UriInfo uriInfo) throws ODataApplicationException {
+        final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, sqlInfo.getEntitySetName());
+
+        final OiyoSettingsDatabase database = OiyoInfoUtil.getOiyoDatabaseByEntitySetName(sqlInfo.getOiyoInfo(),
+                sqlInfo.getEntitySetName());
+        final OiyokanConstants.DatabaseType databaseType = OiyokanConstants.DatabaseType.valueOf(database.getType());
+
         // 取得元のテーブル.
-        switch (sqlInfo.getEntitySet().getDatabaseType()) {
+        switch (databaseType) {
         default:
-            sqlInfo.getSqlBuilder().append(" FROM " + OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo,
-                    sqlInfo.getEntitySet().getDbTableNameTargetIyo()));
+            sqlInfo.getSqlBuilder().append(
+                    " FROM " + OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, entitySet.getEntityType().getDbName()));
             break;
         case MSSQL2008:
         case ORACLE: {
@@ -221,7 +232,7 @@ public class OiyoSqlQueryListBuilder {
             // SQL Server / ORACLE 用特殊記述
             // 現在、無条件にサブクエリ展開
             String topfilter = "";
-            if (OiyokanConstants.DatabaseType.MSSQL2008 == sqlInfo.getEntitySet().getDatabaseType()) {
+            if (OiyokanConstants.DatabaseType.MSSQL2008 == databaseType) {
                 if (uriInfo.getTopOption() != null) {
                     int total = uriInfo.getTopOption().getValue();
                     if (uriInfo.getSkipOption() != null) {
@@ -247,15 +258,15 @@ public class OiyoSqlQueryListBuilder {
             sqlInfo.getSqlBuilder().append("AS rownum4between,");
             // 必要な分だけ項目展開.
             expandSelect(uriInfo);
-            sqlInfo.getSqlBuilder().append(" FROM " + OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo,
-                    sqlInfo.getEntitySet().getDbTableNameTargetIyo()));
+            sqlInfo.getSqlBuilder().append(
+                    " FROM " + OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, entitySet.getEntityType().getDbName()));
             if (uriInfo.getFilterOption() != null) {
                 sqlInfo.getSqlBuilder().append(" WHERE ");
                 // データ絞り込みはここで実現.
                 new OiyoSqlQueryListExpr(oiyoInfo, sqlInfo).expand(uriInfo.getFilterOption().getExpression());
             }
             sqlInfo.getSqlBuilder().append(")");
-            if (OiyokanConstants.DatabaseType.MSSQL2008 == sqlInfo.getEntitySet().getDatabaseType()) {
+            if (OiyokanConstants.DatabaseType.MSSQL2008 == databaseType) {
                 // 以下記述は SQL2008のみ。ORACLEではエラー。
                 sqlInfo.getSqlBuilder().append(" AS rownum4subquery");
             }
@@ -267,6 +278,8 @@ public class OiyoSqlQueryListBuilder {
     }
 
     private void expandOrderBy(UriInfo uriInfo) throws ODataApplicationException {
+        final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, sqlInfo.getEntitySetName());
+
         List<OrderByItem> orderByItemList = uriInfo.getOrderByOption().getOrders();
         for (int index = 0; index < orderByItemList.size(); index++) {
             OrderByItem orderByItem = orderByItemList.get(index);
@@ -277,8 +290,8 @@ public class OiyoSqlQueryListBuilder {
 
             final String unescapedName = OiyoBasicJdbcUtil
                     .unescapeKakkoFieldName(((MemberImpl) orderByItem.getExpression()).toString());
-            sqlInfo.getSqlBuilder().append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyoInfoUtil
-                    .getOiyoEntityProperty(oiyoInfo, sqlInfo.getEntitySet().getName(), unescapedName).getDbName()));
+            sqlInfo.getSqlBuilder().append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo,
+                    OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, entitySet.getName(), unescapedName).getDbName()));
 
             if (orderByItem.isDescending()) {
                 sqlInfo.getSqlBuilder().append(" DESC");
@@ -287,23 +300,30 @@ public class OiyoSqlQueryListBuilder {
     }
 
     private void expandOrderByWithPrimary() throws ODataApplicationException {
+        final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, sqlInfo.getEntitySetName());
+
         // 無指定の場合はプライマリキーにてソート.
         boolean isFirst = true;
-        for (CsdlPropertyRef look : sqlInfo.getEntitySet().getEntityType().getKey()) {
+        for (String look : entitySet.getEntityType().getKeyName()) {
             if (isFirst) {
                 isFirst = false;
             } else {
                 sqlInfo.getSqlBuilder().append(",");
             }
-            final String unescapedName = OiyoBasicJdbcUtil.unescapeKakkoFieldName(look.getName());
-            sqlInfo.getSqlBuilder().append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyoInfoUtil
-                    .getOiyoEntityProperty(oiyoInfo, sqlInfo.getEntitySet().getName(), unescapedName).getDbName()));
+
+            final OiyoSettingsProperty prop = OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, entitySet.getName(), look);
+
+            sqlInfo.getSqlBuilder().append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, prop.getDbName()));
         }
     }
 
-    private void expandTopSkip(UriInfo uriInfo) {
-        if (OiyokanConstants.DatabaseType.MSSQL2008 != sqlInfo.getEntitySet().getDatabaseType() //
-                && OiyokanConstants.DatabaseType.ORACLE != sqlInfo.getEntitySet().getDatabaseType()) {
+    private void expandTopSkip(UriInfo uriInfo) throws ODataApplicationException {
+        final OiyoSettingsDatabase database = OiyoInfoUtil.getOiyoDatabaseByEntitySetName(sqlInfo.getOiyoInfo(),
+                sqlInfo.getEntitySetName());
+        final OiyokanConstants.DatabaseType databaseType = OiyokanConstants.DatabaseType.valueOf(database.getType());
+
+        if (OiyokanConstants.DatabaseType.MSSQL2008 != databaseType //
+                && OiyokanConstants.DatabaseType.ORACLE != databaseType) {
             if (uriInfo.getTopOption() != null) {
                 sqlInfo.getSqlBuilder().append(" LIMIT ");
                 sqlInfo.getSqlBuilder().append(uriInfo.getTopOption().getValue());

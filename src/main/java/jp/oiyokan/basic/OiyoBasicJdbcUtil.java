@@ -233,8 +233,8 @@ public class OiyoBasicJdbcUtil {
             OiyokanCsdlEntitySet iyoEntitySet) throws ODataApplicationException, SQLException {
         // 基本的に CSDL で処理するが、やむを得ない場所のみ ResultSetMetaData を利用する
         String propName = null;
-        for (OiyoSettingsProperty prop : OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, iyoEntitySet.getName())
-                .getEntityType().getProperty()) {
+        for (OiyoSettingsProperty prop : OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, iyoEntitySet.getName()).getEntityType()
+                .getProperty()) {
             // 大文字小文字を無視。
             if (rsmeta.getColumnName(column).equalsIgnoreCase(prop.getDbName())) {
                 propName = prop.getName();
@@ -456,12 +456,12 @@ public class OiyoBasicJdbcUtil {
     /**
      * リテラルまたはプレースホルダーをビルド.
      * 
-     * @param sqlInfo    SQL info.
-     * @param csdlType   CSDL type.
-     * @param inputParam parameter text.
+     * @param sqlInfo     SQL info.
+     * @param edmTypeName CSDL type.
+     * @param inputParam  parameter text.
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
-    public static void expandLiteralOrBindParameter(final OiyoSqlInfo sqlInfo, String csdlType, Object inputParam)
+    public static void expandLiteralOrBindParameter(final OiyoSqlInfo sqlInfo, String edmTypeName, Object inputParam)
             throws ODataApplicationException {
         if (inputParam == null) {
             if (IS_DEBUG_EXPAND_LITERAL)
@@ -470,7 +470,7 @@ public class OiyoBasicJdbcUtil {
             sqlInfo.getSqlParamList().add(inputParam);
             return;
         }
-        final EdmPrimitiveType edmType = OiyoEdmUtil.string2EdmType(csdlType);
+        final EdmPrimitiveType edmType = OiyoEdmUtil.string2EdmType(edmTypeName);
         if (EdmSByte.getInstance() == edmType) {
             if (IS_DEBUG_EXPAND_LITERAL)
                 System.err.println("TRACE: EdmSByte: " + inputParam);
@@ -695,8 +695,8 @@ public class OiyoBasicJdbcUtil {
         }
 
         // [M037] NOT SUPPORTED: Parameter Type
-        System.err.println(OiyokanMessages.M037 + ": " + csdlType);
-        throw new ODataApplicationException(OiyokanMessages.M037 + ": " + csdlType, //
+        System.err.println(OiyokanMessages.M037 + ": " + edmTypeName);
+        throw new ODataApplicationException(OiyokanMessages.M037 + ": " + edmTypeName, //
                 OiyokanMessages.M037_CODE, Locale.ENGLISH);
     }
 
@@ -725,7 +725,10 @@ public class OiyoBasicJdbcUtil {
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
     public static String escapeKakkoFieldName(OiyoSqlInfo sqlInfo, String fieldName) throws ODataApplicationException {
-        return escapeKakkoFieldName(sqlInfo.getEntitySet().getDatabaseType(), fieldName);
+        final OiyoSettingsDatabase database = OiyoInfoUtil.getOiyoDatabaseByEntitySetName(sqlInfo.getOiyoInfo(),
+                sqlInfo.getEntitySetName());
+
+        return escapeKakkoFieldName(OiyokanConstants.DatabaseType.valueOf(database.getType()), fieldName);
     }
 
     public static String escapeKakkoFieldName(OiyokanConstants.DatabaseType databaseType, String fieldName)
