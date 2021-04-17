@@ -43,6 +43,7 @@ import org.apache.olingo.server.core.uri.queryoption.CountOptionImpl;
 
 import jp.oiyokan.basic.OiyoBasicJdbcEntityCollectionBuilder;
 import jp.oiyokan.common.OiyoInfo;
+import jp.oiyokan.common.OiyoInfoUtil;
 
 /**
  * Oiyokan による EntityCollectionProcessor 実装.
@@ -157,7 +158,10 @@ public class OiyokanEntityCollectionProcessor implements EntityCollectionProcess
             }
         }
 
-        switch (entitySet.getDatabaseType()) {
+        final OiyokanConstants.DatabaseType databaseType = OiyoInfoUtil.getOiyoDatabaseTypeByEntitySetName(oiyoInfo,
+                edmEntitySet.getName());
+
+        switch (databaseType) {
         case h2:
         case postgres:
         case MySQL:

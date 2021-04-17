@@ -22,7 +22,6 @@ import org.apache.olingo.commons.api.edm.provider.CsdlEntitySet;
 import org.apache.olingo.commons.api.edm.provider.CsdlEntityType;
 import org.apache.olingo.server.api.ODataApplicationException;
 
-import jp.oiyokan.OiyokanConstants.DatabaseType;
 import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.common.OiyoInfoUtil;
 import jp.oiyokan.dto.OiyoSettingsDatabase;
@@ -46,38 +45,16 @@ public class OiyokanCsdlEntitySet extends CsdlEntitySet {
     private OiyoSettingsEntitySet settingsEntitySet = null;
 
     /**
-     * この EntitySet が接続する先のデータベースタイプを記憶.
-     */
-    private DatabaseType databaseType = DatabaseType.h2;
-
-    /**
      * この EntitySet から導出された EntityType.
      */
     private CsdlEntityType entityType = null;
-
-    /**
-     * EntitySet設定情報を取得.
-     * 
-     * @return EntitySet設定情報.
-     */
-    public OiyoSettingsEntitySet getSettingsEntitySet() {
-        return settingsEntitySet;
-    }
-
-    /**
-     * データベース型を取得.
-     * 
-     * @return データベースの型.
-     */
-    public DatabaseType getDatabaseType() {
-        return databaseType;
-    }
 
     /**
      * Database設定情報を取得.
      * 
      * @return Database設定情報.
      * @throws ODataApplicationException ODataアプリ例外.
+     * @deprecated
      */
     public OiyoSettingsDatabase getSettingsDatabase(OiyoInfo oiyoInfo) throws ODataApplicationException {
         return OiyoInfoUtil.getOiyoDatabaseByName(oiyoInfo, settingsEntitySet.getDbSettingName());
@@ -96,6 +73,7 @@ public class OiyokanCsdlEntitySet extends CsdlEntitySet {
      * CsdlEntityType を取得。
      * 
      * @return CsdlEntityTypeインスタンス.
+     * @deprecated
      */
     public CsdlEntityType getEntityType() {
         return entityType;
@@ -107,6 +85,7 @@ public class OiyokanCsdlEntitySet extends CsdlEntitySet {
      * @param entityContainer   コンテナ情報.
      * @param settingsEntitySet EntitySetの設定.
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
+     * @deprecated
      */
     public OiyokanCsdlEntitySet(OiyoInfo oiyoInfo, OiyokanCsdlEntityContainer entityContainer,
             OiyoSettingsEntitySet settingsEntitySet) throws ODataApplicationException {
@@ -116,7 +95,7 @@ public class OiyokanCsdlEntitySet extends CsdlEntitySet {
 
         try {
             // 指定のデータベース名の文字列が妥当かどうかチェックして値として設定。
-            databaseType = OiyokanConstants.DatabaseType.valueOf(getSettingsDatabase(oiyoInfo).getType());
+            OiyokanConstants.DatabaseType.valueOf(getSettingsDatabase(oiyoInfo).getType());
         } catch (IllegalArgumentException ex) {
             // [M002] UNEXPECTED: Illegal data type in database settings
             System.err.println(OiyokanMessages.M002 + ": dbname:" + getSettingsDatabase(oiyoInfo).getName() //
@@ -134,6 +113,7 @@ public class OiyokanCsdlEntitySet extends CsdlEntitySet {
      * エンティティ名. ODataTest1 相当.
      * 
      * @return エンティティ名. ODataTest1 相当.
+     * @deprecated
      */
     public String getEntityNameIyo() {
         return settingsEntitySet.getEntityType().getName();
@@ -144,17 +124,9 @@ public class OiyokanCsdlEntitySet extends CsdlEntitySet {
      * 
      * @return エンティティのFQN(完全修飾名).
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
+     * @deprecated
      */
     public FullQualifiedName getEntityNameFqnIyo() throws ODataApplicationException {
         return new FullQualifiedName(csdlEntityContainer.getNamespaceIyo(), getEntityNameIyo());
-    }
-
-    /**
-     * ターゲット上のテーブル名.
-     * 
-     * @return ターゲットのDBテーブル名.
-     */
-    public String getDbTableNameTargetIyo() {
-        return settingsEntitySet.getEntityType().getDbName();
     }
 }
