@@ -88,7 +88,7 @@ public class OiyokanEntityCollectionProcessor implements EntityCollectionProcess
             throws ODataApplicationException, SerializerException {
         try {
             // シングルトンな OiyoInfo を利用。
-            final OiyoInfo oiyoInfo = OiyokanCsdlEntityContainer.getOiyoInfoInstance();
+            final OiyoInfo oiyoInfo = OiyokanEdmProvider.getOiyoInfoInstance();
 
             // URI情報からURIリソースの指定を取得.
             List<UriResource> resourcePaths = uriInfo.getUriResourceParts();

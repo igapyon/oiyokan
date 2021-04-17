@@ -27,8 +27,6 @@ import org.apache.olingo.commons.api.edm.provider.CsdlEntityType;
 import org.apache.olingo.server.api.ODataApplicationException;
 
 import jp.oiyokan.basic.OiyoBasicJdbcEntityTypeBuilder;
-import jp.oiyokan.common.OiyoInfo;
-import jp.oiyokan.common.OiyoInfoUtil;
 import jp.oiyokan.data.OiyokanKanDatabase;
 import jp.oiyokan.dto.OiyoSettingsDatabase;
 import jp.oiyokan.dto.OiyoSettingsEntitySet;
@@ -40,34 +38,9 @@ import jp.oiyokan.dto.OiyoSettingsEntitySet;
  */
 public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
     /**
-     * OiyokanSettings を singleton に記憶.
-     */
-    private static volatile OiyoInfo oiyoInfo = null;
-
-    /**
      * CsdlEntityType をすでに取得済みであればそれをキャッシュとして利用.
      */
     private Map<String, CsdlEntityType> cachedCsdlEntityTypeMap = new HashMap<>();
-
-    /**
-     * OiyoInfo (OiyokanSettings 設定情報を含む) を singleton に取得.
-     * 
-     * このパッケージからのみアクセスを許容。
-     * 
-     * @return OiyoInfo OiyokanSettings instanceを含む. 参照のみで利用.
-     * @throws ODataApplicationException ODataアプリ例外が発生した場合.
-     */
-    static synchronized OiyoInfo getOiyoInfoInstance() throws ODataApplicationException {
-        // singleton by static synchronized.
-        if (oiyoInfo == null) {
-            final OiyoInfo wrk = new OiyoInfo();
-            wrk.setSettings(OiyoInfoUtil.loadOiyokanSettings());
-            // ロードが終わってから変数に値をセット。念には念を)
-            oiyoInfo = wrk;
-        }
-
-        return oiyoInfo;
-    }
 
     /**
      * このコンテナをビルドし、紐づくエンティティセットをここで生成. このクラスの利用者は、機能呼び出し前にこのメソッドを呼ぶこと.
@@ -77,11 +50,8 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
     public void ensureBuild() throws ODataApplicationException {
-        // OiyoInfo の singleton を確実にインスタンス化.
-        getOiyoInfoInstance();
-
         if (getName() == null) {
-            setName(OiyokanCsdlEntityContainer.getOiyoInfoInstance().getSettings().getContainerName());
+            setName(OiyokanEdmProvider.getOiyoInfoInstance().getSettings().getContainerName());
         }
         if (getEntitySets() == null) {
             setEntitySets(new ArrayList<CsdlEntitySet>());
@@ -94,7 +64,8 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
                 return;
             }
 
-            for (OiyoSettingsDatabase settingsDatabase : getOiyoInfoInstance().getSettings().getDatabase()) {
+            for (OiyoSettingsDatabase settingsDatabase : OiyokanEdmProvider.getOiyoInfoInstance().getSettings()
+                    .getDatabase()) {
                 if (OiyokanConstants.IS_TRACE_ODATA_V4)
                     System.err.println("OData v4: Check JDBC Driver: " + settingsDatabase.getJdbcDriver());
                 try {
@@ -122,12 +93,14 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
             }
 
             // Oiyokan が動作する際に必要になる内部データベースのバージョン情報および Oiyo info をセットアップ.
-            OiyokanKanDatabase.setupKanDatabase(oiyoInfo);
+            OiyokanKanDatabase.setupKanDatabase(OiyokanEdmProvider.getOiyoInfoInstance());
 
             // TODO FIXME ここが設定としての EntitySet をロードして設定しているところ。ここを見直したい。
-            for (OiyoSettingsEntitySet entitySet : getOiyoInfoInstance().getSettings().getEntitySet()) {
+            for (OiyoSettingsEntitySet entitySet : OiyokanEdmProvider.getOiyoInfoInstance().getSettings()
+                    .getEntitySet()) {
                 // EntitySet の初期セットを実施。
-                getEntitySets().add(new OiyokanCsdlEntitySet(oiyoInfo, this, entitySet));
+                getEntitySets()
+                        .add(new OiyokanCsdlEntitySet(OiyokanEdmProvider.getOiyoInfoInstance(), this, entitySet));
             }
         }
     }
@@ -140,7 +113,7 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
      * @deprecated
      */
     public String getNamespaceIyo() throws ODataApplicationException {
-        return getOiyoInfoInstance().getSettings().getNamespace();
+        return OiyokanEdmProvider.getOiyoInfoInstance().getSettings().getNamespace();
     }
 
     /**
@@ -151,7 +124,8 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
      * @deprecated
      */
     public FullQualifiedName getContainerFqnIyo() throws ODataApplicationException {
-        return new FullQualifiedName(getNamespaceIyo(), getOiyoInfoInstance().getSettings().getContainerName());
+        return new FullQualifiedName(getNamespaceIyo(),
+                OiyokanEdmProvider.getOiyoInfoInstance().getSettings().getContainerName());
     }
 
     /**
@@ -193,7 +167,7 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
         }
 
         OiyoSettingsEntitySet entitySet = null;
-        for (OiyoSettingsEntitySet lookup : oiyoInfo.getSettings().getEntitySet()) {
+        for (OiyoSettingsEntitySet lookup : OiyokanEdmProvider.getOiyoInfoInstance().getSettings().getEntitySet()) {
             if (entityTypeName.getName().equals(lookup.getEntityType().getName())) {
                 entitySet = lookup;
             }
@@ -207,7 +181,8 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
 
         // 処理したことのない EntityType。これから型情報を構築。
         // 内部データベースをもとに Oiyo形式を構築するため、リソースの型によらず常に以下のクラスで処理.
-        OiyoBasicJdbcEntityTypeBuilder entityTypeBuilder = new OiyoBasicJdbcEntityTypeBuilder(oiyoInfo, entitySet);
+        OiyoBasicJdbcEntityTypeBuilder entityTypeBuilder = new OiyoBasicJdbcEntityTypeBuilder(
+                OiyokanEdmProvider.getOiyoInfoInstance(), entitySet);
 
         // キャッシュに記憶.
         CsdlEntityType newEntityType = entityTypeBuilder.getEntityType();

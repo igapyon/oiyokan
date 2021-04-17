@@ -30,6 +30,7 @@ import org.apache.olingo.commons.api.edm.provider.CsdlSchema;
 import org.apache.olingo.server.api.ODataApplicationException;
 
 import jp.oiyokan.common.OiyoInfo;
+import jp.oiyokan.common.OiyoInfoUtil;
 
 /**
  * Oiyokan による CSDL (Common Schema Definition Language) 実装.
@@ -45,9 +46,36 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
     private static final boolean IS_DEBUG = false;
 
     /**
+     * OiyokanSettings を singleton に記憶.
+     */
+    private static volatile OiyoInfo oiyoInfo = null;
+
+    /**
      * Oiyokan実装のキモ。シングルトンなコンテナ.
+     * 
+     * @deprecated これやめたい。
      */
     private static final OiyokanCsdlEntityContainer localTemplateEntityContainer = new OiyokanCsdlEntityContainer();
+
+    /**
+     * OiyoInfo (OiyokanSettings 設定情報を含む) を singleton に取得.
+     * 
+     * このパッケージからのみアクセスを許容。
+     * 
+     * @return OiyoInfo OiyokanSettings instanceを含む. 参照のみで利用.
+     * @throws ODataApplicationException ODataアプリ例外が発生した場合.
+     */
+    static synchronized OiyoInfo getOiyoInfoInstance() throws ODataApplicationException {
+        // singleton by static synchronized.
+        if (oiyoInfo == null) {
+            final OiyoInfo wrk = new OiyoInfo();
+            wrk.setSettings(OiyoInfoUtil.loadOiyokanSettings());
+            // ロードが終わってから変数に値をセット。念には念を)
+            oiyoInfo = wrk;
+        }
+
+        return oiyoInfo;
+    }
 
     /**
      * 与えられた型名のEntityTypeを取得.
@@ -152,7 +180,7 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
             localTemplateEntityContainer.ensureBuild();
 
             // シングルトンな OiyoInfo を利用。
-            final OiyoInfo oiyoInfo = OiyokanCsdlEntityContainer.getOiyoInfoInstance();
+            final OiyoInfo oiyoInfo = getOiyoInfoInstance();
 
             // CSDLスキーマを作成.
             final CsdlSchema newSchema = new CsdlSchema();
@@ -200,7 +228,7 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
             localTemplateEntityContainer.ensureBuild();
 
             // シングルトンな OiyoInfo を利用。
-            final OiyoInfo oiyoInfo = OiyokanCsdlEntityContainer.getOiyoInfoInstance();
+            final OiyoInfo oiyoInfo = getOiyoInfoInstance();
             final FullQualifiedName fqn = new FullQualifiedName(oiyoInfo.getSettings().getNamespace(),
                     oiyoInfo.getSettings().getContainerName());
 
