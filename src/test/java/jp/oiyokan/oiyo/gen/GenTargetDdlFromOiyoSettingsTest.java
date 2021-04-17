@@ -38,7 +38,7 @@ class GenTargetDdlFromOiyoSettingsTest {
     @Test
     void test01() throws Exception {
         new File("./target/").mkdirs();
-        final File existJsonFile = new File("./target/auto-generated-oiyokan-settings.json");
+        final File existJsonFile = new File("./target/generated-oiyokan/auto-generated-oiyokan-settings.json");
         if (!existJsonFile.exists()) {
             return;
         }
@@ -114,7 +114,7 @@ class GenTargetDdlFromOiyoSettingsTest {
             sql.append("\n");
         }
 
-        final File generateFile = new File("./target/auto-generated-targetddl.sql");
+        final File generateFile = new File("./target/generated-oiyokan/auto-generated-targetddl.sql");
         FileUtils.writeStringToFile(generateFile, sql.toString(), "UTF-8");
         System.err.println("sample oiyokan create ddl file generated: " + generateFile.getCanonicalPath());
     }

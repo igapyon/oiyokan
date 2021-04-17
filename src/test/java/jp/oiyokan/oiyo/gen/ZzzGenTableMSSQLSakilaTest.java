@@ -17,10 +17,6 @@ package jp.oiyokan.oiyo.gen;
 
 import java.sql.Connection;
 
-import org.junit.jupiter.api.Test;
-
-import jp.oiyokan.OiyokanConstants;
-import jp.oiyokan.OiyokanTestSettingConstants;
 import jp.oiyokan.basic.OiyoBasicJdbcUtil;
 import jp.oiyokan.data.OiyokanKanDatabase;
 import jp.oiyokan.dto.OiyoSettingsDatabase;
@@ -29,25 +25,18 @@ import jp.oiyokan.settings.OiyoSettingsUtil;
 /**
  * 内部データベース用のCSDL用内部テーブルのDDLをコマンドライン生成.
  */
-class GenTableODataTest1Test {
+class ZzzGenTableMSSQLSakilaTest {
     /**
-     * ODataTest1 のための Oiyo DDL を生成.
+     * SQL Server 接続環境が適切に存在する場合にのみ実行可能。
      * 
-     * カバレッジ目的で、以下のテストは常に動作させる。
+     * Oiyoテーブルのスキーマを取得したい場合にのみ JUnit を実行する。
      */
-    @Test
+    // @Test
     void test01() throws Exception {
-        if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
-            return;
-
-        OiyoSettingsDatabase settingsDatabase = OiyoSettingsUtil
-                .getOiyokanDatabase(OiyokanConstants.OIYOKAN_UNITTEST_DB);
+        OiyoSettingsDatabase settingsDatabase = OiyoSettingsUtil.getOiyokanDatabase("mssql1");
 
         try (Connection connTargetDb = OiyoBasicJdbcUtil.getConnection(settingsDatabase)) {
-            // 内部データベースのテーブルをセットアップ.
-            OiyokanKanDatabase.setupKanDatabase();
-
-            System.err.println(OiyokanKanDatabase.generateCreateOiyoDdl(connTargetDb, "ODataTest1"));
+            System.err.println(OiyokanKanDatabase.generateCreateOiyoDdl(connTargetDb, "actor"));
 
         }
     }
