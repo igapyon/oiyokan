@@ -26,6 +26,13 @@ import jp.oiyokan.OiyokanMessages;
  * JDBCの超基本ユーティリティ
  */
 public class OiyoJdbcUtil {
+    /**
+     * 与えられた java.sql.Types を文字列に変換.
+     * 
+     * @param types Value of java.sql.Types.
+     * @return String java.sql.Types.
+     * @throws ODataApplicationException OData app exception occured.
+     */
     public static String types2String(final int types) throws ODataApplicationException {
         switch (types) {
         case Types.BIT: // -7
