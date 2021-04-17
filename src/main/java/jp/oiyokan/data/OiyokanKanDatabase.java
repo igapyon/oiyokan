@@ -397,7 +397,7 @@ public class OiyokanKanDatabase {
                     SingletonPrimitiveType edmType = OiyoMapJdbcEdmUtil.jdbcTypes2Edm(jdbcTypes);
                     property.setEdmType(OiyoEdmUtil.edmType2String(edmType));
                 } catch (IllegalArgumentException ex) {
-                    property.setEdmType("UNKNOWN:");
+                    property.setEdmType("NOT.SUPPORTED");
                 }
                 switch (rsmeta.getColumnType(column)) {
                 case Types.DECIMAL:
