@@ -1,5 +1,7 @@
 # How to set `oiyokan-settings.json`
 
+`oiyokan-settings.json` is an important settings file to control Oiyokan.
+
 ## `oiyokan-settings.json` location
 
 ```sh
