@@ -1,4 +1,4 @@
-# How to set `oiyokan-settings.json` 
+# How to set `oiyokan-settings.json`
 
 ## `oiyokan-settings.json` location
 
@@ -12,96 +12,66 @@ src/main/resources/iyokan/oiyokan-settings.json
 
 ファイルはJSONで記述する。
 
-### 
+### セクション
 
-  "namespace": "Oiyokan",
-  "containerName": "Container",
-  "database": [
-entitySet
+`oiyokan-settings.json` は、container section, database section, entitySet section の 3 main section から成り立ちます。
 
 
-{
-  "namespace": "Oiyokan",
-  "containerName": "Container",
-  "database": [
-    {
-      "name": "oiyokanKan",
-      "type": "h2",
-      "description": "Oiyokan internal DB. Do not change.",
-      "jdbcDriver": "org.h2.Driver",
-      "jdbcUrl": "jdbc:h2:mem:oiyokan;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=FALSE;MODE=MSSQLServer",
-      "jdbcUser": "sa",
-      "jdbcPass": ""
-    },
-    {
-      "name": "oiyoUnitTestDb",
-      "type": "h2",
-      "description": "Oiyokan internal Target Test DB. Used for build unit test.",
-      "jdbcDriver": "org.h2.Driver",
-      "jdbcUrl": "jdbc:h2:file:./src/main/resources/db/oiyokan-internal;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=FALSE;MODE=MSSQLServer",
-      "jdbcUser": "sa",
-      "jdbcPass": ""
-    },
-    {
-      "name": "postgres1",
-      "type": "postgres",
-      "description": "Sample postgres settings. Change the settings to suit your environment.",
-      "jdbcDriver": "org.postgresql.Driver",
-      "jdbcUrl": "jdbc:postgresql://localhost:5432/dvdrental",
-      "jdbcUser": "",
-      "jdbcPass": ""
-    },
-    {
-      "name": "mysql1",
-      "type": "MySQL",
-      "description": "Sample MySQL settings. Change the settings to suit your environment.",
-      "jdbcDriver": "com.mysql.jdbc.Driver",
-      "jdbcUrl": "jdbc:mysql://localhost/mysql?useUnicode=true&characterEncoding=UTF-8&characterSetResults=UTF-8&useCursorFetch=true&defaultFetchSize=128&useServerPrepStmts=true&emulateUnsupportedPstmts=false",
-      "jdbcUser": "root",
-      "jdbcPass": "passwd123"
-    },
-    {
-      "name": "mysql2",
-      "type": "MySQL",
-      "description": "Sample MySQL settings for Sakila. Change the settings to suit your environment.",
-      "jdbcDriver": "com.mysql.jdbc.Driver",
-      "jdbcUrl": "jdbc:mysql://localhost/sakila?useUnicode=true&characterEncoding=UTF-8&characterSetResults=UTF-8&useCursorFetch=true&defaultFetchSize=128&useServerPrepStmts=true&emulateUnsupportedPstmts=false",
-      "jdbcUser": "root",
-      "jdbcPass": "passwd123"
-    },
-    {
-      "name": "mssql1",
-      "type": "MSSQL2008",
-      "description": "Sample MS SQL Server 2008 settings. Change the settings to suit your environment.",
-      "jdbcDriver": "com.microsoft.sqlserver.jdbc.SQLServerDriver",
-      "jdbcUrl": "jdbc:sqlserver://localhost\\SQLExpress;SelectMethod=cursor",
-      "jdbcUser": "sa",
-      "jdbcPass": "passwd123"
-    },
-    {
-      "name": "oracle1",
-      "type": "ORACLE",
-      "description": "Sample Oracle XE (18c) settings. Change the settings to suit your environment.",
-      "jdbcDriver": "oracle.jdbc.driver.OracleDriver",
-      "jdbcUrl": "jdbc:oracle:thin:@10.0.2.15:1521/xepdb1",
-      "jdbcUser": "orauser",
-      "jdbcPass": "passwd123"
-    }
-  ],
-  "entitySet": [
-    {
-      "name": "Oiyokans",
-      "description": "Oiyokan internal info. Do not change.",
-      "dbSettingName": "oiyokanKan",
-      "canCreate": true,
-      "canRead": true,
-      "canUpdate": true,
-      "canDelete": true,
-      "omitCountAll": false,
-      "entityType": {
-        "name": "Oiyokan",
-        "dbName": "Oiyokan",
-        "keyName": ["KeyName"],
+#### container section
+
+| key            | description                      |
+| -------------- | -------------------------------- |
+| namespace      | namespace name like `Oiyokan`    |
+| containerName  | container name like `Container`  |
 
 
+#### database section
+
+| key            | description                                                       |
+| -------------- | ----------------------------------------------------------------- |
+| name           | database setting name. ex `oiyokanKan`                            |
+| type           | `h2`, xxxx                                                        |
+| description    | description of this database                                      |
+| jdbcDriver     | class name of JDBC driver. ex: `org.h2.Driver`                    |
+| jdbcUrl        | JDBC url to connect. ex: `jdbc:h2:mem:oiyokan;DB_CLOSE_DELAY=-1;` |
+| jdbcUser       | JDBC user name.                                                   |
+| jdbcPass       | JDBC password                                                     |
+
+#### entitySet section
+
+| key            | description                                                       |
+| -------------- | ----------------------------------------------------------------- |
+| name           | Name of EntitySet                                                 |
+| description    | description of this EntitySet                                     |
+| dbSettingName  | Name of database setting                                          |
+| canCreate      | CRUD authz. Default true.                                         |
+| canRead        | CRUD authz. Only true supported. Default true.                    |
+| canUpdate      | CRUD authz. Default true.                                         |
+| canDelete      | CRUD authz. Default true.                                         |
+| omitCountAll   | Ignore $count in the case of NO conditional query. Default false. |
+| entityType     | List of EntityType.                                               |
+
+#### entityType - sub section
+
+| key            | description                                                       |
+| -------------- | ----------------------------------------------------------------- |
+| name           | Name of EntityType                                                |
+| dbName         | Table name on Database                                            |
+| keyName        | Array of key property name.                                       |
+| property       | Array of property.                                                |
+
+#### property - sub sub section
+
+| key            | description                                                       |
+| -------------- | ----------------------------------------------------------------- |
+| name           | Name of Property                                                  |
+| dbName         | Column name on Database. ex: `Types.VARCHAR`                      |
+| edmType        | Column name on Database. ex: `Edm.String`                         |
+| dbType         | Type name on Database. ex: `VARCHAR`                              |
+| jdbcSetMethod  | Hint method name of JDBC API. ex: `setString`                     |
+| nullable       | true:Nullable, false:NOT NULL, null:Unknown                       |
+| maxLength      | Length of string                                                  |
+| lengthFixed    | for CHAR                                                          |
+| precision      | precision of decimal.                                             |
+| scale          | scale of decimal.                                                 |
 
