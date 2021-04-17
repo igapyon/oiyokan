@@ -27,7 +27,6 @@ import org.apache.olingo.server.core.uri.queryoption.FilterOptionImpl;
 import org.apache.olingo.server.core.uri.queryoption.expression.MemberImpl;
 
 import jp.oiyokan.OiyokanConstants;
-import jp.oiyokan.OiyokanCsdlEntitySet;
 import jp.oiyokan.basic.OiyoBasicJdbcUtil;
 import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.common.OiyoInfoUtil;
@@ -60,7 +59,7 @@ public class OiyoSqlQueryListBuilder {
         return sqlInfo;
     }
 
-    public OiyoSqlQueryListBuilder(OiyoInfo oiyoInfo, String entitySetName, OiyokanCsdlEntitySet csdlEntitySet) {
+    public OiyoSqlQueryListBuilder(OiyoInfo oiyoInfo, String entitySetName) {
         this.oiyoInfo = oiyoInfo;
         this.entitySetName = entitySetName;
         this.sqlInfo = new OiyoSqlInfo(oiyoInfo, entitySetName);

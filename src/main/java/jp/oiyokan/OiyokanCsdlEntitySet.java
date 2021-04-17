@@ -30,6 +30,7 @@ import jp.oiyokan.dto.OiyoSettingsEntitySet;
  * Oiyokan の CsdlEntitySet 実装.
  * 
  * TODO FIXME このクラス自体の存在を消したい。
+ * @deprecated
  */
 public class OiyokanCsdlEntitySet extends CsdlEntitySet {
 
