@@ -128,8 +128,14 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
             // テンプレートを念押しビルド.
             localTemplateEntityContainer.ensureBuild();
 
+            // シングルトンな OiyoInfo を利用。
+            final OiyoInfo oiyoInfo = getOiyoInfoInstance();
+
+            final FullQualifiedName fqn = new FullQualifiedName(oiyoInfo.getSettings().getNamespace(),
+                    oiyoInfo.getSettings().getContainerName());
+
             // コンテナが一致する場合のみ処理対象.
-            if (!entityContainer.equals(localTemplateEntityContainer.getContainerFqnIyo())) {
+            if (!entityContainer.equals(fqn)) {
                 return null;
             }
 
