@@ -263,33 +263,34 @@ public class OiyoBasicJdbcUtil {
             throw new ODataApplicationException(OiyokanMessages.M034 + ": colname:" + rsmeta.getColumnName(column)
                     + ", propname(should):" + propName, 500, Locale.ENGLISH);
         }
-        if ("Edm.SByte".equals(csdlProp.getType())) {
+        final EdmPrimitiveType edmType = OiyoEdmUtil.string2EdmType(csdlProp.getType());
+        if (EdmSByte.getInstance() == edmType) {
             return new Property("Edm.SByte", propName, ValueType.PRIMITIVE, rset.getByte(column));
-        } else if ("Edm.Byte".equals(csdlProp.getType())) {
+        } else if (EdmByte.getInstance() == edmType) {
             // 符号なしのバイト. h2 database には該当なし.
             // Edm.Byteに相当する型がJavaにないので Shortで代替.
             return new Property("Edm.Byte", propName, ValueType.PRIMITIVE, rset.getShort(column));
-        } else if ("Edm.Int16".equals(csdlProp.getType())) {
+        } else if (EdmInt16.getInstance() == edmType) {
             return new Property("Edm.Int16", propName, ValueType.PRIMITIVE, rset.getShort(column));
-        } else if ("Edm.Int32".equals(csdlProp.getType())) {
+        } else if (EdmInt32.getInstance() == edmType) {
             return new Property("Edm.Int32", propName, ValueType.PRIMITIVE, rset.getInt(column));
-        } else if ("Edm.Int64".equals(csdlProp.getType())) {
+        } else if (EdmInt64.getInstance() == edmType) {
             return new Property("Edm.Int64", propName, ValueType.PRIMITIVE, rset.getLong(column));
-        } else if ("Edm.Decimal".equals(csdlProp.getType())) {
+        } else if (EdmDecimal.getInstance() == edmType) {
             return new Property("Edm.Decimal", propName, ValueType.PRIMITIVE, rset.getBigDecimal(column));
-        } else if ("Edm.Boolean".equals(csdlProp.getType())) {
+        } else if (EdmBoolean.getInstance() == edmType) {
             return new Property("Edm.Boolean", propName, ValueType.PRIMITIVE, rset.getBoolean(column));
-        } else if ("Edm.Single".equals(csdlProp.getType())) {
+        } else if (EdmSingle.getInstance() == edmType) {
             return new Property("Edm.Single", propName, ValueType.PRIMITIVE, rset.getFloat(column));
-        } else if ("Edm.Double".equals(csdlProp.getType())) {
+        } else if (EdmDouble.getInstance() == edmType) {
             return new Property("Edm.Double", propName, ValueType.PRIMITIVE, rset.getDouble(column));
-        } else if ("Edm.Date".equals(csdlProp.getType())) {
+        } else if (EdmDate.getInstance() == edmType) {
             return new Property("Edm.Date", propName, ValueType.PRIMITIVE, rset.getDate(column));
-        } else if ("Edm.DateTimeOffset".equals(csdlProp.getType())) {
+        } else if (EdmDateTimeOffset.getInstance() == edmType) {
             return new Property("Edm.DateTimeOffset", propName, ValueType.PRIMITIVE, rset.getTimestamp(column));
-        } else if ("Edm.TimeOfDay".equals(csdlProp.getType())) {
+        } else if (EdmTimeOfDay.getInstance() == edmType) {
             return new Property("Edm.TimeOfDay", propName, ValueType.PRIMITIVE, rset.getTime(column));
-        } else if ("Edm.String".equals(csdlProp.getType())) {
+        } else if (EdmString.getInstance() == edmType) {
             // 基本的に CSDL で処理するが、やむを得ない場所のみ ResultSetMetaData を利用する
             // TODO FIXME ただしこれは事前に CSDL に記憶可能。
             if (Types.CLOB == rsmeta.getColumnType(column)) {
@@ -306,7 +307,7 @@ public class OiyoBasicJdbcUtil {
             } else {
                 return new Property("Edm.String", propName, ValueType.PRIMITIVE, rset.getString(column));
             }
-        } else if ("Edm.Binary".equals(csdlProp.getType())) {
+        } else if (EdmBinary.getInstance() == edmType) {
             try {
                 return new Property("Edm.Binary", propName, ValueType.PRIMITIVE,
                         StreamUtils.copyToByteArray(rset.getBinaryStream(column)));
@@ -316,7 +317,7 @@ public class OiyoBasicJdbcUtil {
                 throw new ODataApplicationException(OiyokanMessages.M008 + ": " + rsmeta.getColumnName(column), //
                         500, Locale.ENGLISH);
             }
-        } else if ("Edm.Guid".equals(csdlProp.getType())) {
+        } else if (EdmGuid.getInstance() == edmType) {
             // Guid については UUID として読み込む。
             final Object obj = rset.getObject(column);
             if (obj == null) {
