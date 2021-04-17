@@ -64,7 +64,7 @@ public class OiyoSqlQueryListBuilder {
     public OiyoSqlQueryListBuilder(OiyoInfo oiyoInfo, String entitySetName, OiyokanCsdlEntitySet entitySet) {
         this.oiyoInfo = oiyoInfo;
         this.entitySetName = entitySetName;
-        this.sqlInfo = new OiyoSqlInfo(oiyoInfo, entitySetName, entitySet);
+        this.sqlInfo = new OiyoSqlInfo(oiyoInfo, entitySetName);
     }
 
     /**
