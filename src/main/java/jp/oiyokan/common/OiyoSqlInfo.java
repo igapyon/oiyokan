@@ -18,11 +18,6 @@ package jp.oiyokan.common;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.olingo.server.api.ODataApplicationException;
-
-import jp.oiyokan.OiyokanCsdlEntitySet;
-import jp.oiyokan.dto.OiyoSettingsDatabase;
-
 /**
  * SQL文を構築するための簡易クラスの、SQL構築のデータ構造.
  * 
@@ -38,20 +33,18 @@ public class OiyoSqlInfo {
 
     private String entitySetName;
 
-    private OiyokanCsdlEntitySet entitySet = null;
-
     private final StringBuilder sqlBuilder = new StringBuilder();
     private final List<Object> sqlParamList = new ArrayList<>();
 
     /**
      * BasicSqlInfo Constructor.
      * 
-     * @param entitySet EntitySet instance.
+     * @param oiyoInfo      OiyoInfo instance.
+     * @param entitySetName EntitySet name.
      */
-    public OiyoSqlInfo(OiyoInfo oiyoInfo, String entitySetName, OiyokanCsdlEntitySet entitySet) {
+    public OiyoSqlInfo(OiyoInfo oiyoInfo, String entitySetName) {
         this.oiyoInfo = oiyoInfo;
         this.entitySetName = entitySetName;
-        this.entitySet = entitySet;
     }
 
     public OiyoInfo getOiyoInfo() {
@@ -78,16 +71,5 @@ public class OiyoSqlInfo {
      */
     public List<Object> getSqlParamList() {
         return sqlParamList;
-    }
-
-    /**
-     * このSQLがひもづく OiyokanSettingsDatabase を取得.
-     * 
-     * @return OiyokanSettingsDatabase インスタンス.
-     * @throws ODataApplicationException ODataアプリ例外が発生.
-     * @deprecated これの利用が減るようにしたい。
-     */
-    public OiyoSettingsDatabase getSettingsDatabase() throws ODataApplicationException {
-        return entitySet.getSettingsDatabase(oiyoInfo);
     }
 }
