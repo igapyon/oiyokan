@@ -49,7 +49,6 @@ import org.apache.olingo.commons.core.edm.primitivetype.EdmSingle;
 import org.apache.olingo.commons.core.edm.primitivetype.EdmStream;
 import org.apache.olingo.commons.core.edm.primitivetype.EdmString;
 import org.apache.olingo.commons.core.edm.primitivetype.EdmTimeOfDay;
-import org.apache.olingo.commons.core.edm.primitivetype.SingletonPrimitiveType;
 
 import jp.oiyokan.OiyokanMessages;
 
@@ -63,7 +62,7 @@ public class OiyoEdmUtil {
      * @param edmType `Edm.Binary` などの文字列表現。
      * @return シングルトンなプリミティブ型。
      */
-    public static SingletonPrimitiveType string2EdmType(String edmType) {
+    public static EdmPrimitiveType string2EdmType(String edmType) {
         if ("Edm.Binary".equals(edmType)) {
             return EdmBinary.getInstance();
         }

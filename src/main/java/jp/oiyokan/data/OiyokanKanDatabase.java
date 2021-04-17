@@ -27,7 +27,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import org.apache.olingo.commons.core.edm.primitivetype.SingletonPrimitiveType;
+import org.apache.olingo.commons.api.edm.EdmPrimitiveType;
 import org.apache.olingo.server.api.ODataApplicationException;
 
 import jp.oiyokan.OiyokanConstants;
@@ -394,7 +394,7 @@ public class OiyokanKanDatabase {
                 final int jdbcTypes = rsmeta.getColumnType(column);
                 property.setJdbcType(OiyoJdbcUtil.types2String(jdbcTypes));
                 try {
-                    SingletonPrimitiveType edmType = OiyoMapJdbcEdmUtil.jdbcTypes2Edm(jdbcTypes);
+                    EdmPrimitiveType edmType = OiyoMapJdbcEdmUtil.jdbcTypes2Edm(jdbcTypes);
                     property.setEdmType(OiyoEdmUtil.edmType2String(edmType));
                 } catch (IllegalArgumentException ex) {
                     property.setEdmType("NOT.SUPPORTED");
