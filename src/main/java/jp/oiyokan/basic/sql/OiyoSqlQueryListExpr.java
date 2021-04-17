@@ -38,7 +38,6 @@ import jp.oiyokan.basic.OiyoBasicJdbcUtil;
 import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.common.OiyoInfoUtil;
 import jp.oiyokan.common.OiyoSqlInfo;
-import jp.oiyokan.dto.OiyoSettingsDatabase;
 import jp.oiyokan.dto.OiyoSettingsEntitySet;
 
 /**
@@ -280,9 +279,8 @@ public class OiyoSqlQueryListExpr {
      * @throws ODataApplicationException ODataアプリ例外が発生.
      */
     private void expandMethod(MethodImpl impl) throws ODataApplicationException {
-        final OiyoSettingsDatabase database = OiyoInfoUtil.getOiyoDatabaseByEntitySetName(sqlInfo.getOiyoInfo(),
-                sqlInfo.getEntitySetName());
-        final OiyokanConstants.DatabaseType databaseType = OiyokanConstants.DatabaseType.valueOf(database.getType());
+        final OiyokanConstants.DatabaseType databaseType = OiyoInfoUtil
+                .getOiyoDatabaseTypeByEntitySetName(sqlInfo.getOiyoInfo(), sqlInfo.getEntitySetName());
 
         // CONTAINS
         if (impl.getMethod() == MethodKind.CONTAINS) {

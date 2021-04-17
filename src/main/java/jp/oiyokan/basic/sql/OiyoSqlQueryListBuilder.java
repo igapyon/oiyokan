@@ -32,7 +32,6 @@ import jp.oiyokan.basic.OiyoBasicJdbcUtil;
 import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.common.OiyoInfoUtil;
 import jp.oiyokan.common.OiyoSqlInfo;
-import jp.oiyokan.dto.OiyoSettingsDatabase;
 import jp.oiyokan.dto.OiyoSettingsEntitySet;
 import jp.oiyokan.dto.OiyoSettingsProperty;
 
@@ -92,8 +91,6 @@ public class OiyoSqlQueryListBuilder {
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
     public void buildSelectQuery(UriInfo uriInfo) throws ODataApplicationException {
-        final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, entitySetName);
-
         sqlInfo.getSqlBuilder().append("SELECT ");
 
         expandSelect(uriInfo);
@@ -104,9 +101,8 @@ public class OiyoSqlQueryListBuilder {
         // 現状の実装では指定があろうがなかろうが件数はカウントする実装となっている.
         // TODO FIXME 現状でも常にカウントしているかどうか確認すること。
 
-        final OiyoSettingsDatabase database = OiyoInfoUtil.getOiyoDatabaseByEntitySetName(sqlInfo.getOiyoInfo(),
-                sqlInfo.getEntitySetName());
-        final OiyokanConstants.DatabaseType databaseType = OiyokanConstants.DatabaseType.valueOf(database.getType());
+        final OiyokanConstants.DatabaseType databaseType = OiyoInfoUtil
+                .getOiyoDatabaseTypeByEntitySetName(sqlInfo.getOiyoInfo(), sqlInfo.getEntitySetName());
 
         if (OiyokanConstants.DatabaseType.MSSQL2008 == databaseType //
                 || OiyokanConstants.DatabaseType.ORACLE == databaseType) {
@@ -216,9 +212,8 @@ public class OiyoSqlQueryListBuilder {
     private void expandFrom(UriInfo uriInfo) throws ODataApplicationException {
         final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, sqlInfo.getEntitySetName());
 
-        final OiyoSettingsDatabase database = OiyoInfoUtil.getOiyoDatabaseByEntitySetName(sqlInfo.getOiyoInfo(),
-                sqlInfo.getEntitySetName());
-        final OiyokanConstants.DatabaseType databaseType = OiyokanConstants.DatabaseType.valueOf(database.getType());
+        final OiyokanConstants.DatabaseType databaseType = OiyoInfoUtil
+                .getOiyoDatabaseTypeByEntitySetName(sqlInfo.getOiyoInfo(), sqlInfo.getEntitySetName());
 
         // 取得元のテーブル.
         switch (databaseType) {
@@ -318,9 +313,8 @@ public class OiyoSqlQueryListBuilder {
     }
 
     private void expandTopSkip(UriInfo uriInfo) throws ODataApplicationException {
-        final OiyoSettingsDatabase database = OiyoInfoUtil.getOiyoDatabaseByEntitySetName(sqlInfo.getOiyoInfo(),
-                sqlInfo.getEntitySetName());
-        final OiyokanConstants.DatabaseType databaseType = OiyokanConstants.DatabaseType.valueOf(database.getType());
+        final OiyokanConstants.DatabaseType databaseType = OiyoInfoUtil
+                .getOiyoDatabaseTypeByEntitySetName(sqlInfo.getOiyoInfo(), sqlInfo.getEntitySetName());
 
         if (OiyokanConstants.DatabaseType.MSSQL2008 != databaseType //
                 && OiyokanConstants.DatabaseType.ORACLE != databaseType) {

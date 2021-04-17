@@ -181,6 +181,8 @@ public class OiyoBasicJdbcEntityOneBuilder {
 
         final OiyoSettingsDatabase database = OiyoInfoUtil.getOiyoDatabaseByEntitySetName(oiyoInfo,
                 entitySet.getName());
+        final OiyokanConstants.DatabaseType databaseType = OiyoInfoUtil.getOiyoDatabaseTypeByEntitySetName(oiyoInfo,
+                entitySet.getName());
 
         // データベースに接続.
         boolean isTranSuccessed = false;
@@ -191,7 +193,7 @@ public class OiyoBasicJdbcEntityOneBuilder {
                 final List<String> generatedKeys = OiyoBasicJdbcUtil.executeDml(connTargetDb, sqlInfo, true);
                 // 生成されたキーをその後の処理に反映。
                 final List<UriParameter> keyPredicates = new ArrayList<>();
-                if (DatabaseType.ORACLE == DatabaseType.valueOf(database.getType())) {
+                if (DatabaseType.ORACLE == databaseType) {
                     // ORACLEの特殊ルール。ROWIDが戻るので決め打ちで検索.
                     final UriParameterImpl newParam = new UriParameterImpl();
                     newParam.setName("ROWID");

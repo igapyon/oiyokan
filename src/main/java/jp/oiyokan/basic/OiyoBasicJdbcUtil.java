@@ -725,10 +725,10 @@ public class OiyoBasicJdbcUtil {
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
     public static String escapeKakkoFieldName(OiyoSqlInfo sqlInfo, String fieldName) throws ODataApplicationException {
-        final OiyoSettingsDatabase database = OiyoInfoUtil.getOiyoDatabaseByEntitySetName(sqlInfo.getOiyoInfo(),
-                sqlInfo.getEntitySetName());
+        final OiyokanConstants.DatabaseType databaseType = OiyoInfoUtil
+                .getOiyoDatabaseTypeByEntitySetName(sqlInfo.getOiyoInfo(), sqlInfo.getEntitySetName());
 
-        return escapeKakkoFieldName(OiyokanConstants.DatabaseType.valueOf(database.getType()), fieldName);
+        return escapeKakkoFieldName(databaseType, fieldName);
     }
 
     public static String escapeKakkoFieldName(OiyokanConstants.DatabaseType databaseType, String fieldName)

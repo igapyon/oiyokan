@@ -97,6 +97,16 @@ public class OiyoInfoUtil {
         return getOiyoDatabaseByName(oiyoInfo, entitySet.getDbSettingName());
     }
 
+    public static OiyokanConstants.DatabaseType getOiyoDatabaseTypeByEntitySetName(OiyoInfo oiyoInfo,
+            String entitySetName) throws ODataApplicationException {
+        final OiyoSettingsEntitySet entitySet = getOiyoEntitySet(oiyoInfo, entitySetName);
+
+        // TODO FIXME エラーメッセージ処理。
+        OiyoSettingsDatabase database = getOiyoDatabaseByName(oiyoInfo, entitySet.getDbSettingName());
+
+        return OiyokanConstants.DatabaseType.valueOf(database.getType());
+    }
+
     public static OiyoSettingsEntitySet getOiyoEntitySet(OiyoInfo oiyoInfo, String entitySetName)
             throws ODataApplicationException {
         if (entitySetName == null) {
@@ -129,7 +139,7 @@ public class OiyoInfoUtil {
         }
 
         new Exception("ここはどこ").printStackTrace();
-        
+
         // [M040] UNEXPECTED: EntitySet Property settings NOT found.
         System.err.println(OiyokanMessages.M040 + ": entitySet:" + entitySetName + ", property:" + propertyName);
         throw new ODataApplicationException(
