@@ -39,7 +39,7 @@ public class OiyoJdbcUtil {
         case Types.SMALLINT: // 5
             return "Types.SMALLINT";
         case Types.INTEGER: // 4
-            return "Types.INT";
+            return "Types.INTEGER";
         case Types.BIGINT: // -5
             return "Types.BIGINT";
         case Types.FLOAT: // 6
