@@ -60,7 +60,7 @@ public class OiyoSqlQueryListBuilder {
         return sqlInfo;
     }
 
-    public OiyoSqlQueryListBuilder(OiyoInfo oiyoInfo, String entitySetName, OiyokanCsdlEntitySet entitySet) {
+    public OiyoSqlQueryListBuilder(OiyoInfo oiyoInfo, String entitySetName, OiyokanCsdlEntitySet csdlEntitySet) {
         this.oiyoInfo = oiyoInfo;
         this.entitySetName = entitySetName;
         this.sqlInfo = new OiyoSqlInfo(oiyoInfo, entitySetName);

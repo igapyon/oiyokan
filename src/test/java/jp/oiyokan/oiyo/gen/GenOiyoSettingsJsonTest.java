@@ -259,25 +259,25 @@ class GenOiyoSettingsJsonTest {
             }
 
             if (true) {
-                OiyoSettingsEntitySet eset = new OiyoSettingsEntitySet();
-                oiyoSettings.getEntitySet().add(eset);
-                eset.setName("Oiyokans");
-                eset.setDescription("Oiyokan internal info. Do not change.");
-                eset.setDbSettingName("oiyokanKan");
-                eset.setCanCreate(false);
-                eset.setCanRead(true);
-                eset.setCanUpdate(false);
-                eset.setCanDelete(false);
-                eset.setOmitCountAll(true);
-                eset.setEntityType(new OiyoSettingsEntityType());
-                eset.getEntityType().setName("Oiyokan");
-                eset.getEntityType().setDbName("Oiyokan");
-                eset.getEntityType().setKeyName(new ArrayList<>());
-                eset.getEntityType().getKeyName().add("KeyName");
-                eset.getEntityType().setProperty(new ArrayList<>());
+                OiyoSettingsEntitySet entitySet = new OiyoSettingsEntitySet();
+                oiyoSettings.getEntitySet().add(entitySet);
+                entitySet.setName("Oiyokans");
+                entitySet.setDescription("Oiyokan internal info. Do not change.");
+                entitySet.setDbSettingName("oiyokanKan");
+                entitySet.setCanCreate(false);
+                entitySet.setCanRead(true);
+                entitySet.setCanUpdate(false);
+                entitySet.setCanDelete(false);
+                entitySet.setOmitCountAll(true);
+                entitySet.setEntityType(new OiyoSettingsEntityType());
+                entitySet.getEntityType().setName("Oiyokan");
+                entitySet.getEntityType().setDbName("Oiyokan");
+                entitySet.getEntityType().setKeyName(new ArrayList<>());
+                entitySet.getEntityType().getKeyName().add("KeyName");
+                entitySet.getEntityType().setProperty(new ArrayList<>());
 
                 OiyoSettingsProperty prop = new OiyoSettingsProperty();
-                eset.getEntityType().getProperty().add(prop);
+                entitySet.getEntityType().getProperty().add(prop);
                 prop.setName("KeyName");
                 prop.setDbName("KeyName");
                 prop.setEdmType("Edm.String");
@@ -291,7 +291,7 @@ class GenOiyoSettingsJsonTest {
                 prop.setScale(null);
 
                 prop = new OiyoSettingsProperty();
-                eset.getEntityType().getProperty().add(prop);
+                entitySet.getEntityType().getProperty().add(prop);
                 prop.setName("KeyValue");
                 prop.setDbName("KeyValue");
                 prop.setEdmType("Edm.String");
@@ -311,98 +311,98 @@ class GenOiyoSettingsJsonTest {
                         OiyokanConstants.DatabaseType.valueOf(settingsDatabase.getType())));
             }
 
-            for (OiyoSettingsEntitySet iyoEntitySet : oiyoSettings.getEntitySet()) {
-                if ("ODataTest1".equals(iyoEntitySet.getEntityType().getDbName())) {
-                    iyoEntitySet.setName("ODataTests1");
+            for (OiyoSettingsEntitySet entitySet : oiyoSettings.getEntitySet()) {
+                if ("ODataTest1".equals(entitySet.getEntityType().getDbName())) {
+                    entitySet.setName("ODataTests1");
                 }
-                if ("ODataTest2".equals(iyoEntitySet.getEntityType().getDbName())) {
-                    iyoEntitySet.setName("ODataTests2");
+                if ("ODataTest2".equals(entitySet.getEntityType().getDbName())) {
+                    entitySet.setName("ODataTests2");
                 }
-                if ("ODataTest3".equals(iyoEntitySet.getEntityType().getDbName())) {
-                    iyoEntitySet.setName("ODataTests3");
+                if ("ODataTest3".equals(entitySet.getEntityType().getDbName())) {
+                    entitySet.setName("ODataTests3");
                 }
-                if ("OData Test4".equals(iyoEntitySet.getEntityType().getDbName())) {
-                    iyoEntitySet.setName("ODataTests4");
-                    iyoEntitySet.getEntityType().setName("ODataTest4");
+                if ("OData Test4".equals(entitySet.getEntityType().getDbName())) {
+                    entitySet.setName("ODataTests4");
+                    entitySet.getEntityType().setName("ODataTest4");
                 }
-                if ("ODataTest5".equals(iyoEntitySet.getEntityType().getDbName())) {
-                    iyoEntitySet.setName("ODataTests5");
+                if ("ODataTest5".equals(entitySet.getEntityType().getDbName())) {
+                    entitySet.setName("ODataTests5");
                 }
-                if ("ODataTest6".equals(iyoEntitySet.getEntityType().getDbName())) {
-                    iyoEntitySet.setName("ODataTests6");
+                if ("ODataTest6".equals(entitySet.getEntityType().getDbName())) {
+                    entitySet.setName("ODataTests6");
                 }
-                if ("ODataTest7".equals(iyoEntitySet.getEntityType().getDbName())) {
-                    iyoEntitySet.setName("ODataTests7");
+                if ("ODataTest7".equals(entitySet.getEntityType().getDbName())) {
+                    entitySet.setName("ODataTests7");
                 }
             }
 
-            for (OiyoSettingsEntitySet iyoEntitySet : oiyoSettings.getEntitySet()) {
-                if (iyoEntitySet.getName().equals("actors")) {
-                    iyoEntitySet.setName("SklActors");
-                    iyoEntitySet.getEntityType().setName("SklActor");
-                } else if (iyoEntitySet.getName().equals("actor_infos")) {
-                    iyoEntitySet.setName("SklActorInfos");
-                    iyoEntitySet.getEntityType().setName("SklActorInfo");
-                } else if (iyoEntitySet.getName().equals("addresss")) {
-                    iyoEntitySet.setName("SklAddresses");
-                    iyoEntitySet.getEntityType().setName("SklAddress");
-                } else if (iyoEntitySet.getName().equals("categorys")) {
-                    iyoEntitySet.setName("SklCategories");
-                    iyoEntitySet.getEntityType().setName("SklCategory");
-                } else if (iyoEntitySet.getName().equals("citys")) {
-                    iyoEntitySet.setName("SklCities");
-                    iyoEntitySet.getEntityType().setName("SklCity");
-                } else if (iyoEntitySet.getName().equals("countrys")) {
-                    iyoEntitySet.setName("SklCountries");
-                    iyoEntitySet.getEntityType().setName("SklCountry");
-                } else if (iyoEntitySet.getName().equals("customers")) {
-                    iyoEntitySet.setName("SklCustomers");
-                    iyoEntitySet.getEntityType().setName("SklCustomer");
-                } else if (iyoEntitySet.getName().equals("customer_lists")) {
-                    iyoEntitySet.setName("SklCustomerLists");
-                    iyoEntitySet.getEntityType().setName("SklCustomerList");
-                } else if (iyoEntitySet.getName().equals("films")) {
-                    iyoEntitySet.setName("SklFilms");
-                    iyoEntitySet.getEntityType().setName("SklFilm");
-                } else if (iyoEntitySet.getName().equals("film_actors")) {
-                    iyoEntitySet.setName("SklFilmActors");
-                    iyoEntitySet.getEntityType().setName("SklFilmActor");
-                } else if (iyoEntitySet.getName().equals("film_categorys")) {
-                    iyoEntitySet.setName("SklFilmCategories");
-                    iyoEntitySet.getEntityType().setName("SklFilmCategory");
-                } else if (iyoEntitySet.getName().equals("film_lists")) {
-                    iyoEntitySet.setName("SklFilmLists");
-                    iyoEntitySet.getEntityType().setName("SklFilmList");
-                } else if (iyoEntitySet.getName().equals("inventorys")) {
-                    iyoEntitySet.setName("SklInventories");
-                    iyoEntitySet.getEntityType().setName("SklInventory");
-                } else if (iyoEntitySet.getName().equals("languages")) {
-                    iyoEntitySet.setName("SklLanguages");
-                    iyoEntitySet.getEntityType().setName("SklLanguage");
-                } else if (iyoEntitySet.getName().equals("nicer_but_slower_film_lists")) {
-                    iyoEntitySet.setName("SklNicerButSlowerFilmLists");
-                    iyoEntitySet.getEntityType().setName("SklNicerButSlowerFilmList");
-                } else if (iyoEntitySet.getName().equals("payments")) {
-                    iyoEntitySet.setName("SklPayments");
-                    iyoEntitySet.getEntityType().setName("SklPayment");
-                } else if (iyoEntitySet.getName().equals("rentals")) {
-                    iyoEntitySet.setName("SklRentals");
-                    iyoEntitySet.getEntityType().setName("SklRental");
-                } else if (iyoEntitySet.getName().equals("sales_by_film_categorys")) {
-                    iyoEntitySet.setName("SklSalesByFilmCategories");
-                    iyoEntitySet.getEntityType().setName("SklSalesByFilmCategory");
-                } else if (iyoEntitySet.getName().equals("sales_by_stores")) {
-                    iyoEntitySet.setName("SklSalesByStores");
-                    iyoEntitySet.getEntityType().setName("SklSalesByStore");
-                } else if (iyoEntitySet.getName().equals("staffs")) {
-                    iyoEntitySet.setName("SklStaffs");
-                    iyoEntitySet.getEntityType().setName("SklStaff");
-                } else if (iyoEntitySet.getName().equals("staff_lists")) {
-                    iyoEntitySet.setName("SklStaffLists");
-                    iyoEntitySet.getEntityType().setName("SklStaffList");
-                } else if (iyoEntitySet.getName().equals("stores")) {
-                    iyoEntitySet.setName("SklStores");
-                    iyoEntitySet.getEntityType().setName("SklStore");
+            for (OiyoSettingsEntitySet entitySet : oiyoSettings.getEntitySet()) {
+                if (entitySet.getName().equals("actors")) {
+                    entitySet.setName("SklActors");
+                    entitySet.getEntityType().setName("SklActor");
+                } else if (entitySet.getName().equals("actor_infos")) {
+                    entitySet.setName("SklActorInfos");
+                    entitySet.getEntityType().setName("SklActorInfo");
+                } else if (entitySet.getName().equals("addresss")) {
+                    entitySet.setName("SklAddresses");
+                    entitySet.getEntityType().setName("SklAddress");
+                } else if (entitySet.getName().equals("categorys")) {
+                    entitySet.setName("SklCategories");
+                    entitySet.getEntityType().setName("SklCategory");
+                } else if (entitySet.getName().equals("citys")) {
+                    entitySet.setName("SklCities");
+                    entitySet.getEntityType().setName("SklCity");
+                } else if (entitySet.getName().equals("countrys")) {
+                    entitySet.setName("SklCountries");
+                    entitySet.getEntityType().setName("SklCountry");
+                } else if (entitySet.getName().equals("customers")) {
+                    entitySet.setName("SklCustomers");
+                    entitySet.getEntityType().setName("SklCustomer");
+                } else if (entitySet.getName().equals("customer_lists")) {
+                    entitySet.setName("SklCustomerLists");
+                    entitySet.getEntityType().setName("SklCustomerList");
+                } else if (entitySet.getName().equals("films")) {
+                    entitySet.setName("SklFilms");
+                    entitySet.getEntityType().setName("SklFilm");
+                } else if (entitySet.getName().equals("film_actors")) {
+                    entitySet.setName("SklFilmActors");
+                    entitySet.getEntityType().setName("SklFilmActor");
+                } else if (entitySet.getName().equals("film_categorys")) {
+                    entitySet.setName("SklFilmCategories");
+                    entitySet.getEntityType().setName("SklFilmCategory");
+                } else if (entitySet.getName().equals("film_lists")) {
+                    entitySet.setName("SklFilmLists");
+                    entitySet.getEntityType().setName("SklFilmList");
+                } else if (entitySet.getName().equals("inventorys")) {
+                    entitySet.setName("SklInventories");
+                    entitySet.getEntityType().setName("SklInventory");
+                } else if (entitySet.getName().equals("languages")) {
+                    entitySet.setName("SklLanguages");
+                    entitySet.getEntityType().setName("SklLanguage");
+                } else if (entitySet.getName().equals("nicer_but_slower_film_lists")) {
+                    entitySet.setName("SklNicerButSlowerFilmLists");
+                    entitySet.getEntityType().setName("SklNicerButSlowerFilmList");
+                } else if (entitySet.getName().equals("payments")) {
+                    entitySet.setName("SklPayments");
+                    entitySet.getEntityType().setName("SklPayment");
+                } else if (entitySet.getName().equals("rentals")) {
+                    entitySet.setName("SklRentals");
+                    entitySet.getEntityType().setName("SklRental");
+                } else if (entitySet.getName().equals("sales_by_film_categorys")) {
+                    entitySet.setName("SklSalesByFilmCategories");
+                    entitySet.getEntityType().setName("SklSalesByFilmCategory");
+                } else if (entitySet.getName().equals("sales_by_stores")) {
+                    entitySet.setName("SklSalesByStores");
+                    entitySet.getEntityType().setName("SklSalesByStore");
+                } else if (entitySet.getName().equals("staffs")) {
+                    entitySet.setName("SklStaffs");
+                    entitySet.getEntityType().setName("SklStaff");
+                } else if (entitySet.getName().equals("staff_lists")) {
+                    entitySet.setName("SklStaffLists");
+                    entitySet.getEntityType().setName("SklStaffList");
+                } else if (entitySet.getName().equals("stores")) {
+                    entitySet.setName("SklStores");
+                    entitySet.getEntityType().setName("SklStore");
                 }
             }
 

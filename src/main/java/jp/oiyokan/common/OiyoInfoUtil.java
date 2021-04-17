@@ -117,9 +117,9 @@ public class OiyoInfoUtil {
 
         // TODO FIXME このシングルトン取得を回避したい。引数に変えたい。
         final OiyoSettings settingsOiyokan = oiyoInfo.getSettings();
-        for (OiyoSettingsEntitySet look : settingsOiyokan.getEntitySet()) {
-            if (entitySetName.equals(look.getName())) {
-                return look;
+        for (OiyoSettingsEntitySet entitySet : settingsOiyokan.getEntitySet()) {
+            if (entitySetName.equals(entitySet.getName())) {
+                return entitySet;
             }
         }
 
@@ -137,8 +137,6 @@ public class OiyoInfoUtil {
                 return prop;
             }
         }
-
-        new Exception("ここはどこ").printStackTrace();
 
         // [M040] UNEXPECTED: EntitySet Property settings NOT found.
         System.err.println(OiyokanMessages.M040 + ": entitySet:" + entitySetName + ", property:" + propertyName);

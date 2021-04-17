@@ -122,13 +122,10 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
             // Oiyokan が動作する際に必要になる内部データベースのバージョン情報および Oiyo info をセットアップ.
             OiyokanKanDatabase.setupKanDatabase(oiyoInfo);
 
-            for (OiyoSettingsEntitySet entitySetCnof : getOiyoInfoInstance().getSettings().getEntitySet()) {
-                // System.err.println("TRACE: entitySet: " + entitySetCnof.getEntitySetName() +
-                // ", dbname: "
-                // + entitySetCnof.getDatabaseName());
-
+            // TODO FIXME ここが設定としての EntitySet をロードして設定しているところ。ここを見直したい。
+            for (OiyoSettingsEntitySet entitySet : getOiyoInfoInstance().getSettings().getEntitySet()) {
                 // EntitySet の初期セットを実施。
-                getEntitySets().add(new OiyokanCsdlEntitySet(oiyoInfo, this, entitySetCnof));
+                getEntitySets().add(new OiyokanCsdlEntitySet(oiyoInfo, this, entitySet));
             }
         }
     }

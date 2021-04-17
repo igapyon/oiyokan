@@ -62,12 +62,12 @@ import org.apache.olingo.server.api.ODataApplicationException;
 import org.springframework.util.StreamUtils;
 
 import jp.oiyokan.OiyokanConstants;
-import jp.oiyokan.OiyokanCsdlEntitySet;
 import jp.oiyokan.OiyokanMessages;
 import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.common.OiyoInfoUtil;
 import jp.oiyokan.common.OiyoSqlInfo;
 import jp.oiyokan.dto.OiyoSettingsDatabase;
+import jp.oiyokan.dto.OiyoSettingsEntitySet;
 import jp.oiyokan.dto.OiyoSettingsProperty;
 import jp.oiyokan.util.OiyoDateTimeUtil;
 import jp.oiyokan.util.OiyoEdmUtil;
@@ -224,16 +224,16 @@ public class OiyoBasicJdbcUtil {
      * @param rset         結果セット.
      * @param rsmeta       結果セットメタデータ.
      * @param column       項目番号. 1オリジン.
-     * @param iyoEntitySet EntitySetインスタンス.
+     * @param entitySet EntitySetインスタンス.
      * @return 作成された Property.
      * @throws SQLException              SQL例外が発生した場合.
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
     public static Property resultSet2Property(OiyoInfo oiyoInfo, ResultSet rset, ResultSetMetaData rsmeta, int column,
-            OiyokanCsdlEntitySet iyoEntitySet) throws ODataApplicationException, SQLException {
+            OiyoSettingsEntitySet entitySet) throws ODataApplicationException, SQLException {
         // 基本的に CSDL で処理するが、やむを得ない場所のみ ResultSetMetaData を利用する
         String propName = null;
-        for (OiyoSettingsProperty prop : OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, iyoEntitySet.getName()).getEntityType()
+        for (OiyoSettingsProperty prop : OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, entitySet.getName()).getEntityType()
                 .getProperty()) {
             // 大文字小文字を無視。
             if (rsmeta.getColumnName(column).equalsIgnoreCase(prop.getDbName())) {
@@ -242,30 +242,17 @@ public class OiyoBasicJdbcUtil {
         }
         if (propName == null) {
             // [M041] Fail to find Property from DB name.
-            System.err.println(OiyokanMessages.M041 + "EntitySet:" + iyoEntitySet.getName() + " DB:"
+            System.err.println(OiyokanMessages.M041 + "EntitySet:" + entitySet.getName() + " DB:"
                     + rsmeta.getColumnName(column));
             throw new ODataApplicationException(
-                    OiyokanMessages.M041 + "EntitySet:" + iyoEntitySet.getName() + " DB:"
+                    OiyokanMessages.M041 + "EntitySet:" + entitySet.getName() + " DB:"
                             + rsmeta.getColumnName(column), //
                     500, Locale.ENGLISH);
         }
 
-        final CsdlProperty csdlProp = iyoEntitySet.getEntityType().getProperty(propName);
-        if (csdlProp == null) {
-            // [M034] ERROR: An unknown field name was specified. The field names are case
-            // sensitive. Make sure the Oiyo field name matches the target field name.
-            System.err.println(OiyokanMessages.M034 + ": colname:" + rsmeta.getColumnName(column)
-                    + ", propname(should):" + propName);
-
-            System.err.println("TRACE: EntityName: " + iyoEntitySet.getEntityType().getName());
-            for (CsdlProperty look : iyoEntitySet.getEntityType().getProperties()) {
-                System.err.println("  PropName: " + look.getName());
-            }
-
-            throw new ODataApplicationException(OiyokanMessages.M034 + ": colname:" + rsmeta.getColumnName(column)
-                    + ", propname(should):" + propName, 500, Locale.ENGLISH);
-        }
-        final String edmTypeName = csdlProp.getType();
+        final OiyoSettingsProperty csdlProp = OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, entitySet.getName(),
+                propName);
+        final String edmTypeName = csdlProp.getEdmType();
         final EdmPrimitiveType edmType = OiyoEdmUtil.string2EdmType(edmTypeName);
         if (EdmSByte.getInstance() == edmType) {
             return new Property(edmTypeName, propName, ValueType.PRIMITIVE, rset.getByte(column));
@@ -335,9 +322,9 @@ public class OiyoBasicJdbcUtil {
                 return new Property(edmTypeName, propName, ValueType.PRIMITIVE, look);
             } else {
                 // [M033] NOT SUPPORTED: unknown UUID object given
-                System.err.println(OiyokanMessages.M033 + ": type[" + csdlProp.getType() + "], "
+                System.err.println(OiyokanMessages.M033 + ": type[" + csdlProp.getEdmType() + "], "
                         + obj.getClass().getCanonicalName());
-                throw new ODataApplicationException(OiyokanMessages.M033 + ": type[" + csdlProp.getType() + "], "
+                throw new ODataApplicationException(OiyokanMessages.M033 + ": type[" + csdlProp.getEdmType() + "], "
                         + obj.getClass().getCanonicalName(), OiyokanMessages.M033_CODE, Locale.ENGLISH);
             }
         } else {
