@@ -24,6 +24,8 @@ import org.apache.olingo.commons.api.edm.provider.CsdlEntityContainer;
 import org.apache.olingo.commons.api.edm.provider.CsdlEntityContainerInfo;
 import org.apache.olingo.commons.api.edm.provider.CsdlEntitySet;
 import org.apache.olingo.commons.api.edm.provider.CsdlEntityType;
+import org.apache.olingo.commons.api.edm.provider.CsdlProperty;
+import org.apache.olingo.commons.api.edm.provider.CsdlPropertyRef;
 import org.apache.olingo.commons.api.edm.provider.CsdlSchema;
 import org.apache.olingo.server.api.ODataApplicationException;
 
@@ -35,6 +37,8 @@ import org.apache.olingo.server.api.ODataApplicationException;
 public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
     /**
      * デバッグ出力の有無.
+     * 
+     * OData Server の挙動のデバッグで困ったときにはこれを true にすること。
      */
     private static final boolean IS_DEBUG = false;
 
@@ -59,7 +63,17 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
             // テンプレートを念押しビルド.
             localTemplateEntityContainer.ensureBuild();
 
-            return localTemplateEntityContainer.getEntityType(entityTypeName);
+            CsdlEntityType look = localTemplateEntityContainer.getEntityType(entityTypeName);
+            if (IS_DEBUG) {
+                System.err.println("csdlEntityType: " + look.getName());
+                for (CsdlPropertyRef key : look.getKey()) {
+                    System.err.println("  key: " + key.getName());
+                }
+                for (CsdlProperty prop : look.getProperties()) {
+                    System.err.println("  prop: " + prop.getName());
+                }
+            }
+            return look;
         } catch (RuntimeException ex) {
             System.err.println("OiyokanEdmProvider#getEntityType: exception: " + ex.toString());
             throw ex;

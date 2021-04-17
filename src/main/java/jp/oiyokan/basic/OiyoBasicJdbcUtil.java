@@ -221,9 +221,9 @@ public class OiyoBasicJdbcUtil {
     /**
      * 実際の EntityCollection 生成時に、ResultSet から Property を作成.
      * 
-     * @param rset         結果セット.
-     * @param rsmeta       結果セットメタデータ.
-     * @param column       項目番号. 1オリジン.
+     * @param rset      結果セット.
+     * @param rsmeta    結果セットメタデータ.
+     * @param column    項目番号. 1オリジン.
      * @param entitySet EntitySetインスタンス.
      * @return 作成された Property.
      * @throws SQLException              SQL例外が発生した場合.
@@ -242,11 +242,10 @@ public class OiyoBasicJdbcUtil {
         }
         if (propName == null) {
             // [M041] Fail to find Property from DB name.
-            System.err.println(OiyokanMessages.M041 + "EntitySet:" + entitySet.getName() + " DB:"
-                    + rsmeta.getColumnName(column));
+            System.err.println(
+                    OiyokanMessages.M041 + "EntitySet:" + entitySet.getName() + " DB:" + rsmeta.getColumnName(column));
             throw new ODataApplicationException(
-                    OiyokanMessages.M041 + "EntitySet:" + entitySet.getName() + " DB:"
-                            + rsmeta.getColumnName(column), //
+                    OiyokanMessages.M041 + "EntitySet:" + entitySet.getName() + " DB:" + rsmeta.getColumnName(column), //
                     500, Locale.ENGLISH);
         }
 
