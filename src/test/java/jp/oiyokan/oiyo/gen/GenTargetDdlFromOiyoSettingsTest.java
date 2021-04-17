@@ -63,7 +63,10 @@ class GenTargetDdlFromOiyoSettingsTest {
 
             final OiyoSettingsEntityType entityType = entitySet.getEntityType();
             System.err.println(entitySet.getName());
-            sql.append("CREATE TABLE\n");
+            sql.append("CREATE TABLE");
+            sql.append(" IF NOT EXISTS");
+            sql.append("\n");
+
             sql.append("  " + OiyoBasicJdbcUtil.escapeKakkoFieldName(databaseType, entityType.getDbName()) + " (\n");
 
             boolean isFirst = true;
@@ -78,6 +81,13 @@ class GenTargetDdlFromOiyoSettingsTest {
                         + prop.getDbType());
                 if (prop.getMaxLength() != null && prop.getMaxLength() > 0) {
                     sql.append("(" + prop.getMaxLength() + ")");
+                }
+                if (prop.getPrecision() != null && prop.getPrecision() > 0) {
+                    sql.append("(" + prop.getPrecision());
+                    if (prop.getScale() != null) {
+                        sql.append("," + prop.getScale());
+                    }
+                    sql.append(")");
                 }
                 if (prop.getDbDefault() != null) {
                     sql.append(" DEFAULT " + prop.getDbDefault());
@@ -113,7 +123,7 @@ class GenTargetDdlFromOiyoSettingsTest {
                 sql.append(")\n");
             }
 
-            sql.append("  )\n");
+            sql.append("  );\n");
             sql.append("\n");
         }
 
