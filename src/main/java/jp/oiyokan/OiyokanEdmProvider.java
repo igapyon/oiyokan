@@ -151,16 +151,18 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
             // テンプレートを念押しビルド.
             localTemplateEntityContainer.ensureBuild();
 
+            // シングルトンな OiyoInfo を利用。
+            final OiyoInfo oiyoInfo = OiyokanCsdlEntityContainer.getOiyoInfoInstance();
+
             // CSDLスキーマを作成.
             final CsdlSchema newSchema = new CsdlSchema();
-            newSchema.setNamespace(localTemplateEntityContainer.getNamespaceIyo());
+            newSchema.setNamespace(oiyoInfo.getSettings().getNamespace());
 
             // 要素型を設定.
             final List<CsdlEntityType> newEntityTypeList = new ArrayList<>();
             for (CsdlEntitySet look : localTemplateEntityContainer.getEntitySets()) {
-                OiyokanCsdlEntitySet local2 = (OiyokanCsdlEntitySet) look;
                 // エンティティタイプを設定.
-                newEntityTypeList.add(getEntityType(local2.getEntityNameFqnIyo()));
+                newEntityTypeList.add(getEntityType(look.getTypeFQN()));
             }
             newSchema.setEntityTypes(newEntityTypeList);
 
@@ -199,8 +201,7 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
 
             // シングルトンな OiyoInfo を利用。
             final OiyoInfo oiyoInfo = OiyokanCsdlEntityContainer.getOiyoInfoInstance();
-
-            FullQualifiedName fqn = new FullQualifiedName(oiyoInfo.getSettings().getNamespace(),
+            final FullQualifiedName fqn = new FullQualifiedName(oiyoInfo.getSettings().getNamespace(),
                     oiyoInfo.getSettings().getContainerName());
 
             // entityContainerNameが nullのときにも応答するのが正しい仕様.
