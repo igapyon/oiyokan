@@ -585,9 +585,9 @@ public class OiyokanKanDatabase {
                     break;
                 }
 
-                // if (defaultValueMap.get(columnName) != null) {
-                // sqlBuilder.append(" DEFAULT " + defaultValueMap.get(columnName));
-                // }
+                if (defaultValueMap.get(columnName) != null) {
+                    property.setDbDefault(defaultValueMap.get(columnName));
+                }
 
                 final int nullableVal = rsmeta.isNullable(column);
                 if (ResultSetMetaData.columnNoNulls == nullableVal) {
@@ -598,6 +598,7 @@ public class OiyokanKanDatabase {
                     // 不明は null.
                     property.setNullable(null);
                 }
+
             }
 
             // テーブルのキー情報

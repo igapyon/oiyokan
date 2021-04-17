@@ -79,6 +79,9 @@ class GenTargetDdlFromOiyoSettingsTest {
                 if (prop.getMaxLength() != null && prop.getMaxLength() > 0) {
                     sql.append("(" + prop.getMaxLength() + ")");
                 }
+                if (prop.getDbDefault() != null) {
+                    sql.append(" DEFAULT " + prop.getDbDefault());
+                }
                 if (prop.getNullable() != null && prop.getNullable() == false) {
                     sql.append(" NOT NULL");
                 }
