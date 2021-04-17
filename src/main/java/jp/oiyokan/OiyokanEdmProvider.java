@@ -17,6 +17,7 @@ package jp.oiyokan;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.olingo.commons.api.edm.FullQualifiedName;
 import org.apache.olingo.commons.api.edm.provider.CsdlAbstractEdmProvider;
@@ -29,8 +30,11 @@ import org.apache.olingo.commons.api.edm.provider.CsdlPropertyRef;
 import org.apache.olingo.commons.api.edm.provider.CsdlSchema;
 import org.apache.olingo.server.api.ODataApplicationException;
 
+import jp.oiyokan.basic.OiyoBasicJdbcEntityTypeBuilder;
 import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.common.OiyoInfoUtil;
+import jp.oiyokan.dto.OiyoSettings;
+import jp.oiyokan.dto.OiyoSettingsEntitySet;
 
 /**
  * Oiyokan による CSDL (Common Schema Definition Language) 実装.
@@ -93,17 +97,35 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
             // テンプレートを念押しビルド.
             localTemplateEntityContainer.ensureBuild();
 
-            CsdlEntityType look = localTemplateEntityContainer.getEntityType(entityTypeName);
+            OiyoSettingsEntitySet entitySet = null;
+            // TODO FIXME このシングルトン取得を回避したい。引数に変えたい。
+            final OiyoSettings settingsOiyokan = oiyoInfo.getSettings();
+            for (OiyoSettingsEntitySet look : settingsOiyokan.getEntitySet()) {
+                if (look.getEntityType().getName().equals(entityTypeName.getName())) {
+                    entitySet = look;
+                }
+            }
+            if (entitySet == null) {
+                // TODO FIXME メッセージ番号
+                System.err.println(OiyokanMessages.M999 + ": EntitySet検索失敗");
+                throw new ODataApplicationException(OiyokanMessages.M999 + ": EntitySet検索失敗", //
+                        500, Locale.ENGLISH);
+            }
+
+            OiyoBasicJdbcEntityTypeBuilder entityTypeBuilder = new OiyoBasicJdbcEntityTypeBuilder(
+                    OiyokanEdmProvider.getOiyoInfoInstance(), entitySet);
+            CsdlEntityType entityType = entityTypeBuilder.getEntityType();
+
             if (IS_DEBUG) {
-                System.err.println("csdlEntityType: " + look.getName());
-                for (CsdlPropertyRef key : look.getKey()) {
+                System.err.println("csdlEntityType: " + entityType.getName());
+                for (CsdlPropertyRef key : entityType.getKey()) {
                     System.err.println("  key: " + key.getName());
                 }
-                for (CsdlProperty prop : look.getProperties()) {
+                for (CsdlProperty prop : entityType.getProperties()) {
                     System.err.println("  prop: " + prop.getName());
                 }
             }
-            return look;
+            return entityType;
         } catch (RuntimeException ex) {
             System.err.println("OiyokanEdmProvider#getEntityType: exception: " + ex.toString());
             throw ex;
