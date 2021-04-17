@@ -420,6 +420,7 @@ public class OiyoBasicJdbcEntityOneBuilder {
      * @param edmEntitySet EdmEntitySet.
      * @return OiyokanCsdlEntitySet for specified edmEntitySet.
      * @throws ODataApplicationException OData App exception occured.
+     * @deprecated
      */
     public static OiyokanCsdlEntitySet findEntitySet(EdmEntitySet edmEntitySet) throws ODataApplicationException {
         final OiyokanEdmProvider provider = new OiyokanEdmProvider();
