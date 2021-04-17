@@ -77,8 +77,14 @@ class GenTargetDdlFromOiyoSettingsTest {
                 } else {
                     sql.append(", ");
                 }
-                sql.append(OiyoBasicJdbcUtil.escapeKakkoFieldName(databaseType, prop.getDbName()) + " "
-                        + prop.getDbType());
+                sql.append(OiyoBasicJdbcUtil.escapeKakkoFieldName(databaseType, prop.getDbName()));
+                if (prop.getDbDefault() != null && prop.getDbDefault().startsWith("NEXT VALUE FOR")) {
+                    // h2 database 特殊ルール
+                    sql.append(" IDENTITY");
+                } else {
+                    sql.append(" " + prop.getDbType());
+                }
+
                 if (prop.getMaxLength() != null && prop.getMaxLength() > 0) {
                     sql.append("(" + prop.getMaxLength() + ")");
                 }
@@ -90,7 +96,11 @@ class GenTargetDdlFromOiyoSettingsTest {
                     sql.append(")");
                 }
                 if (prop.getDbDefault() != null) {
-                    sql.append(" DEFAULT " + prop.getDbDefault());
+                    if (prop.getDbDefault().startsWith("NEXT VALUE FOR")) {
+                        // h2 database 特殊ルール
+                    } else {
+                        sql.append(" DEFAULT " + prop.getDbDefault());
+                    }
                 }
                 if (prop.getNullable() != null && prop.getNullable() == false) {
                     sql.append(" NOT NULL");
