@@ -87,8 +87,7 @@ public class OiyoBasicJdbcEntityTypeBuilder {
             // キーがないものは OData 的に不都合があるため警告する。
             if (OiyokanConstants.IS_TRACE_ODATA_V4) {
                 System.err.println("OData v4: WARNING: No ID: " + entitySet.getName());
-                System.err.println(
-                        "OData v4: WARNING: Set primary key on Oiyo table: " + entitySet.getDbTableNameLocalOiyo());
+                System.err.println("OData v4: WARNING: Set primary key on Oiyo table: " + entitySet.getName());
             }
         }
 

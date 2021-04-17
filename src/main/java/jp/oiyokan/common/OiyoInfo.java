@@ -13,18 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jp.oiyokan.util;
+package jp.oiyokan.common;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import jp.oiyokan.dto.OiyoSettings;
 
-import org.apache.olingo.commons.api.edm.EdmPrimitiveType;
-import org.junit.jupiter.api.Test;
+public class OiyoInfo {
+    /**
+     * JSONから読み込んだ oiyokan-settings.json の内容.
+     */
+    private OiyoSettings settings = null;
 
-class OiyoEdmUtilTest {
+    public OiyoSettings getSettings() {
+        return settings;
+    }
 
-    @Test
-    void test() {
-        EdmPrimitiveType edmType = OiyoEdmUtil.string2EdmType("Edm.String");
-        assertEquals("Edm.String", OiyoEdmUtil.edmType2String(edmType));
+    public void setSettings(OiyoSettings settings) {
+        this.settings = settings;
     }
 }

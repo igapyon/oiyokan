@@ -1,4 +1,4 @@
-package jp.oiyokan.basic;
+package jp.oiyokan.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -12,7 +12,7 @@ import java.time.format.DateTimeParseException;
 /**
  * Basic DateTime util for Oiyokan.
  */
-public class OiyoBasicDateTimeUtil {
+public class OiyoDateTimeUtil {
     private static final DateTimeFormatter[] OFPATTERNS_DATETIME = new DateTimeFormatter[] { //
             DateTimeFormatter.ISO_DATE_TIME, //
             DateTimeFormatter.ISO_INSTANT, //

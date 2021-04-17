@@ -27,8 +27,8 @@ import org.apache.olingo.commons.api.edm.provider.CsdlEntityType;
 import org.apache.olingo.server.api.ODataApplicationException;
 
 import jp.oiyokan.basic.OiyoBasicJdbcEntityTypeBuilder;
+import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.data.OiyokanKanDatabase;
-import jp.oiyokan.dto.OiyoSettings;
 import jp.oiyokan.dto.OiyoSettingsDatabase;
 import jp.oiyokan.dto.OiyoSettingsEntitySet;
 import jp.oiyokan.settings.OiyoSettingsUtil;
@@ -40,7 +40,7 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
     /**
      * OiyokanSettings を singleton に記憶.
      */
-    private static volatile OiyoSettings settingsOiyokan = null;
+    private static volatile OiyoInfo oiyoInfo = null;
 
     /**
      * CsdlEntityType をすでに取得済みであればそれをキャッシュとして利用.
@@ -48,18 +48,19 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
     private Map<String, CsdlEntityType> cachedCsdlEntityTypeMap = new HashMap<>();
 
     /**
-     * OiyokanSettings 設定情報を singleton に取得.
+     * OiyoInfo (OiyokanSettings 設定情報を含む) を singleton に取得.
      * 
-     * @return OiyokanSettings instance. 参照のみで利用.
+     * @return OiyoInfo OiyokanSettings instanceを含む. 参照のみで利用.
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
-    public static synchronized OiyoSettings getSettingsInstance() throws ODataApplicationException {
+    public static synchronized OiyoInfo getOiyoInfoInstance() throws ODataApplicationException {
         // singleton by static synchronized.
-        if (settingsOiyokan == null) {
-            settingsOiyokan = OiyoSettingsUtil.loadOiyokanSettings();
+        if (oiyoInfo == null) {
+            oiyoInfo = new OiyoInfo();
+            oiyoInfo.setSettings(OiyoSettingsUtil.loadOiyokanSettings());
         }
 
-        return settingsOiyokan;
+        return oiyoInfo;
     }
 
     /**
@@ -71,10 +72,10 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
      */
     public void ensureBuild() throws ODataApplicationException {
         // OiyokanSettings の singleton を確実にインスタンス化.
-        getSettingsInstance();
+        getOiyoInfoInstance();
 
         if (getName() == null) {
-            setName(OiyokanCsdlEntityContainer.getSettingsInstance().getContainerName());
+            setName(OiyokanCsdlEntityContainer.getOiyoInfoInstance().getSettings().getContainerName());
         }
         if (getEntitySets() == null) {
             setEntitySets(new ArrayList<CsdlEntitySet>());
@@ -87,7 +88,7 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
                 return;
             }
 
-            for (OiyoSettingsDatabase settingsDatabase : getSettingsInstance().getDatabase()) {
+            for (OiyoSettingsDatabase settingsDatabase : getOiyoInfoInstance().getSettings().getDatabase()) {
                 if (OiyokanConstants.IS_TRACE_ODATA_V4)
                     System.err.println("OData v4: Check JDBC Driver: " + settingsDatabase.getJdbcDriver());
                 try {
@@ -117,7 +118,7 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
             // Oiyokan が動作する際に必要になる内部データベースのバージョン情報および Oiyo info をセットアップ.
             OiyokanKanDatabase.setupKanDatabase();
 
-            for (OiyoSettingsEntitySet entitySetCnof : getSettingsInstance().getEntitySet()) {
+            for (OiyoSettingsEntitySet entitySetCnof : getOiyoInfoInstance().getSettings().getEntitySet()) {
                 // System.err.println("TRACE: entitySet: " + entitySetCnof.getEntitySetName() +
                 // ", dbname: "
                 // + entitySetCnof.getDatabaseName());
@@ -135,7 +136,7 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
     public String getNamespaceIyo() throws ODataApplicationException {
-        return getSettingsInstance().getNamespace();
+        return getOiyoInfoInstance().getSettings().getNamespace();
     }
 
     /**
@@ -145,7 +146,7 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
     public FullQualifiedName getContainerFqnIyo() throws ODataApplicationException {
-        return new FullQualifiedName(getNamespaceIyo(), getSettingsInstance().getContainerName());
+        return new FullQualifiedName(getNamespaceIyo(), getOiyoInfoInstance().getSettings().getContainerName());
     }
 
     /**

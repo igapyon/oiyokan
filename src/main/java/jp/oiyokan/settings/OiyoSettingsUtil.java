@@ -77,7 +77,7 @@ public class OiyoSettingsUtil {
             throw new ODataApplicationException(OiyokanMessages.M026 + ": " + databaseDefName, 500, Locale.ENGLISH);
         }
 
-        final OiyoSettings settingsOiyokan = OiyokanCsdlEntityContainer.getSettingsInstance();
+        final OiyoSettings settingsOiyokan = OiyokanCsdlEntityContainer.getOiyoInfoInstance().getSettings();
         for (OiyoSettingsDatabase look : settingsOiyokan.getDatabase()) {
             if (databaseDefName.equals(look.getName())) {
                 return look;
@@ -96,7 +96,8 @@ public class OiyoSettingsUtil {
             throw new ODataApplicationException(OiyokanMessages.M038 + ": " + entitySetName, 500, Locale.ENGLISH);
         }
 
-        final OiyoSettings settingsOiyokan = OiyokanCsdlEntityContainer.getSettingsInstance();
+        // TODO FIXME このシングルトン取得を回避したい。引数に変えたい。
+        final OiyoSettings settingsOiyokan = OiyokanCsdlEntityContainer.getOiyoInfoInstance().getSettings();
         for (OiyoSettingsEntitySet look : settingsOiyokan.getEntitySet()) {
             if (entitySetName.equals(look.getName())) {
                 return look;
