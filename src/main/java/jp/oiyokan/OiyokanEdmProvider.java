@@ -29,6 +29,8 @@ import org.apache.olingo.commons.api.edm.provider.CsdlPropertyRef;
 import org.apache.olingo.commons.api.edm.provider.CsdlSchema;
 import org.apache.olingo.server.api.ODataApplicationException;
 
+import jp.oiyokan.common.OiyoInfo;
+
 /**
  * Oiyokan による CSDL (Common Schema Definition Language) 実装.
  * 
@@ -195,11 +197,16 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
             // テンプレートを念押しビルド.
             localTemplateEntityContainer.ensureBuild();
 
+            // シングルトンな OiyoInfo を利用。
+            final OiyoInfo oiyoInfo = OiyokanCsdlEntityContainer.getOiyoInfoInstance();
+
+            FullQualifiedName fqn = new FullQualifiedName(oiyoInfo.getSettings().getNamespace(),
+                    oiyoInfo.getSettings().getContainerName());
+
             // entityContainerNameが nullのときにも応答するのが正しい仕様.
-            if (entityContainerName == null
-                    || entityContainerName.equals(localTemplateEntityContainer.getContainerFqnIyo())) {
+            if (entityContainerName == null || entityContainerName.equals(fqn)) {
                 final CsdlEntityContainerInfo entityContainerInfo = new CsdlEntityContainerInfo();
-                entityContainerInfo.setContainerName(localTemplateEntityContainer.getContainerFqnIyo());
+                entityContainerInfo.setContainerName(fqn);
                 return entityContainerInfo;
             }
 

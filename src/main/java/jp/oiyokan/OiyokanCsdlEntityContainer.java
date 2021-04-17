@@ -35,6 +35,8 @@ import jp.oiyokan.dto.OiyoSettingsEntitySet;
 
 /**
  * Oiyokan の CsdlEntityContainer 実装.
+ * 
+ * @deprecated このクラスの責任をほとんど無くしたい。
  */
 public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
     /**
@@ -135,6 +137,7 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
      * 
      * @return 名前空間名.
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
+     * @deprecated
      */
     public String getNamespaceIyo() throws ODataApplicationException {
         return getOiyoInfoInstance().getSettings().getNamespace();
@@ -145,6 +148,7 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
      * 
      * @return EDMコンテナ名のFQN(完全修飾名).
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
+     * @deprecated
      */
     public FullQualifiedName getContainerFqnIyo() throws ODataApplicationException {
         return new FullQualifiedName(getNamespaceIyo(), getOiyoInfoInstance().getSettings().getContainerName());
