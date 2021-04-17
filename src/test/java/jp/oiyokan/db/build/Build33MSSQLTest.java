@@ -22,9 +22,9 @@ import org.junit.jupiter.api.Test;
 
 import jp.oiyokan.basic.OiyoBasicJdbcUtil;
 import jp.oiyokan.common.OiyoInfo;
+import jp.oiyokan.common.OiyoInfoUtil;
 import jp.oiyokan.data.OiyokanResourceSqlUtil;
 import jp.oiyokan.dto.OiyoSettingsDatabase;
-import jp.oiyokan.settings.OiyoSettingsUtil;
 
 /**
  * 内部データベース用のCSDL用内部テーブルのDDLをコマンドライン生成.
@@ -46,9 +46,9 @@ class Build33MSSQLTest {
             return;
 
         final OiyoInfo oiyoInfo = new OiyoInfo();
-        oiyoInfo.setSettings(OiyoSettingsUtil.loadOiyokanSettings());
+        oiyoInfo.setSettings(OiyoInfoUtil.loadOiyokanSettings());
 
-        OiyoSettingsDatabase settingsDatabase = OiyoSettingsUtil.getOiyokanDatabase(oiyoInfo, "mssql1");
+        OiyoSettingsDatabase settingsDatabase = OiyoInfoUtil.getOiyoDatabaseByName(oiyoInfo, "mssql1");
 
         try (Connection connTargetDb = OiyoBasicJdbcUtil.getConnection(settingsDatabase)) {
             for (String sql : DROP_TABLE_SQLS) {
@@ -75,9 +75,9 @@ class Build33MSSQLTest {
     // @Test
     void test02() throws Exception {
         final OiyoInfo oiyoInfo = new OiyoInfo();
-        oiyoInfo.setSettings(OiyoSettingsUtil.loadOiyokanSettings());
+        oiyoInfo.setSettings(OiyoInfoUtil.loadOiyokanSettings());
 
-        OiyoSettingsDatabase settingsDatabase = OiyoSettingsUtil.getOiyokanDatabase(oiyoInfo, "mssql1");
+        OiyoSettingsDatabase settingsDatabase = OiyoInfoUtil.getOiyoDatabaseByName(oiyoInfo, "mssql1");
 
         try (Connection connTargetDb = OiyoBasicJdbcUtil.getConnection(settingsDatabase)) {
             String[] sqls = OiyokanResourceSqlUtil

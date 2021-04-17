@@ -22,9 +22,9 @@ import org.junit.jupiter.api.Test;
 
 import jp.oiyokan.basic.OiyoBasicJdbcUtil;
 import jp.oiyokan.common.OiyoInfo;
+import jp.oiyokan.common.OiyoInfoUtil;
 import jp.oiyokan.data.OiyokanResourceSqlUtil;
 import jp.oiyokan.dto.OiyoSettingsDatabase;
-import jp.oiyokan.settings.OiyoSettingsUtil;
 
 /**
  * テスト用の内部データベースを作成します。この内部データベースは動作の上で必要です。
@@ -46,9 +46,9 @@ class Build32MySQLTest {
             return;
 
         final OiyoInfo oiyoInfo = new OiyoInfo();
-        oiyoInfo.setSettings(OiyoSettingsUtil.loadOiyokanSettings());
+        oiyoInfo.setSettings(OiyoInfoUtil.loadOiyokanSettings());
 
-        OiyoSettingsDatabase settingsDatabase = OiyoSettingsUtil.getOiyokanDatabase(oiyoInfo, "mysql1");
+        OiyoSettingsDatabase settingsDatabase = OiyoInfoUtil.getOiyoDatabaseByName(oiyoInfo, "mysql1");
 
         try (Connection connTargetDb = OiyoBasicJdbcUtil.getConnection(settingsDatabase)) {
             for (String sql : DROP_TABLE_SQLS) {

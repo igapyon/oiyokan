@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jp.oiyokan.settings;
+package jp.oiyokan.common;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,7 +28,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanMessages;
-import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.dto.OiyoSettings;
 import jp.oiyokan.dto.OiyoSettingsDatabase;
 import jp.oiyokan.dto.OiyoSettingsEntitySet;
@@ -37,7 +36,7 @@ import jp.oiyokan.dto.OiyoSettingsProperty;
 /**
  * oiyokan-settings.json ファイルに関する処理。
  */
-public class OiyoSettingsUtil {
+public class OiyoInfoUtil {
     /**
      * resources フォルダから設定ファイルを読み込み.
      * 
@@ -70,7 +69,7 @@ public class OiyoSettingsUtil {
      * @return OiyokanSettingsDatabase setting info.
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
-    public static OiyoSettingsDatabase getOiyokanDatabase(OiyoInfo oiyoInfo, String databaseDefName)
+    public static OiyoSettingsDatabase getOiyoDatabaseByName(OiyoInfo oiyoInfo, String databaseDefName)
             throws ODataApplicationException {
         if (databaseDefName == null) {
             // [M026] UNEXPECTED: Database settings NOT found
@@ -88,6 +87,14 @@ public class OiyoSettingsUtil {
         // [M026] UNEXPECTED: Database settings NOT found
         System.err.println(OiyokanMessages.M026 + ": " + databaseDefName);
         throw new ODataApplicationException(OiyokanMessages.M026 + ": " + databaseDefName, 500, Locale.ENGLISH);
+    }
+
+    public static OiyoSettingsDatabase getOiyoDatabaseByEntitySetName(OiyoInfo oiyoInfo, String entitySetName)
+            throws ODataApplicationException {
+        final OiyoSettingsEntitySet entitySet = getOiyoEntitySet(oiyoInfo, entitySetName);
+
+        // TODO FIXME エラーメッセージ処理。
+        return getOiyoDatabaseByName(oiyoInfo, entitySet.getDbSettingName());
     }
 
     public static OiyoSettingsEntitySet getOiyoEntitySet(OiyoInfo oiyoInfo, String entitySetName)

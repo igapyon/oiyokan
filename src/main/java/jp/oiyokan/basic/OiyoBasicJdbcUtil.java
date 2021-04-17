@@ -64,11 +64,11 @@ import org.springframework.util.StreamUtils;
 import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanCsdlEntitySet;
 import jp.oiyokan.OiyokanMessages;
-import jp.oiyokan.basic.sql.OiyoSqlInfo;
 import jp.oiyokan.common.OiyoInfo;
+import jp.oiyokan.common.OiyoInfoUtil;
+import jp.oiyokan.common.OiyoSqlInfo;
 import jp.oiyokan.dto.OiyoSettingsDatabase;
 import jp.oiyokan.dto.OiyoSettingsProperty;
-import jp.oiyokan.settings.OiyoSettingsUtil;
 import jp.oiyokan.util.OiyoDateTimeUtil;
 import jp.oiyokan.util.OiyoEdmUtil;
 
@@ -233,7 +233,7 @@ public class OiyoBasicJdbcUtil {
             OiyokanCsdlEntitySet iyoEntitySet) throws ODataApplicationException, SQLException {
         // 基本的に CSDL で処理するが、やむを得ない場所のみ ResultSetMetaData を利用する
         String propName = null;
-        for (OiyoSettingsProperty prop : OiyoSettingsUtil.getOiyoEntitySet(oiyoInfo, iyoEntitySet.getName())
+        for (OiyoSettingsProperty prop : OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, iyoEntitySet.getName())
                 .getEntityType().getProperty()) {
             // 大文字小文字を無視。
             if (rsmeta.getColumnName(column).equalsIgnoreCase(prop.getDbName())) {

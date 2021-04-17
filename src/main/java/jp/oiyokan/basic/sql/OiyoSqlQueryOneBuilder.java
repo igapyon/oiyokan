@@ -25,7 +25,8 @@ import org.apache.olingo.server.api.uri.UriParameter;
 import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.basic.OiyoBasicJdbcUtil;
 import jp.oiyokan.common.OiyoInfo;
-import jp.oiyokan.settings.OiyoSettingsUtil;
+import jp.oiyokan.common.OiyoInfoUtil;
+import jp.oiyokan.common.OiyoSqlInfo;
 
 /**
  * データベースから1件レコードを検索.
@@ -85,7 +86,7 @@ public class OiyoSqlQueryOneBuilder {
                 sqlInfo.getSqlBuilder().append(param.getName());
             } else {
                 sqlInfo.getSqlBuilder()
-                        .append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyoSettingsUtil
+                        .append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyoInfoUtil
                                 .getOiyoEntityProperty(oiyoInfo, sqlInfo.getEntitySet().getName(), param.getName())
                                 .getDbName()));
             }
@@ -103,7 +104,7 @@ public class OiyoSqlQueryOneBuilder {
         for (String name : edmEntitySet.getEntityType().getPropertyNames()) {
             sqlInfo.getSqlBuilder().append(itemCount++ == 0 ? "" : ",");
             final String unescapedName = OiyoBasicJdbcUtil.unescapeKakkoFieldName(name);
-            sqlInfo.getSqlBuilder().append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyoSettingsUtil
+            sqlInfo.getSqlBuilder().append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyoInfoUtil
                     .getOiyoEntityProperty(oiyoInfo, edmEntitySet.getName(), unescapedName).getDbName()));
         }
     }

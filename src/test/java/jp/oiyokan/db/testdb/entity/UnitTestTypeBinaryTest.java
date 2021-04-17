@@ -28,7 +28,7 @@ import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanTestSettingConstants;
 import jp.oiyokan.basic.OiyoBasicJdbcUtil;
 import jp.oiyokan.common.OiyoInfo;
-import jp.oiyokan.settings.OiyoSettingsUtil;
+import jp.oiyokan.common.OiyoInfoUtil;
 import jp.oiyokan.util.OiyokanTestUtil;
 
 /**
@@ -41,7 +41,7 @@ class UnitTestTypeBinaryTest {
             return;
 
         final OiyoInfo oiyoInfo = new OiyoInfo();
-        oiyoInfo.setSettings(OiyoSettingsUtil.loadOiyokanSettings());
+        oiyoInfo.setSettings(OiyoInfoUtil.loadOiyokanSettings());
 
         final int TEST_ID = OiyokanTestUtil.getNextUniqueId();
 
@@ -68,7 +68,7 @@ class UnitTestTypeBinaryTest {
         if (false/* ここは h2 database のときのみ通過が可能 */) {
             // generic JDBC
             try (Connection conn = OiyoBasicJdbcUtil.getConnection(
-                    OiyoSettingsUtil.getOiyokanDatabase(oiyoInfo, OiyokanConstants.OIYOKAN_UNITTEST_DB))) {
+                    OiyoInfoUtil.getOiyoDatabaseByName(oiyoInfo, OiyokanConstants.OIYOKAN_UNITTEST_DB))) {
 
                 try (var stmt = conn.prepareStatement("SELECT Binary1 FROM ODataTest6 WHERE ID = " + TEST_ID)) {
                     stmt.executeQuery();

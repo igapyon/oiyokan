@@ -49,8 +49,8 @@ import org.apache.olingo.server.api.uri.UriResourceEntitySet;
 import jp.oiyokan.basic.OiyoBasicJdbcEntityOneBuilder;
 import jp.oiyokan.basic.OiyoBasicJdbcUtil;
 import jp.oiyokan.common.OiyoInfo;
+import jp.oiyokan.common.OiyoInfoUtil;
 import jp.oiyokan.dto.OiyoSettingsEntitySet;
-import jp.oiyokan.settings.OiyoSettingsUtil;
 
 /**
  * Oiyokan による Entity Processor
@@ -91,7 +91,7 @@ public class OiyokanEntityProcessor implements EntityProcessor {
                 throw new ODataApplicationException(OiyokanMessages.M211, 500, Locale.ENGLISH);
             }
 
-            final OiyoSettingsEntitySet oiyoEntitySet = OiyoSettingsUtil.getOiyoEntitySet(oiyoInfo,
+            final OiyoSettingsEntitySet oiyoEntitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo,
                     edmEntitySet.getName());
             if (oiyoEntitySet.getCanRead() != null && oiyoEntitySet.getCanRead() == false) {
                 // [M052] WARN: No Read access by canRead==false.
@@ -153,7 +153,7 @@ public class OiyokanEntityProcessor implements EntityProcessor {
             EdmEntitySet edmEntitySet = uriResourceEntitySet.getEntitySet();
             EdmEntityType edmEntityType = edmEntitySet.getEntityType();
 
-            final OiyoSettingsEntitySet oiyoEntitySet = OiyoSettingsUtil.getOiyoEntitySet(oiyoInfo,
+            final OiyoSettingsEntitySet oiyoEntitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo,
                     edmEntitySet.getName());
             if (oiyoEntitySet.getCanCreate() != null && oiyoEntitySet.getCanCreate() == false) {
                 // [M051] WARN: No Create access by canCreate==false.
@@ -208,7 +208,7 @@ public class OiyokanEntityProcessor implements EntityProcessor {
             UriResourceEntitySet uriResourceEntitySet = (UriResourceEntitySet) resourcePaths.get(0);
             EdmEntitySet edmEntitySet = uriResourceEntitySet.getEntitySet();
 
-            final OiyoSettingsEntitySet oiyoEntitySet = OiyoSettingsUtil.getOiyoEntitySet(oiyoInfo,
+            final OiyoSettingsEntitySet oiyoEntitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo,
                     edmEntitySet.getName());
             if (oiyoEntitySet.getCanUpdate() != null && oiyoEntitySet.getCanUpdate() == false) {
                 // [M053] WARN: No Update access by canUpdate==false.
@@ -275,7 +275,7 @@ public class OiyokanEntityProcessor implements EntityProcessor {
             UriResourceEntitySet uriResourceEntitySet = (UriResourceEntitySet) resourcePaths.get(0);
             EdmEntitySet edmEntitySet = uriResourceEntitySet.getEntitySet();
 
-            final OiyoSettingsEntitySet oiyoEntitySet = OiyoSettingsUtil.getOiyoEntitySet(oiyoInfo,
+            final OiyoSettingsEntitySet oiyoEntitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo,
                     edmEntitySet.getName());
             if (oiyoEntitySet.getCanDelete() != null && oiyoEntitySet.getCanDelete() == false) {
                 // [M054] WARN: No Delete access by canDelete==false.

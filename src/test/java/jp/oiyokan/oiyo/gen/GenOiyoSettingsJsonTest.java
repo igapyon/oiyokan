@@ -32,13 +32,13 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.basic.OiyoBasicJdbcUtil;
 import jp.oiyokan.common.OiyoInfo;
+import jp.oiyokan.common.OiyoInfoUtil;
 import jp.oiyokan.data.OiyokanKanDatabase;
 import jp.oiyokan.dto.OiyoSettings;
 import jp.oiyokan.dto.OiyoSettingsDatabase;
 import jp.oiyokan.dto.OiyoSettingsEntitySet;
 import jp.oiyokan.dto.OiyoSettingsEntityType;
 import jp.oiyokan.dto.OiyoSettingsProperty;
-import jp.oiyokan.settings.OiyoSettingsUtil;
 
 /**
  * 内部データベース用のCSDL用内部テーブルのDDLをコマンドライン生成.
@@ -65,9 +65,9 @@ class GenOiyoSettingsJsonTest {
         }
 
         final OiyoInfo oiyoInfo = new OiyoInfo();
-        oiyoInfo.setSettings(OiyoSettingsUtil.loadOiyokanSettings());
+        oiyoInfo.setSettings(OiyoInfoUtil.loadOiyokanSettings());
 
-        OiyoSettingsDatabase settingsDatabase = OiyoSettingsUtil.getOiyokanDatabase(oiyoInfo, TARGET_UNITTEST_DATABASE);
+        OiyoSettingsDatabase settingsDatabase = OiyoInfoUtil.getOiyoDatabaseByName(oiyoInfo, TARGET_UNITTEST_DATABASE);
         System.err.println("確認対象データベース: " + settingsDatabase.getName());
 
         try (Connection connTargetDb = OiyoBasicJdbcUtil.getConnection(settingsDatabase)) {

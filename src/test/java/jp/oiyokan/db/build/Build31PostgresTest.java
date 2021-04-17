@@ -22,9 +22,9 @@ import org.junit.jupiter.api.Test;
 
 import jp.oiyokan.basic.OiyoBasicJdbcUtil;
 import jp.oiyokan.common.OiyoInfo;
+import jp.oiyokan.common.OiyoInfoUtil;
 import jp.oiyokan.data.OiyokanResourceSqlUtil;
 import jp.oiyokan.dto.OiyoSettingsDatabase;
-import jp.oiyokan.settings.OiyoSettingsUtil;
 
 /**
  * テスト用の Postgres Test データベースを作成します。
@@ -48,9 +48,9 @@ class Build31PostgresTest {
             return;
 
         final OiyoInfo oiyoInfo = new OiyoInfo();
-        oiyoInfo.setSettings(OiyoSettingsUtil.loadOiyokanSettings());
+        oiyoInfo.setSettings(OiyoInfoUtil.loadOiyokanSettings());
 
-        OiyoSettingsDatabase settingsDatabase = OiyoSettingsUtil.getOiyokanDatabase(oiyoInfo, "postgres1");
+        OiyoSettingsDatabase settingsDatabase = OiyoInfoUtil.getOiyoDatabaseByName(oiyoInfo, "postgres1");
 
         try (Connection connTargetDb = OiyoBasicJdbcUtil.getConnection(settingsDatabase)) {
             for (String sql : DROP_TABLE_SQLS) {

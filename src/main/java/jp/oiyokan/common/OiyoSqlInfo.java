@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jp.oiyokan.basic.sql;
+package jp.oiyokan.common;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +21,6 @@ import java.util.List;
 import org.apache.olingo.server.api.ODataApplicationException;
 
 import jp.oiyokan.OiyokanCsdlEntitySet;
-import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.dto.OiyoSettingsDatabase;
 
 /**
@@ -37,6 +36,8 @@ public class OiyoSqlInfo {
      */
     private OiyoInfo oiyoInfo;
 
+    private String entitySetName;
+
     private OiyokanCsdlEntitySet entitySet = null;
 
     private final StringBuilder sqlBuilder = new StringBuilder();
@@ -47,8 +48,9 @@ public class OiyoSqlInfo {
      * 
      * @param entitySet EntitySet instance.
      */
-    public OiyoSqlInfo(OiyoInfo oiyoInfo, OiyokanCsdlEntitySet entitySet) {
+    public OiyoSqlInfo(OiyoInfo oiyoInfo, String entitySetName, OiyokanCsdlEntitySet entitySet) {
         this.oiyoInfo = oiyoInfo;
+        this.entitySetName = entitySetName;
         this.entitySet = entitySet;
     }
 
@@ -56,6 +58,7 @@ public class OiyoSqlInfo {
      * 処理対象のエンティティ名を設定.
      * 
      * @return 処理対象のエンティティ名.
+     * @deprecated これは利用しない方向性で。
      */
     public OiyokanCsdlEntitySet getEntitySet() {
         return entitySet;
@@ -84,6 +87,7 @@ public class OiyoSqlInfo {
      * 
      * @return OiyokanSettingsDatabase インスタンス.
      * @throws ODataApplicationException ODataアプリ例外が発生.
+     * @deprecated これの利用が減るようにしたい。
      */
     public OiyoSettingsDatabase getSettingsDatabase() throws ODataApplicationException {
         return entitySet.getSettingsDatabase(oiyoInfo);

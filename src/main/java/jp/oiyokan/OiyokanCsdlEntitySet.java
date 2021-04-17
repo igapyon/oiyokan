@@ -24,12 +24,14 @@ import org.apache.olingo.server.api.ODataApplicationException;
 
 import jp.oiyokan.OiyokanConstants.DatabaseType;
 import jp.oiyokan.common.OiyoInfo;
+import jp.oiyokan.common.OiyoInfoUtil;
 import jp.oiyokan.dto.OiyoSettingsDatabase;
 import jp.oiyokan.dto.OiyoSettingsEntitySet;
-import jp.oiyokan.settings.OiyoSettingsUtil;
 
 /**
  * Oiyokan の CsdlEntitySet 実装.
+ * 
+ * TODO FIXME このクラス自体の存在を消したい。
  */
 public class OiyokanCsdlEntitySet extends CsdlEntitySet {
 
@@ -78,7 +80,7 @@ public class OiyokanCsdlEntitySet extends CsdlEntitySet {
      * @throws ODataApplicationException ODataアプリ例外.
      */
     public OiyoSettingsDatabase getSettingsDatabase(OiyoInfo oiyoInfo) throws ODataApplicationException {
-        return OiyoSettingsUtil.getOiyokanDatabase(oiyoInfo, settingsEntitySet.getDbSettingName());
+        return OiyoInfoUtil.getOiyoDatabaseByName(oiyoInfo, settingsEntitySet.getDbSettingName());
     }
 
     /**
