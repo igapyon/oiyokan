@@ -41,7 +41,7 @@ class ZzzGenTablePostgresSakilaTest {
         final OiyoInfo oiyoInfo = new OiyoInfo();
         oiyoInfo.setSettings(OiyoInfoUtil.loadOiyokanSettings());
 
-        OiyoSettingsDatabase settingsDatabase = OiyoInfoUtil.getOiyokanDatabase(oiyoInfo, "postgres1");
+        OiyoSettingsDatabase settingsDatabase = OiyoInfoUtil.getOiyoDatabaseByName(oiyoInfo, "postgres1");
 
         try (Connection connTargetDb = OiyoBasicJdbcUtil.getConnection(settingsDatabase)) {
             System.err.println(OiyokanKanDatabase.generateCreateOiyoDdl(connTargetDb, "actor"));

@@ -48,7 +48,7 @@ class Build33MSSQLTest {
         final OiyoInfo oiyoInfo = new OiyoInfo();
         oiyoInfo.setSettings(OiyoInfoUtil.loadOiyokanSettings());
 
-        OiyoSettingsDatabase settingsDatabase = OiyoInfoUtil.getOiyokanDatabase(oiyoInfo, "mssql1");
+        OiyoSettingsDatabase settingsDatabase = OiyoInfoUtil.getOiyoDatabaseByName(oiyoInfo, "mssql1");
 
         try (Connection connTargetDb = OiyoBasicJdbcUtil.getConnection(settingsDatabase)) {
             for (String sql : DROP_TABLE_SQLS) {
@@ -77,7 +77,7 @@ class Build33MSSQLTest {
         final OiyoInfo oiyoInfo = new OiyoInfo();
         oiyoInfo.setSettings(OiyoInfoUtil.loadOiyokanSettings());
 
-        OiyoSettingsDatabase settingsDatabase = OiyoInfoUtil.getOiyokanDatabase(oiyoInfo, "mssql1");
+        OiyoSettingsDatabase settingsDatabase = OiyoInfoUtil.getOiyoDatabaseByName(oiyoInfo, "mssql1");
 
         try (Connection connTargetDb = OiyoBasicJdbcUtil.getConnection(settingsDatabase)) {
             String[] sqls = OiyokanResourceSqlUtil

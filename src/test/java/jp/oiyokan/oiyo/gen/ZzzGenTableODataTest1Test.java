@@ -44,7 +44,7 @@ class ZzzGenTableODataTest1Test {
         final OiyoInfo oiyoInfo = new OiyoInfo();
         oiyoInfo.setSettings(OiyoInfoUtil.loadOiyokanSettings());
 
-        OiyoSettingsDatabase settingsDatabase = OiyoInfoUtil.getOiyokanDatabase(oiyoInfo,
+        OiyoSettingsDatabase settingsDatabase = OiyoInfoUtil.getOiyoDatabaseByName(oiyoInfo,
                 OiyokanConstants.OIYOKAN_UNITTEST_DB);
 
         try (Connection connTargetDb = OiyoBasicJdbcUtil.getConnection(settingsDatabase)) {

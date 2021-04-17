@@ -43,7 +43,7 @@ class H2DatabaseTest {
         oiyoInfo.setSettings(OiyoInfoUtil.loadOiyokanSettings());
 
         try (Connection conn = OiyoBasicJdbcUtil
-                .getConnection(OiyoInfoUtil.getOiyokanDatabase(oiyoInfo, OiyokanConstants.OIYOKAN_UNITTEST_DB))) {
+                .getConnection(OiyoInfoUtil.getOiyoDatabaseByName(oiyoInfo, OiyokanConstants.OIYOKAN_UNITTEST_DB))) {
 
             try (var stmt = conn.prepareStatement("SELECT ID, Name, Description FROM ODataTest1 ORDER BY ID LIMIT 3")) {
                 stmt.executeQuery();
@@ -62,7 +62,7 @@ class H2DatabaseTest {
         oiyoInfo.setSettings(OiyoInfoUtil.loadOiyokanSettings());
 
         try (Connection conn = OiyoBasicJdbcUtil
-                .getConnection(OiyoInfoUtil.getOiyokanDatabase(oiyoInfo, OiyokanConstants.OIYOKAN_UNITTEST_DB))) {
+                .getConnection(OiyoInfoUtil.getOiyoDatabaseByName(oiyoInfo, OiyokanConstants.OIYOKAN_UNITTEST_DB))) {
 
             try (var stmt = conn.prepareStatement("SELECT ID, Name, Description" //
                     + ",Sbyte1,Int16a,Int32a,Int64a,Decimal1,StringChar8,StringVar255,Boolean1,Single1,Double1,DateTimeOffset1,TimeOfDay1" //
@@ -92,13 +92,13 @@ class H2DatabaseTest {
         oiyoInfo.setSettings(OiyoInfoUtil.loadOiyokanSettings());
 
         try (Connection conn = OiyoBasicJdbcUtil
-                .getConnection(OiyoInfoUtil.getOiyokanDatabase(oiyoInfo, OiyokanConstants.OIYOKAN_KAN_DB))) {
+                .getConnection(OiyoInfoUtil.getOiyoDatabaseByName(oiyoInfo, OiyokanConstants.OIYOKAN_KAN_DB))) {
             // 内部データベースのテーブルをセットアップ.
             OiyokanKanDatabase.setupKanDatabase(oiyoInfo);
         }
 
         try (Connection conn = OiyoBasicJdbcUtil
-                .getConnection(OiyoInfoUtil.getOiyokanDatabase(oiyoInfo, OiyokanConstants.OIYOKAN_UNITTEST_DB))) {
+                .getConnection(OiyoInfoUtil.getOiyoDatabaseByName(oiyoInfo, OiyokanConstants.OIYOKAN_UNITTEST_DB))) {
 
             try (var stmt = conn.prepareStatement(
                     "SELECT address_id FROM address WHERE ((address2 IS NULL) AND (address = ?)) LIMIT 2001")) {
@@ -125,7 +125,7 @@ class H2DatabaseTest {
         oiyoInfo.setSettings(OiyoInfoUtil.loadOiyokanSettings());
 
         try (Connection conn = OiyoBasicJdbcUtil
-                .getConnection(OiyoInfoUtil.getOiyokanDatabase(oiyoInfo, "mysql1"))) {
+                .getConnection(OiyoInfoUtil.getOiyoDatabaseByName(oiyoInfo, "mysql1"))) {
 
             ResultSet rset = conn.getMetaData().getTables(null, "%", "%", new String[] { "TABLE", "VIEW" });
             for (; rset.next();) {

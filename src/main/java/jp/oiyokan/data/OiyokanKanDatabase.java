@@ -61,7 +61,7 @@ public class OiyokanKanDatabase {
             System.err.println( //
                     "OData v4: setup oiyokanKan database (Oiyokan: " + OiyokanConstants.VERSION + ")");
 
-        OiyoSettingsDatabase settingsInterDatabase = OiyoInfoUtil.getOiyokanDatabase(oiyoInfo,
+        OiyoSettingsDatabase settingsInterDatabase = OiyoInfoUtil.getOiyoDatabaseByName(oiyoInfo,
                 OiyokanConstants.OIYOKAN_KAN_DB);
 
         try (Connection connInterDb = OiyoBasicJdbcUtil.getConnection(settingsInterDatabase)) {

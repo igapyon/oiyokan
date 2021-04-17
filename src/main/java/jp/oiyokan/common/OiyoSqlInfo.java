@@ -36,6 +36,8 @@ public class OiyoSqlInfo {
      */
     private OiyoInfo oiyoInfo;
 
+    private String entitySetName;
+
     private OiyokanCsdlEntitySet entitySet = null;
 
     private final StringBuilder sqlBuilder = new StringBuilder();
@@ -46,8 +48,9 @@ public class OiyoSqlInfo {
      * 
      * @param entitySet EntitySet instance.
      */
-    public OiyoSqlInfo(OiyoInfo oiyoInfo, OiyokanCsdlEntitySet entitySet) {
+    public OiyoSqlInfo(OiyoInfo oiyoInfo, String entitySetName, OiyokanCsdlEntitySet entitySet) {
         this.oiyoInfo = oiyoInfo;
+        this.entitySetName = entitySetName;
         this.entitySet = entitySet;
     }
 
@@ -84,6 +87,7 @@ public class OiyoSqlInfo {
      * 
      * @return OiyokanSettingsDatabase インスタンス.
      * @throws ODataApplicationException ODataアプリ例外が発生.
+     * @deprecated これの利用が減るようにしたい。
      */
     public OiyoSettingsDatabase getSettingsDatabase() throws ODataApplicationException {
         return entitySet.getSettingsDatabase(oiyoInfo);

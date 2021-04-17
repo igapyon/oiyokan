@@ -80,7 +80,7 @@ public class OiyokanCsdlEntitySet extends CsdlEntitySet {
      * @throws ODataApplicationException ODataアプリ例外.
      */
     public OiyoSettingsDatabase getSettingsDatabase(OiyoInfo oiyoInfo) throws ODataApplicationException {
-        return OiyoInfoUtil.getOiyokanDatabase(oiyoInfo, settingsEntitySet.getDbSettingName());
+        return OiyoInfoUtil.getOiyoDatabaseByName(oiyoInfo, settingsEntitySet.getDbSettingName());
     }
 
     /**

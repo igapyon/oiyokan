@@ -69,7 +69,7 @@ public class OiyoInfoUtil {
      * @return OiyokanSettingsDatabase setting info.
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
-    public static OiyoSettingsDatabase getOiyokanDatabase(OiyoInfo oiyoInfo, String databaseDefName)
+    public static OiyoSettingsDatabase getOiyoDatabaseByName(OiyoInfo oiyoInfo, String databaseDefName)
             throws ODataApplicationException {
         if (databaseDefName == null) {
             // [M026] UNEXPECTED: Database settings NOT found
@@ -87,6 +87,14 @@ public class OiyoInfoUtil {
         // [M026] UNEXPECTED: Database settings NOT found
         System.err.println(OiyokanMessages.M026 + ": " + databaseDefName);
         throw new ODataApplicationException(OiyokanMessages.M026 + ": " + databaseDefName, 500, Locale.ENGLISH);
+    }
+
+    public static OiyoSettingsDatabase getOiyoDatabaseByEntitySetName(OiyoInfo oiyoInfo, String entitySetName)
+            throws ODataApplicationException {
+        final OiyoSettingsEntitySet entitySet = getOiyoEntitySet(oiyoInfo, entitySetName);
+
+        // TODO FIXME エラーメッセージ処理。
+        return getOiyoDatabaseByName(oiyoInfo, entitySet.getDbSettingName());
     }
 
     public static OiyoSettingsEntitySet getOiyoEntitySet(OiyoInfo oiyoInfo, String entitySetName)

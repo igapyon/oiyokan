@@ -47,7 +47,9 @@ import jp.oiyokan.basic.sql.OiyoSqlInsertOneBuilder;
 import jp.oiyokan.basic.sql.OiyoSqlQueryOneBuilder;
 import jp.oiyokan.basic.sql.OiyoSqlUpdateOneBuilder;
 import jp.oiyokan.common.OiyoInfo;
+import jp.oiyokan.common.OiyoInfoUtil;
 import jp.oiyokan.common.OiyoSqlInfo;
+import jp.oiyokan.dto.OiyoSettingsDatabase;
 
 /**
  * Entity 1件の検索に関する基本的なJDBC処理
@@ -87,7 +89,7 @@ public class OiyoBasicJdbcEntityOneBuilder {
         if (OiyokanConstants.IS_TRACE_ODATA_V4)
             System.err.println("OData v4: TRACE: ENTITY: READ: " + edmEntitySet.getName());
 
-        final OiyoSqlInfo sqlInfo = new OiyoSqlInfo(oiyoInfo, entitySet);
+        final OiyoSqlInfo sqlInfo = new OiyoSqlInfo(oiyoInfo, entitySet.getName(), entitySet);
         new OiyoSqlQueryOneBuilder(oiyoInfo, sqlInfo).buildSelectOneQuery(edmEntitySet, keyPredicates);
 
         final String sql = sqlInfo.getSqlBuilder().toString();
@@ -174,20 +176,22 @@ public class OiyoBasicJdbcEntityOneBuilder {
         if (OiyokanConstants.IS_TRACE_ODATA_V4)
             System.err.println("OData v4: TRACE: ENTITY: CREATE: " + edmEntitySet.getName());
 
-        final OiyoSqlInfo sqlInfo = new OiyoSqlInfo(oiyoInfo, entitySet);
+        final OiyoSqlInfo sqlInfo = new OiyoSqlInfo(oiyoInfo, entitySet.getName(), entitySet);
         new OiyoSqlInsertOneBuilder(oiyoInfo, sqlInfo).buildInsertIntoDml(edmEntitySet, null, requestEntity);
+
+        final OiyoSettingsDatabase database = OiyoInfoUtil.getOiyoDatabaseByEntitySetName(oiyoInfo,
+                entitySet.getName());
 
         // データベースに接続.
         boolean isTranSuccessed = false;
-        try (Connection connTargetDb = OiyoBasicJdbcUtil
-                .getConnection(sqlInfo.getEntitySet().getSettingsDatabase(oiyoInfo))) {
+        try (Connection connTargetDb = OiyoBasicJdbcUtil.getConnection(database)) {
             // Set auto commit OFF.
             connTargetDb.setAutoCommit(false);
             try {
                 final List<String> generatedKeys = OiyoBasicJdbcUtil.executeDml(connTargetDb, sqlInfo, true);
                 // 生成されたキーをその後の処理に反映。
                 final List<UriParameter> keyPredicates = new ArrayList<>();
-                if (DatabaseType.ORACLE == sqlInfo.getEntitySet().getDatabaseType()) {
+                if (DatabaseType.ORACLE == DatabaseType.valueOf(database.getType())) {
                     // ORACLEの特殊ルール。ROWIDが戻るので決め打ちで検索.
                     final UriParameterImpl newParam = new UriParameterImpl();
                     newParam.setName("ROWID");
@@ -277,13 +281,15 @@ public class OiyoBasicJdbcEntityOneBuilder {
         if (OiyokanConstants.IS_TRACE_ODATA_V4)
             System.err.println("OData v4: TRACE: ENTITY: DELETE: " + edmEntitySet.getName());
 
-        final OiyoSqlInfo sqlInfo = new OiyoSqlInfo(oiyoInfo, entitySet);
+        final OiyoSqlInfo sqlInfo = new OiyoSqlInfo(oiyoInfo, entitySet.getName(), entitySet);
         new OiyoSqlDeleteOneBuilder(oiyoInfo, sqlInfo).buildDeleteDml(edmEntitySet, keyPredicates);
+
+        final OiyoSettingsDatabase database = OiyoInfoUtil.getOiyoDatabaseByEntitySetName(oiyoInfo,
+                entitySet.getName());
 
         // データベースに接続.
         boolean isTranSuccessed = false;
-        try (Connection connTargetDb = OiyoBasicJdbcUtil
-                .getConnection(sqlInfo.getEntitySet().getSettingsDatabase(oiyoInfo))) {
+        try (Connection connTargetDb = OiyoBasicJdbcUtil.getConnection(database)) {
             // Set auto commit OFF.
             connTargetDb.setAutoCommit(false);
             try {
@@ -333,11 +339,13 @@ public class OiyoBasicJdbcEntityOneBuilder {
                     OiyokanMessages.M213_CODE, Locale.ENGLISH);
         }
 
-        final OiyoSqlInfo sqlInfo = new OiyoSqlInfo(oiyoInfo, entitySet);
+        final OiyoSqlInfo sqlInfo = new OiyoSqlInfo(oiyoInfo, entitySet.getName(), entitySet);
+
+        final OiyoSettingsDatabase database = OiyoInfoUtil.getOiyoDatabaseByEntitySetName(oiyoInfo,
+                entitySet.getName());
 
         // データベースに接続.
-        try (Connection connTargetDb = OiyoBasicJdbcUtil
-                .getConnection(sqlInfo.getEntitySet().getSettingsDatabase(oiyoInfo))) {
+        try (Connection connTargetDb = OiyoBasicJdbcUtil.getConnection(database)) {
             // Set auto commit OFF.
             connTargetDb.setAutoCommit(false);
             boolean isTranSuccessed = false;
