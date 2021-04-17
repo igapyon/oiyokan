@@ -68,6 +68,7 @@ import jp.oiyokan.basic.sql.OiyoSqlInfo;
 import jp.oiyokan.dto.OiyoSettingsDatabase;
 import jp.oiyokan.dto.OiyoSettingsProperty;
 import jp.oiyokan.settings.OiyoSettingsUtil;
+import jp.oiyokan.util.OiyoDateTimeUtil;
 import jp.oiyokan.util.OiyoEdmUtil;
 
 /**
@@ -429,7 +430,7 @@ public class OiyoBasicJdbcUtil {
             if (IS_SHOW_DEBUG)
                 System.err.println("TRACE: PreparedStatement#setDate(4): " + value);
             ZonedDateTime zdt = (ZonedDateTime) value;
-            java.util.Date look = OiyoBasicDateTimeUtil.zonedDateTime2Date(zdt);
+            java.util.Date look = OiyoDateTimeUtil.zonedDateTime2Date(zdt);
             java.sql.Date sdate = new java.sql.Date(look.getTime());
             stmt.setDate(column, sdate);
         } else if (value instanceof String) {
@@ -601,7 +602,7 @@ public class OiyoBasicJdbcUtil {
                 sqlInfo.getSqlBuilder().append("?");
                 sqlInfo.getSqlParamList().add(inputParam);
             } else {
-                ZonedDateTime zdt = OiyoBasicDateTimeUtil.parseStringDateTime(String.valueOf(inputParam));
+                ZonedDateTime zdt = OiyoDateTimeUtil.parseStringDateTime(String.valueOf(inputParam));
                 sqlInfo.getSqlBuilder().append("?");
                 sqlInfo.getSqlParamList().add(zdt);
             }
@@ -619,7 +620,7 @@ public class OiyoBasicJdbcUtil {
                 sqlInfo.getSqlBuilder().append("?");
                 sqlInfo.getSqlParamList().add(inputParam);
             } else {
-                ZonedDateTime zdt = OiyoBasicDateTimeUtil.parseStringDateTime(String.valueOf(inputParam));
+                ZonedDateTime zdt = OiyoDateTimeUtil.parseStringDateTime(String.valueOf(inputParam));
                 sqlInfo.getSqlBuilder().append("?");
                 sqlInfo.getSqlParamList().add(zdt);
             }
@@ -638,7 +639,7 @@ public class OiyoBasicJdbcUtil {
                 sqlInfo.getSqlBuilder().append("?");
                 sqlInfo.getSqlParamList().add(look);
             } else {
-                ZonedDateTime zdt = OiyoBasicDateTimeUtil.parseStringDateTime(String.valueOf(inputParam));
+                ZonedDateTime zdt = OiyoDateTimeUtil.parseStringDateTime(String.valueOf(inputParam));
                 sqlInfo.getSqlBuilder().append("?");
                 sqlInfo.getSqlParamList().add(zdt);
             }
