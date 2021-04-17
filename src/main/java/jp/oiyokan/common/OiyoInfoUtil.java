@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jp.oiyokan.settings;
+package jp.oiyokan.common;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,7 +28,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanMessages;
-import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.dto.OiyoSettings;
 import jp.oiyokan.dto.OiyoSettingsDatabase;
 import jp.oiyokan.dto.OiyoSettingsEntitySet;
@@ -37,7 +36,7 @@ import jp.oiyokan.dto.OiyoSettingsProperty;
 /**
  * oiyokan-settings.json ファイルに関する処理。
  */
-public class OiyoSettingsUtil {
+public class OiyoInfoUtil {
     /**
      * resources フォルダから設定ファイルを読み込み.
      * 

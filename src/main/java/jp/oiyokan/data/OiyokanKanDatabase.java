@@ -34,11 +34,11 @@ import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanMessages;
 import jp.oiyokan.basic.OiyoBasicJdbcUtil;
 import jp.oiyokan.common.OiyoInfo;
+import jp.oiyokan.common.OiyoInfoUtil;
 import jp.oiyokan.dto.OiyoSettingsDatabase;
 import jp.oiyokan.dto.OiyoSettingsEntitySet;
 import jp.oiyokan.dto.OiyoSettingsEntityType;
 import jp.oiyokan.dto.OiyoSettingsProperty;
-import jp.oiyokan.settings.OiyoSettingsUtil;
 import jp.oiyokan.util.OiyoEdmUtil;
 import jp.oiyokan.util.OiyoJdbcUtil;
 import jp.oiyokan.util.OiyoMapJdbcEdmUtil;
@@ -61,7 +61,7 @@ public class OiyokanKanDatabase {
             System.err.println( //
                     "OData v4: setup oiyokanKan database (Oiyokan: " + OiyokanConstants.VERSION + ")");
 
-        OiyoSettingsDatabase settingsInterDatabase = OiyoSettingsUtil.getOiyokanDatabase(oiyoInfo,
+        OiyoSettingsDatabase settingsInterDatabase = OiyoInfoUtil.getOiyokanDatabase(oiyoInfo,
                 OiyokanConstants.OIYOKAN_KAN_DB);
 
         try (Connection connInterDb = OiyoBasicJdbcUtil.getConnection(settingsInterDatabase)) {

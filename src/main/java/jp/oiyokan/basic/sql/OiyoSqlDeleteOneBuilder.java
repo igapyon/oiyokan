@@ -24,7 +24,8 @@ import org.apache.olingo.server.api.uri.UriParameter;
 
 import jp.oiyokan.basic.OiyoBasicJdbcUtil;
 import jp.oiyokan.common.OiyoInfo;
-import jp.oiyokan.settings.OiyoSettingsUtil;
+import jp.oiyokan.common.OiyoInfoUtil;
+import jp.oiyokan.common.OiyoSqlInfo;
 
 /**
  * データベースから1件レコードを削除.
@@ -78,7 +79,7 @@ public class OiyoSqlDeleteOneBuilder {
 
             CsdlProperty csdlProp = sqlInfo.getEntitySet().getEntityType().getProperty(param.getName());
 
-            sqlInfo.getSqlBuilder().append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyoSettingsUtil
+            sqlInfo.getSqlBuilder().append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyoInfoUtil
                     .getOiyoEntityProperty(oiyoInfo, edmEntitySet.getName(), csdlProp.getName()).getDbName()));
             sqlInfo.getSqlBuilder().append("=");
             OiyoBasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo, csdlProp.getType(), param.getText());

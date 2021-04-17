@@ -26,7 +26,8 @@ import org.apache.olingo.server.api.uri.UriParameter;
 
 import jp.oiyokan.basic.OiyoBasicJdbcUtil;
 import jp.oiyokan.common.OiyoInfo;
-import jp.oiyokan.settings.OiyoSettingsUtil;
+import jp.oiyokan.common.OiyoInfoUtil;
+import jp.oiyokan.common.OiyoSqlInfo;
 
 /**
  * データベースに1件レコードを追加.
@@ -80,7 +81,7 @@ public class OiyoSqlInsertOneBuilder {
                 } else {
                     sqlInfo.getSqlBuilder().append(",");
                 }
-                sqlInfo.getSqlBuilder().append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyoSettingsUtil
+                sqlInfo.getSqlBuilder().append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyoInfoUtil
                         .getOiyoEntityProperty(oiyoInfo, edmEntitySet.getName(), param.getName()).getDbName()));
             }
         }
@@ -92,7 +93,7 @@ public class OiyoSqlInsertOneBuilder {
                 sqlInfo.getSqlBuilder().append(",");
             }
 
-            final String colName = OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyoSettingsUtil
+            final String colName = OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyoInfoUtil
                     .getOiyoEntityProperty(oiyoInfo, edmEntitySet.getName(), prop.getName()).getDbName());
             sqlInfo.getSqlBuilder().append(colName);
         }

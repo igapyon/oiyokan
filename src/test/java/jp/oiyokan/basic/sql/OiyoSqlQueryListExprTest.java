@@ -33,7 +33,8 @@ import jp.oiyokan.OiyokanEdmProvider;
 import jp.oiyokan.OiyokanTestSettingConstants;
 import jp.oiyokan.basic.OiyoBasicUrlUtil;
 import jp.oiyokan.common.OiyoInfo;
-import jp.oiyokan.settings.OiyoSettingsUtil;
+import jp.oiyokan.common.OiyoInfoUtil;
+import jp.oiyokan.common.OiyoSqlInfo;
 
 /**
  * OiyoSqlQueryListExpr のテスト.
@@ -51,7 +52,7 @@ class OiyoSqlQueryListExprTest {
      */
     private String getExprString(String rawODataPath, String rawQueryPath) throws Exception {
         final OiyoInfo oiyoInfo = new OiyoInfo();
-        oiyoInfo.setSettings(OiyoSettingsUtil.loadOiyokanSettings());
+        oiyoInfo.setSettings(OiyoInfoUtil.loadOiyokanSettings());
 
         OData odata = OData.newInstance();
         ServiceMetadata edm = odata.createServiceMetadata(new OiyokanEdmProvider(), new ArrayList<>());

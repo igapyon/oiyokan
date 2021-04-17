@@ -43,11 +43,11 @@ import jp.oiyokan.OiyokanCsdlEntitySet;
 import jp.oiyokan.OiyokanEdmProvider;
 import jp.oiyokan.OiyokanMessages;
 import jp.oiyokan.basic.sql.OiyoSqlDeleteOneBuilder;
-import jp.oiyokan.basic.sql.OiyoSqlInfo;
 import jp.oiyokan.basic.sql.OiyoSqlInsertOneBuilder;
 import jp.oiyokan.basic.sql.OiyoSqlQueryOneBuilder;
 import jp.oiyokan.basic.sql.OiyoSqlUpdateOneBuilder;
 import jp.oiyokan.common.OiyoInfo;
+import jp.oiyokan.common.OiyoSqlInfo;
 
 /**
  * Entity 1件の検索に関する基本的なJDBC処理

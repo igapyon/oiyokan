@@ -28,10 +28,10 @@ import org.apache.olingo.server.api.ODataApplicationException;
 
 import jp.oiyokan.basic.OiyoBasicJdbcEntityTypeBuilder;
 import jp.oiyokan.common.OiyoInfo;
+import jp.oiyokan.common.OiyoInfoUtil;
 import jp.oiyokan.data.OiyokanKanDatabase;
 import jp.oiyokan.dto.OiyoSettingsDatabase;
 import jp.oiyokan.dto.OiyoSettingsEntitySet;
-import jp.oiyokan.settings.OiyoSettingsUtil;
 
 /**
  * Oiyokan の CsdlEntityContainer 実装.
@@ -58,8 +58,10 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
     static synchronized OiyoInfo getOiyoInfoInstance() throws ODataApplicationException {
         // singleton by static synchronized.
         if (oiyoInfo == null) {
-            oiyoInfo = new OiyoInfo();
-            oiyoInfo.setSettings(OiyoSettingsUtil.loadOiyokanSettings());
+            final OiyoInfo wrk = new OiyoInfo();
+            wrk.setSettings(OiyoInfoUtil.loadOiyokanSettings());
+            // ロードが終わってから変数に値をセット。念には念を)
+            oiyoInfo = wrk;
         }
 
         return oiyoInfo;
@@ -73,7 +75,7 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
     public void ensureBuild() throws ODataApplicationException {
-        // OiyokanSettings の singleton を確実にインスタンス化.
+        // OiyoInfo の singleton を確実にインスタンス化.
         getOiyoInfoInstance();
 
         if (getName() == null) {

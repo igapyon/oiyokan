@@ -26,9 +26,9 @@ import org.apache.olingo.server.api.ODataApplicationException;
 import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanCsdlEntitySet;
 import jp.oiyokan.common.OiyoInfo;
+import jp.oiyokan.common.OiyoInfoUtil;
 import jp.oiyokan.dto.OiyoSettingsEntitySet;
 import jp.oiyokan.dto.OiyoSettingsProperty;
-import jp.oiyokan.settings.OiyoSettingsUtil;
 
 /**
  * 典型的で基本的な JDBC処理を利用した EntityType を構築。
@@ -76,7 +76,7 @@ public class OiyoBasicJdbcEntityTypeBuilder {
         final List<CsdlProperty> propertyList = new ArrayList<>();
         entityType.setProperties(propertyList);
 
-        OiyoSettingsEntitySet oiyoEntitySet = OiyoSettingsUtil.getOiyoEntitySet(oiyoInfo, entitySet.getName());
+        OiyoSettingsEntitySet oiyoEntitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, entitySet.getName());
 
         for (OiyoSettingsProperty oiyoProp : oiyoEntitySet.getEntityType().getProperty()) {
             propertyList.add(OiyoBasicJdbcUtil.resultSetMetaData2CsdlProperty(oiyoProp));

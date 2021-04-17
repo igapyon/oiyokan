@@ -19,9 +19,9 @@ import java.sql.Connection;
 
 import jp.oiyokan.basic.OiyoBasicJdbcUtil;
 import jp.oiyokan.common.OiyoInfo;
+import jp.oiyokan.common.OiyoInfoUtil;
 import jp.oiyokan.data.OiyokanKanDatabase;
 import jp.oiyokan.dto.OiyoSettingsDatabase;
-import jp.oiyokan.settings.OiyoSettingsUtil;
 
 /**
  * 内部データベース用のCSDL用内部テーブルのDDLをコマンドライン生成.
@@ -35,9 +35,9 @@ class ZzzGenTableMSSQLSakilaTest {
     // @Test
     void test01() throws Exception {
         final OiyoInfo oiyoInfo = new OiyoInfo();
-        oiyoInfo.setSettings(OiyoSettingsUtil.loadOiyokanSettings());
+        oiyoInfo.setSettings(OiyoInfoUtil.loadOiyokanSettings());
 
-        OiyoSettingsDatabase settingsDatabase = OiyoSettingsUtil.getOiyokanDatabase(oiyoInfo, "mssql1");
+        OiyoSettingsDatabase settingsDatabase = OiyoInfoUtil.getOiyokanDatabase(oiyoInfo, "mssql1");
 
         try (Connection connTargetDb = OiyoBasicJdbcUtil.getConnection(settingsDatabase)) {
             System.err.println(OiyokanKanDatabase.generateCreateOiyoDdl(connTargetDb, "actor"));

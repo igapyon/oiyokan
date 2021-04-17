@@ -27,9 +27,9 @@ import org.junit.jupiter.api.Test;
 
 import jp.oiyokan.basic.OiyoBasicJdbcUtil;
 import jp.oiyokan.common.OiyoInfo;
+import jp.oiyokan.common.OiyoInfoUtil;
 import jp.oiyokan.data.OiyokanKanDatabase;
 import jp.oiyokan.dto.OiyoSettingsDatabase;
-import jp.oiyokan.settings.OiyoSettingsUtil;
 
 /**
  * 内部データベース用のCSDL用内部テーブルのDDLをコマンドライン生成.
@@ -56,9 +56,9 @@ class ZzzGenTableGenericAllTest {
         }
 
         final OiyoInfo oiyoInfo = new OiyoInfo();
-        oiyoInfo.setSettings(OiyoSettingsUtil.loadOiyokanSettings());
+        oiyoInfo.setSettings(OiyoInfoUtil.loadOiyokanSettings());
 
-        OiyoSettingsDatabase settingsDatabase = OiyoSettingsUtil.getOiyokanDatabase(oiyoInfo, TARGET_UNITTEST_DATABASE);
+        OiyoSettingsDatabase settingsDatabase = OiyoInfoUtil.getOiyokanDatabase(oiyoInfo, TARGET_UNITTEST_DATABASE);
 
         try (Connection connTargetDb = OiyoBasicJdbcUtil.getConnection(settingsDatabase)) {
             final List<String> tableNameList = new ArrayList<>();

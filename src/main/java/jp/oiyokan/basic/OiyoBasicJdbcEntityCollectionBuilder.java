@@ -40,9 +40,9 @@ import jp.oiyokan.OiyokanEntityCollectionBuilderInterface;
 import jp.oiyokan.OiyokanMessages;
 import jp.oiyokan.basic.sql.OiyoSqlQueryListBuilder;
 import jp.oiyokan.common.OiyoInfo;
+import jp.oiyokan.common.OiyoInfoUtil;
 import jp.oiyokan.dto.OiyoSettingsEntitySet;
 import jp.oiyokan.h2.data.OiyoExperimentalH2FullTextSearch;
-import jp.oiyokan.settings.OiyoSettingsUtil;
 
 /**
  * 実際に返却するデータ本体を組み上げるクラス.
@@ -128,7 +128,7 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
                 return entityCollection;
             }
 
-            final OiyoSettingsEntitySet oiyoEntitySet = OiyoSettingsUtil.getOiyoEntitySet(oiyoInfo,
+            final OiyoSettingsEntitySet oiyoEntitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo,
                     edmEntitySet.getName());
 
             if (uriInfo.getCountOption() != null && uriInfo.getCountOption().getValue()) {
@@ -160,7 +160,7 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
     private void processCountQuery(OiyokanCsdlEntitySet entitySet, UriInfo uriInfo, Connection connTargetDb,
             EntityCollection entityCollection) throws ODataApplicationException {
         // 件数をカウントして設定。
-        OiyoSqlQueryListBuilder basicSqlBuilder = new OiyoSqlQueryListBuilder(oiyoInfo, entitySet);
+        OiyoSqlQueryListBuilder basicSqlBuilder = new OiyoSqlQueryListBuilder(oiyoInfo, entitySet.getName(), entitySet);
         basicSqlBuilder.buildSelectCountQuery(uriInfo);
         final String sql = basicSqlBuilder.getSqlInfo().getSqlBuilder().toString();
 
@@ -217,7 +217,7 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
      */
     public void processCollectionQuery(OiyokanCsdlEntitySet entitySet, UriInfo uriInfo, Connection connTargetDb,
             EntityCollection entityCollection) throws ODataApplicationException {
-        OiyoSqlQueryListBuilder basicSqlBuilder = new OiyoSqlQueryListBuilder(oiyoInfo, entitySet);
+        OiyoSqlQueryListBuilder basicSqlBuilder = new OiyoSqlQueryListBuilder(oiyoInfo, entitySet.getName(), entitySet);
 
         // UriInfo 情報を元に SQL文を組み立て.
         basicSqlBuilder.buildSelectQuery(uriInfo);
