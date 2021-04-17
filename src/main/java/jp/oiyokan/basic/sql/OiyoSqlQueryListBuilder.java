@@ -32,12 +32,18 @@ import org.apache.olingo.server.core.uri.queryoption.expression.MemberImpl;
 import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanCsdlEntitySet;
 import jp.oiyokan.basic.OiyoBasicJdbcUtil;
+import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.settings.OiyoSettingsUtil;
 
 /**
  * SQL文を構築するための簡易クラス.
  */
 public class OiyoSqlQueryListBuilder {
+    /**
+     * Oiyokan Info.
+     */
+    private OiyoInfo oiyoInfo;
+
     /**
      * SQL構築のデータ構造.
      */
@@ -52,8 +58,9 @@ public class OiyoSqlQueryListBuilder {
         return sqlInfo;
     }
 
-    public OiyoSqlQueryListBuilder(OiyokanCsdlEntitySet entitySet) {
-        this.sqlInfo = new OiyoSqlInfo(entitySet);
+    public OiyoSqlQueryListBuilder(OiyoInfo oiyoInfo, OiyokanCsdlEntitySet entitySet) {
+        this.oiyoInfo = oiyoInfo;
+        this.sqlInfo = new OiyoSqlInfo(oiyoInfo, entitySet);
     }
 
     /**
@@ -68,7 +75,7 @@ public class OiyoSqlQueryListBuilder {
         if (uriInfo.getFilterOption() != null) {
             FilterOptionImpl filterOpt = (FilterOptionImpl) uriInfo.getFilterOption();
             sqlInfo.getSqlBuilder().append(" WHERE ");
-            new OiyoSqlQueryListExpr(sqlInfo).expand(filterOpt.getExpression());
+            new OiyoSqlQueryListExpr(oiyoInfo, sqlInfo).expand(filterOpt.getExpression());
         }
     }
 
@@ -99,7 +106,7 @@ public class OiyoSqlQueryListBuilder {
                 FilterOptionImpl filterOpt = (FilterOptionImpl) uriInfo.getFilterOption();
                 // WHERE部分についてはパラメータクエリで処理するのを基本とする.
                 sqlInfo.getSqlBuilder().append(" WHERE ");
-                new OiyoSqlQueryListExpr(sqlInfo).expand(filterOpt.getExpression());
+                new OiyoSqlQueryListExpr(oiyoInfo, sqlInfo).expand(filterOpt.getExpression());
             }
         }
 
@@ -160,7 +167,7 @@ public class OiyoSqlQueryListBuilder {
 
             // もし空白を含む場合はエスケープ。
             strColumns += OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo,
-                    OiyoSettingsUtil.getOiyoEntityProperty(entitySet.getName(), prop.getName()).getDbName());
+                    OiyoSettingsUtil.getOiyoEntityProperty(oiyoInfo, entitySet.getName(), prop.getName()).getDbName());
         }
         sqlInfo.getSqlBuilder().append(strColumns);
     }
@@ -169,8 +176,8 @@ public class OiyoSqlQueryListBuilder {
         final OiyokanCsdlEntitySet iyoEntitySet = (OiyokanCsdlEntitySet) sqlInfo.getEntitySet();
         final List<String> keyTarget = new ArrayList<>();
         for (CsdlPropertyRef propRef : iyoEntitySet.getEntityType().getKey()) {
-            keyTarget
-                    .add(OiyoSettingsUtil.getOiyoEntityProperty(iyoEntitySet.getName(), propRef.getName()).getDbName());
+            keyTarget.add(OiyoSettingsUtil.getOiyoEntityProperty(oiyoInfo, iyoEntitySet.getName(), propRef.getName())
+                    .getDbName());
         }
         int itemCount = 0;
         for (SelectItem item : uriInfo.getSelectOption().getSelectItems()) {
@@ -178,7 +185,7 @@ public class OiyoSqlQueryListBuilder {
                 sqlInfo.getSqlBuilder().append(itemCount++ == 0 ? "" : ",");
                 final String unescapedName = OiyoBasicJdbcUtil.unescapeKakkoFieldName(res.toString());
                 sqlInfo.getSqlBuilder().append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyoSettingsUtil
-                        .getOiyoEntityProperty(sqlInfo.getEntitySet().getName(), unescapedName).getDbName()));
+                        .getOiyoEntityProperty(oiyoInfo, sqlInfo.getEntitySet().getName(), unescapedName).getDbName()));
                 for (int index = 0; index < keyTarget.size(); index++) {
                     if (keyTarget.get(index).equals(res.toString())) {
                         keyTarget.remove(index);
@@ -238,7 +245,7 @@ public class OiyoSqlQueryListBuilder {
             if (uriInfo.getFilterOption() != null) {
                 sqlInfo.getSqlBuilder().append(" WHERE ");
                 // データ絞り込みはここで実現.
-                new OiyoSqlQueryListExpr(sqlInfo).expand(uriInfo.getFilterOption().getExpression());
+                new OiyoSqlQueryListExpr(oiyoInfo, sqlInfo).expand(uriInfo.getFilterOption().getExpression());
             }
             sqlInfo.getSqlBuilder().append(")");
             if (OiyokanConstants.DatabaseType.MSSQL2008 == sqlInfo.getEntitySet().getDatabaseType()) {
@@ -264,7 +271,7 @@ public class OiyoSqlQueryListBuilder {
             final String unescapedName = OiyoBasicJdbcUtil
                     .unescapeKakkoFieldName(((MemberImpl) orderByItem.getExpression()).toString());
             sqlInfo.getSqlBuilder().append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyoSettingsUtil
-                    .getOiyoEntityProperty(sqlInfo.getEntitySet().getName(), unescapedName).getDbName()));
+                    .getOiyoEntityProperty(oiyoInfo, sqlInfo.getEntitySet().getName(), unescapedName).getDbName()));
 
             if (orderByItem.isDescending()) {
                 sqlInfo.getSqlBuilder().append(" DESC");
@@ -283,7 +290,7 @@ public class OiyoSqlQueryListBuilder {
             }
             final String unescapedName = OiyoBasicJdbcUtil.unescapeKakkoFieldName(look.getName());
             sqlInfo.getSqlBuilder().append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyoSettingsUtil
-                    .getOiyoEntityProperty(sqlInfo.getEntitySet().getName(), unescapedName).getDbName()));
+                    .getOiyoEntityProperty(oiyoInfo, sqlInfo.getEntitySet().getName(), unescapedName).getDbName()));
         }
     }
 

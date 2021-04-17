@@ -23,12 +23,18 @@ import org.apache.olingo.server.api.ODataApplicationException;
 import org.apache.olingo.server.api.uri.UriParameter;
 
 import jp.oiyokan.basic.OiyoBasicJdbcUtil;
+import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.settings.OiyoSettingsUtil;
 
 /**
  * データベースから1件レコードを削除.
  */
 public class OiyoSqlDeleteOneBuilder {
+    /**
+     * Oiyokan Info.
+     */
+    private OiyoInfo oiyoInfo;
+
     /**
      * SQL構築のデータ構造.
      */
@@ -43,7 +49,8 @@ public class OiyoSqlDeleteOneBuilder {
         return sqlInfo;
     }
 
-    public OiyoSqlDeleteOneBuilder(OiyoSqlInfo sqlInfo) {
+    public OiyoSqlDeleteOneBuilder(OiyoInfo oiyoInfo, OiyoSqlInfo sqlInfo) {
+        this.oiyoInfo = oiyoInfo;
         this.sqlInfo = sqlInfo;
     }
 
@@ -71,8 +78,8 @@ public class OiyoSqlDeleteOneBuilder {
 
             CsdlProperty csdlProp = sqlInfo.getEntitySet().getEntityType().getProperty(param.getName());
 
-            sqlInfo.getSqlBuilder().append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo,
-                    OiyoSettingsUtil.getOiyoEntityProperty(edmEntitySet.getName(), csdlProp.getName()).getDbName()));
+            sqlInfo.getSqlBuilder().append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyoSettingsUtil
+                    .getOiyoEntityProperty(oiyoInfo, edmEntitySet.getName(), csdlProp.getName()).getDbName()));
             sqlInfo.getSqlBuilder().append("=");
             OiyoBasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo, csdlProp.getType(), param.getText());
         }

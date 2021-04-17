@@ -19,8 +19,6 @@ import java.time.ZonedDateTime;
 
 import org.junit.jupiter.api.Test;
 
-import jp.oiyokan.util.OiyoDateTimeUtil;
-
 /**
  * DateTimeに関するテスト。
  */
@@ -30,7 +28,7 @@ class OiyoDateTimeUtilTest {
     void test() {
         ZonedDateTime zdt = OiyoDateTimeUtil.parseStringDateTime("2021-04-10T19:12:49.082Z");
         // System.err.println(zdt.toString());
-        
+
         zdt = OiyoDateTimeUtil.parseStringDateTime("2021-04-10 19:12:49.082Z");
         // System.err.println(zdt.toString());
 

@@ -21,6 +21,7 @@ import java.util.List;
 import org.apache.olingo.server.api.ODataApplicationException;
 
 import jp.oiyokan.OiyokanCsdlEntitySet;
+import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.dto.OiyoSettingsDatabase;
 
 /**
@@ -31,6 +32,11 @@ import jp.oiyokan.dto.OiyoSettingsDatabase;
  * 当面は、このクラスはSQL文とパラメータを蓄える。
  */
 public class OiyoSqlInfo {
+    /**
+     * Oiyokan Info.
+     */
+    private OiyoInfo oiyoInfo;
+
     private OiyokanCsdlEntitySet entitySet = null;
 
     private final StringBuilder sqlBuilder = new StringBuilder();
@@ -41,7 +47,8 @@ public class OiyoSqlInfo {
      * 
      * @param entitySet EntitySet instance.
      */
-    public OiyoSqlInfo(OiyokanCsdlEntitySet entitySet) {
+    public OiyoSqlInfo(OiyoInfo oiyoInfo, OiyokanCsdlEntitySet entitySet) {
+        this.oiyoInfo = oiyoInfo;
         this.entitySet = entitySet;
     }
 
@@ -79,6 +86,6 @@ public class OiyoSqlInfo {
      * @throws ODataApplicationException ODataアプリ例外が発生.
      */
     public OiyoSettingsDatabase getSettingsDatabase() throws ODataApplicationException {
-        return entitySet.getSettingsDatabase();
+        return entitySet.getSettingsDatabase(oiyoInfo);
     }
 }

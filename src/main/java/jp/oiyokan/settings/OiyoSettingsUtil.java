@@ -27,8 +27,8 @@ import org.springframework.util.StreamUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jp.oiyokan.OiyokanConstants;
-import jp.oiyokan.OiyokanCsdlEntityContainer;
 import jp.oiyokan.OiyokanMessages;
+import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.dto.OiyoSettings;
 import jp.oiyokan.dto.OiyoSettingsDatabase;
 import jp.oiyokan.dto.OiyoSettingsEntitySet;
@@ -70,14 +70,15 @@ public class OiyoSettingsUtil {
      * @return OiyokanSettingsDatabase setting info.
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
-    public static OiyoSettingsDatabase getOiyokanDatabase(String databaseDefName) throws ODataApplicationException {
+    public static OiyoSettingsDatabase getOiyokanDatabase(OiyoInfo oiyoInfo, String databaseDefName)
+            throws ODataApplicationException {
         if (databaseDefName == null) {
             // [M026] UNEXPECTED: Database settings NOT found
             System.err.println(OiyokanMessages.M026 + ": " + databaseDefName);
             throw new ODataApplicationException(OiyokanMessages.M026 + ": " + databaseDefName, 500, Locale.ENGLISH);
         }
 
-        final OiyoSettings settingsOiyokan = OiyokanCsdlEntityContainer.getOiyoInfoInstance().getSettings();
+        final OiyoSettings settingsOiyokan = oiyoInfo.getSettings();
         for (OiyoSettingsDatabase look : settingsOiyokan.getDatabase()) {
             if (databaseDefName.equals(look.getName())) {
                 return look;
@@ -89,7 +90,8 @@ public class OiyoSettingsUtil {
         throw new ODataApplicationException(OiyokanMessages.M026 + ": " + databaseDefName, 500, Locale.ENGLISH);
     }
 
-    public static OiyoSettingsEntitySet getOiyoEntitySet(String entitySetName) throws ODataApplicationException {
+    public static OiyoSettingsEntitySet getOiyoEntitySet(OiyoInfo oiyoInfo, String entitySetName)
+            throws ODataApplicationException {
         if (entitySetName == null) {
             // [M038] UNEXPECTED: null parameter given as EntitySet.
             System.err.println(OiyokanMessages.M038 + ": " + entitySetName);
@@ -97,7 +99,7 @@ public class OiyoSettingsUtil {
         }
 
         // TODO FIXME このシングルトン取得を回避したい。引数に変えたい。
-        final OiyoSettings settingsOiyokan = OiyokanCsdlEntityContainer.getOiyoInfoInstance().getSettings();
+        final OiyoSettings settingsOiyokan = oiyoInfo.getSettings();
         for (OiyoSettingsEntitySet look : settingsOiyokan.getEntitySet()) {
             if (entitySetName.equals(look.getName())) {
                 return look;
@@ -109,9 +111,9 @@ public class OiyoSettingsUtil {
         throw new ODataApplicationException(OiyokanMessages.M039 + ": " + entitySetName, 500, Locale.ENGLISH);
     }
 
-    public static OiyoSettingsProperty getOiyoEntityProperty(String entitySetName, String propertyName)
-            throws ODataApplicationException {
-        OiyoSettingsEntitySet entitySet = getOiyoEntitySet(entitySetName);
+    public static OiyoSettingsProperty getOiyoEntityProperty(OiyoInfo oiyoInfo, String entitySetName,
+            String propertyName) throws ODataApplicationException {
+        OiyoSettingsEntitySet entitySet = getOiyoEntitySet(oiyoInfo, entitySetName);
 
         for (OiyoSettingsProperty prop : entitySet.getEntityType().getProperty()) {
             if (prop.getName().equals(propertyName)) {

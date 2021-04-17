@@ -22,6 +22,7 @@ import org.junit.jupiter.api.Test;
 import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanTestSettingConstants;
 import jp.oiyokan.basic.OiyoBasicJdbcUtil;
+import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.data.OiyokanKanDatabase;
 import jp.oiyokan.dto.OiyoSettingsDatabase;
 import jp.oiyokan.settings.OiyoSettingsUtil;
@@ -40,12 +41,15 @@ class ZzzGenTableODataTest1Test {
         if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
             return;
 
-        OiyoSettingsDatabase settingsDatabase = OiyoSettingsUtil
-                .getOiyokanDatabase(OiyokanConstants.OIYOKAN_UNITTEST_DB);
+        final OiyoInfo oiyoInfo = new OiyoInfo();
+        oiyoInfo.setSettings(OiyoSettingsUtil.loadOiyokanSettings());
+
+        OiyoSettingsDatabase settingsDatabase = OiyoSettingsUtil.getOiyokanDatabase(oiyoInfo,
+                OiyokanConstants.OIYOKAN_UNITTEST_DB);
 
         try (Connection connTargetDb = OiyoBasicJdbcUtil.getConnection(settingsDatabase)) {
             // 内部データベースのテーブルをセットアップ.
-            OiyokanKanDatabase.setupKanDatabase();
+            OiyokanKanDatabase.setupKanDatabase(oiyoInfo);
 
             System.err.println(OiyokanKanDatabase.generateCreateOiyoDdl(connTargetDb, "ODataTest1"));
 

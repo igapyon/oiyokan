@@ -25,6 +25,7 @@ import org.apache.commons.codec.net.URLCodec;
  * Oiyokan 関連の URL まわりユーティリティクラス.
  */
 public class OiyoBasicUrlUtil {
+    // TODO FIXME パッケージを util に移動.
     private OiyoBasicUrlUtil() {
     }
 

@@ -52,6 +52,7 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
      * 
      * @return OiyoInfo OiyokanSettings instanceを含む. 参照のみで利用.
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
+     * @deprecated なるべく呼ばないで...
      */
     public static synchronized OiyoInfo getOiyoInfoInstance() throws ODataApplicationException {
         // singleton by static synchronized.
@@ -116,7 +117,7 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
             }
 
             // Oiyokan が動作する際に必要になる内部データベースのバージョン情報および Oiyo info をセットアップ.
-            OiyokanKanDatabase.setupKanDatabase();
+            OiyokanKanDatabase.setupKanDatabase(oiyoInfo);
 
             for (OiyoSettingsEntitySet entitySetCnof : getOiyoInfoInstance().getSettings().getEntitySet()) {
                 // System.err.println("TRACE: entitySet: " + entitySetCnof.getEntitySetName() +
@@ -124,7 +125,7 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
                 // + entitySetCnof.getDatabaseName());
 
                 // EntitySet の初期セットを実施。
-                getEntitySets().add(new OiyokanCsdlEntitySet(this, entitySetCnof));
+                getEntitySets().add(new OiyokanCsdlEntitySet(oiyoInfo, this, entitySetCnof));
             }
         }
     }
@@ -187,7 +188,7 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
 
         // 処理したことのない EntityType。これから型情報を構築。
         // 内部データベースをもとに Oiyo形式を構築するため、リソースの型によらず常に以下のクラスで処理.
-        OiyoBasicJdbcEntityTypeBuilder entityTypeBuilder = new OiyoBasicJdbcEntityTypeBuilder(
+        OiyoBasicJdbcEntityTypeBuilder entityTypeBuilder = new OiyoBasicJdbcEntityTypeBuilder(oiyoInfo,
                 getEntitySetByEntityNameFqnIyo(entityTypeName));
 
         // キャッシュに記憶.

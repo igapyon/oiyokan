@@ -42,6 +42,8 @@ import org.apache.olingo.server.api.uri.UriResourceEntitySet;
 import org.apache.olingo.server.core.uri.queryoption.CountOptionImpl;
 
 import jp.oiyokan.basic.OiyoBasicJdbcEntityCollectionBuilder;
+import jp.oiyokan.common.OiyoInfo;
+import jp.oiyokan.settings.OiyoSettingsUtil;
 
 /**
  * Oiyokan による EntityCollectionProcessor 実装.
@@ -86,6 +88,9 @@ public class OiyokanEntityCollectionProcessor implements EntityCollectionProcess
             UriInfo uriInfo, ContentType responseFormat) //
             throws ODataApplicationException, SerializerException {
         try {
+            // TODO FIXME シングルトン化の検討
+            final OiyoInfo oiyoInfo = new OiyoInfo();
+            oiyoInfo.setSettings(OiyoSettingsUtil.loadOiyokanSettings());
 
             // URI情報からURIリソースの指定を取得.
             List<UriResource> resourcePaths = uriInfo.getUriResourceParts();
@@ -95,7 +100,8 @@ public class OiyokanEntityCollectionProcessor implements EntityCollectionProcess
             // 要素セットの指定からEDM要素セットを取得.
             EdmEntitySet edmEntitySet = uriResourceEntitySet.getEntitySet();
 
-            OiyokanEntityCollectionBuilderInterface entityCollectionBuilder = getEntityCollectionBuilder(edmEntitySet);
+            OiyokanEntityCollectionBuilderInterface entityCollectionBuilder = getEntityCollectionBuilder(oiyoInfo,
+                    edmEntitySet);
 
             // 要素セットの指定をもとに要素コレクションを取得.
             // これがデータ本体に該当.
@@ -142,8 +148,8 @@ public class OiyokanEntityCollectionProcessor implements EntityCollectionProcess
         }
     }
 
-    private static final OiyokanEntityCollectionBuilderInterface getEntityCollectionBuilder(EdmEntitySet edmEntitySet)
-            throws ODataApplicationException {
+    private static final OiyokanEntityCollectionBuilderInterface getEntityCollectionBuilder(OiyoInfo oiyoInfo,
+            EdmEntitySet edmEntitySet) throws ODataApplicationException {
         OiyokanCsdlEntitySet entitySet = null;
         OiyokanEdmProvider provider = new OiyokanEdmProvider();
         for (CsdlEntitySet look : provider.getEntityContainer().getEntitySets()) {
@@ -161,7 +167,7 @@ public class OiyokanEntityCollectionProcessor implements EntityCollectionProcess
         case ORACLE:
         default:
             // 大抵のデータベース向けには BasicJdbcEntityCollectionBuilder を利用する。
-            return new OiyoBasicJdbcEntityCollectionBuilder();
+            return new OiyoBasicJdbcEntityCollectionBuilder(oiyoInfo);
         case BigQuery:
             // TODO FIXME BigQuery用の実装が必要.
             // [M999] NOT IMPLEMENTED: Generic NOT implemented message.
