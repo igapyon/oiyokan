@@ -24,7 +24,6 @@ import org.apache.olingo.commons.api.edm.provider.CsdlPropertyRef;
 import org.apache.olingo.server.api.ODataApplicationException;
 
 import jp.oiyokan.OiyokanConstants;
-import jp.oiyokan.OiyokanCsdlEntitySet;
 import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.common.OiyoInfoUtil;
 import jp.oiyokan.dto.OiyoSettingsEntitySet;
@@ -44,14 +43,14 @@ public class OiyoBasicJdbcEntityTypeBuilder {
     /**
      * 処理対象となる EntitySet.
      */
-    private OiyokanCsdlEntitySet entitySet = null;
+    private OiyoSettingsEntitySet entitySet = null;
 
     /**
      * コンストラクタ。
      * 
      * @param entitySet OiyokanCsdlEntitySetのインスタンス.
      */
-    public OiyoBasicJdbcEntityTypeBuilder(OiyoInfo oiyoInfo, OiyokanCsdlEntitySet entitySet) {
+    public OiyoBasicJdbcEntityTypeBuilder(OiyoInfo oiyoInfo, OiyoSettingsEntitySet entitySet) {
         this.oiyoInfo = oiyoInfo;
         this.entitySet = entitySet;
         if (OiyokanConstants.IS_TRACE_ODATA_V4)
@@ -70,7 +69,7 @@ public class OiyoBasicJdbcEntityTypeBuilder {
 
         // CSDL要素型として情報を組み上げ.
         final CsdlEntityType entityType = new CsdlEntityType();
-        entityType.setName(entitySet.getEntityNameIyo());
+        entityType.setName(entitySet.getEntityType().getName());
 
         // 基本的な動作: 内部データベースである h2 データベースから該当する Oiyo による情報取得.
         final List<CsdlProperty> propertyList = new ArrayList<>();

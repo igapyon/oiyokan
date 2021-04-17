@@ -186,10 +186,22 @@ public class OiyokanCsdlEntityContainer extends CsdlEntityContainer {
             return cachedCsdlEntityTypeMap.get(entityTypeName.getFullQualifiedNameAsString());
         }
 
+        OiyoSettingsEntitySet entitySet = null;
+        for (OiyoSettingsEntitySet lookup : oiyoInfo.getSettings().getEntitySet()) {
+            if (entityTypeName.getName().equals(lookup.getEntityType().getName())) {
+                entitySet = lookup;
+            }
+        }
+        if (entitySet == null) {
+            // TODO FIXME メッセージ番号
+            System.err.println(OiyokanMessages.M999 + ": EntitySet検索失敗");
+            throw new ODataApplicationException(OiyokanMessages.M999 + ": EntitySet検索失敗", //
+                    500, Locale.ENGLISH);
+        }
+
         // 処理したことのない EntityType。これから型情報を構築。
         // 内部データベースをもとに Oiyo形式を構築するため、リソースの型によらず常に以下のクラスで処理.
-        OiyoBasicJdbcEntityTypeBuilder entityTypeBuilder = new OiyoBasicJdbcEntityTypeBuilder(oiyoInfo,
-                getEntitySetByEntityNameFqnIyo(entityTypeName));
+        OiyoBasicJdbcEntityTypeBuilder entityTypeBuilder = new OiyoBasicJdbcEntityTypeBuilder(oiyoInfo, entitySet);
 
         // キャッシュに記憶.
         CsdlEntityType newEntityType = entityTypeBuilder.getEntityType();
