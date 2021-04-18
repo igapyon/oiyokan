@@ -62,8 +62,8 @@ public class OiyokanKanDatabase {
                 stmt.executeUpdate();
             } catch (SQLException ex) {
                 // [M027] UNEXPECTED: Fail to create local table: Oiyokan
-                System.err.println(OiyokanMessages.M027 + ": " + ex.toString());
-                throw new ODataApplicationException(OiyokanMessages.M027, 500, Locale.ENGLISH);
+                System.err.println(OiyokanMessages.IY7115 + ": " + ex.toString());
+                throw new ODataApplicationException(OiyokanMessages.IY7115, 500, Locale.ENGLISH);
             }
 
             // ODataAppInfos が既に存在するかどうか確認. 存在する場合は処理中断.
@@ -77,8 +77,8 @@ public class OiyokanKanDatabase {
                 }
             } catch (SQLException ex) {
                 // [M028] UNEXPECTED: Fail to check local table exists: Oiyokan
-                System.err.println(OiyokanMessages.M028 + ": " + ex.toString());
-                throw new ODataApplicationException(OiyokanMessages.M028, 500, Locale.ENGLISH);
+                System.err.println(OiyokanMessages.IY7116 + ": " + ex.toString());
+                throw new ODataApplicationException(OiyokanMessages.IY7116, 500, Locale.ENGLISH);
             }
 
             ///////////////////////////////////////////
@@ -103,16 +103,16 @@ public class OiyokanKanDatabase {
                 connInterDb.commit();
             } catch (SQLException ex) {
                 // [M029] UNEXPECTED: Fail to execute SQL for local internal table
-                System.err.println(OiyokanMessages.M029 + ": " + ex.toString());
-                throw new ODataApplicationException(OiyokanMessages.M029, 500, Locale.ENGLISH);
+                System.err.println(OiyokanMessages.IY7117 + ": " + ex.toString());
+                throw new ODataApplicationException(OiyokanMessages.IY7117, 500, Locale.ENGLISH);
             }
 
             // 新規作成.
             return true;
         } catch (SQLException ex) {
             // [M004] UNEXPECTED: Database error in setup internal database.
-            System.err.println(OiyokanMessages.M004 + ": " + ex.toString());
-            throw new ODataApplicationException(OiyokanMessages.M004, 500, Locale.ENGLISH);
+            System.err.println(OiyokanMessages.IY7104 + ": " + ex.toString());
+            throw new ODataApplicationException(OiyokanMessages.IY7104, 500, Locale.ENGLISH);
         }
     }
 }

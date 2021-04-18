@@ -146,7 +146,7 @@ public class OiyoMapJdbcEdmUtil {
 
         // TODO 番号取り直し
         // [M021] NOT SUPPORTED: JDBC Type
-        System.err.println(OiyokanMessages.M021 + ": " + types);
-        throw new IllegalArgumentException(OiyokanMessages.M021 + ": " + types);
+        System.err.println(OiyokanMessages.IY7125 + ": " + types);
+        throw new IllegalArgumentException(OiyokanMessages.IY7125 + ": " + types);
     }
 }
