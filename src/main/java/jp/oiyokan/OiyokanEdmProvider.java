@@ -95,7 +95,6 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
                 System.err.println("OiyokanEdmProvider#getEntityType(" + entityTypeName + ")");
 
             OiyoSettingsEntitySet entitySet = null;
-            // TODO FIXME このシングルトン取得を回避したい。引数に変えたい。
             final OiyoSettings settingsOiyokan = oiyoInfo.getSettings();
             for (OiyoSettingsEntitySet look : settingsOiyokan.getEntitySet()) {
                 if (look.getEntityType().getName().equals(entityTypeName.getName())) {

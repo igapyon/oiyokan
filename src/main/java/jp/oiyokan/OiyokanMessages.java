@@ -188,6 +188,8 @@ public class OiyokanMessages {
     public static final String IY7153 = "[IY7153] NOT SUPPORTED: JDBC Type String.";
     public static final String IY7154 = "[IY7154] NOT SUPPORTED: JDBC Type";
 
+    public static final String IY7161 = "[IY7161] Error: Fail to parse DateTime string.";
+
     ////////////////////////////////////////////////////////////////////////////////
     // Authz (Server Side)
 

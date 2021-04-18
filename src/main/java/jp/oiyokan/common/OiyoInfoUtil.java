@@ -93,7 +93,6 @@ public class OiyoInfoUtil {
             throws ODataApplicationException {
         final OiyoSettingsEntitySet entitySet = getOiyoEntitySet(oiyoInfo, entitySetName);
 
-        // TODO FIXME エラーメッセージ処理。
         return getOiyoDatabaseByName(oiyoInfo, entitySet.getDbSettingName());
     }
 
@@ -101,7 +100,6 @@ public class OiyoInfoUtil {
             String entitySetName) throws ODataApplicationException {
         final OiyoSettingsEntitySet entitySet = getOiyoEntitySet(oiyoInfo, entitySetName);
 
-        // TODO FIXME エラーメッセージ処理。
         OiyoSettingsDatabase database = getOiyoDatabaseByName(oiyoInfo, entitySet.getDbSettingName());
 
         return OiyokanConstants.DatabaseType.valueOf(database.getType());
@@ -115,7 +113,6 @@ public class OiyoInfoUtil {
             throw new ODataApplicationException(OiyokanMessages.IY7120 + ": " + entitySetName, 500, Locale.ENGLISH);
         }
 
-        // TODO FIXME このシングルトン取得を回避したい。引数に変えたい。
         final OiyoSettings settingsOiyokan = oiyoInfo.getSettings();
         for (OiyoSettingsEntitySet entitySet : settingsOiyokan.getEntitySet()) {
             if (entitySetName.equals(entitySet.getName())) {

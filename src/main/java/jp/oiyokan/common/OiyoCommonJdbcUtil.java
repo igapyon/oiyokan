@@ -230,8 +230,7 @@ public class OiyoCommonJdbcUtil {
         } else if (EdmTimeOfDay.getInstance() == edmType) {
             return new Property(edmTypeName, propName, ValueType.PRIMITIVE, rset.getTime(column));
         } else if (EdmString.getInstance() == edmType) {
-            // 基本的に CSDL で処理するが、やむを得ない場所のみ ResultSetMetaData を利用する
-            // TODO FIXME ただしこれは事前に CSDL に記憶可能。
+            // 基本的に OiyoInfo以下 EntitySet で処理するが、やむを得ない場所のみ ResultSetMetaData を利用する
             if (Types.CLOB == rsmeta.getColumnType(column)) {
                 try {
                     return new Property(edmTypeName, propName, ValueType.PRIMITIVE,
@@ -706,7 +705,7 @@ public class OiyoCommonJdbcUtil {
     // EXECUTE DML
 
     /**
-     * TODO FIXME 自動採集番された項目の値をreturnすること。
+     * 実行後、自動採集番された項目の値をreturnする。
      * 
      * @param connTargetDb 利用データベース接続.
      * @param sqlInfo      実行したいSQL情報.
