@@ -27,7 +27,6 @@ import org.apache.olingo.server.api.uri.UriInfo;
 import org.apache.olingo.server.core.uri.parser.Parser;
 import org.junit.jupiter.api.Test;
 
-import jp.oiyokan.OiyokanCsdlEntityContainer;
 import jp.oiyokan.OiyokanEdmProvider;
 import jp.oiyokan.OiyokanTestSettingConstants;
 import jp.oiyokan.basic.OiyoBasicUrlUtil;
@@ -40,8 +39,6 @@ import jp.oiyokan.dto.OiyoSettingsEntitySet;
  * OiyoSqlQueryListExpr のテスト.
  */
 class OiyoSqlQueryListExprTest {
-    final OiyokanCsdlEntityContainer localTemplateEntityContainer = new OiyokanCsdlEntityContainer();
-
     /**
      * クラス内の共通関数
      * 
@@ -58,7 +55,7 @@ class OiyoSqlQueryListExprTest {
         ServiceMetadata edm = odata.createServiceMetadata(new OiyokanEdmProvider(), new ArrayList<>());
 
         // アプリ情報が入っている内部DBをベースに処理。つまり h2 database 前提としての振る舞いをおこなう。
-        OiyoSettingsEntitySet entitySet=   OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, "ODataTests1");
+        OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, "ODataTests1");
         if (entitySet == null) {
             final String message = "ERROR: Fail to load Oiyokans EntitySet.";
             System.err.println(message);

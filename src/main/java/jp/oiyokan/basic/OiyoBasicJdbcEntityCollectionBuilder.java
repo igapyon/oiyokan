@@ -33,7 +33,6 @@ import org.apache.olingo.server.api.ODataApplicationException;
 import org.apache.olingo.server.api.uri.UriInfo;
 
 import jp.oiyokan.OiyokanConstants;
-import jp.oiyokan.OiyokanCsdlEntitySet;
 import jp.oiyokan.OiyokanEdmProvider;
 import jp.oiyokan.OiyokanEntityCollectionBuilderInterface;
 import jp.oiyokan.OiyokanMessages;
@@ -79,7 +78,7 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
         CsdlEntitySet csdlEntitySet = null;
         for (CsdlEntitySet look : provider.getEntityContainer().getEntitySets()) {
             if (edmEntitySet.getName().equals(look.getName())) {
-                csdlEntitySet =  look;
+                csdlEntitySet = look;
                 break;
             }
         }

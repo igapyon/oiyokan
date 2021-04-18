@@ -30,7 +30,6 @@ import java.util.Locale;
 import org.apache.olingo.commons.api.data.Entity;
 import org.apache.olingo.commons.api.data.Property;
 import org.apache.olingo.commons.api.edm.EdmEntitySet;
-import org.apache.olingo.commons.api.edm.provider.CsdlEntitySet;
 import org.apache.olingo.server.api.ODataApplicationException;
 import org.apache.olingo.server.api.uri.UriInfo;
 import org.apache.olingo.server.api.uri.UriParameter;
@@ -38,7 +37,6 @@ import org.apache.olingo.server.core.uri.UriParameterImpl;
 
 import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanConstants.DatabaseType;
-import jp.oiyokan.OiyokanEdmProvider;
 import jp.oiyokan.OiyokanMessages;
 import jp.oiyokan.basic.sql.OiyoSqlDeleteOneBuilder;
 import jp.oiyokan.basic.sql.OiyoSqlInsertOneBuilder;
