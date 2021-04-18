@@ -48,7 +48,7 @@ public class OiyoBasicJdbcEntityTypeBuilder {
     /**
      * コンストラクタ。
      * 
-     * @param entitySet OiyokanCsdlEntitySetのインスタンス.
+     * @param entitySet OiyoSettingsEntitySetのインスタンス.
      */
     public OiyoBasicJdbcEntityTypeBuilder(OiyoInfo oiyoInfo, OiyoSettingsEntitySet entitySet) {
         this.oiyoInfo = oiyoInfo;

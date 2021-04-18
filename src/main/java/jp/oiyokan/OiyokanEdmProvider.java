@@ -33,6 +33,7 @@ import org.apache.olingo.server.api.ODataApplicationException;
 import jp.oiyokan.basic.OiyoBasicJdbcEntityTypeBuilder;
 import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.common.OiyoInfoUtil;
+import jp.oiyokan.data.OiyokanKanDatabase;
 import jp.oiyokan.dto.OiyoSettings;
 import jp.oiyokan.dto.OiyoSettingsEntitySet;
 
@@ -53,13 +54,6 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
      * OiyokanSettings を singleton に記憶.
      */
     private static volatile OiyoInfo oiyoInfo = null;
-
-    /**
-     * Oiyokan実装のキモ。シングルトンなコンテナ.
-     * 
-     * @deprecated これやめたい。
-     */
-    private static final OiyokanCsdlEntityContainer localTemplateEntityContainer = new OiyokanCsdlEntityContainer();
 
     /**
      * OiyoInfo (OiyokanSettings 設定情報を含む) を singleton に取得.
@@ -93,9 +87,6 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
         try {
             if (IS_DEBUG)
                 System.err.println("OiyokanEdmProvider#getEntityType(" + entityTypeName + ")");
-
-            // テンプレートを念押しビルド.
-            localTemplateEntityContainer.ensureBuild();
 
             OiyoSettingsEntitySet entitySet = null;
             // TODO FIXME このシングルトン取得を回避したい。引数に変えたい。
@@ -147,9 +138,6 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
                 System.err.println("OiyokanEdmProvider#getEntitySet(" //
                         + entityContainer + ", " + entitySetName + ")");
 
-            // テンプレートを念押しビルド.
-            localTemplateEntityContainer.ensureBuild();
-
             // シングルトンな OiyoInfo を利用。
             final OiyoInfo oiyoInfo = getOiyoInfoInstance();
 
@@ -188,9 +176,6 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
             if (IS_DEBUG)
                 System.err.println("OiyokanEdmProvider#getEntityContainer()");
 
-            // テンプレートを念押しビルド.
-            localTemplateEntityContainer.ensureBuild();
-
             // シングルトンな OiyoInfo を利用。
             final OiyoInfo oiyoInfo = getOiyoInfoInstance();
 
@@ -202,6 +187,9 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
                 System.err.println(fqn);
                 container.getEntitySets().add(getEntitySet(fqn, entitySet.getName()));
             }
+
+            // Oiyokan が動作する際に必要になる内部データベースのバージョン情報および Oiyo info をセットアップ.
+            OiyokanKanDatabase.setupKanDatabase(OiyokanEdmProvider.getOiyoInfoInstance());
 
             return container;
         } catch (RuntimeException ex) {
@@ -222,9 +210,6 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
             if (IS_DEBUG)
                 System.err.println("OiyokanEdmProvider#getSchemas()");
 
-            // テンプレートを念押しビルド.
-            localTemplateEntityContainer.ensureBuild();
-
             // シングルトンな OiyoInfo を利用。
             final OiyoInfo oiyoInfo = getOiyoInfoInstance();
 
@@ -234,9 +219,12 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
 
             // 要素型を設定.
             final List<CsdlEntityType> newEntityTypeList = new ArrayList<>();
-            for (CsdlEntitySet look : localTemplateEntityContainer.getEntitySets()) {
+            for (OiyoSettingsEntitySet look : oiyoInfo.getSettings().getEntitySet()) {
+                FullQualifiedName fqn = new FullQualifiedName(oiyoInfo.getSettings().getContainerName(),
+                        look.getEntityType().getName());
+
                 // エンティティタイプを設定.
-                newEntityTypeList.add(getEntityType(look.getTypeFQN()));
+                newEntityTypeList.add(getEntityType(fqn));
             }
             newSchema.setEntityTypes(newEntityTypeList);
 
@@ -269,9 +257,6 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
         try {
             if (IS_DEBUG)
                 System.err.println("OiyokanEdmProvider#getEntityContainerInfo(" + entityContainerName + ")");
-
-            // テンプレートを念押しビルド.
-            localTemplateEntityContainer.ensureBuild();
 
             // シングルトンな OiyoInfo を利用。
             final OiyoInfo oiyoInfo = getOiyoInfoInstance();
