@@ -165,8 +165,8 @@ public class OiyoEdmUtil {
 
         // TODO 番号取り直し
         // [M021] NOT SUPPORTED: JDBC Type
-        System.err.println(OiyokanMessages.M021 + ": " + edmType);
-        throw new IllegalArgumentException(OiyokanMessages.M021 + ": " + edmType);
+        System.err.println(OiyokanMessages.IY7125 + ": " + edmType);
+        throw new IllegalArgumentException(OiyokanMessages.IY7125 + ": " + edmType);
     }
 
     public static String edmType2String(EdmPrimitiveType primitiveType) {

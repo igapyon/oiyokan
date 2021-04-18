@@ -103,9 +103,9 @@ public class OiyoBasicJdbcEntityOneBuilder {
             var rset = stmt.getResultSet();
             if (!rset.next()) {
                 // [M207] No such Entity data
-                System.err.println(OiyokanMessages.M207 + ": " + sql);
-                throw new ODataApplicationException(OiyokanMessages.M207 + ": " //
-                        + sql, OiyokanMessages.M207_CODE, Locale.ENGLISH);
+                System.err.println(OiyokanMessages.IY3105 + ": " + sql);
+                throw new ODataApplicationException(OiyokanMessages.IY3105 + ": " //
+                        + sql, OiyokanMessages.IY3105_CODE, Locale.ENGLISH);
             }
 
             final ResultSetMetaData rsmeta = rset.getMetaData();
@@ -117,9 +117,9 @@ public class OiyoBasicJdbcEntityOneBuilder {
 
             if (rset.next()) {
                 // [M215] UNEXPECTED: Too many rows found (readEntity)
-                System.err.println(OiyokanMessages.M215 + ": " + sql);
-                throw new ODataApplicationException(OiyokanMessages.M215 + ": " + sql, //
-                        OiyokanMessages.M215_CODE, Locale.ENGLISH);
+                System.err.println(OiyokanMessages.IY3112 + ": " + sql);
+                throw new ODataApplicationException(OiyokanMessages.IY3112 + ": " + sql, //
+                        OiyokanMessages.IY3112_CODE, Locale.ENGLISH);
             }
 
             final long endMillisec = System.currentTimeMillis();
@@ -133,14 +133,14 @@ public class OiyoBasicJdbcEntityOneBuilder {
             return ent;
         } catch (SQLTimeoutException ex) {
             // [M208] SQL timeout at execute (readEntity)
-            System.err.println(OiyokanMessages.M208 + ": " + sql + ", " + ex.toString());
-            throw new ODataApplicationException(OiyokanMessages.M208 + ": " + sql, //
-                    OiyokanMessages.M208_CODE, Locale.ENGLISH);
+            System.err.println(OiyokanMessages.IY3501 + ": " + sql + ", " + ex.toString());
+            throw new ODataApplicationException(OiyokanMessages.IY3501 + ": " + sql, //
+                    OiyokanMessages.IY3501_CODE, Locale.ENGLISH);
         } catch (SQLException ex) {
             // [M209] Fail to execute SQL (readEntity)
-            System.err.println(OiyokanMessages.M209 + ": " + sql + ", " + ex.toString());
-            throw new ODataApplicationException(OiyokanMessages.M209 + ": " + sql, //
-                    OiyokanMessages.M209_CODE, Locale.ENGLISH);
+            System.err.println(OiyokanMessages.IY3106 + ": " + sql + ", " + ex.toString());
+            throw new ODataApplicationException(OiyokanMessages.IY3106 + ": " + sql, //
+                    OiyokanMessages.IY3106_CODE, Locale.ENGLISH);
         }
     }
 
@@ -208,9 +208,9 @@ public class OiyoBasicJdbcEntityOneBuilder {
                             if (generatedKeys.size() == 0) {
                                 // [M217] UNEXPECTED: Can't retrieve PreparedStatement#getGeneratedKeys: Fail to
                                 // map auto generated key field.
-                                System.err.println(OiyokanMessages.M217 + ": " + keyName);
-                                throw new ODataApplicationException(OiyokanMessages.M217 + ": " + keyName, //
-                                        OiyokanMessages.M217_CODE, Locale.ENGLISH);
+                                System.err.println(OiyokanMessages.IY3114 + ": " + keyName);
+                                throw new ODataApplicationException(OiyokanMessages.IY3114 + ": " + keyName, //
+                                        OiyokanMessages.IY3114_CODE, Locale.ENGLISH);
                             }
                             propValue = generatedKeys.get(0);
                             generatedKeys.remove(0);
@@ -240,9 +240,9 @@ public class OiyoBasicJdbcEntityOneBuilder {
             }
         } catch (SQLException ex) {
             // [M205] Fail to execute SQL.
-            System.err.println(OiyokanMessages.M205 + ": " + ex.toString());
-            throw new ODataApplicationException(OiyokanMessages.M205, //
-                    OiyokanMessages.M205_CODE, Locale.ENGLISH);
+            System.err.println(OiyokanMessages.IY3103 + ": " + ex.toString());
+            throw new ODataApplicationException(OiyokanMessages.IY3103, //
+                    OiyokanMessages.IY3103_CODE, Locale.ENGLISH);
         }
     }
 
@@ -291,9 +291,9 @@ public class OiyoBasicJdbcEntityOneBuilder {
             }
         } catch (SQLException ex) {
             // [M205] Fail to execute SQL.
-            System.err.println(OiyokanMessages.M205 + ": " + ex.toString());
-            throw new ODataApplicationException(OiyokanMessages.M205, //
-                    OiyokanMessages.M205_CODE, Locale.ENGLISH);
+            System.err.println(OiyokanMessages.IY3103 + ": " + ex.toString());
+            throw new ODataApplicationException(OiyokanMessages.IY3103, //
+                    OiyokanMessages.IY3103_CODE, Locale.ENGLISH);
         }
     }
 
@@ -355,7 +355,7 @@ public class OiyoBasicJdbcEntityOneBuilder {
                     new OiyoSqlUpdateOneBuilder(oiyoInfo, sqlInfo).buildUpdatePatchDml(edmEntitySet, keyPredicates,
                             requestEntity);
                 } catch (ODataApplicationException ex) {
-                    if (OiyokanMessages.M207_CODE != ex.getStatusCode()) {
+                    if (OiyokanMessages.IY3105_CODE != ex.getStatusCode()) {
                         // そのまま throw.
                         throw ex;
                     }
@@ -382,9 +382,9 @@ public class OiyoBasicJdbcEntityOneBuilder {
             }
         } catch (SQLException ex) {
             // [M205] Fail to execute SQL.
-            System.err.println(OiyokanMessages.M205 + ": " + ex.toString());
-            throw new ODataApplicationException(OiyokanMessages.M205, //
-                    OiyokanMessages.M205_CODE, Locale.ENGLISH);
+            System.err.println(OiyokanMessages.IY3103 + ": " + ex.toString());
+            throw new ODataApplicationException(OiyokanMessages.IY3103, //
+                    OiyokanMessages.IY3103_CODE, Locale.ENGLISH);
         }
     }
 }

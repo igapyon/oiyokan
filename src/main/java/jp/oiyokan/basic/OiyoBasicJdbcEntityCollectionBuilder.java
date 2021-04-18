@@ -97,28 +97,28 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
         // Oiyokan が対応しない処理を拒絶するための記述.
         if (uriInfo.getSearchOption() != null && !OiyokanConstants.IS_EXPERIMENTAL_SEARCH_ENABLED) {
             // [M032] NOT SUPPORTED: URI: $search
-            System.err.println(OiyokanMessages.M032);
-            throw new ODataApplicationException(OiyokanMessages.M032, OiyokanMessages.M032_CODE, Locale.ENGLISH);
+            System.err.println(OiyokanMessages.IY1107);
+            throw new ODataApplicationException(OiyokanMessages.IY1107, OiyokanMessages.IY1107_CODE, Locale.ENGLISH);
         }
         if (uriInfo.getApplyOption() != null) {
             // [M011] NOT SUPPORTED: URI: $apply
-            System.err.println(OiyokanMessages.M011);
-            throw new ODataApplicationException(OiyokanMessages.M011, OiyokanMessages.M011_CODE, Locale.ENGLISH);
+            System.err.println(OiyokanMessages.IY1102);
+            throw new ODataApplicationException(OiyokanMessages.IY1102, OiyokanMessages.IY1102_CODE, Locale.ENGLISH);
         }
         if (uriInfo.getCustomQueryOptions() != null && uriInfo.getCustomQueryOptions().size() > 0) {
             // [M012] NOT SUPPORTED: URI: customQuery
-            System.err.println(OiyokanMessages.M012);
-            throw new ODataApplicationException(OiyokanMessages.M012, OiyokanMessages.M012_CODE, Locale.ENGLISH);
+            System.err.println(OiyokanMessages.IY1103);
+            throw new ODataApplicationException(OiyokanMessages.IY1103, OiyokanMessages.IY1103_CODE, Locale.ENGLISH);
         }
         if (uriInfo.getDeltaTokenOption() != null) {
             // [M013] NOT SUPPORTED: URI: deltaToken
-            System.err.println(OiyokanMessages.M013);
-            throw new ODataApplicationException(OiyokanMessages.M013, OiyokanMessages.M013_CODE, Locale.ENGLISH);
+            System.err.println(OiyokanMessages.IY1104);
+            throw new ODataApplicationException(OiyokanMessages.IY1104, OiyokanMessages.IY1104_CODE, Locale.ENGLISH);
         }
         if (uriInfo.getExpandOption() != null && uriInfo.getExpandOption().getExpandItems().size() > 0) {
             // [M014] NOT SUPPORTED: URI: $expand
-            System.err.println(OiyokanMessages.M014);
-            throw new ODataApplicationException(OiyokanMessages.M014, OiyokanMessages.M014_CODE, Locale.ENGLISH);
+            System.err.println(OiyokanMessages.IY1105);
+            throw new ODataApplicationException(OiyokanMessages.IY1105, OiyokanMessages.IY1105_CODE, Locale.ENGLISH);
         }
 
         // データベースに接続.
@@ -138,7 +138,7 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
                 if (uriInfo.getFilterOption() == null //
                         && oiyoEntitySet.getOmitCountAll() != null && oiyoEntitySet.getOmitCountAll().booleanValue()) {
                     // ただし、条件のない件数カウントの場合、つまり全件カウントについては、、omitCountAll が true の場合には検索をスキップ.
-                    System.err.println(OiyokanMessages.M042);
+                    System.err.println(OiyokanMessages.IY2101);
                 } else {
                     // $count.
                     processCountQuery(csdlEntitySet, uriInfo, connTargetDb, entityCollection);
@@ -154,8 +154,8 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
         SQLException ex) {
             // [M015] UNEXPECTED: An error occurred in SQL that counts the number of search
             // results.
-            System.err.println(OiyokanMessages.M015 + ": " + ex.toString());
-            throw new ODataApplicationException(OiyokanMessages.M015, 500, Locale.ENGLISH);
+            System.err.println(OiyokanMessages.IY2103 + ": " + ex.toString());
+            throw new ODataApplicationException(OiyokanMessages.IY2103, 500, Locale.ENGLISH);
         }
     }
 
@@ -186,14 +186,14 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
             countWithWhere = rset.getInt(1);
         } catch (SQLTimeoutException ex) {
             // [M035] SQL timeout at count
-            System.err.println(OiyokanMessages.M035 + ": " + sql + ", " + ex.toString());
-            throw new ODataApplicationException(OiyokanMessages.M035 + ": " + sql, //
-                    OiyokanMessages.M035_CODE, Locale.ENGLISH);
+            System.err.println(OiyokanMessages.IY2501 + ": " + sql + ", " + ex.toString());
+            throw new ODataApplicationException(OiyokanMessages.IY2501 + ": " + sql, //
+                    OiyokanMessages.IY2501_CODE, Locale.ENGLISH);
         } catch (SQLException ex) {
             // [M015] UNEXPECTED: An error occurred in SQL that counts the number of search
             // results.
-            System.err.println(OiyokanMessages.M015 + ": " + sql + ", " + ex.toString());
-            throw new ODataApplicationException(OiyokanMessages.M015 + ": " + sql, 500, Locale.ENGLISH);
+            System.err.println(OiyokanMessages.IY2103 + ": " + sql + ", " + ex.toString());
+            throw new ODataApplicationException(OiyokanMessages.IY2103 + ": " + sql, 500, Locale.ENGLISH);
         }
 
         final long endMillisec = System.currentTimeMillis();
@@ -307,15 +307,15 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
             }
         } catch (SQLTimeoutException ex) {
             // [M036] SQL timeout at execute
-            System.err.println(OiyokanMessages.M036 + ": " + sql + ", " + ex.toString());
-            throw new ODataApplicationException(OiyokanMessages.M036 + ": " + sql, //
-                    OiyokanMessages.M036_CODE, Locale.ENGLISH);
+            System.err.println(OiyokanMessages.IY2502 + ": " + sql + ", " + ex.toString());
+            throw new ODataApplicationException(OiyokanMessages.IY2502 + ": " + sql, //
+                    OiyokanMessages.IY2502_CODE, Locale.ENGLISH);
         } catch (SQLException ex) {
             // ex.printStackTrace();
             // [M017] Fail to execute SQL
-            System.err.println(OiyokanMessages.M017 + ": " + sql + ", " + ex.toString());
-            throw new ODataApplicationException(OiyokanMessages.M017 + ": " + sql, //
-                    OiyokanMessages.M017_CODE, Locale.ENGLISH);
+            System.err.println(OiyokanMessages.IY2102 + ": " + sql + ", " + ex.toString());
+            throw new ODataApplicationException(OiyokanMessages.IY2102 + ": " + sql, //
+                    OiyokanMessages.IY2102_CODE, Locale.ENGLISH);
         }
     }
 
@@ -332,9 +332,9 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
             return new URI(entitySetName + "(" + id + ")");
         } catch (URISyntaxException ex) {
             // [M018] UNEXPECTED: Fail to create ID EntitySet name
-            System.err.println(OiyokanMessages.M018 + ": " + entitySetName + ": " + ex.toString());
+            System.err.println(OiyokanMessages.IY2104 + ": " + entitySetName + ": " + ex.toString());
             ex.printStackTrace();
-            throw new ODataRuntimeException(OiyokanMessages.M018 + ": " + entitySetName);
+            throw new ODataRuntimeException(OiyokanMessages.IY2104 + ": " + entitySetName);
         }
     }
 }

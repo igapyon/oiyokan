@@ -104,8 +104,8 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
             }
             if (entitySet == null) {
                 // TODO FIXME メッセージ番号
-                System.err.println(OiyokanMessages.M999 + ": EntitySet検索失敗");
-                throw new ODataApplicationException(OiyokanMessages.M999 + ": EntitySet検索失敗", //
+                System.err.println(OiyokanMessages.IY9999 + ": EntitySet検索失敗");
+                throw new ODataApplicationException(OiyokanMessages.IY9999 + ": EntitySet検索失敗", //
                         500, Locale.ENGLISH);
             }
 
@@ -207,10 +207,10 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
                     } catch (ClassNotFoundException ex) {
                         // [M003] UNEXPECTED: Fail to load JDBC driver. Check JDBC Driver classname or
                         // JDBC Driver is on classpath."
-                        System.err.println(OiyokanMessages.M003 + ": " + settingsDatabase.getJdbcDriver() //
+                        System.err.println(OiyokanMessages.IY7103 + ": " + settingsDatabase.getJdbcDriver() //
                                 + ": " + ex.toString());
                         throw new ODataApplicationException(
-                                OiyokanMessages.M003 + ": " + settingsDatabase.getJdbcDriver(), 500, Locale.ENGLISH);
+                                OiyokanMessages.IY7103 + ": " + settingsDatabase.getJdbcDriver(), 500, Locale.ENGLISH);
                     }
 
                     try {
@@ -218,10 +218,10 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
                         OiyokanConstants.DatabaseType.valueOf(settingsDatabase.getType());
                     } catch (IllegalArgumentException ex) {
                         // [M002] UNEXPECTED: Illegal data type in database settings
-                        System.err.println(OiyokanMessages.M002 + ": dbname:" + settingsDatabase.getName() //
+                        System.err.println(OiyokanMessages.IY7102 + ": dbname:" + settingsDatabase.getName() //
                                 + ", type:" + settingsDatabase.getType());
                         throw new ODataApplicationException(
-                                OiyokanMessages.M002 + ": dbname:" + settingsDatabase.getName() //
+                                OiyokanMessages.IY7102 + ": dbname:" + settingsDatabase.getName() //
                                         + ", type:" + settingsDatabase.getType(),
                                 500, Locale.ENGLISH);
                     }

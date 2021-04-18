@@ -22,9 +22,46 @@ import org.junit.jupiter.api.Test;
 
 class OiyoEdmUtilTest {
 
+    private static final String[] EDMTYPES = new String[] { "Edm.Binary" //
+            , "Edm.Boolean" //
+            , "Edm.Byte" //
+            , "Edm.Date" //
+            , "Edm.DateTimeOffset" //
+            , "Edm.Decimal" //
+            , "Edm.Double" //
+            , "Edm.Duration" //
+            , "Edm.Geography" //
+            , "Edm.GeographyCollection" //
+            , "Edm.GeographyLineString" //
+            , "Edm.GeographyMultiLineString" //
+            , "Edm.GeographyMultiPoint" //
+            , "Edm.GeographyMultiPolygon" //
+            , "Edm.GeographyPoint" //
+            , "Edm.GeographyPolygon" //
+            , "Edm.Geometry" //
+            , "Edm.GeometryCollection" //
+            , "Edm.GeometryLineString" //
+            , "Edm.GeometryMultiLineString" //
+            , "Edm.GeometryMultiPoint" //
+            , "Edm.GeometryMultiPolygon" //
+            , "Edm.GeometryPoint" //
+            , "Edm.GeometryPolygon" //
+            , "Edm.Guid" //
+            , "Edm.Int16" //
+            , "Edm.Int32" //
+            , "Edm.Int64" //
+            , "Edm.SByte" //
+            , "Edm.Single" //
+            , "Edm.Stream" //
+            , "Edm.String" //
+            , "Edm.TimeOfDay" //
+    };
+
     @Test
     void test() {
-        EdmPrimitiveType edmType = OiyoEdmUtil.string2EdmType("Edm.String");
-        assertEquals("Edm.String", OiyoEdmUtil.edmType2String(edmType));
+        for (String edmTypeString : EDMTYPES) {
+            EdmPrimitiveType edmType = OiyoEdmUtil.string2EdmType(edmTypeString);
+            assertEquals(edmTypeString, OiyoEdmUtil.edmType2String(edmType));
+        }
     }
 }
