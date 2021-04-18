@@ -19,7 +19,6 @@ import java.util.List;
 
 import org.apache.olingo.commons.api.data.Entity;
 import org.apache.olingo.commons.api.data.Property;
-import org.apache.olingo.commons.api.edm.EdmEntitySet;
 import org.apache.olingo.server.api.ODataApplicationException;
 import org.apache.olingo.server.api.uri.UriParameter;
 
@@ -61,14 +60,14 @@ public class OiyoSqlInsertOneBuilder {
     /**
      * Create DML for INSERT.
      * 
-     * @param edmEntitySet  instance of EdmEntitySet.
+     * @param entitySetName instance of EdmEntitySet.
      * @param keyPredicates (PATCH) key to insert.
      * @param requestEntity entity to insert.
      * @throws ODataApplicationException OData App exception occured.
      */
-    public void buildInsertIntoDml(EdmEntitySet edmEntitySet, List<UriParameter> keyPredicates, Entity requestEntity)
+    public void buildInsertIntoDml(String entitySetName, List<UriParameter> keyPredicates, Entity requestEntity)
             throws ODataApplicationException {
-        final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, edmEntitySet.getName());
+        final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, entitySetName);
 
         sqlInfo.getSqlBuilder().append("INSERT INTO ");
         sqlInfo.getSqlBuilder()
@@ -84,8 +83,8 @@ public class OiyoSqlInsertOneBuilder {
                 } else {
                     sqlInfo.getSqlBuilder().append(",");
                 }
-                sqlInfo.getSqlBuilder().append(OiyoCommonJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyoInfoUtil
-                        .getOiyoEntityProperty(oiyoInfo, edmEntitySet.getName(), param.getName()).getDbName()));
+                sqlInfo.getSqlBuilder().append(OiyoCommonJdbcUtil.escapeKakkoFieldName(sqlInfo,
+                        OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, entitySetName, param.getName()).getDbName()));
             }
         }
 
@@ -97,7 +96,7 @@ public class OiyoSqlInsertOneBuilder {
             }
 
             final String colName = OiyoCommonJdbcUtil.escapeKakkoFieldName(sqlInfo,
-                    OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, edmEntitySet.getName(), prop.getName()).getDbName());
+                    OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, entitySetName, prop.getName()).getDbName());
             sqlInfo.getSqlBuilder().append(colName);
         }
 
@@ -113,7 +112,7 @@ public class OiyoSqlInsertOneBuilder {
                     sqlInfo.getSqlBuilder().append(",");
                 }
 
-                final OiyoSettingsProperty prop = OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, edmEntitySet.getName(),
+                final OiyoSettingsProperty prop = OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, entitySetName,
                         param.getName());
                 OiyoCommonJdbcUtil.expandLiteralOrBindParameter(sqlInfo, prop.getEdmType(), param.getText());
             }

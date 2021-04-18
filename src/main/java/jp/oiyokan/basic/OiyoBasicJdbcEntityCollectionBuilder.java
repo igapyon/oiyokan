@@ -159,6 +159,7 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
         }
     }
 
+    // TODO CsdlEntitySet を廃止。
     private void processCountQuery(CsdlEntitySet entitySet, UriInfo uriInfo, Connection connTargetDb,
             EntityCollection entityCollection) throws ODataApplicationException {
         // 件数をカウントして設定。
@@ -217,6 +218,7 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
      * @param entityCollection result of search.
      * @throws ODataApplicationException OData App Exception occured.
      */
+    // TODO CsdlEntitySet を廃止。
     public void processCollectionQuery(CsdlEntitySet csdlEntitySet, UriInfo uriInfo, Connection connTargetDb,
             EntityCollection entityCollection) throws ODataApplicationException {
         OiyoSqlQueryListBuilder basicSqlBuilder = new OiyoSqlQueryListBuilder(oiyoInfo, csdlEntitySet.getName());
