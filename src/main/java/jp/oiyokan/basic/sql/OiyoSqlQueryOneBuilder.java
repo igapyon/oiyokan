@@ -96,13 +96,15 @@ public class OiyoSqlQueryOneBuilder {
             }
             sqlInfo.getSqlBuilder().append("=");
 
-            final OiyoSettingsProperty prop = OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, edmEntitySet.getName(),
-                    param.getName());
-
-            // ORACLEのROWIDを利用する場合、この処理がnullになってしまうため、nullの場合は Edm.String 決め打ちで処理する。
-            // TODO FIXME try-catchする必要あり。
-            final String propType = (prop == null ? "Edm.String" : prop.getEdmType());
-            OiyoBasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo, propType, param.getText());
+            try {
+                final OiyoSettingsProperty prop = OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, edmEntitySet.getName(),
+                        param.getName());
+                OiyoBasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo, prop.getEdmType(), param.getText());
+            } catch (ODataApplicationException ex) {
+                // ORACLEのROWIDを利用する場合、この処理で例外.
+                // 例外の場合は Edm.String 決め打ちで処理する。
+                OiyoBasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo, "Edm.String", param.getText());
+            }
         }
     }
 
