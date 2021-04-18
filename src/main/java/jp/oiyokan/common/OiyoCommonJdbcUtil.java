@@ -104,8 +104,8 @@ public class OiyoCommonJdbcUtil {
         } catch (SQLException ex) {
             // [M005] UNEXPECTED: データベースの接続に失敗:
             // しばらく待って再度トライしてください。しばらく経っても改善しない場合はIT部門に連絡してください
-            System.err.println(OiyokanMessages.IY7105 + ": " + settingsDatabase.getName() + ": " + ex.toString());
-            throw new ODataApplicationException(OiyokanMessages.IY7105 + ": " + settingsDatabase.getName(), //
+            System.err.println(OiyokanMessages.IY1501 + ": " + settingsDatabase.getName() + ": " + ex.toString());
+            throw new ODataApplicationException(OiyokanMessages.IY1501 + ": " + settingsDatabase.getName(), //
                     500, Locale.ENGLISH);
         }
 
@@ -192,8 +192,8 @@ public class OiyoCommonJdbcUtil {
         }
         if (propName == null) {
             // [M041] Fail to find Property from DB name.
-            System.err.println(
-                    OiyokanMessages.IY7123 + "EntitySet:" + entitySet.getName() + " DB:" + rsmeta.getColumnName(column));
+            System.err.println(OiyokanMessages.IY7123 + "EntitySet:" + entitySet.getName() + " DB:"
+                    + rsmeta.getColumnName(column));
             throw new ODataApplicationException(
                     OiyokanMessages.IY7123 + "EntitySet:" + entitySet.getName() + " DB:" + rsmeta.getColumnName(column), //
                     500, Locale.ENGLISH);
@@ -238,8 +238,8 @@ public class OiyoCommonJdbcUtil {
                             StreamUtils.copyToString(rset.getAsciiStream(column), Charset.forName("UTF-8")));
                 } catch (IOException ex) {
                     // [M007] UNEXPECTED: fail to read from CLOB
-                    System.err
-                            .println(OiyokanMessages.IY7107 + ": " + rsmeta.getColumnName(column) + ": " + ex.toString());
+                    System.err.println(
+                            OiyokanMessages.IY7107 + ": " + rsmeta.getColumnName(column) + ": " + ex.toString());
                     throw new ODataApplicationException(OiyokanMessages.IY7107 + ": " + rsmeta.getColumnName(column), //
                             500, Locale.ENGLISH);
                 }
@@ -380,7 +380,7 @@ public class OiyoCommonJdbcUtil {
             byte[] look = (byte[]) value;
             stmt.setBytes(column, look);
         } else {
-            // [M010] NOT SUPPORTED: Parameter Type
+            // [IY1101] NOT SUPPORTED: Parameter Type
             System.err.println(OiyokanMessages.IY1101 + ": " + value.getClass().getCanonicalName());
             throw new ODataApplicationException(OiyokanMessages.IY1101 + ": " + value.getClass().getCanonicalName(), //
                     OiyokanMessages.IY1101_CODE, Locale.ENGLISH);
@@ -774,9 +774,9 @@ public class OiyoCommonJdbcUtil {
         } catch (SQLException ex) {
             ex.printStackTrace();
             // [M204] Fail to execute SQL.
-            System.err.println(OiyokanMessages.IY3102 + ": " + sql + ", " + ex.toString());
-            throw new ODataApplicationException(OiyokanMessages.IY3102 + ": " + sql, //
-                    OiyokanMessages.IY3102_CODE, Locale.ENGLISH);
+            System.err.println(OiyokanMessages.IY3151 + ": " + sql + ", " + ex.toString());
+            throw new ODataApplicationException(OiyokanMessages.IY3151 + ": " + sql, //
+                    OiyokanMessages.IY3151_CODE, Locale.ENGLISH);
         }
     }
 }

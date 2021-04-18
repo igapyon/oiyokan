@@ -250,11 +250,13 @@ public class OiyokanEntityProcessor implements EntityProcessor {
             } else if (request.getMethod().equals(HttpMethod.PUT)) {
                 // [M016] NOT SUPPORTED: PUT: use PATCH to update Entity.
                 System.err.println(OiyokanMessages.IY1106);
-                throw new ODataApplicationException(OiyokanMessages.IY1106, OiyokanMessages.IY3104_CODE, Locale.ENGLISH);
+                throw new ODataApplicationException(OiyokanMessages.IY1106, OiyokanMessages.IY1106_CODE,
+                        Locale.ENGLISH);
             } else {
                 // [M216] UNEXPECTED: Must NOT pass this case.
                 System.err.println(OiyokanMessages.IY3113);
-                throw new ODataApplicationException(OiyokanMessages.IY3113, OiyokanMessages.IY3113_CODE, Locale.ENGLISH);
+                throw new ODataApplicationException(OiyokanMessages.IY3113, OiyokanMessages.IY3113_CODE,
+                        Locale.ENGLISH);
             }
 
             // TODO FIXME

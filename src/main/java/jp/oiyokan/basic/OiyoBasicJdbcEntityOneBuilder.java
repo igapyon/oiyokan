@@ -240,9 +240,9 @@ public class OiyoBasicJdbcEntityOneBuilder {
             }
         } catch (SQLException ex) {
             // [M205] Fail to execute SQL.
-            System.err.println(OiyokanMessages.IY3103 + ": " + ex.toString());
-            throw new ODataApplicationException(OiyokanMessages.IY3103, //
-                    OiyokanMessages.IY3103_CODE, Locale.ENGLISH);
+            System.err.println(OiyokanMessages.IY3152 + ": " + ex.toString());
+            throw new ODataApplicationException(OiyokanMessages.IY3152, //
+                    OiyokanMessages.IY3152_CODE, Locale.ENGLISH);
         }
     }
 
@@ -291,9 +291,9 @@ public class OiyoBasicJdbcEntityOneBuilder {
             }
         } catch (SQLException ex) {
             // [M205] Fail to execute SQL.
-            System.err.println(OiyokanMessages.IY3103 + ": " + ex.toString());
-            throw new ODataApplicationException(OiyokanMessages.IY3103, //
-                    OiyokanMessages.IY3103_CODE, Locale.ENGLISH);
+            System.err.println(OiyokanMessages.IY3153 + ": " + ex.toString());
+            throw new ODataApplicationException(OiyokanMessages.IY3153, //
+                    OiyokanMessages.IY3153_CODE, Locale.ENGLISH);
         }
     }
 
@@ -382,9 +382,9 @@ public class OiyoBasicJdbcEntityOneBuilder {
             }
         } catch (SQLException ex) {
             // [M205] Fail to execute SQL.
-            System.err.println(OiyokanMessages.IY3103 + ": " + ex.toString());
-            throw new ODataApplicationException(OiyokanMessages.IY3103, //
-                    OiyokanMessages.IY3103_CODE, Locale.ENGLISH);
+            System.err.println(OiyokanMessages.IY3154 + ": " + ex.toString());
+            throw new ODataApplicationException(OiyokanMessages.IY3154, //
+                    OiyokanMessages.IY3154_CODE, Locale.ENGLISH);
         }
     }
 }

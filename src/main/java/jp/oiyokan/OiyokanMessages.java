@@ -42,6 +42,10 @@ public class OiyokanMessages {
     public static final int IY1107_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
 
     ////////////////////////////////////////////////////////////////////////////////
+    // IY15XX : DB接続(Client)
+    public static final String IY1501 = "[IY1501] ERROR: Fail to connect database. Please wait minutes and retry again.: データベースの接続に失敗しました。しばらく待って再度トライしてください。しばらく経っても改善しない場合はIT部門などに連絡してください。";
+
+    ////////////////////////////////////////////////////////////////////////////////
     // EntityCollection
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -50,12 +54,11 @@ public class OiyokanMessages {
     public static final String IY2102 = "[IY2102] Fail to execute SQL";
     public static final int IY2102_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
     public static final String IY2103 = "[IY2103] UNEXPECTED: An error occurred in SQL that counts the number of search results.";
-    public static final String IY2104 = "[IY2104] UNEXPECTED: Fail to create ID EntitySet name";
-    public static final String IY2105 = "[IY2105] UNEXPECTED: Fail to get database meta";
-    public static final int IY2105_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
+    public static final String IY2104 = "[IY2104] UNEXPECTED: An error occurred in SQL that counts the number of search results.";
+    public static final String IY2105 = "[IY2105] UNEXPECTED: Fail to create ID EntitySet name";
     public static final String IY2106 = "[IY2106] NOT SUPPORTED: unknown UUID object given";
     public static final int IY2106_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
-    public static final String IY2107 = "[IY2107] ERROR: An unknown field name was specified. The field names are case sensitive. Make sure the Oiyo field name matches the target field name.";
+    // IY2107
     public static final String IY2108 = "[IY2108] NOT SUPPORTED: Parameter Type";
     public static final int IY2108_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
 
@@ -73,32 +76,33 @@ public class OiyokanMessages {
     // IY31XX : Entity
     public static final String IY3101 = "[IY3101] NO record processed. No Entity effects.";
     public static final int IY3101_CODE = HttpStatusCode.NOT_FOUND.getStatusCode();
-    public static final String IY3102 = "[IY3102] Fail to execute SQL.";
-    public static final int IY3102_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
-    public static final String IY3103 = "[IY3103] Fail to execute SQL.";
-    public static final int IY3103_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
-    public static final String IY3104 = "[IY3104] No such EntitySet found (readEntity)";
-    public static final int IY3104_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
+    // IY3102
+    // IY3103
+    // IY3104
     public static final String IY3105 = "[IY3105] No such Entity data";
     public static final int IY3105_CODE = HttpStatusCode.NOT_FOUND.getStatusCode();
     public static final String IY3106 = "[IY3106] Fail to execute SQL (readEntity)";
     public static final int IY3106_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
     public static final String IY3107 = "[IY3107] Database exception occured (readEntity)";
     public static final int IY3107_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
-    public static final String IY3108 = "[IY3108] No such EntitySet found (createEntity)";
-    public static final int IY3108_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
-    public static final String IY3109 = "[IY3109] No such EntitySet found (deleteEntity)";
-    public static final int IY3109_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
-    public static final String IY3110 = "[IY3110] No such EntitySet found (updateEntity(PATCH))";
-    public static final int IY3110_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
-    public static final String IY3111 = "[IY3111] No such EntitySet found (updateEntity(PUT))";
-    public static final int IY3111_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
+    // IY3108
+    // IY3109
+    // IY3110
     public static final String IY3112 = "[IY3112] UNEXPECTED: Too many rows found (readEntity)";
     public static final int IY3112_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
     public static final String IY3113 = "[IY3113] UNEXPECTED: Must NOT pass this case.";
     public static final int IY3113_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
     public static final String IY3114 = "[IY3114] UNEXPECTED: Can't retrieve PreparedStatement#getGeneratedKeys: Fail to map auto generated key field.";
     public static final int IY3114_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
+
+    public static final String IY3151 = "[IY3151] Fail to execute SQL.";
+    public static final int IY3151_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
+    public static final String IY3152 = "[IY3152] Fail to execute SQL.";
+    public static final int IY3152_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
+    public static final String IY3153 = "[IY3153] Fail to execute SQL.";
+    public static final int IY3153_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
+    public static final String IY3154 = "[IY3154] Fail to execute SQL.";
+    public static final int IY3154_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
 
     ////////////////////////////////////////////////////////////////////////////////
     // IY34XX : Entity - Constraint
@@ -157,27 +161,32 @@ public class OiyokanMessages {
     public static final String IY7102 = "[IY7102] UNEXPECTED: Illegal data type in database settings";
     public static final String IY7103 = "[IY7103] UNEXPECTED: Fail to load JDBC driver. Check JDBC Driver classname or JDBC Driver is on classpath.";
     public static final String IY7104 = "[IY7104] UNEXPECTED: Database error in setup internal database.";
-    public static final String IY7105 = "[IY7105] ERROR: Fail to connect database. Please wait minutes and retry again.: データベースの接続に失敗しました。しばらく待って再度トライしてください。しばらく経っても改善しない場合はIT部門などに連絡してください。";
-    public static final String IY7106 = "[IY7106] NOT SUPPORTED: CSDL: JDBC Type";
+    // IY7105
+    // IY7106
     public static final String IY7107 = "[IY7107] UNEXPECTED: fail to read from CLOB";
     public static final String IY7108 = "[IY7108] UNEXPECTED: fail to read from binary";
     public static final String IY7109 = "[IY7109] UNEXPECTED: missing impl";
     public static final String IY7110 = "[IY7110] UNEXPECTED: Fail to load setting SQL file";
-    public static final String IY7111 = "[IY7111] UNEXPECTED: Fail to load Oiyokan naming settings";
+    // IY7111
     public static final String IY7112 = "[IY7112] UNEXPECTED: Fail to load Oiyokan settings";
-    public static final String IY7113 = "[IY7113] UNEXPECTED: Database settings NOT found";
+    // IY7113
     public static final String IY7114 = "[IY7114] UNEXPECTED: Database settings NOT found";
     public static final String IY7115 = "[IY7115] UNEXPECTED: Fail to create local table: Oiyokan";
     public static final String IY7116 = "[IY7116] UNEXPECTED: Fail to check local table exists: Oiyokan";
     public static final String IY7117 = "[IY7117] UNEXPECTED: Fail to execute SQL for local internal table";
-    public static final String IY7118 = "[IY7118] UNEXPECTED: Fail to execute SQL for local internal table(2)";
-    public static final String IY7119 = "[IY7119] UNEXPECTED: Fail to execute Dabaase";
+    // IY7118
+    public static final String IY7119 = "[IY7119] UNEXPECTED: EntitySet settings NOT found.";
+    public static final int IY7119_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
     public static final String IY7120 = "[IY7120] UNEXPECTED: null parameter given as EntitySet.";
     public static final String IY7121 = "[IY7121] UNEXPECTED: EntitySet settings NOT found.";
     public static final String IY7122 = "[IY7122] UNEXPECTED: EntitySet Property settings NOT found.";
     public static final String IY7123 = "[IY7123] UNEXPECTED: Fail to find Property from DB name.";
     public static final String IY7124 = "[IY7124] NOT SUPPORTED: Database type";
-    public static final String IY7125 = "[IY7125] NOT SUPPORTED: JDBC Type";
+
+    public static final String IY7151 = "[IY7151] NOT SUPPORTED: JDBC Type";
+    public static final String IY7152 = "[IY7152] NOT SUPPORTED: Edm Type";
+    public static final String IY7153 = "[IY7153] NOT SUPPORTED: JDBC Type String.";
+    public static final String IY7154 = "[IY7154] NOT SUPPORTED: JDBC Type";
 
     ////////////////////////////////////////////////////////////////////////////////
     // Authz (Server Side)

@@ -111,10 +111,9 @@ public class OiyoJdbcUtil {
         case Types.TIMESTAMP_WITH_TIMEZONE: // 2014
             return "Types.TIMESTAMP_WITH_TIMEZONE";
         default:
-            // TODO 番号取り直し
-            // [M021] NOT SUPPORTED: JDBC Type
-            System.err.println(OiyokanMessages.IY7125 + ": " + types);
-            throw new IllegalArgumentException(OiyokanMessages.IY7125 + ": " + types);
+            // [IY7154] NOT SUPPORTED: JDBC Type
+            System.err.println(OiyokanMessages.IY7154 + ": " + types);
+            throw new IllegalArgumentException(OiyokanMessages.IY7154 + ": " + types);
         }
     }
 
@@ -245,9 +244,8 @@ public class OiyoJdbcUtil {
             return Types.TIMESTAMP_WITH_TIMEZONE; // 2014
         }
 
-        // TODO 番号取り直し
-        // [M021] NOT SUPPORTED: JDBC Type
-        System.err.println(OiyokanMessages.IY7125 + ": " + typesString);
-        throw new IllegalArgumentException(OiyokanMessages.IY7125 + ": " + typesString);
+        // [IY7153] NOT SUPPORTED: JDBC Type String.
+        System.err.println(OiyokanMessages.IY7153 + ": " + typesString);
+        throw new IllegalArgumentException(OiyokanMessages.IY7153 + ": " + typesString);
     }
 }
