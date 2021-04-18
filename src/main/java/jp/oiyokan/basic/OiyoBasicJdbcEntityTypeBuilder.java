@@ -53,9 +53,6 @@ public class OiyoBasicJdbcEntityTypeBuilder {
     public OiyoBasicJdbcEntityTypeBuilder(OiyoInfo oiyoInfo, OiyoSettingsEntitySet entitySet) {
         this.oiyoInfo = oiyoInfo;
         this.entitySet = entitySet;
-        if (OiyokanConstants.IS_TRACE_ODATA_V4)
-            System.err.println( //
-                    "OData v4: EntityType: " + entitySet.getName() + " (Oiyokan: " + OiyokanConstants.VERSION + ")");
     }
 
     /**

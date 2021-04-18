@@ -56,6 +56,11 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
     private static volatile OiyoInfo oiyoInfo = null;
 
     /**
+     * Oiyokan が内部的に利用するデータベースがセットアップ済みかどうか。
+     */
+    private static volatile boolean isKanDatabaseSetupDone = false;
+
+    /**
      * OiyoInfo (OiyokanSettings 設定情報を含む) を singleton に取得.
      * 
      * このパッケージからのみアクセスを許容。
@@ -184,12 +189,14 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
             for (OiyoSettingsEntitySet entitySet : oiyoInfo.getSettings().getEntitySet()) {
                 FullQualifiedName fqn = new FullQualifiedName(oiyoInfo.getSettings().getNamespace(),
                         oiyoInfo.getSettings().getContainerName());
-                System.err.println(fqn);
                 container.getEntitySets().add(getEntitySet(fqn, entitySet.getName()));
             }
 
-            // Oiyokan が動作する際に必要になる内部データベースのバージョン情報および Oiyo info をセットアップ.
-            OiyokanKanDatabase.setupKanDatabase(OiyokanEdmProvider.getOiyoInfoInstance());
+            if (isKanDatabaseSetupDone == false) {
+                // Oiyokan の動作で利用する内部データベースをセットアップ.
+                OiyokanKanDatabase.setupKanDatabase(OiyokanEdmProvider.getOiyoInfoInstance());
+                isKanDatabaseSetupDone = true;
+            }
 
             return container;
         } catch (RuntimeException ex) {
