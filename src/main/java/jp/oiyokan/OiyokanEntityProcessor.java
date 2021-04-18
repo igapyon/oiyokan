@@ -21,6 +21,8 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Locale;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.olingo.commons.api.data.ContextURL;
 import org.apache.olingo.commons.api.data.Entity;
 import org.apache.olingo.commons.api.edm.EdmEntitySet;
@@ -57,20 +59,14 @@ import jp.oiyokan.dto.OiyoSettingsEntitySet;
  * Oiyokan による Entity Processor
  */
 public class OiyokanEntityProcessor implements EntityProcessor {
-    /**
-     * デバッグ出力の有無.
-     * 
-     * OData Server の挙動のデバッグで困ったときにはこれを true にすること。
-     */
-    private static final boolean IS_DEBUG = false;
+    private static final Log logger = LogFactory.getLog(OiyokanEntityProcessor.class);
 
     private OData odata;
     private ServiceMetadata serviceMetadata;
 
     @Override
     public void init(OData odata, ServiceMetadata serviceMetadata) {
-        if (IS_DEBUG)
-            System.err.println("OiyokanEntityProcessor#init");
+        logger.trace("OiyokanEntityProcessor#init()");
 
         this.odata = odata;
         this.serviceMetadata = serviceMetadata;
@@ -79,8 +75,8 @@ public class OiyokanEntityProcessor implements EntityProcessor {
     @Override
     public void readEntity(ODataRequest request, ODataResponse response, UriInfo uriInfo, ContentType responseFormat)
             throws ODataApplicationException, ODataLibraryException {
-        if (IS_DEBUG)
-            System.err.println("OiyokanEntityProcessor#readEntity: " + request.getRawRequestUri());
+        logger.trace("OiyokanEntityProcessor#readEntity(" + request.getRawODataPath() + "," + request.getRawQueryPath()
+                + ")");
 
         try {
             // シングルトンな OiyoInfo を利用。
@@ -137,7 +133,8 @@ public class OiyokanEntityProcessor implements EntityProcessor {
             response.setHeader(HttpHeader.CONTENT_TYPE, responseFormat.toContentTypeString());
 
         } catch (RuntimeException ex) {
-            System.err.println("OiyokanEntityProcessor#readEntity: exception: " + ex.toString());
+            logger.error("ERROR: OiyokanEntityProcessor#readEntity(" + request.getRawODataPath() + ","
+                    + request.getRawQueryPath() + ")", ex);
             throw ex;
         }
     }
@@ -145,8 +142,8 @@ public class OiyokanEntityProcessor implements EntityProcessor {
     @Override
     public void createEntity(ODataRequest request, ODataResponse response, UriInfo uriInfo, ContentType requestFormat,
             ContentType responseFormat) throws ODataApplicationException, ODataLibraryException {
-        if (IS_DEBUG)
-            System.err.println("OiyokanEntityProcessor#createEntity: " + request.getRawRequestUri());
+        logger.trace("OiyokanEntityProcessor#createEntity(" + request.getRawODataPath() + ","
+                + request.getRawQueryPath() + ")");
 
         try {
             // シングルトンな OiyoInfo を利用。
@@ -199,8 +196,8 @@ public class OiyokanEntityProcessor implements EntityProcessor {
             response.setHeader(HttpHeader.CONTENT_TYPE, responseFormat.toContentTypeString());
 
         } catch (RuntimeException ex) {
-            ex.printStackTrace();
-            System.err.println("OiyokanEntityProcessor#createEntity: exception: " + ex.toString());
+            logger.error("ERROR: OiyokanEntityProcessor#createEntity(" + request.getRawODataPath() + ","
+                    + request.getRawQueryPath() + ")");
             throw ex;
         }
     }
@@ -208,8 +205,8 @@ public class OiyokanEntityProcessor implements EntityProcessor {
     @Override
     public void updateEntity(ODataRequest request, ODataResponse response, UriInfo uriInfo, ContentType requestFormat,
             ContentType responseFormat) throws ODataApplicationException, ODataLibraryException {
-        if (IS_DEBUG)
-            System.err.println("OiyokanEntityProcessor#updateEntity: " + request.getRawRequestUri());
+        logger.trace("OiyokanEntityProcessor#updateEntity(" + request.getRawODataPath() + ","
+                + request.getRawQueryPath() + ")");
 
         try {
             // シングルトンな OiyoInfo を利用。
@@ -270,8 +267,8 @@ public class OiyokanEntityProcessor implements EntityProcessor {
             response.setHeader(HttpHeader.CONTENT_TYPE, responseFormat.toContentTypeString());
 
         } catch (RuntimeException ex) {
-            ex.printStackTrace();
-            System.err.println("OiyokanEntityProcessor#updateEntity: exception: " + ex.toString());
+            logger.error("ERROR: OiyokanEntityProcessor#updateEntity(" + request.getRawODataPath() + ","
+                    + request.getRawQueryPath() + ")");
             throw ex;
         }
     }
@@ -279,8 +276,8 @@ public class OiyokanEntityProcessor implements EntityProcessor {
     @Override
     public void deleteEntity(ODataRequest request, ODataResponse response, UriInfo uriInfo)
             throws ODataApplicationException, ODataLibraryException {
-        if (IS_DEBUG)
-            System.err.println("OiyokanEntityProcessor#deleteEntity: " + request.getRawRequestUri());
+        logger.trace("OiyokanEntityProcessor#deleteEntity(" + request.getRawODataPath() + ","
+                + request.getRawQueryPath() + ")");
 
         try {
             // シングルトンな OiyoInfo を利用。
@@ -309,8 +306,8 @@ public class OiyokanEntityProcessor implements EntityProcessor {
             response.setStatusCode(HttpStatusCode.NO_CONTENT.getStatusCode());
 
         } catch (RuntimeException ex) {
-            // ex.printStackTrace();
-            System.err.println("OiyokanEntityProcessor#deleteEntity: exception: " + ex.toString());
+            logger.error("ERROR: OiyokanEntityProcessor#deleteEntity(" + request.getRawODataPath() + ","
+                    + request.getRawQueryPath() + ")");
             throw ex;
         }
     }

@@ -20,6 +20,8 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.Locale;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.olingo.server.api.ODataApplicationException;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.StreamUtils;
@@ -37,6 +39,8 @@ import jp.oiyokan.dto.OiyoSettingsProperty;
  * oiyokan-settings.json ファイルに関する処理。
  */
 public class OiyoInfoUtil {
+    private static final Log logger = LogFactory.getLog(OiyoInfoUtil.class);
+
     /**
      * resources フォルダから設定ファイルを読み込み.
      * 
@@ -120,9 +124,10 @@ public class OiyoInfoUtil {
             }
         }
 
-        // [M039] UNEXPECTED: EntitySet settings NOT found.
-        System.err.println(OiyokanMessages.IY7121 + ": " + entitySetName);
-        throw new ODataApplicationException(OiyokanMessages.IY7121 + ": " + entitySetName, 500, Locale.ENGLISH);
+        // [IY7121] UNEXPECTED: EntitySet settings NOT found.
+        logger.error(OiyokanMessages.IY7121 + ": " + entitySetName);
+        throw new ODataApplicationException(OiyokanMessages.IY7121 + ": " + entitySetName, //
+                OiyokanMessages.IY7121_CODE, Locale.ENGLISH);
     }
 
     public static OiyoSettingsProperty getOiyoEntityProperty(OiyoInfo oiyoInfo, String entitySetName,

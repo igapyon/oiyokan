@@ -179,6 +179,7 @@ public class OiyokanMessages {
     public static final int IY7119_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
     public static final String IY7120 = "[IY7120] UNEXPECTED: null parameter given as EntitySet.";
     public static final String IY7121 = "[IY7121] UNEXPECTED: EntitySet settings NOT found.";
+    public static final int IY7121_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
     public static final String IY7122 = "[IY7122] UNEXPECTED: EntitySet Property settings NOT found.";
     public static final String IY7123 = "[IY7123] UNEXPECTED: Fail to find Property from DB name.";
     public static final String IY7124 = "[IY7124] NOT SUPPORTED: Database type";
