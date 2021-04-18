@@ -99,7 +99,7 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
             }
             if (entitySet == null) {
                 // [IY7119] UNEXPECTED: EntitySet settings NOT found.
-                System.err.println(OiyokanMessages.IY7119 + ": " + entityTypeName);
+                log.error(OiyokanMessages.IY7119 + ": " + entityTypeName);
                 throw new ODataApplicationException(OiyokanMessages.IY7119 + ": " + entityTypeName, //
                         OiyokanMessages.IY7119_CODE, Locale.ENGLISH);
             }
@@ -109,12 +109,12 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
             CsdlEntityType entityType = entityTypeBuilder.getEntityType();
 
             if (false) {
-                System.err.println("csdlEntityType: " + entityType.getName());
+                log.trace("csdlEntityType: " + entityType.getName());
                 for (CsdlPropertyRef key : entityType.getKey()) {
-                    System.err.println("  key: " + key.getName());
+                    log.trace("  key: " + key.getName());
                 }
                 for (CsdlProperty prop : entityType.getProperties()) {
-                    System.err.println("  prop: " + prop.getName());
+                    log.trace("  prop: " + prop.getName());
                 }
             }
             return entityType;

@@ -38,6 +38,8 @@ import java.util.Locale;
 import java.util.UUID;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.olingo.commons.api.data.Property;
 import org.apache.olingo.commons.api.data.ValueType;
 import org.apache.olingo.commons.api.edm.EdmPrimitiveType;
@@ -72,6 +74,8 @@ import jp.oiyokan.util.OiyoEdmUtil;
  * Oiyokan 関連の JDBC まわりユーティリティクラス.
  */
 public class OiyoCommonJdbcUtil {
+    private static final Log log = LogFactory.getLog(OiyoCommonJdbcUtil.class);
+
     private OiyoCommonJdbcUtil() {
     }
 

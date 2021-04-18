@@ -20,6 +20,8 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.Locale;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.olingo.server.api.ODataApplicationException;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.StreamUtils;
@@ -30,6 +32,8 @@ import jp.oiyokan.OiyokanMessages;
  * oiyokan-sampledb.sql ファイルに関する処理。
  */
 public class OiyokanResourceSqlUtil {
+    private static final Log log = LogFactory.getLog(OiyokanResourceSqlUtil.class);
+
     /**
      * 指定されたSQLリソースからSQL文の配列を読み込み.
      * 

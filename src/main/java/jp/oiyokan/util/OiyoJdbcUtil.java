@@ -17,12 +17,17 @@ package jp.oiyokan.util;
 
 import java.sql.Types;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import jp.oiyokan.OiyokanMessages;
 
 /**
  * JDBCの超基本ユーティリティ. 鉄板なメソッドのみここに記載する. Oiyokan の対応有無とは関わらず、数値文字変換を実施。
  */
 public class OiyoJdbcUtil {
+    private static final Log log = LogFactory.getLog(OiyoJdbcUtil.class);
+
     /**
      * 与えられた java.sql.Types を文字列に変換.
      * 

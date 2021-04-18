@@ -142,8 +142,8 @@ public class OiyokanEntityProcessor implements EntityProcessor {
     @Override
     public void createEntity(ODataRequest request, ODataResponse response, UriInfo uriInfo, ContentType requestFormat,
             ContentType responseFormat) throws ODataApplicationException, ODataLibraryException {
-        log.trace("OiyokanEntityProcessor#createEntity(" + request.getRawODataPath() + ","
-                + request.getRawQueryPath() + ")");
+        log.trace("OiyokanEntityProcessor#createEntity(" + request.getRawODataPath() + "," + request.getRawQueryPath()
+                + ")");
 
         try {
             // シングルトンな OiyoInfo を利用。
@@ -205,8 +205,8 @@ public class OiyokanEntityProcessor implements EntityProcessor {
     @Override
     public void updateEntity(ODataRequest request, ODataResponse response, UriInfo uriInfo, ContentType requestFormat,
             ContentType responseFormat) throws ODataApplicationException, ODataLibraryException {
-        log.trace("OiyokanEntityProcessor#updateEntity(" + request.getRawODataPath() + ","
-                + request.getRawQueryPath() + ")");
+        log.trace("OiyokanEntityProcessor#updateEntity(" + request.getRawODataPath() + "," + request.getRawQueryPath()
+                + ")");
 
         try {
             // シングルトンな OiyoInfo を利用。
@@ -276,8 +276,8 @@ public class OiyokanEntityProcessor implements EntityProcessor {
     @Override
     public void deleteEntity(ODataRequest request, ODataResponse response, UriInfo uriInfo)
             throws ODataApplicationException, ODataLibraryException {
-        log.trace("OiyokanEntityProcessor#deleteEntity(" + request.getRawODataPath() + ","
-                + request.getRawQueryPath() + ")");
+        log.trace("OiyokanEntityProcessor#deleteEntity(" + request.getRawODataPath() + "," + request.getRawQueryPath()
+                + ")");
 
         try {
             // シングルトンな OiyoInfo を利用。

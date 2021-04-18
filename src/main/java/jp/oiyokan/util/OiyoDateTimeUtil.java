@@ -9,12 +9,17 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import jp.oiyokan.OiyokanMessages;
 
 /**
  * Basic DateTime util for Oiyokan.
  */
 public class OiyoDateTimeUtil {
+    private static final Log log = LogFactory.getLog(OiyoDateTimeUtil.class);
+
     private static final DateTimeFormatter[] OFPATTERNS_DATETIME = new DateTimeFormatter[] { //
             DateTimeFormatter.ISO_DATE_TIME, //
             DateTimeFormatter.ISO_INSTANT, //

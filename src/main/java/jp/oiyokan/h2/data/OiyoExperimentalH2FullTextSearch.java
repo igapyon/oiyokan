@@ -21,6 +21,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Locale;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.olingo.commons.api.data.Entity;
 import org.apache.olingo.commons.api.data.EntityCollection;
 import org.apache.olingo.commons.api.data.Property;
@@ -36,6 +38,8 @@ import jp.oiyokan.OiyokanConstants;
  * h2 用の全文検索の実験的な実装。
  */
 public class OiyoExperimentalH2FullTextSearch {
+    private static final Log log = LogFactory.getLog(OiyoExperimentalH2FullTextSearch.class);
+
     /**
      * 全文検索を処理.
      * 
