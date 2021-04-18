@@ -22,6 +22,13 @@ import org.apache.olingo.commons.api.http.HttpStatusCode;
  */
 public class OiyokanMessages {
     ////////////////////////////////////////////////////////////////////////////////
+    // IY10XX : Start
+    public static final String IY1001 = "[IY1001] Start Oiyokan";
+
+    public static final String IY1051 = "[IY1051] Check JDBC Driver";
+    public static final String IY1052 = "[IY1052] OData v4: URI";
+
+    ////////////////////////////////////////////////////////////////////////////////
     // Query
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -158,8 +165,8 @@ public class OiyokanMessages {
     ////////////////////////////////////////////////////////////////////////////////
     // IY71XX : Generic
     public static final String IY7101 = "[IY7101] ERROR: Can't decode specified decodec url";
-    public static final String IY7102 = "[IY7102] UNEXPECTED: Illegal data type in database settings";
-    public static final String IY7103 = "[IY7103] UNEXPECTED: Fail to load JDBC driver. Check JDBC Driver classname or JDBC Driver is on classpath.";
+    public static final String IY7102 = "[IY7102] ERROR: Illegal data type in database settings";
+    public static final String IY7103 = "[IY7103] ERROR: Fail to load JDBC driver. Check JDBC Driver classname or JDBC Driver is on classpath.";
     public static final String IY7104 = "[IY7104] UNEXPECTED: Database error in setup internal database.";
     // IY7105
     // IY7106
@@ -196,13 +203,13 @@ public class OiyokanMessages {
 
     ////////////////////////////////////////////////////////////////////////////////
     // IY81XX : Authz
-    public static final String IY8101 = "[IY8101] WARN: No Create access by canCreate==false.";
+    public static final String IY8101 = "[IY8101] ERROR: No Create access by canCreate==false.";
     public static final int IY8101_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
-    public static final String IY8102 = "[IY8102] WARN: No Read access by canRead==false.";
+    public static final String IY8102 = "[IY8102] ERROR: No Read access by canRead==false.";
     public static final int IY8102_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
-    public static final String IY8103 = "[IY8103] WARN: No Update access by canUpdate==false.";
+    public static final String IY8103 = "[IY8103] ERROR: No Update access by canUpdate==false.";
     public static final int IY8103_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
-    public static final String IY8104 = "[IY8104] WARN: No Delete access by canDelete==false.";
+    public static final String IY8104 = "[IY8104] ERROR: No Delete access by canDelete==false.";
     public static final int IY8104_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
 
     ////////////////////////////////////////////////////////////////////////////////

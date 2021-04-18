@@ -99,8 +99,8 @@ public class OiyokanEntityProcessor implements EntityProcessor {
 
             final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, edmEntitySet.getName());
             if (entitySet.getCanRead() != null && entitySet.getCanRead() == false) {
-                // [M052] WARN: No Read access by canRead==false.
-                System.err.println(OiyokanMessages.IY8102 + ": Entity:" + edmEntitySet.getName());
+                // [IY8102] ERROR: No Read access by canRead==false.
+                logger.error(OiyokanMessages.IY8102 + ": Entity:" + edmEntitySet.getName());
                 throw new ODataApplicationException(OiyokanMessages.IY8102 + ": Entity:" + edmEntitySet.getName(), //
                         OiyokanMessages.IY8102_CODE, Locale.ENGLISH);
             }
@@ -110,8 +110,8 @@ public class OiyokanEntityProcessor implements EntityProcessor {
                 entity = new OiyoBasicJdbcEntityOneBuilder(oiyoInfo).readEntityData(connTargetDb, uriInfo, edmEntitySet,
                         keyPredicates);
             } catch (SQLException ex) {
-                // [M210] Database exception occured (readEntity)
-                System.err.println(OiyokanMessages.IY3107 + ": " + ex.toString());
+                // [IY3107] Database exception occured (readEntity)
+                logger.error(OiyokanMessages.IY3107 + ": " + ex.toString());
                 throw new ODataApplicationException(OiyokanMessages.IY3107, //
                         OiyokanMessages.IY3107_CODE, Locale.ENGLISH);
             }
@@ -164,8 +164,8 @@ public class OiyokanEntityProcessor implements EntityProcessor {
 
             final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, edmEntitySet.getName());
             if (entitySet.getCanCreate() != null && entitySet.getCanCreate() == false) {
-                // [M051] WARN: No Create access by canCreate==false.
-                System.err.println(OiyokanMessages.IY8101 + ": Entity:" + edmEntitySet.getName());
+                // [IY8101] ERROR: No Create access by canCreate==false.
+                logger.error(OiyokanMessages.IY8101 + ": Entity:" + edmEntitySet.getName());
                 throw new ODataApplicationException(OiyokanMessages.IY8101 + ": Entity:" + edmEntitySet.getName(), //
                         OiyokanMessages.IY8101_CODE, Locale.ENGLISH);
             }
@@ -221,8 +221,8 @@ public class OiyokanEntityProcessor implements EntityProcessor {
 
             final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, edmEntitySet.getName());
             if (entitySet.getCanUpdate() != null && entitySet.getCanUpdate() == false) {
-                // [M053] WARN: No Update access by canUpdate==false.
-                System.err.println(OiyokanMessages.IY8103 + ": Entity:" + edmEntitySet.getName());
+                // [IY8103] ERROR: No Update access by canUpdate==false.
+                logger.error(OiyokanMessages.IY8103 + ": Entity:" + edmEntitySet.getName());
                 throw new ODataApplicationException(OiyokanMessages.IY8103 + ": Entity:" + edmEntitySet.getName(), //
                         OiyokanMessages.IY8103_CODE, Locale.ENGLISH);
             }
@@ -245,13 +245,13 @@ public class OiyokanEntityProcessor implements EntityProcessor {
                 new OiyoBasicJdbcEntityOneBuilder(oiyoInfo).updateEntityDataPatch(uriInfo, edmEntitySet, keyPredicates,
                         requestEntity, ifMatch, ifNoneMatch);
             } else if (request.getMethod().equals(HttpMethod.PUT)) {
-                // [M016] NOT SUPPORTED: PUT: use PATCH to update Entity.
-                System.err.println(OiyokanMessages.IY1106);
+                // [IY1106] NOT SUPPORTED: PUT: use PATCH to update Entity.
+                logger.error(OiyokanMessages.IY1106);
                 throw new ODataApplicationException(OiyokanMessages.IY1106, OiyokanMessages.IY1106_CODE,
                         Locale.ENGLISH);
             } else {
-                // [M216] UNEXPECTED: Must NOT pass this case.
-                System.err.println(OiyokanMessages.IY3113);
+                // [IY3113] UNEXPECTED: Must NOT pass this case.
+                logger.fatal(OiyokanMessages.IY3113);
                 throw new ODataApplicationException(OiyokanMessages.IY3113, OiyokanMessages.IY3113_CODE,
                         Locale.ENGLISH);
             }
@@ -292,8 +292,8 @@ public class OiyokanEntityProcessor implements EntityProcessor {
 
             final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, edmEntitySet.getName());
             if (entitySet.getCanDelete() != null && entitySet.getCanDelete() == false) {
-                // [M054] WARN: No Delete access by canDelete==false.
-                System.err.println(OiyokanMessages.IY8104 + ": Entity:" + edmEntitySet.getName());
+                // [IY8104] ERROR: No Delete access by canDelete==false.
+                logger.error(OiyokanMessages.IY8104 + ": Entity:" + edmEntitySet.getName());
                 throw new ODataApplicationException(OiyokanMessages.IY8104 + ": Entity:" + edmEntitySet.getName(), //
                         OiyokanMessages.IY8104_CODE, Locale.ENGLISH);
             }

@@ -49,13 +49,6 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
     private static final Log logger = LogFactory.getLog(OiyokanEdmProvider.class);
 
     /**
-     * デバッグ出力の有無.
-     * 
-     * OData Server の挙動のデバッグで困ったときにはこれを true にすること。
-     */
-    private static final boolean IS_DEBUG = false;
-
-    /**
      * OiyokanSettings を singleton に記憶.
      */
     private static volatile OiyoInfo oiyoInfo = null;
@@ -97,9 +90,6 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
         logger.trace("OiyokanEdmProvider#getEntityType(" + entityTypeName + ")");
 
         try {
-            if (IS_DEBUG)
-                System.err.println("OiyokanEdmProvider#getEntityType(" + entityTypeName + ")");
-
             OiyoSettingsEntitySet entitySet = null;
             final OiyoSettings settingsOiyokan = oiyoInfo.getSettings();
             for (OiyoSettingsEntitySet look : settingsOiyokan.getEntitySet()) {
@@ -118,7 +108,7 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
                     OiyokanEdmProvider.getOiyoInfoInstance(), entitySet);
             CsdlEntityType entityType = entityTypeBuilder.getEntityType();
 
-            if (IS_DEBUG) {
+            if (false) {
                 System.err.println("csdlEntityType: " + entityType.getName());
                 for (CsdlPropertyRef key : entityType.getKey()) {
                     System.err.println("  key: " + key.getName());
@@ -147,10 +137,6 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
         logger.trace("OiyokanEdmProvider#getEntitySet(" + entitySetName + ")");
 
         try {
-            if (IS_DEBUG)
-                System.err.println("OiyokanEdmProvider#getEntitySet(" //
-                        + entityContainer + ", " + entitySetName + ")");
-
             // シングルトンな OiyoInfo を利用。
             final OiyoInfo oiyoInfo = getOiyoInfoInstance();
 
@@ -188,9 +174,6 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
         logger.trace("OiyokanEdmProvider#getEntityContainer()");
 
         try {
-            if (IS_DEBUG)
-                System.err.println("OiyokanEdmProvider#getEntityContainer()");
-
             // シングルトンな OiyoInfo を利用。
             final OiyoInfo oiyoInfo = getOiyoInfoInstance();
 
@@ -203,21 +186,20 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
             }
 
             if (isKanDatabaseSetupDone == false) {
-                if (OiyokanConstants.IS_TRACE_ODATA_V4)
-                    System.err.println( //
-                            "OData v4: Start Oiyokan (Oiyokan: " + OiyokanConstants.VERSION + ")");
+                // [IY1001] Start Oiyokan server.
+                logger.info(OiyokanMessages.IY1001 + " (Oiyokan: " + OiyokanConstants.VERSION + ")");
 
                 for (OiyoSettingsDatabase settingsDatabase : getOiyoInfoInstance().getSettings().getDatabase()) {
-                    if (OiyokanConstants.IS_TRACE_ODATA_V4)
-                        System.err.println("OData v4: Check JDBC Driver: " + settingsDatabase.getJdbcDriver());
+                    // [IY1051] Check JDBC Driver
+                    logger.info(OiyokanMessages.IY1051 + ": " + settingsDatabase.getJdbcDriver());
+
                     try {
                         // Database Driver が loadable か念押し確認.
                         Class.forName(settingsDatabase.getJdbcDriver());
                     } catch (ClassNotFoundException ex) {
-                        // [M003] UNEXPECTED: Fail to load JDBC driver. Check JDBC Driver classname or
-                        // JDBC Driver is on classpath."
-                        System.err.println(OiyokanMessages.IY7103 + ": " + settingsDatabase.getJdbcDriver() //
-                                + ": " + ex.toString());
+                        // [IY7103] ERROR: Fail to load JDBC driver. Check JDBC Driver classname or
+                        // JDBC Driver is on classpath.
+                        logger.error(OiyokanMessages.IY7103 + ": " + settingsDatabase.getJdbcDriver() + ": ", ex);
                         throw new ODataApplicationException(
                                 OiyokanMessages.IY7103 + ": " + settingsDatabase.getJdbcDriver(), 500, Locale.ENGLISH);
                     }
@@ -226,9 +208,9 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
                         // 指定のデータベース名の文字列が妥当かどうかチェック。
                         OiyokanConstants.DatabaseType.valueOf(settingsDatabase.getType());
                     } catch (IllegalArgumentException ex) {
-                        // [M002] UNEXPECTED: Illegal data type in database settings
-                        System.err.println(OiyokanMessages.IY7102 + ": dbname:" + settingsDatabase.getName() //
-                                + ", type:" + settingsDatabase.getType());
+                        // [IY7102] ERROR: Illegal data type in database settings
+                        logger.error(OiyokanMessages.IY7102 + ": dbname:" + settingsDatabase.getName() //
+                                + ", type:" + settingsDatabase.getType(), ex);
                         throw new ODataApplicationException(
                                 OiyokanMessages.IY7102 + ": dbname:" + settingsDatabase.getName() //
                                         + ", type:" + settingsDatabase.getType(),
@@ -259,9 +241,6 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
         logger.trace("OiyokanEdmProvider#getSchemas()");
 
         try {
-            if (IS_DEBUG)
-                System.err.println("OiyokanEdmProvider#getSchemas()");
-
             // シングルトンな OiyoInfo を利用。
             final OiyoInfo oiyoInfo = getOiyoInfoInstance();
 
@@ -309,9 +288,6 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
         logger.trace("OiyokanEdmProvider#getEntityContainerInfo()");
 
         try {
-            if (IS_DEBUG)
-                System.err.println("OiyokanEdmProvider#getEntityContainerInfo(" + entityContainerName + ")");
-
             // シングルトンな OiyoInfo を利用。
             final OiyoInfo oiyoInfo = getOiyoInfoInstance();
             final FullQualifiedName fqn = new FullQualifiedName(oiyoInfo.getSettings().getNamespace(),

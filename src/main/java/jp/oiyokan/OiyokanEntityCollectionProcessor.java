@@ -173,9 +173,8 @@ public class OiyokanEntityCollectionProcessor implements EntityCollectionProcess
             // 大抵のデータベース向けには BasicJdbcEntityCollectionBuilder を利用する。
             return new OiyoBasicJdbcEntityCollectionBuilder(oiyoInfo);
         case BigQuery:
-            // TODO FIXME BigQuery用の実装が必要.
-            // [M999] NOT IMPLEMENTED: Generic NOT implemented message.
-            System.err.println(OiyokanMessages.IY9999);
+            // [IY9999] NOT IMPLEMENTED: Generic NOT implemented message.
+            logger.error(OiyokanMessages.IY9999);
             throw new ODataApplicationException(OiyokanMessages.IY9999, 500, Locale.ENGLISH);
         }
     }
