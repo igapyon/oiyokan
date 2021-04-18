@@ -136,7 +136,7 @@ public class OiyoJdbcUtil {
         if ("Types.SMALLINT".equals(typesString)) {
             return Types.SMALLINT; // 5
         }
-        if ("Types.INT".equals(typesString)) {
+        if ("Types.INTEGER".equals(typesString)) {
             return Types.INTEGER; // 4
         }
         if ("Types.BIGINT".equals(typesString)) {
