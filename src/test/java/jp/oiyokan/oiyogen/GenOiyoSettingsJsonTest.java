@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jp.oiyokan.oiyo.gen;
+package jp.oiyokan.oiyogen;
 
 import java.io.File;
 import java.io.StringWriter;
@@ -30,10 +30,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 import jp.oiyokan.OiyokanConstants;
-import jp.oiyokan.basic.OiyoBasicJdbcUtil;
+import jp.oiyokan.common.OiyoCommonJdbcUtil;
 import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.common.OiyoInfoUtil;
-import jp.oiyokan.data.OiyokanKanDatabase;
 import jp.oiyokan.dto.OiyoSettings;
 import jp.oiyokan.dto.OiyoSettingsDatabase;
 import jp.oiyokan.dto.OiyoSettingsEntitySet;
@@ -70,7 +69,7 @@ class GenOiyoSettingsJsonTest {
         OiyoSettingsDatabase settingsDatabase = OiyoInfoUtil.getOiyoDatabaseByName(oiyoInfo, TARGET_UNITTEST_DATABASE);
         System.err.println("確認対象データベース: " + settingsDatabase.getName());
 
-        try (Connection connTargetDb = OiyoBasicJdbcUtil.getConnection(settingsDatabase)) {
+        try (Connection connTargetDb = OiyoCommonJdbcUtil.getConnection(settingsDatabase)) {
             final List<String> tableNameList = new ArrayList<>();
 
             ResultSet rset = connTargetDb.getMetaData().getTables(null, "%", "%", new String[] { "TABLE", "VIEW" });
@@ -307,7 +306,7 @@ class GenOiyoSettingsJsonTest {
 
             for (String tableName : tableNameList) {
                 // System.err.println("tabname: "+tableName);
-                oiyoSettings.getEntitySet().add(OiyokanKanDatabase.generateCreateOiyoJson(connTargetDb, tableName,
+                oiyoSettings.getEntitySet().add(OiyokanSettingsGenUtil.generateCreateOiyoJson(connTargetDb, tableName,
                         OiyokanConstants.DatabaseType.valueOf(settingsDatabase.getType())));
             }
 

@@ -29,10 +29,10 @@ import org.junit.jupiter.api.Test;
 
 import jp.oiyokan.OiyokanEdmProvider;
 import jp.oiyokan.OiyokanTestSettingConstants;
-import jp.oiyokan.basic.OiyoBasicUrlUtil;
 import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.common.OiyoInfoUtil;
 import jp.oiyokan.common.OiyoSqlInfo;
+import jp.oiyokan.common.OiyoUrlUtil;
 import jp.oiyokan.dto.OiyoSettingsEntitySet;
 
 /**
@@ -78,7 +78,7 @@ class OiyoSqlQueryListExprTest {
             return;
 
         assertEquals("(ID = 1.0)", getExprString("/ODataTests1", //
-                OiyoBasicUrlUtil.encodeUrlQuery("$filter=ID eq 1.0")), //
+                OiyoUrlUtil.encodeUrlQuery("$filter=ID eq 1.0")), //
                 "Postgresの場合大文字小文字の差異が出る");
     }
 
@@ -88,7 +88,7 @@ class OiyoSqlQueryListExprTest {
             return;
 
         assertEquals("((Description = ?) AND (ID = 2.0))", getExprString("/ODataTests1", //
-                OiyoBasicUrlUtil.encodeUrlQuery("$filter=Description eq 'Mac' and ID eq 2.0")),
+                OiyoUrlUtil.encodeUrlQuery("$filter=Description eq 'Mac' and ID eq 2.0")),
                 "Postgres/ORACLEの場合大文字小文字の差異が出る");
     }
 
@@ -98,7 +98,7 @@ class OiyoSqlQueryListExprTest {
             return;
 
         assertEquals("((INSTR(Description,?) - 1) <> -1)", getExprString("/ODataTests1", //
-                OiyoBasicUrlUtil.encodeUrlQuery(
+                OiyoUrlUtil.encodeUrlQuery(
                         "$top=51&$filter= indexof(Description,'増殖タブレット7') ne -1 &$orderby=ID &$count=true &$select=Description,ID,Name")),
                 "Postgres/ORACLEの場合、命令の差異、大文字小文字の差異が出る");
     }

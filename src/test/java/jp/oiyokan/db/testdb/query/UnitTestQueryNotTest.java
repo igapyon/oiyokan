@@ -21,7 +21,7 @@ import org.apache.olingo.server.api.ODataResponse;
 import org.junit.jupiter.api.Test;
 
 import jp.oiyokan.OiyokanTestSettingConstants;
-import jp.oiyokan.basic.OiyoBasicUrlUtil;
+import jp.oiyokan.common.OiyoUrlUtil;
 import jp.oiyokan.util.OiyokanTestUtil;
 
 /**
@@ -33,7 +33,7 @@ class UnitTestQueryNotTest {
         if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
             return;
 
-        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1", OiyoBasicUrlUtil
+        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1", OiyoUrlUtil
                 .encodeUrlQuery("&$filter=not contains(StringVar255,'VARCHAR255') &$count=true &$select=ID"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 

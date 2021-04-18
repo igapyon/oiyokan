@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test;
 
 import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanTestSettingConstants;
-import jp.oiyokan.basic.OiyoBasicJdbcUtil;
+import jp.oiyokan.common.OiyoCommonJdbcUtil;
 import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.common.OiyoInfoUtil;
 import jp.oiyokan.data.OiyokanKanDatabase;
@@ -42,7 +42,7 @@ class H2DatabaseTest {
         final OiyoInfo oiyoInfo = new OiyoInfo();
         oiyoInfo.setSettings(OiyoInfoUtil.loadOiyokanSettings());
 
-        try (Connection conn = OiyoBasicJdbcUtil
+        try (Connection conn = OiyoCommonJdbcUtil
                 .getConnection(OiyoInfoUtil.getOiyoDatabaseByName(oiyoInfo, OiyokanConstants.OIYOKAN_UNITTEST_DB))) {
 
             try (var stmt = conn.prepareStatement("SELECT ID, Name, Description FROM ODataTest1 ORDER BY ID LIMIT 3")) {
@@ -61,7 +61,7 @@ class H2DatabaseTest {
         final OiyoInfo oiyoInfo = new OiyoInfo();
         oiyoInfo.setSettings(OiyoInfoUtil.loadOiyokanSettings());
 
-        try (Connection conn = OiyoBasicJdbcUtil
+        try (Connection conn = OiyoCommonJdbcUtil
                 .getConnection(OiyoInfoUtil.getOiyoDatabaseByName(oiyoInfo, OiyokanConstants.OIYOKAN_UNITTEST_DB))) {
 
             try (var stmt = conn.prepareStatement("SELECT ID, Name, Description" //
@@ -91,13 +91,13 @@ class H2DatabaseTest {
         final OiyoInfo oiyoInfo = new OiyoInfo();
         oiyoInfo.setSettings(OiyoInfoUtil.loadOiyokanSettings());
 
-        try (Connection conn = OiyoBasicJdbcUtil
+        try (Connection conn = OiyoCommonJdbcUtil
                 .getConnection(OiyoInfoUtil.getOiyoDatabaseByName(oiyoInfo, OiyokanConstants.OIYOKAN_KAN_DB))) {
             // 内部データベースのテーブルをセットアップ.
             OiyokanKanDatabase.setupKanDatabase(oiyoInfo);
         }
 
-        try (Connection conn = OiyoBasicJdbcUtil
+        try (Connection conn = OiyoCommonJdbcUtil
                 .getConnection(OiyoInfoUtil.getOiyoDatabaseByName(oiyoInfo, OiyokanConstants.OIYOKAN_UNITTEST_DB))) {
 
             try (var stmt = conn.prepareStatement(
@@ -124,7 +124,7 @@ class H2DatabaseTest {
         final OiyoInfo oiyoInfo = new OiyoInfo();
         oiyoInfo.setSettings(OiyoInfoUtil.loadOiyokanSettings());
 
-        try (Connection conn = OiyoBasicJdbcUtil
+        try (Connection conn = OiyoCommonJdbcUtil
                 .getConnection(OiyoInfoUtil.getOiyoDatabaseByName(oiyoInfo, "mysql1"))) {
 
             ResultSet rset = conn.getMetaData().getTables(null, "%", "%", new String[] { "TABLE", "VIEW" });

@@ -27,7 +27,7 @@ import org.apache.olingo.server.core.uri.queryoption.FilterOptionImpl;
 import org.apache.olingo.server.core.uri.queryoption.expression.MemberImpl;
 
 import jp.oiyokan.OiyokanConstants;
-import jp.oiyokan.basic.OiyoBasicJdbcUtil;
+import jp.oiyokan.common.OiyoCommonJdbcUtil;
 import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.common.OiyoInfoUtil;
 import jp.oiyokan.common.OiyoSqlInfo;
@@ -75,7 +75,7 @@ public class OiyoSqlQueryListBuilder {
         final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, entitySetName);
 
         sqlInfo.getSqlBuilder().append("SELECT COUNT(*) FROM "
-                + OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, entitySet.getEntityType().getDbName()));
+                + OiyoCommonJdbcUtil.escapeKakkoFieldName(sqlInfo, entitySet.getEntityType().getDbName()));
         if (uriInfo.getFilterOption() != null) {
             FilterOptionImpl filterOpt = (FilterOptionImpl) uriInfo.getFilterOption();
             sqlInfo.getSqlBuilder().append(" WHERE ");
@@ -173,7 +173,7 @@ public class OiyoSqlQueryListBuilder {
             }
 
             // もし空白を含む場合はエスケープ。
-            strColumns += OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo,
+            strColumns += OiyoCommonJdbcUtil.escapeKakkoFieldName(sqlInfo,
                     OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, entitySet.getName(), prop.getName()).getDbName());
         }
         sqlInfo.getSqlBuilder().append(strColumns);
@@ -190,8 +190,8 @@ public class OiyoSqlQueryListBuilder {
         for (SelectItem item : uriInfo.getSelectOption().getSelectItems()) {
             for (UriResource res : item.getResourcePath().getUriResourceParts()) {
                 sqlInfo.getSqlBuilder().append(itemCount++ == 0 ? "" : ",");
-                final String unescapedName = OiyoBasicJdbcUtil.unescapeKakkoFieldName(res.toString());
-                sqlInfo.getSqlBuilder().append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo,
+                final String unescapedName = OiyoCommonJdbcUtil.unescapeKakkoFieldName(res.toString());
+                sqlInfo.getSqlBuilder().append(OiyoCommonJdbcUtil.escapeKakkoFieldName(sqlInfo,
                         OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, entitySet.getName(), unescapedName).getDbName()));
                 for (int index = 0; index < keyTarget.size(); index++) {
                     if (keyTarget.get(index).equals(res.toString())) {
@@ -204,7 +204,7 @@ public class OiyoSqlQueryListBuilder {
         for (int index = 0; index < keyTarget.size(); index++) {
             // レコードを一意に表すID項目が必須。検索対象にない場合は追加.
             sqlInfo.getSqlBuilder().append(itemCount++ == 0 ? "" : ",");
-            sqlInfo.getSqlBuilder().append(OiyoBasicJdbcUtil.unescapeKakkoFieldName(keyTarget.get(index)));
+            sqlInfo.getSqlBuilder().append(OiyoCommonJdbcUtil.unescapeKakkoFieldName(keyTarget.get(index)));
         }
     }
 
@@ -218,7 +218,7 @@ public class OiyoSqlQueryListBuilder {
         switch (databaseType) {
         default:
             sqlInfo.getSqlBuilder().append(
-                    " FROM " + OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, entitySet.getEntityType().getDbName()));
+                    " FROM " + OiyoCommonJdbcUtil.escapeKakkoFieldName(sqlInfo, entitySet.getEntityType().getDbName()));
             break;
         case MSSQL2008:
         case ORACLE: {
@@ -253,7 +253,7 @@ public class OiyoSqlQueryListBuilder {
             // 必要な分だけ項目展開.
             expandSelect(uriInfo);
             sqlInfo.getSqlBuilder().append(
-                    " FROM " + OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, entitySet.getEntityType().getDbName()));
+                    " FROM " + OiyoCommonJdbcUtil.escapeKakkoFieldName(sqlInfo, entitySet.getEntityType().getDbName()));
             if (uriInfo.getFilterOption() != null) {
                 sqlInfo.getSqlBuilder().append(" WHERE ");
                 // データ絞り込みはここで実現.
@@ -282,9 +282,9 @@ public class OiyoSqlQueryListBuilder {
                 sqlInfo.getSqlBuilder().append(",");
             }
 
-            final String unescapedName = OiyoBasicJdbcUtil
+            final String unescapedName = OiyoCommonJdbcUtil
                     .unescapeKakkoFieldName(((MemberImpl) orderByItem.getExpression()).toString());
-            sqlInfo.getSqlBuilder().append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo,
+            sqlInfo.getSqlBuilder().append(OiyoCommonJdbcUtil.escapeKakkoFieldName(sqlInfo,
                     OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, entitySet.getName(), unescapedName).getDbName()));
 
             if (orderByItem.isDescending()) {
@@ -307,7 +307,7 @@ public class OiyoSqlQueryListBuilder {
 
             final OiyoSettingsProperty prop = OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, entitySet.getName(), look);
 
-            sqlInfo.getSqlBuilder().append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, prop.getDbName()));
+            sqlInfo.getSqlBuilder().append(OiyoCommonJdbcUtil.escapeKakkoFieldName(sqlInfo, prop.getDbName()));
         }
     }
 

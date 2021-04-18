@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jp.oiyokan.oiyo.gen;
+package jp.oiyokan.oiyogen;
 
 import java.io.File;
 import java.io.StringReader;
@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jp.oiyokan.OiyokanConstants;
-import jp.oiyokan.basic.OiyoBasicJdbcUtil;
+import jp.oiyokan.common.OiyoCommonJdbcUtil;
 import jp.oiyokan.dto.OiyoSettings;
 import jp.oiyokan.dto.OiyoSettingsDatabase;
 import jp.oiyokan.dto.OiyoSettingsEntitySet;
@@ -67,7 +67,7 @@ class GenTargetDdlFromOiyoSettingsTest {
             sql.append(" IF NOT EXISTS");
             sql.append("\n");
 
-            sql.append("  " + OiyoBasicJdbcUtil.escapeKakkoFieldName(databaseType, entityType.getDbName()) + " (\n");
+            sql.append("  " + OiyoCommonJdbcUtil.escapeKakkoFieldName(databaseType, entityType.getDbName()) + " (\n");
 
             boolean isFirst = true;
             for (OiyoSettingsProperty prop : entityType.getProperty()) {
@@ -77,7 +77,7 @@ class GenTargetDdlFromOiyoSettingsTest {
                 } else {
                     sql.append(", ");
                 }
-                sql.append(OiyoBasicJdbcUtil.escapeKakkoFieldName(databaseType, prop.getDbName()));
+                sql.append(OiyoCommonJdbcUtil.escapeKakkoFieldName(databaseType, prop.getDbName()));
                 if (prop.getDbDefault() != null && prop.getDbDefault().indexOf("NEXT VALUE FOR") >= 0) {
                     // h2 database 特殊ルール
                     sql.append(" IDENTITY");
@@ -128,7 +128,7 @@ class GenTargetDdlFromOiyoSettingsTest {
                         throw new IllegalArgumentException("EntitySetからProperty定義が発見できない. JSONファイル破損の疑い.");
                     }
 
-                    sql.append(OiyoBasicJdbcUtil.escapeKakkoFieldName(databaseType, prop.getDbName()));
+                    sql.append(OiyoCommonJdbcUtil.escapeKakkoFieldName(databaseType, prop.getDbName()));
                 }
                 sql.append(")\n");
             }

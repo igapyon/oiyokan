@@ -21,7 +21,7 @@ import org.apache.olingo.server.api.ODataResponse;
 import org.junit.jupiter.api.Test;
 
 import jp.oiyokan.OiyokanTestSettingConstants;
-import jp.oiyokan.basic.OiyoBasicUrlUtil;
+import jp.oiyokan.common.OiyoUrlUtil;
 import jp.oiyokan.util.OiyokanTestUtil;
 
 /**
@@ -34,7 +34,7 @@ class SakilaActualFailCaseTest {
             return;
 
         final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/SklFilmActors",
-                OiyoBasicUrlUtil.encodeUrlQuery(
+                OiyoUrlUtil.encodeUrlQuery(
                         "$top=2001 &$filter=actor_id eq 1 and film_id eq 140 &$count=true &$select=actor_id,film_id,last_update"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 

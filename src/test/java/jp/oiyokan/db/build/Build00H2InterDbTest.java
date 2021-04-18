@@ -24,7 +24,7 @@ import org.apache.olingo.server.api.ODataApplicationException;
 import org.junit.jupiter.api.Test;
 
 import jp.oiyokan.OiyokanConstants;
-import jp.oiyokan.basic.OiyoBasicJdbcUtil;
+import jp.oiyokan.common.OiyoCommonJdbcUtil;
 import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.common.OiyoInfoUtil;
 import jp.oiyokan.data.OiyokanResourceSqlUtil;
@@ -68,7 +68,7 @@ class Build00H2InterDbTest {
 
             OiyoSettingsDatabase lookDatabase = OiyoInfoUtil.getOiyoDatabaseByName(oiyoInfo, sqlFileDef[0]);
 
-            try (Connection connLoookDatabase = OiyoBasicJdbcUtil.getConnection(lookDatabase)) {
+            try (Connection connLoookDatabase = OiyoCommonJdbcUtil.getConnection(lookDatabase)) {
                 final String[] sqls = OiyokanResourceSqlUtil.loadOiyokanResourceSql("oiyokan/sql/" + sqlFileDef[1]);
                 for (String sql : sqls) {
                     try (var stmt = connLoookDatabase.prepareStatement(sql.trim())) {

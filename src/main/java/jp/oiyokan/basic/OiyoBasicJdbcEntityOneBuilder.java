@@ -42,6 +42,7 @@ import jp.oiyokan.basic.sql.OiyoSqlDeleteOneBuilder;
 import jp.oiyokan.basic.sql.OiyoSqlInsertOneBuilder;
 import jp.oiyokan.basic.sql.OiyoSqlQueryOneBuilder;
 import jp.oiyokan.basic.sql.OiyoSqlUpdateOneBuilder;
+import jp.oiyokan.common.OiyoCommonJdbcUtil;
 import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.common.OiyoInfoUtil;
 import jp.oiyokan.common.OiyoSqlInfo;
@@ -95,7 +96,7 @@ public class OiyoBasicJdbcEntityOneBuilder {
 
             int idxColumn = 1;
             for (Object look : sqlInfo.getSqlParamList()) {
-                OiyoBasicJdbcUtil.bindPreparedParameter(stmt, idxColumn++, look);
+                OiyoCommonJdbcUtil.bindPreparedParameter(stmt, idxColumn++, look);
             }
 
             stmt.executeQuery();
@@ -110,7 +111,7 @@ public class OiyoBasicJdbcEntityOneBuilder {
             final ResultSetMetaData rsmeta = rset.getMetaData();
             final Entity ent = new Entity();
             for (int column = 1; column <= rsmeta.getColumnCount(); column++) {
-                Property prop = OiyoBasicJdbcUtil.resultSet2Property(oiyoInfo, rset, rsmeta, column, entitySet);
+                Property prop = OiyoCommonJdbcUtil.resultSet2Property(oiyoInfo, rset, rsmeta, column, entitySet);
                 ent.addProperty(prop);
             }
 
@@ -172,11 +173,11 @@ public class OiyoBasicJdbcEntityOneBuilder {
 
         // データベースに接続.
         boolean isTranSuccessed = false;
-        try (Connection connTargetDb = OiyoBasicJdbcUtil.getConnection(database)) {
+        try (Connection connTargetDb = OiyoCommonJdbcUtil.getConnection(database)) {
             // Set auto commit OFF.
             connTargetDb.setAutoCommit(false);
             try {
-                final List<String> generatedKeys = OiyoBasicJdbcUtil.executeDml(connTargetDb, sqlInfo, true);
+                final List<String> generatedKeys = OiyoCommonJdbcUtil.executeDml(connTargetDb, sqlInfo, true);
                 // 生成されたキーをその後の処理に反映。
                 final List<UriParameter> keyPredicates = new ArrayList<>();
                 if (DatabaseType.ORACLE == databaseType) {
@@ -271,11 +272,11 @@ public class OiyoBasicJdbcEntityOneBuilder {
 
         // データベースに接続.
         boolean isTranSuccessed = false;
-        try (Connection connTargetDb = OiyoBasicJdbcUtil.getConnection(database)) {
+        try (Connection connTargetDb = OiyoCommonJdbcUtil.getConnection(database)) {
             // Set auto commit OFF.
             connTargetDb.setAutoCommit(false);
             try {
-                OiyoBasicJdbcUtil.executeDml(connTargetDb, sqlInfo, false);
+                OiyoCommonJdbcUtil.executeDml(connTargetDb, sqlInfo, false);
 
                 // トランザクションを成功としてマーク.
                 isTranSuccessed = true;
@@ -321,7 +322,7 @@ public class OiyoBasicJdbcEntityOneBuilder {
                 entitySet.getName());
 
         // データベースに接続.
-        try (Connection connTargetDb = OiyoBasicJdbcUtil.getConnection(database)) {
+        try (Connection connTargetDb = OiyoCommonJdbcUtil.getConnection(database)) {
             // Set auto commit OFF.
             connTargetDb.setAutoCommit(false);
             boolean isTranSuccessed = false;
@@ -366,7 +367,7 @@ public class OiyoBasicJdbcEntityOneBuilder {
             }
 
             try {
-                OiyoBasicJdbcUtil.executeDml(connTargetDb, sqlInfo, false);
+                OiyoCommonJdbcUtil.executeDml(connTargetDb, sqlInfo, false);
 
                 // トランザクションを成功としてマーク.
                 isTranSuccessed = true;

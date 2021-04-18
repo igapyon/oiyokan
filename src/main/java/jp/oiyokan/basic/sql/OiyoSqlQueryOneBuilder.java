@@ -22,7 +22,7 @@ import org.apache.olingo.server.api.ODataApplicationException;
 import org.apache.olingo.server.api.uri.UriParameter;
 
 import jp.oiyokan.OiyokanConstants;
-import jp.oiyokan.basic.OiyoBasicJdbcUtil;
+import jp.oiyokan.common.OiyoCommonJdbcUtil;
 import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.common.OiyoInfoUtil;
 import jp.oiyokan.common.OiyoSqlInfo;
@@ -76,7 +76,7 @@ public class OiyoSqlQueryOneBuilder {
         expandSelectKey(edmEntitySet);
 
         sqlInfo.getSqlBuilder().append(
-                " FROM " + OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, entitySet.getEntityType().getDbName()));
+                " FROM " + OiyoCommonJdbcUtil.escapeKakkoFieldName(sqlInfo, entitySet.getEntityType().getDbName()));
 
         sqlInfo.getSqlBuilder().append(" WHERE ");
         boolean isFirst = true;
@@ -91,7 +91,7 @@ public class OiyoSqlQueryOneBuilder {
                 // ORACLE ROWID special.
                 sqlInfo.getSqlBuilder().append(param.getName());
             } else {
-                sqlInfo.getSqlBuilder().append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyoInfoUtil
+                sqlInfo.getSqlBuilder().append(OiyoCommonJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyoInfoUtil
                         .getOiyoEntityProperty(oiyoInfo, entitySet.getName(), param.getName()).getDbName()));
             }
             sqlInfo.getSqlBuilder().append("=");
@@ -99,11 +99,11 @@ public class OiyoSqlQueryOneBuilder {
             try {
                 final OiyoSettingsProperty prop = OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, edmEntitySet.getName(),
                         param.getName());
-                OiyoBasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo, prop.getEdmType(), param.getText());
+                OiyoCommonJdbcUtil.expandLiteralOrBindParameter(sqlInfo, prop.getEdmType(), param.getText());
             } catch (ODataApplicationException ex) {
                 // ORACLEのROWIDを利用する場合、この処理で例外.
                 // 例外の場合は Edm.String 決め打ちで処理する。
-                OiyoBasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo, "Edm.String", param.getText());
+                OiyoCommonJdbcUtil.expandLiteralOrBindParameter(sqlInfo, "Edm.String", param.getText());
             }
         }
     }
@@ -112,8 +112,8 @@ public class OiyoSqlQueryOneBuilder {
         int itemCount = 0;
         for (String name : edmEntitySet.getEntityType().getPropertyNames()) {
             sqlInfo.getSqlBuilder().append(itemCount++ == 0 ? "" : ",");
-            final String unescapedName = OiyoBasicJdbcUtil.unescapeKakkoFieldName(name);
-            sqlInfo.getSqlBuilder().append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo,
+            final String unescapedName = OiyoCommonJdbcUtil.unescapeKakkoFieldName(name);
+            sqlInfo.getSqlBuilder().append(OiyoCommonJdbcUtil.escapeKakkoFieldName(sqlInfo,
                     OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, edmEntitySet.getName(), unescapedName).getDbName()));
         }
     }

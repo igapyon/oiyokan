@@ -34,7 +34,7 @@ import org.apache.olingo.server.core.uri.queryoption.expression.UnaryImpl;
 
 import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanMessages;
-import jp.oiyokan.basic.OiyoBasicJdbcUtil;
+import jp.oiyokan.common.OiyoCommonJdbcUtil;
 import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.common.OiyoInfoUtil;
 import jp.oiyokan.common.OiyoSqlInfo;
@@ -259,7 +259,7 @@ public class OiyoSqlQueryListExpr {
             return;
         }
 
-        OiyoBasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo,
+        OiyoCommonJdbcUtil.expandLiteralOrBindParameter(sqlInfo,
                 impl.getType().getFullQualifiedName().getFullQualifiedNameAsString(), impl.getText());
     }
 
@@ -267,8 +267,8 @@ public class OiyoSqlQueryListExpr {
         final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, sqlInfo.getEntitySetName());
 
         // そのままSQLのメンバーとせず、項目名エスケープを除去.
-        final String unescapedName = OiyoBasicJdbcUtil.unescapeKakkoFieldName(impl.toString());
-        sqlInfo.getSqlBuilder().append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo,
+        final String unescapedName = OiyoCommonJdbcUtil.unescapeKakkoFieldName(impl.toString());
+        sqlInfo.getSqlBuilder().append(OiyoCommonJdbcUtil.escapeKakkoFieldName(sqlInfo,
                 OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, entitySet.getName(), unescapedName).getDbName()));
     }
 

@@ -21,7 +21,7 @@ import org.apache.olingo.server.api.ODataResponse;
 import org.junit.jupiter.api.Test;
 
 import jp.oiyokan.OiyokanTestSettingConstants;
-import jp.oiyokan.basic.OiyoBasicUrlUtil;
+import jp.oiyokan.common.OiyoUrlUtil;
 import jp.oiyokan.util.OiyokanTestUtil;
 
 /**
@@ -37,7 +37,7 @@ class SakilaFieldNameContainsSpaceTest {
             return;
 
         final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/SklStaffLists",
-                OiyoBasicUrlUtil.encodeUrlQuery(
+                OiyoUrlUtil.encodeUrlQuery(
                         "$count=true &$top=20 &$select=zip_code &$orderby=zip_code &$filter=zip_code eq '00000'"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 

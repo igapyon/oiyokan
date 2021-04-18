@@ -37,8 +37,10 @@ import jp.oiyokan.OiyokanEdmProvider;
 import jp.oiyokan.OiyokanEntityCollectionBuilderInterface;
 import jp.oiyokan.OiyokanMessages;
 import jp.oiyokan.basic.sql.OiyoSqlQueryListBuilder;
+import jp.oiyokan.common.OiyoCommonJdbcUtil;
 import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.common.OiyoInfoUtil;
+import jp.oiyokan.common.OiyoUrlUtil;
 import jp.oiyokan.dto.OiyoSettingsDatabase;
 import jp.oiyokan.dto.OiyoSettingsEntitySet;
 import jp.oiyokan.h2.data.OiyoExperimentalH2FullTextSearch;
@@ -122,7 +124,7 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
         // データベースに接続.
         final OiyoSettingsDatabase database = OiyoInfoUtil.getOiyoDatabaseByEntitySetName(oiyoInfo,
                 edmEntitySet.getName());
-        try (Connection connTargetDb = OiyoBasicJdbcUtil.getConnection(database)) {
+        try (Connection connTargetDb = OiyoCommonJdbcUtil.getConnection(database)) {
             if (uriInfo.getSearchOption() != null) {
                 // $search.
                 new OiyoExperimentalH2FullTextSearch().process(connTargetDb, edmEntitySet, uriInfo, entityCollection);
@@ -175,7 +177,7 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
 
             int column = 1;
             for (Object look : basicSqlBuilder.getSqlInfo().getSqlParamList()) {
-                OiyoBasicJdbcUtil.bindPreparedParameter(stmt, column++, look);
+                OiyoCommonJdbcUtil.bindPreparedParameter(stmt, column++, look);
             }
 
             stmt.executeQuery();
@@ -236,7 +238,7 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
             // 組み立て後のバインド変数を PreparedStatement にセット.
             int idxColumn = 1;
             for (Object look : basicSqlBuilder.getSqlInfo().getSqlParamList()) {
-                OiyoBasicJdbcUtil.bindPreparedParameter(stmt, idxColumn++, look);
+                OiyoCommonJdbcUtil.bindPreparedParameter(stmt, idxColumn++, look);
             }
 
             // 検索を実行.
@@ -252,7 +254,7 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
                 final Entity ent = new Entity();
                 for (int column = 1; column <= rsmeta.getColumnCount(); column++) {
                     // 取得された検索結果を Property に組み替え.
-                    Property prop = OiyoBasicJdbcUtil.resultSet2Property(oiyoInfo, rset, rsmeta, column, entitySet);
+                    Property prop = OiyoCommonJdbcUtil.resultSet2Property(oiyoInfo, rset, rsmeta, column, entitySet);
                     ent.addProperty(prop);
                 }
 
@@ -267,7 +269,7 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
                         String idVal = prop.getValue().toString();
                         if ("Edm.String".equals(prop.getType())) {
                             // TODO FIXME Property の値を文字列に変換する共通関数を期待したい.
-                            idVal = "'" + OiyoBasicUrlUtil.encodeUrl4Key(idVal) + "'";
+                            idVal = "'" + OiyoUrlUtil.encodeUrl4Key(idVal) + "'";
                         }
                         ent.setId(createId(csdlEntitySet.getName(), idVal));
                     } else {
@@ -285,7 +287,7 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
                             String idVal = prop.getValue().toString();
                             if ("Edm.String".equals(prop.getType())) {
                                 // TODO FIXME Property の値を文字列に変換する共通関数を期待したい.
-                                idVal = "'" + OiyoBasicUrlUtil.encodeUrl4Key(idVal) + "'";
+                                idVal = "'" + OiyoUrlUtil.encodeUrl4Key(idVal) + "'";
                             }
                             keyString += idVal;
                         }
