@@ -52,7 +52,7 @@ import jp.oiyokan.common.OiyoInfoUtil;
  * 実際のデータ取得処理を担当.
  */
 public class OiyokanEntityCollectionProcessor implements EntityCollectionProcessor {
-    private static final Log logger = LogFactory.getLog(OiyokanEntityCollectionProcessor.class);
+    private static final Log log = LogFactory.getLog(OiyokanEntityCollectionProcessor.class);
 
     /**
      * OData.
@@ -72,7 +72,7 @@ public class OiyokanEntityCollectionProcessor implements EntityCollectionProcess
      */
     @Override
     public void init(OData odata, ServiceMetadata serviceMetadata) {
-        logger.trace("OiyokanEntityCollectionProcessor#init()");
+        log.trace("OiyokanEntityCollectionProcessor#init()");
 
         this.odata = odata;
         this.serviceMetadata = serviceMetadata;
@@ -92,7 +92,7 @@ public class OiyokanEntityCollectionProcessor implements EntityCollectionProcess
     public void readEntityCollection(ODataRequest request, ODataResponse response, //
             UriInfo uriInfo, ContentType responseFormat) //
             throws ODataApplicationException, SerializerException {
-        logger.trace("OiyokanEntityCollectionProcessor#readEntityCollection(" + request.getRawODataPath() + ","
+        log.trace("OiyokanEntityCollectionProcessor#readEntityCollection(" + request.getRawODataPath() + ","
                 + request.getRawQueryPath() + ")");
 
         try {
@@ -146,11 +146,11 @@ public class OiyokanEntityCollectionProcessor implements EntityCollectionProcess
             response.setStatusCode(HttpStatusCode.OK.getStatusCode());
             response.setHeader(HttpHeader.CONTENT_TYPE, responseFormat.toContentTypeString());
         } catch (ODataApplicationException ex) {
-            logger.error("ERROR: OiyokanEntityCollectionProcessor#readEntityCollection(" + request.getRawODataPath()
+            log.error("ERROR: OiyokanEntityCollectionProcessor#readEntityCollection(" + request.getRawODataPath()
                     + "," + request.getRawQueryPath() + ")", ex);
             throw ex;
         } catch (RuntimeException ex) {
-            logger.fatal("FATAL: OiyokanEntityCollectionProcessor#readEntityCollection(" + request.getRawODataPath()
+            log.fatal("FATAL: OiyokanEntityCollectionProcessor#readEntityCollection(" + request.getRawODataPath()
                     + "," + request.getRawQueryPath() + ")", ex);
             throw ex;
         }
@@ -158,7 +158,7 @@ public class OiyokanEntityCollectionProcessor implements EntityCollectionProcess
 
     private static final OiyokanEntityCollectionBuilderInterface getEntityCollectionBuilder(OiyoInfo oiyoInfo,
             EdmEntitySet edmEntitySet) throws ODataApplicationException {
-        logger.trace("OiyokanEntityCollectionProcessor#getEntityCollectionBuilder(" + edmEntitySet.getName() + ")");
+        log.trace("OiyokanEntityCollectionProcessor#getEntityCollectionBuilder(" + edmEntitySet.getName() + ")");
 
         final OiyokanConstants.DatabaseType databaseType = OiyoInfoUtil.getOiyoDatabaseTypeByEntitySetName(oiyoInfo,
                 edmEntitySet.getName());
@@ -174,7 +174,7 @@ public class OiyokanEntityCollectionProcessor implements EntityCollectionProcess
             return new OiyoBasicJdbcEntityCollectionBuilder(oiyoInfo);
         case BigQuery:
             // [IY9999] NOT IMPLEMENTED: Generic NOT implemented message.
-            logger.error(OiyokanMessages.IY9999);
+            log.error(OiyokanMessages.IY9999);
             throw new ODataApplicationException(OiyokanMessages.IY9999, 500, Locale.ENGLISH);
         }
     }

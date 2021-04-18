@@ -39,7 +39,7 @@ import jp.oiyokan.dto.OiyoSettingsProperty;
  * oiyokan-settings.json ファイルに関する処理。
  */
 public class OiyoInfoUtil {
-    private static final Log logger = LogFactory.getLog(OiyoInfoUtil.class);
+    private static final Log log = LogFactory.getLog(OiyoInfoUtil.class);
 
     /**
      * resources フォルダから設定ファイルを読み込み.
@@ -125,7 +125,7 @@ public class OiyoInfoUtil {
         }
 
         // [IY7121] UNEXPECTED: EntitySet settings NOT found.
-        logger.error(OiyokanMessages.IY7121 + ": " + entitySetName);
+        log.error(OiyokanMessages.IY7121 + ": " + entitySetName);
         throw new ODataApplicationException(OiyokanMessages.IY7121 + ": " + entitySetName, //
                 OiyokanMessages.IY7121_CODE, Locale.ENGLISH);
     }

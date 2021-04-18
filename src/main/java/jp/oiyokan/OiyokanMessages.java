@@ -28,6 +28,21 @@ public class OiyokanMessages {
     public static final String IY1051 = "[IY1051] Check JDBC Driver";
     public static final String IY1052 = "[IY1052] OData v4: URI";
 
+    public static final String IY1061 = "[IY1061] OData v4: QUERY";
+    public static final String IY1062 = "[IY1062] OData v4: COUNT";
+    public static final String IY1063 = "[IY1063] OData v4: COUNT = ";
+    public static final String IY1064 = "[IY1064] OData v4: SQL collect";
+    public static final String IY1065 = "[IY1065] OData v4: SQL: elapsed";
+
+    public static final String IY1071 = "[IY1071] OData v4: ENTITY: READ";
+    public static final String IY1072 = "[IY1072] OData v4: SQL single";
+    public static final String IY1073 = "[IY1073] OData v4: SQL: elapsed";
+    public static final String IY1074 = "[IY1074] OData v4: ENTITY: CREATE";
+    public static final String IY1075 = "[IY1075] OData v4: ENTITY: DELETE";
+    public static final String IY1076 = "[IY1076] OData v4: ENTITY: PATCH: UPDATE (If-Match)";
+    public static final String IY1077 = "[IY1077] OData v4: ENTITY: PATCH: INSERT (If-None-Match)";
+    public static final String IY1078 = "[IY1078] OData v4: ENTITY: PATCH: UPSERT";
+
     ////////////////////////////////////////////////////////////////////////////////
     // Query
 

@@ -39,7 +39,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 public class OiyokanOdata4Register {
-    private static final Log logger = LogFactory.getLog(OiyokanOdata4Register.class);
+    private static final Log log = LogFactory.getLog(OiyokanOdata4Register.class);
 
     /**
      * Oiyokan (OData v4 server) を Spring Boot の Servlet として登録.
@@ -57,13 +57,13 @@ public class OiyokanOdata4Register {
                 uri += "?" + new URLCodec().decode(req.getQueryString());
             } catch (DecoderException ex) {
                 // [IY7101] ERROR: Can't decode specified decodec url
-                logger.error(OiyokanMessages.IY7101 + ": " + ex.toString(), ex);
+                log.error(OiyokanMessages.IY7101 + ": " + ex.toString(), ex);
                 throw new ServletException(OiyokanMessages.IY7101);
             }
         }
 
         // [IY1052] OData v4: URI
-        logger.info(OiyokanMessages.IY1052 + ": " + uri);
+        log.info(OiyokanMessages.IY1052 + ": " + uri);
 
         try {
             OData odata = OData.newInstance();
@@ -86,7 +86,7 @@ public class OiyokanOdata4Register {
                 }
             }, resp);
         } catch (RuntimeException ex) {
-            logger.error("OData v4: OiyokanOdata4Register#serv(): Unexpected Server Error: " + ex.toString(), ex);
+            log.error("OData v4: OiyokanOdata4Register#serv(): Unexpected Server Error: " + ex.toString(), ex);
             throw new ServletException(ex);
         }
     }

@@ -46,7 +46,7 @@ import jp.oiyokan.dto.OiyoSettingsEntitySet;
  * Apache Olingo からのエントリポイント. ここに記載あるコードの多くは Apache Olingo のための基礎的な記述.
  */
 public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
-    private static final Log logger = LogFactory.getLog(OiyokanEdmProvider.class);
+    private static final Log log = LogFactory.getLog(OiyokanEdmProvider.class);
 
     /**
      * OiyokanSettings を singleton に記憶.
@@ -87,7 +87,7 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
      */
     @Override
     public CsdlEntityType getEntityType(FullQualifiedName entityTypeName) throws ODataApplicationException {
-        logger.trace("OiyokanEdmProvider#getEntityType(" + entityTypeName + ")");
+        log.trace("OiyokanEdmProvider#getEntityType(" + entityTypeName + ")");
 
         try {
             OiyoSettingsEntitySet entitySet = null;
@@ -119,7 +119,7 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
             }
             return entityType;
         } catch (RuntimeException ex) {
-            logger.error("ERROR: OiyokanEdmProvider#getEntityType(" + entityTypeName + ")", ex);
+            log.error("ERROR: OiyokanEdmProvider#getEntityType(" + entityTypeName + ")", ex);
             throw ex;
         }
     }
@@ -134,7 +134,7 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
     @Override
     public CsdlEntitySet getEntitySet(FullQualifiedName entityContainer, String entitySetName)
             throws ODataApplicationException {
-        logger.trace("OiyokanEdmProvider#getEntitySet(" + entitySetName + ")");
+        log.trace("OiyokanEdmProvider#getEntitySet(" + entitySetName + ")");
 
         try {
             // シングルトンな OiyoInfo を利用。
@@ -158,7 +158,7 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
             // ヒットしない場合は対象外。その場合は null返却.
             return csdlEntitySet;
         } catch (RuntimeException ex) {
-            logger.error("ERROR: OiyokanEdmProvider#getEntitySet(" + entitySetName + ")", ex);
+            log.error("ERROR: OiyokanEdmProvider#getEntitySet(" + entitySetName + ")", ex);
             throw ex;
         }
     }
@@ -171,7 +171,7 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
      */
     @Override
     public CsdlEntityContainer getEntityContainer() throws ODataApplicationException {
-        logger.trace("OiyokanEdmProvider#getEntityContainer()");
+        log.trace("OiyokanEdmProvider#getEntityContainer()");
 
         try {
             // シングルトンな OiyoInfo を利用。
@@ -187,11 +187,11 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
 
             if (isKanDatabaseSetupDone == false) {
                 // [IY1001] Start Oiyokan server.
-                logger.info(OiyokanMessages.IY1001 + " (Oiyokan: " + OiyokanConstants.VERSION + ")");
+                log.info(OiyokanMessages.IY1001 + " (Oiyokan: " + OiyokanConstants.VERSION + ")");
 
                 for (OiyoSettingsDatabase settingsDatabase : getOiyoInfoInstance().getSettings().getDatabase()) {
                     // [IY1051] Check JDBC Driver
-                    logger.info(OiyokanMessages.IY1051 + ": " + settingsDatabase.getJdbcDriver());
+                    log.info(OiyokanMessages.IY1051 + ": " + settingsDatabase.getJdbcDriver());
 
                     try {
                         // Database Driver が loadable か念押し確認.
@@ -199,7 +199,7 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
                     } catch (ClassNotFoundException ex) {
                         // [IY7103] ERROR: Fail to load JDBC driver. Check JDBC Driver classname or
                         // JDBC Driver is on classpath.
-                        logger.error(OiyokanMessages.IY7103 + ": " + settingsDatabase.getJdbcDriver() + ": ", ex);
+                        log.error(OiyokanMessages.IY7103 + ": " + settingsDatabase.getJdbcDriver() + ": ", ex);
                         throw new ODataApplicationException(
                                 OiyokanMessages.IY7103 + ": " + settingsDatabase.getJdbcDriver(), 500, Locale.ENGLISH);
                     }
@@ -209,7 +209,7 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
                         OiyokanConstants.DatabaseType.valueOf(settingsDatabase.getType());
                     } catch (IllegalArgumentException ex) {
                         // [IY7102] ERROR: Illegal data type in database settings
-                        logger.error(OiyokanMessages.IY7102 + ": dbname:" + settingsDatabase.getName() //
+                        log.error(OiyokanMessages.IY7102 + ": dbname:" + settingsDatabase.getName() //
                                 + ", type:" + settingsDatabase.getType(), ex);
                         throw new ODataApplicationException(
                                 OiyokanMessages.IY7102 + ": dbname:" + settingsDatabase.getName() //
@@ -225,7 +225,7 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
 
             return container;
         } catch (RuntimeException ex) {
-            logger.error("ERROR: OiyokanEdmProvider#getEntityContainer()", ex);
+            log.error("ERROR: OiyokanEdmProvider#getEntityContainer()", ex);
             throw ex;
         }
     }
@@ -238,7 +238,7 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
      */
     @Override
     public List<CsdlSchema> getSchemas() throws ODataApplicationException {
-        logger.trace("OiyokanEdmProvider#getSchemas()");
+        log.trace("OiyokanEdmProvider#getSchemas()");
 
         try {
             // シングルトンな OiyoInfo を利用。
@@ -268,7 +268,7 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
 
             return newSchemaList;
         } catch (RuntimeException ex) {
-            logger.error("ERROR: OiyokanEdmProvider#getSchemas()", ex);
+            log.error("ERROR: OiyokanEdmProvider#getSchemas()", ex);
             throw ex;
         }
     }
@@ -285,7 +285,7 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
     @Override
     public CsdlEntityContainerInfo getEntityContainerInfo(FullQualifiedName entityContainerName)
             throws ODataApplicationException {
-        logger.trace("OiyokanEdmProvider#getEntityContainerInfo()");
+        log.trace("OiyokanEdmProvider#getEntityContainerInfo()");
 
         try {
             // シングルトンな OiyoInfo を利用。
@@ -302,7 +302,7 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
 
             return null;
         } catch (RuntimeException ex) {
-            logger.error("ERROR: OiyokanEdmProvider#getEntityContainerInfo()", ex);
+            log.error("ERROR: OiyokanEdmProvider#getEntityContainerInfo()", ex);
             throw ex;
         }
     }
