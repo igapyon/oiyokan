@@ -27,6 +27,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.olingo.commons.api.data.Entity;
 import org.apache.olingo.commons.api.data.Property;
 import org.apache.olingo.commons.api.edm.EdmEntitySet;
@@ -53,6 +55,8 @@ import jp.oiyokan.dto.OiyoSettingsEntitySet;
  * Entity 1件の検索に関する基本的なJDBC処理
  */
 public class OiyoBasicJdbcEntityOneBuilder {
+    private static final Log log = LogFactory.getLog(OiyoBasicJdbcEntityOneBuilder.class);
+
     /**
      * Oiyokan Info.
      */
@@ -79,15 +83,15 @@ public class OiyoBasicJdbcEntityOneBuilder {
             List<UriParameter> keyPredicates) throws ODataApplicationException {
         final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, edmEntitySet.getName());
 
-        if (OiyokanConstants.IS_TRACE_ODATA_V4)
-            System.err.println("OData v4: TRACE: ENTITY: READ: " + edmEntitySet.getName());
+        // [IY1071] OData v4: ENTITY: READ
+        log.info(OiyokanMessages.IY1071 + ": " + edmEntitySet.getName());
 
         final OiyoSqlInfo sqlInfo = new OiyoSqlInfo(oiyoInfo, entitySet.getName());
         new OiyoSqlQueryOneBuilder(oiyoInfo, sqlInfo).buildSelectOneQuery(edmEntitySet.getName(), keyPredicates);
 
         final String sql = sqlInfo.getSqlBuilder().toString();
-        if (OiyokanConstants.IS_TRACE_ODATA_V4)
-            System.err.println("OData v4: TRACE: SQL single: " + sql);
+        // [IY1072] OData v4: SQL single
+        log.info(OiyokanMessages.IY1072 + "OData v4: TRACE: SQL single: " + sql);
 
         final long startMillisec = System.currentTimeMillis();
         try (var stmt = connTargetDb.prepareStatement(sql)) {
@@ -126,7 +130,8 @@ public class OiyoBasicJdbcEntityOneBuilder {
             if (OiyokanConstants.IS_TRACE_ODATA_V4) {
                 final long elapsed = endMillisec - startMillisec;
                 if (elapsed >= 10) {
-                    System.err.println("OData v4: TRACE: SQL: elapsed: " + (endMillisec - startMillisec));
+                    // [IY1073] OData v4: SQL: elapsed
+                    log.info(OiyokanMessages.IY1073 + ": " + (endMillisec - startMillisec));
                 }
             }
 
@@ -160,8 +165,8 @@ public class OiyoBasicJdbcEntityOneBuilder {
             throws ODataApplicationException {
         final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, edmEntitySet.getName());
 
-        if (OiyokanConstants.IS_TRACE_ODATA_V4)
-            System.err.println("OData v4: TRACE: ENTITY: CREATE: " + edmEntitySet.getName());
+        // [IY1074] OData v4: ENTITY: CREATE
+        log.info(OiyokanMessages.IY1074 + ": " + edmEntitySet.getName());
 
         final OiyoSqlInfo sqlInfo = new OiyoSqlInfo(oiyoInfo, entitySet.getName());
         new OiyoSqlInsertOneBuilder(oiyoInfo, sqlInfo).buildInsertIntoDml(edmEntitySet.getName(), null, requestEntity);
@@ -261,8 +266,8 @@ public class OiyoBasicJdbcEntityOneBuilder {
             throws ODataApplicationException {
         final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, edmEntitySet.getName());
 
-        if (OiyokanConstants.IS_TRACE_ODATA_V4)
-            System.err.println("OData v4: TRACE: ENTITY: DELETE: " + edmEntitySet.getName());
+        // [IY1075] OData v4: ENTITY: DELETE
+        log.info(OiyokanMessages.IY1075 + ": " + edmEntitySet.getName());
 
         final OiyoSqlInfo sqlInfo = new OiyoSqlInfo(oiyoInfo, entitySet.getName());
         new OiyoSqlDeleteOneBuilder(oiyoInfo, sqlInfo).buildDeleteDml(edmEntitySet.getName(), keyPredicates);
@@ -329,23 +334,22 @@ public class OiyoBasicJdbcEntityOneBuilder {
 
             if (ifMatch) {
                 // If-Match header が '*' 指定されたら UPDATE.
-                if (OiyokanConstants.IS_TRACE_ODATA_V4)
-                    System.err.println("OData v4: TRACE: ENTITY: PATCH: UPDATE (If-Match): " + edmEntitySet.getName());
+                // [IY1076] OData v4: ENTITY: PATCH: UPDATE (If-Match)
+                log.info(OiyokanMessages.IY1076 + ": " + edmEntitySet.getName());
                 new OiyoSqlUpdateOneBuilder(oiyoInfo, sqlInfo).buildUpdatePatchDml(edmEntitySet.getName(),
                         keyPredicates, requestEntity);
 
             } else if (ifNoneMatch) {
                 // If-None-Match header が '*' 指定されたら INSERT.
-                if (OiyokanConstants.IS_TRACE_ODATA_V4)
-                    System.err.println(
-                            "OData v4: TRACE: ENTITY: PATCH: INSERT (If-None-Match): " + edmEntitySet.getName());
+                // [IY1077] OData v4: ENTITY: PATCH: INSERT (If-None-Match)
+                log.info(OiyokanMessages.IY1077 + ": " + edmEntitySet.getName());
                 new OiyoSqlInsertOneBuilder(oiyoInfo, sqlInfo).buildInsertIntoDml(edmEntitySet.getName(), keyPredicates,
                         requestEntity);
 
             } else {
                 // If-Match header も If-None-Match header も指定がない場合は UPSERT.
-                if (OiyokanConstants.IS_TRACE_ODATA_V4)
-                    System.err.println("OData v4: TRACE: ENTITY: PATCH: UPSERT: " + edmEntitySet.getName());
+                // [IY1078] OData v4: ENTITY: PATCH: UPSERT
+                log.info(OiyokanMessages.IY1078 + ": " + edmEntitySet.getName());
 
                 try {
                     // SELECT to check exists

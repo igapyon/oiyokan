@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.olingo.commons.api.edm.FullQualifiedName;
 import org.apache.olingo.commons.api.edm.provider.CsdlAbstractEdmProvider;
 import org.apache.olingo.commons.api.edm.provider.CsdlEntityContainer;
@@ -44,12 +46,7 @@ import jp.oiyokan.dto.OiyoSettingsEntitySet;
  * Apache Olingo からのエントリポイント. ここに記載あるコードの多くは Apache Olingo のための基礎的な記述.
  */
 public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
-    /**
-     * デバッグ出力の有無.
-     * 
-     * OData Server の挙動のデバッグで困ったときにはこれを true にすること。
-     */
-    private static final boolean IS_DEBUG = false;
+    private static final Log log = LogFactory.getLog(OiyokanEdmProvider.class);
 
     /**
      * OiyokanSettings を singleton に記憶.
@@ -90,10 +87,9 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
      */
     @Override
     public CsdlEntityType getEntityType(FullQualifiedName entityTypeName) throws ODataApplicationException {
-        try {
-            if (IS_DEBUG)
-                System.err.println("OiyokanEdmProvider#getEntityType(" + entityTypeName + ")");
+        log.trace("OiyokanEdmProvider#getEntityType(" + entityTypeName + ")");
 
+        try {
             OiyoSettingsEntitySet entitySet = null;
             final OiyoSettings settingsOiyokan = oiyoInfo.getSettings();
             for (OiyoSettingsEntitySet look : settingsOiyokan.getEntitySet()) {
@@ -103,7 +99,7 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
             }
             if (entitySet == null) {
                 // [IY7119] UNEXPECTED: EntitySet settings NOT found.
-                System.err.println(OiyokanMessages.IY7119 + ": " + entityTypeName);
+                log.error(OiyokanMessages.IY7119 + ": " + entityTypeName);
                 throw new ODataApplicationException(OiyokanMessages.IY7119 + ": " + entityTypeName, //
                         OiyokanMessages.IY7119_CODE, Locale.ENGLISH);
             }
@@ -112,18 +108,18 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
                     OiyokanEdmProvider.getOiyoInfoInstance(), entitySet);
             CsdlEntityType entityType = entityTypeBuilder.getEntityType();
 
-            if (IS_DEBUG) {
-                System.err.println("csdlEntityType: " + entityType.getName());
+            if (false) {
+                log.trace("csdlEntityType: " + entityType.getName());
                 for (CsdlPropertyRef key : entityType.getKey()) {
-                    System.err.println("  key: " + key.getName());
+                    log.trace("  key: " + key.getName());
                 }
                 for (CsdlProperty prop : entityType.getProperties()) {
-                    System.err.println("  prop: " + prop.getName());
+                    log.trace("  prop: " + prop.getName());
                 }
             }
             return entityType;
         } catch (RuntimeException ex) {
-            System.err.println("OiyokanEdmProvider#getEntityType: exception: " + ex.toString());
+            log.error("ERROR: OiyokanEdmProvider#getEntityType(" + entityTypeName + ")", ex);
             throw ex;
         }
     }
@@ -138,11 +134,9 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
     @Override
     public CsdlEntitySet getEntitySet(FullQualifiedName entityContainer, String entitySetName)
             throws ODataApplicationException {
-        try {
-            if (IS_DEBUG)
-                System.err.println("OiyokanEdmProvider#getEntitySet(" //
-                        + entityContainer + ", " + entitySetName + ")");
+        log.trace("OiyokanEdmProvider#getEntitySet(" + entitySetName + ")");
 
+        try {
             // シングルトンな OiyoInfo を利用。
             final OiyoInfo oiyoInfo = getOiyoInfoInstance();
 
@@ -164,7 +158,7 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
             // ヒットしない場合は対象外。その場合は null返却.
             return csdlEntitySet;
         } catch (RuntimeException ex) {
-            System.err.println("OiyokanEdmProvider#getEntitySet: exception: " + ex.toString());
+            log.error("ERROR: OiyokanEdmProvider#getEntitySet(" + entitySetName + ")", ex);
             throw ex;
         }
     }
@@ -177,10 +171,9 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
      */
     @Override
     public CsdlEntityContainer getEntityContainer() throws ODataApplicationException {
-        try {
-            if (IS_DEBUG)
-                System.err.println("OiyokanEdmProvider#getEntityContainer()");
+        log.trace("OiyokanEdmProvider#getEntityContainer()");
 
+        try {
             // シングルトンな OiyoInfo を利用。
             final OiyoInfo oiyoInfo = getOiyoInfoInstance();
 
@@ -193,21 +186,20 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
             }
 
             if (isKanDatabaseSetupDone == false) {
-                if (OiyokanConstants.IS_TRACE_ODATA_V4)
-                    System.err.println( //
-                            "OData v4: Start Oiyokan (Oiyokan: " + OiyokanConstants.VERSION + ")");
+                // [IY1001] Start Oiyokan server.
+                log.info(OiyokanMessages.IY1001 + " (Oiyokan: " + OiyokanConstants.VERSION + ")");
 
                 for (OiyoSettingsDatabase settingsDatabase : getOiyoInfoInstance().getSettings().getDatabase()) {
-                    if (OiyokanConstants.IS_TRACE_ODATA_V4)
-                        System.err.println("OData v4: Check JDBC Driver: " + settingsDatabase.getJdbcDriver());
+                    // [IY1051] Check JDBC Driver
+                    log.info(OiyokanMessages.IY1051 + ": " + settingsDatabase.getJdbcDriver());
+
                     try {
                         // Database Driver が loadable か念押し確認.
                         Class.forName(settingsDatabase.getJdbcDriver());
                     } catch (ClassNotFoundException ex) {
-                        // [M003] UNEXPECTED: Fail to load JDBC driver. Check JDBC Driver classname or
-                        // JDBC Driver is on classpath."
-                        System.err.println(OiyokanMessages.IY7103 + ": " + settingsDatabase.getJdbcDriver() //
-                                + ": " + ex.toString());
+                        // [IY7103] ERROR: Fail to load JDBC driver. Check JDBC Driver classname or
+                        // JDBC Driver is on classpath.
+                        log.error(OiyokanMessages.IY7103 + ": " + settingsDatabase.getJdbcDriver() + ": ", ex);
                         throw new ODataApplicationException(
                                 OiyokanMessages.IY7103 + ": " + settingsDatabase.getJdbcDriver(), 500, Locale.ENGLISH);
                     }
@@ -216,9 +208,9 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
                         // 指定のデータベース名の文字列が妥当かどうかチェック。
                         OiyokanConstants.DatabaseType.valueOf(settingsDatabase.getType());
                     } catch (IllegalArgumentException ex) {
-                        // [M002] UNEXPECTED: Illegal data type in database settings
-                        System.err.println(OiyokanMessages.IY7102 + ": dbname:" + settingsDatabase.getName() //
-                                + ", type:" + settingsDatabase.getType());
+                        // [IY7102] ERROR: Illegal data type in database settings
+                        log.error(OiyokanMessages.IY7102 + ": dbname:" + settingsDatabase.getName() //
+                                + ", type:" + settingsDatabase.getType(), ex);
                         throw new ODataApplicationException(
                                 OiyokanMessages.IY7102 + ": dbname:" + settingsDatabase.getName() //
                                         + ", type:" + settingsDatabase.getType(),
@@ -233,7 +225,7 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
 
             return container;
         } catch (RuntimeException ex) {
-            System.err.println("OiyokanEdmProvider#getEntityContainer: exception: " + ex.toString());
+            log.error("ERROR: OiyokanEdmProvider#getEntityContainer()", ex);
             throw ex;
         }
     }
@@ -246,10 +238,9 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
      */
     @Override
     public List<CsdlSchema> getSchemas() throws ODataApplicationException {
-        try {
-            if (IS_DEBUG)
-                System.err.println("OiyokanEdmProvider#getSchemas()");
+        log.trace("OiyokanEdmProvider#getSchemas()");
 
+        try {
             // シングルトンな OiyoInfo を利用。
             final OiyoInfo oiyoInfo = getOiyoInfoInstance();
 
@@ -277,7 +268,7 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
 
             return newSchemaList;
         } catch (RuntimeException ex) {
-            System.err.println("OiyokanEdmProvider#getSchemas: exception: " + ex.toString());
+            log.error("ERROR: OiyokanEdmProvider#getSchemas()", ex);
             throw ex;
         }
     }
@@ -294,10 +285,9 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
     @Override
     public CsdlEntityContainerInfo getEntityContainerInfo(FullQualifiedName entityContainerName)
             throws ODataApplicationException {
-        try {
-            if (IS_DEBUG)
-                System.err.println("OiyokanEdmProvider#getEntityContainerInfo(" + entityContainerName + ")");
+        log.trace("OiyokanEdmProvider#getEntityContainerInfo()");
 
+        try {
             // シングルトンな OiyoInfo を利用。
             final OiyoInfo oiyoInfo = getOiyoInfoInstance();
             final FullQualifiedName fqn = new FullQualifiedName(oiyoInfo.getSettings().getNamespace(),
@@ -312,8 +302,7 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
 
             return null;
         } catch (RuntimeException ex) {
-            ex.printStackTrace();
-            System.err.println("OiyokanEdmProvider#getEntityContainerInfo: exception: " + ex.toString());
+            log.error("ERROR: OiyokanEdmProvider#getEntityContainerInfo()", ex);
             throw ex;
         }
     }

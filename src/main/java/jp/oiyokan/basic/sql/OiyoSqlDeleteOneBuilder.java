@@ -17,6 +17,8 @@ package jp.oiyokan.basic.sql;
 
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.olingo.server.api.ODataApplicationException;
 import org.apache.olingo.server.api.uri.UriParameter;
 
@@ -31,6 +33,8 @@ import jp.oiyokan.dto.OiyoSettingsProperty;
  * データベースから1件レコードを削除.
  */
 public class OiyoSqlDeleteOneBuilder {
+    private static final Log log = LogFactory.getLog(OiyoSqlDeleteOneBuilder.class);
+
     /**
      * Oiyokan Info.
      */

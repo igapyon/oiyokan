@@ -24,6 +24,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.net.URLCodec;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.olingo.server.api.OData;
 import org.apache.olingo.server.api.ODataHttpHandler;
 import org.apache.olingo.server.api.ServiceMetadata;
@@ -37,6 +39,8 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 public class OiyokanOdata4Register {
+    private static final Log log = LogFactory.getLog(OiyokanOdata4Register.class);
+
     /**
      * Oiyokan (OData v4 server) を Spring Boot の Servlet として登録.
      * 
@@ -52,14 +56,14 @@ public class OiyokanOdata4Register {
                 // Query String を uri に追加.
                 uri += "?" + new URLCodec().decode(req.getQueryString());
             } catch (DecoderException ex) {
-                // [M001] Can't decode specified decodec url
-                System.err.println(OiyokanMessages.IY7101 + ": " + ex.toString());
+                // [IY7101] ERROR: Can't decode specified decodec url
+                log.error(OiyokanMessages.IY7101 + ": " + ex.toString(), ex);
                 throw new ServletException(OiyokanMessages.IY7101);
             }
         }
 
-        if (OiyokanConstants.IS_TRACE_ODATA_V4)
-            System.err.println("OData v4: URI: " + uri);
+        // [IY1052] OData v4: URI
+        log.info(OiyokanMessages.IY1052 + ": " + uri);
 
         try {
             OData odata = OData.newInstance();
@@ -82,9 +86,7 @@ public class OiyokanOdata4Register {
                 }
             }, resp);
         } catch (RuntimeException ex) {
-            if (OiyokanConstants.IS_TRACE_ODATA_V4)
-                System.err.println("OData v4: OiyokanOdata4Register#serv(): Unexpected Server Error: " + ex.toString());
-            ex.printStackTrace();
+            log.error("OData v4: OiyokanOdata4Register#serv(): Unexpected Server Error: " + ex.toString(), ex);
             throw new ServletException(ex);
         }
     }

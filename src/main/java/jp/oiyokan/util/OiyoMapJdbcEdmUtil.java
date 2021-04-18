@@ -17,6 +17,8 @@ package jp.oiyokan.util;
 
 import java.sql.Types;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.olingo.commons.api.edm.EdmPrimitiveType;
 import org.apache.olingo.commons.core.edm.primitivetype.EdmBinary;
 import org.apache.olingo.commons.core.edm.primitivetype.EdmBoolean;
@@ -38,6 +40,8 @@ import jp.oiyokan.OiyokanMessages;
  * JDBCの超基本ユーティリティ. 結構正しい範囲のメソッドここに記載する. Oiyokan の対応有無とは関わらず実装。
  */
 public class OiyoMapJdbcEdmUtil {
+    private static final Log log = LogFactory.getLog(OiyoMapJdbcEdmUtil.class);
+
     /**
      * 与えられた java.sql.Types を文字列に変換.
      * 

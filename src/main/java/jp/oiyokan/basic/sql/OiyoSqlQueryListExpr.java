@@ -17,6 +17,8 @@ package jp.oiyokan.basic.sql;
 
 import java.util.Locale;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.olingo.server.api.ODataApplicationException;
 import org.apache.olingo.server.api.uri.queryoption.expression.BinaryOperatorKind;
 import org.apache.olingo.server.api.uri.queryoption.expression.Expression;
@@ -44,6 +46,8 @@ import jp.oiyokan.dto.OiyoSettingsEntitySet;
  * SQL文を構築するための簡易クラスの、Expression を SQLに変換する処理.
  */
 public class OiyoSqlQueryListExpr {
+    private static final Log log = LogFactory.getLog(OiyoSqlQueryListExpr.class);
+
     private static final boolean IS_DEBUG_EXPAND_LITERAL = false;
 
     /**
@@ -710,8 +714,8 @@ public class OiyoSqlQueryListExpr {
 
         // [M121] UNEXPECTED: NOT SUPPORTED MethodKind
         System.err.println(OiyokanMessages.IY4153 + ": " + impl.getMethod() + "," + impl.toString());
-        throw new ODataApplicationException(OiyokanMessages.IY4153 + ": " + impl.getMethod() + "," + impl.toString(), 500,
-                Locale.ENGLISH);
+        throw new ODataApplicationException(OiyokanMessages.IY4153 + ": " + impl.getMethod() + "," + impl.toString(),
+                500, Locale.ENGLISH);
     }
 
     private void expandUnary(UnaryImpl impl) throws ODataApplicationException {

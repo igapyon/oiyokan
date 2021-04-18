@@ -19,6 +19,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Locale;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.olingo.server.api.ODataApplicationException;
 
 import jp.oiyokan.OiyokanConstants;
@@ -32,6 +34,8 @@ import jp.oiyokan.dto.OiyoSettingsDatabase;
  * Oiyokan (OData v4 server) が動作する際に必要になる内部管理データベースのバージョン情報および Oiyo情報 をセットアップ.
  */
 public class OiyokanKanDatabase {
+    private static final Log log = LogFactory.getLog(OiyokanKanDatabase.class);
+
     private OiyokanKanDatabase() {
     }
 

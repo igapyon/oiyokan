@@ -18,6 +18,8 @@ package jp.oiyokan.basic;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.olingo.commons.api.edm.provider.CsdlEntityType;
 import org.apache.olingo.commons.api.edm.provider.CsdlProperty;
 import org.apache.olingo.commons.api.edm.provider.CsdlPropertyRef;
@@ -36,6 +38,8 @@ import jp.oiyokan.dto.OiyoSettingsProperty;
  * 内部データベースをもとにした Oiyo 形式での処理であるため接続先のリソースの種類によらず Oiyokan ではこのクラスを利用.
  */
 public class OiyoBasicJdbcEntityTypeBuilder {
+    private static final Log log = LogFactory.getLog(OiyoBasicJdbcEntityTypeBuilder.class);
+
     /**
      * Oiyokan Info.
      */

@@ -15,3 +15,4 @@ buildNumber.properties
 .mvn/wrapper/maven-wrapper.jar
 
 oiyokan-internal.trace.db
+spring.log

@@ -17,6 +17,8 @@ package jp.oiyokan.basic.sql;
 
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.olingo.commons.api.data.Entity;
 import org.apache.olingo.commons.api.data.Property;
 import org.apache.olingo.server.api.ODataApplicationException;
@@ -33,6 +35,8 @@ import jp.oiyokan.dto.OiyoSettingsProperty;
  * データベースに1件レコードを追加.
  */
 public class OiyoSqlInsertOneBuilder {
+    private static final Log log = LogFactory.getLog(OiyoSqlInsertOneBuilder.class);
+
     /**
      * Oiyokan Info.
      */

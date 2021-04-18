@@ -18,6 +18,8 @@ package jp.oiyokan.basic.sql;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.olingo.server.api.ODataApplicationException;
 import org.apache.olingo.server.api.uri.UriInfo;
 import org.apache.olingo.server.api.uri.UriResource;
@@ -38,6 +40,8 @@ import jp.oiyokan.dto.OiyoSettingsProperty;
  * SQL文を構築するための簡易クラス.
  */
 public class OiyoSqlQueryListBuilder {
+    private static final Log log = LogFactory.getLog(OiyoSqlQueryListBuilder.class);
+
     /**
      * Oiyokan Info.
      */
