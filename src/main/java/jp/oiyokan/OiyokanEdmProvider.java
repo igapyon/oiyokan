@@ -161,9 +161,16 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
                 return null;
             }
 
+            
+            final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, entitySetName);
+            final CsdlEntitySet csdlEntitySet = new CsdlEntitySet();
+            csdlEntitySet.setName(entitySetName);
+            csdlEntitySet.setType(
+                    new FullQualifiedName(oiyoInfo.getSettings().getNamespace(), entitySet.getEntityType().getName()));
+
             // 要素セット名が一致する場合はそれを返却.
             // ヒットしない場合は対象外。その場合は null返却.
-            return localTemplateEntityContainer.getEntitySet(entitySetName);
+            return csdlEntitySet;
         } catch (RuntimeException ex) {
             System.err.println("OiyokanEdmProvider#getEntitySet: exception: " + ex.toString());
             throw ex;
