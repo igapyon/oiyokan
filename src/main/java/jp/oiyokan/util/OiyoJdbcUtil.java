@@ -117,7 +117,7 @@ public class OiyoJdbcUtil {
             return "Types.TIMESTAMP_WITH_TIMEZONE";
         default:
             // [IY7154] NOT SUPPORTED: JDBC Type
-            System.err.println(OiyokanMessages.IY7154 + ": " + types);
+            log.error(OiyokanMessages.IY7154 + ": " + types);
             throw new IllegalArgumentException(OiyokanMessages.IY7154 + ": " + types);
         }
     }
@@ -250,7 +250,7 @@ public class OiyoJdbcUtil {
         }
 
         // [IY7153] NOT SUPPORTED: JDBC Type String.
-        System.err.println(OiyokanMessages.IY7153 + ": " + typesString);
+        log.error(OiyokanMessages.IY7153 + ": " + typesString);
         throw new IllegalArgumentException(OiyokanMessages.IY7153 + ": " + typesString);
     }
 }

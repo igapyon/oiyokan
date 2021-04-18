@@ -94,7 +94,7 @@ public class OiyoDateTimeUtil {
         }
 
         // [IY7161] Error: Fail to parse DateTime string.
-        System.err.println(OiyokanMessages.IY7161 + ": " + inputDateString);
+        log.error(OiyokanMessages.IY7161 + ": " + inputDateString);
         throw new IllegalArgumentException(OiyokanMessages.IY7161 + ": " + inputDateString);
     }
 

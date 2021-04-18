@@ -168,7 +168,7 @@ public class OiyoEdmUtil {
         }
 
         // [IY7152] NOT SUPPORTED: Edm Type
-        System.err.println(OiyokanMessages.IY7152 + ": " + edmType);
+        log.error(OiyokanMessages.IY7152 + ": " + edmType);
         throw new IllegalArgumentException(OiyokanMessages.IY7152 + ": " + edmType);
     }
 

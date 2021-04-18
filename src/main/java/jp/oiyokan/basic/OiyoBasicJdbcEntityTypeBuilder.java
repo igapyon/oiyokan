@@ -92,19 +92,14 @@ public class OiyoBasicJdbcEntityTypeBuilder {
         if (keyRefList.size() == 0) {
             // キーがないものは OData 的に不都合があるため警告する。
             if (OiyokanConstants.IS_TRACE_ODATA_V4) {
-                System.err.println("OData v4: WARNING: No ID: " + entitySet.getName());
-                System.err.println("OData v4: WARNING: Set primary key on Oiyo table: " + entitySet.getName());
+                // TODO FIXME メッセージ抽出
+                log.error("OData v4: WARNING: No ID: " + entitySet.getName());
+                log.error("OData v4: WARNING: Set primary key on Oiyo table: " + entitySet.getName());
             }
         }
 
         entityType.setKey(keyRefList);
 
         return entityType;
-        // } catch (SQLException ex) {
-        // // [M019] UNEXPECTED: Fail to get database meta
-        // System.err.println(OiyokanMessages.M019 + ": " + ex.toString());
-        // throw new ODataApplicationException(OiyokanMessages.M019,
-        // OiyokanMessages.M019_CODE, Locale.ENGLISH);
-        // }
     }
 }

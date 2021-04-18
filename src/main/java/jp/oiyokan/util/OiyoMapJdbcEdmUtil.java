@@ -149,7 +149,7 @@ public class OiyoMapJdbcEdmUtil {
         }
 
         // [IY7151] NOT SUPPORTED: JDBC Type
-        System.err.println(OiyokanMessages.IY7151 + ": " + types);
+        log.error(OiyokanMessages.IY7151 + ": " + types);
         throw new IllegalArgumentException(OiyokanMessages.IY7151 + ": " + types);
     }
 }

@@ -46,9 +46,8 @@ public class OiyokanKanDatabase {
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
     public static synchronized boolean setupKanDatabase(OiyoInfo oiyoInfo) throws ODataApplicationException {
-        if (OiyokanConstants.IS_TRACE_ODATA_V4)
-            System.err.println( //
-                    "OData v4: setup oiyokanKan database (Oiyokan: " + OiyokanConstants.VERSION + ")");
+        // TODO message そとだし
+        log.info("OData v4: setup oiyokanKan database (Oiyokan: " + OiyokanConstants.VERSION + ")");
 
         OiyoSettingsDatabase settingsInterDatabase = OiyoInfoUtil.getOiyoDatabaseByName(oiyoInfo,
                 OiyokanConstants.OIYOKAN_KAN_DB);
@@ -66,7 +65,7 @@ public class OiyokanKanDatabase {
                 stmt.executeUpdate();
             } catch (SQLException ex) {
                 // [M027] UNEXPECTED: Fail to create local table: Oiyokan
-                System.err.println(OiyokanMessages.IY7115 + ": " + ex.toString());
+                log.error(OiyokanMessages.IY7115 + ": " + ex.toString(), ex);
                 throw new ODataApplicationException(OiyokanMessages.IY7115, 500, Locale.ENGLISH);
             }
 
@@ -81,15 +80,13 @@ public class OiyokanKanDatabase {
                 }
             } catch (SQLException ex) {
                 // [M028] UNEXPECTED: Fail to check local table exists: Oiyokan
-                System.err.println(OiyokanMessages.IY7116 + ": " + ex.toString());
+                log.fatal(OiyokanMessages.IY7116 + ": " + ex.toString(), ex);
                 throw new ODataApplicationException(OiyokanMessages.IY7116, 500, Locale.ENGLISH);
             }
 
             ///////////////////////////////////////////
             // 内部データの作成に突入.
-            if (OiyokanConstants.IS_TRACE_ODATA_V4)
-                System.err.println( //
-                        "OData v4: setup internal data " + " (Oiyokan: " + OiyokanConstants.VERSION + ")");
+            log.info("OData v4: setup internal data " + " (Oiyokan: " + OiyokanConstants.VERSION + ")");
 
             ///////////////////////////////////////////
             // ODataAppInfos にバージョン情報などデータの追加
@@ -107,7 +104,7 @@ public class OiyokanKanDatabase {
                 connInterDb.commit();
             } catch (SQLException ex) {
                 // [M029] UNEXPECTED: Fail to execute SQL for local internal table
-                System.err.println(OiyokanMessages.IY7117 + ": " + ex.toString());
+                log.error(OiyokanMessages.IY7117 + ": " + ex.toString(), ex);
                 throw new ODataApplicationException(OiyokanMessages.IY7117, 500, Locale.ENGLISH);
             }
 
@@ -115,7 +112,7 @@ public class OiyokanKanDatabase {
             return true;
         } catch (SQLException ex) {
             // [M004] UNEXPECTED: Database error in setup internal database.
-            System.err.println(OiyokanMessages.IY7104 + ": " + ex.toString());
+            log.error(OiyokanMessages.IY7104 + ": " + ex.toString(), ex);
             throw new ODataApplicationException(OiyokanMessages.IY7104, 500, Locale.ENGLISH);
         }
     }
