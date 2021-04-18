@@ -51,7 +51,7 @@ public class OiyokanResourceSqlUtil {
             return sqls;
         } catch (IOException ex) {
             // [M022] UNEXPECTED: Fail to load setting SQL file
-            System.err.println(OiyokanMessages.IY7110 + ": " + resourceSqlFileName + ": " + ex.toString());
+            log.error(OiyokanMessages.IY7110 + ": " + resourceSqlFileName + ": " + ex.toString(), ex);
             throw new ODataApplicationException(OiyokanMessages.IY7110, 500, Locale.ENGLISH);
         }
     }
