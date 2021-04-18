@@ -38,6 +38,7 @@ public class OiyokanResourceSqlUtil {
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
     public static String[] loadOiyokanResourceSql(final String resourceSqlFileName) throws ODataApplicationException {
+        // このメソッドは、テストデータベースを生成する際に呼び出されます。
         // resources から読み込み。
         final ClassPathResource cpres = new ClassPathResource(resourceSqlFileName);
         try (InputStream inStream = cpres.getInputStream()) {
@@ -46,8 +47,8 @@ public class OiyokanResourceSqlUtil {
             return sqls;
         } catch (IOException ex) {
             // [M022] UNEXPECTED: Fail to load setting SQL file
-            System.err.println(OiyokanMessages.M022 + ": " + resourceSqlFileName + ": " + ex.toString());
-            throw new ODataApplicationException(OiyokanMessages.M022, 500, Locale.ENGLISH);
+            System.err.println(OiyokanMessages.IY7110 + ": " + resourceSqlFileName + ": " + ex.toString());
+            throw new ODataApplicationException(OiyokanMessages.IY7110, 500, Locale.ENGLISH);
         }
     }
 }

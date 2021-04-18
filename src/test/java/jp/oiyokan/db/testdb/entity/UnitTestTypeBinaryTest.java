@@ -26,8 +26,9 @@ import org.springframework.util.StreamUtils;
 
 import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanTestSettingConstants;
-import jp.oiyokan.basic.OiyoBasicJdbcUtil;
-import jp.oiyokan.settings.OiyokanSettingsUtil;
+import jp.oiyokan.common.OiyoCommonJdbcUtil;
+import jp.oiyokan.common.OiyoInfo;
+import jp.oiyokan.common.OiyoInfoUtil;
 import jp.oiyokan.util.OiyokanTestUtil;
 
 /**
@@ -38,6 +39,9 @@ class UnitTestTypeBinaryTest {
     void test01() throws Exception {
         if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
             return;
+
+        final OiyoInfo oiyoInfo = new OiyoInfo();
+        oiyoInfo.setSettings(OiyoInfoUtil.loadOiyokanSettings());
 
         final int TEST_ID = OiyokanTestUtil.getNextUniqueId();
 
@@ -53,7 +57,7 @@ class UnitTestTypeBinaryTest {
                 + ",\"Name\":\"Binary UnitTest\",\"Description\":\"Binary UnitTest table.\"" //
                 + ",\"Binary1\":\"VG9uYXJpIG5vIGt5YWt1Lg==\",\"VarBinary1\":\"VG9uYXJpIG5vIGt5YWt1Lg==\",\"LongVarBinary1\":\"VG9uYXJpIG5vIGt5YWt1Lg==\",\"Blob1\":\"VG9uYXJpIG5vIGt5YWt1Lg==\"}",
                 result, //
-                "INSERTできることを確認. MySQLではエラー Binary1が固定長扱いで後方に自動埋め込みが発生(既知の問題。だが解決方法にアイデア現状なし), SQLServer2008でエラー(既知の問題)");
+                "INSERTできることを確認. MySQLではエラー Binary1が固定長扱いで後方に自動埋め込みが発生(既知の問題。だが解決方法にアイデア現状なし), MySQLでエラー(テストの既知の問題)、 SQLServer2008でエラー(既知の問題)");
         assertEquals(201, resp.getStatusCode());
 
         resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests6(" + TEST_ID + ")", null);
@@ -63,8 +67,8 @@ class UnitTestTypeBinaryTest {
 
         if (false/* ここは h2 database のときのみ通過が可能 */) {
             // generic JDBC
-            try (Connection conn = OiyoBasicJdbcUtil
-                    .getConnection(OiyokanSettingsUtil.getOiyokanDatabase(OiyokanConstants.OIYOKAN_UNITTEST_DB))) {
+            try (Connection conn = OiyoCommonJdbcUtil.getConnection(
+                    OiyoInfoUtil.getOiyoDatabaseByName(oiyoInfo, OiyokanConstants.OIYOKAN_UNITTEST_DB))) {
 
                 try (var stmt = conn.prepareStatement("SELECT Binary1 FROM ODataTest6 WHERE ID = " + TEST_ID)) {
                     stmt.executeQuery();

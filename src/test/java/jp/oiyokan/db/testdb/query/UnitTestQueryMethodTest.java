@@ -21,7 +21,7 @@ import org.apache.olingo.server.api.ODataResponse;
 import org.junit.jupiter.api.Test;
 
 import jp.oiyokan.OiyokanTestSettingConstants;
-import jp.oiyokan.basic.OiyoBasicUrlUtil;
+import jp.oiyokan.common.OiyoUrlUtil;
 import jp.oiyokan.util.OiyokanTestUtil;
 
 /**
@@ -33,7 +33,7 @@ class UnitTestQueryMethodTest {
         if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
             return;
 
-        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1", OiyoBasicUrlUtil
+        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1", OiyoUrlUtil
                 .encodeUrlQuery("&$filter=startswith(StringVar255, 'ABCDEFG') &$count=true &$select=ID"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
@@ -50,7 +50,7 @@ class UnitTestQueryMethodTest {
             return;
 
         final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1",
-                OiyoBasicUrlUtil.encodeUrlQuery("&$filter=endswith(StringVar255, 'VWXYZ') &$count=true &$select=ID"));
+                OiyoUrlUtil.encodeUrlQuery("&$filter=endswith(StringVar255, 'VWXYZ') &$count=true &$select=ID"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         // System.err.println("result: " + result);
@@ -65,7 +65,7 @@ class UnitTestQueryMethodTest {
             return;
 
         final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1",
-                OiyoBasicUrlUtil.encodeUrlQuery("&$filter=contains(StringVar255, 'HIJK') &$count=true &$select=ID"));
+                OiyoUrlUtil.encodeUrlQuery("&$filter=contains(StringVar255, 'HIJK') &$count=true &$select=ID"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         // System.err.println("result: " + result);
@@ -80,7 +80,7 @@ class UnitTestQueryMethodTest {
             return;
 
         // indexof は 0 ベース.
-        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1", OiyoBasicUrlUtil
+        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1", OiyoUrlUtil
                 .encodeUrlQuery("&$filter=indexof(StringVar255, 'HIJK') eq 7 &$count=true &$select=ID"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
@@ -97,7 +97,7 @@ class UnitTestQueryMethodTest {
             return;
 
         final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1",
-                OiyoBasicUrlUtil.encodeUrlQuery("&$filter=length(StringVar255) eq 26 &$count=true &$select=ID"));
+                OiyoUrlUtil.encodeUrlQuery("&$filter=length(StringVar255) eq 26 &$count=true &$select=ID"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         // System.err.println("result: " + result);
@@ -112,7 +112,7 @@ class UnitTestQueryMethodTest {
         if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
             return;
 
-        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1", OiyoBasicUrlUtil
+        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1", OiyoUrlUtil
                 .encodeUrlQuery("&$filter=substring(StringVar255,3,2) eq 'CD' &$count=true &$select=ID"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
@@ -129,7 +129,7 @@ class UnitTestQueryMethodTest {
             return;
 
         final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1",
-                OiyoBasicUrlUtil.encodeUrlQuery(
+                OiyoUrlUtil.encodeUrlQuery(
                         "&$filter=tolower(StringVar255) eq 'abcdefghijklmnopqrstuvwxyz' &$count=true &$select=ID"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
@@ -146,7 +146,7 @@ class UnitTestQueryMethodTest {
             return;
 
         final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1",
-                OiyoBasicUrlUtil.encodeUrlQuery(
+                OiyoUrlUtil.encodeUrlQuery(
                         "&$filter=toupper(tolower(StringVar255)) eq 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' &$count=true &$select=ID"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
@@ -163,7 +163,7 @@ class UnitTestQueryMethodTest {
             return;
 
         final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1",
-                OiyoBasicUrlUtil.encodeUrlQuery(
+                OiyoUrlUtil.encodeUrlQuery(
                         "&$filter=trim(concat(' ', StringVar255)) eq 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' &$count=true &$select=ID"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
@@ -180,7 +180,7 @@ class UnitTestQueryMethodTest {
             return;
 
         final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1",
-                OiyoBasicUrlUtil.encodeUrlQuery(
+                OiyoUrlUtil.encodeUrlQuery(
                         "&$filter=concat(' ', StringVar255) eq ' ABCDEFGHIJKLMNOPQRSTUVWXYZ' &$count=true &$select=ID"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
@@ -197,7 +197,7 @@ class UnitTestQueryMethodTest {
             return;
 
         final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1",
-                OiyoBasicUrlUtil.encodeUrlQuery("&$filter=substringof(StringVar255, 'EFG') &$count=true &$select=ID"));
+                OiyoUrlUtil.encodeUrlQuery("&$filter=substringof(StringVar255, 'EFG') &$count=true &$select=ID"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         // System.err.println("result: " + result);

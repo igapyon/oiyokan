@@ -27,18 +27,18 @@ import org.apache.olingo.server.api.uri.UriInfo;
 import org.apache.olingo.server.core.uri.parser.Parser;
 import org.junit.jupiter.api.Test;
 
-import jp.oiyokan.OiyokanCsdlEntityContainer;
-import jp.oiyokan.OiyokanCsdlEntitySet;
 import jp.oiyokan.OiyokanEdmProvider;
 import jp.oiyokan.OiyokanTestSettingConstants;
-import jp.oiyokan.basic.OiyoBasicUrlUtil;
+import jp.oiyokan.common.OiyoInfo;
+import jp.oiyokan.common.OiyoInfoUtil;
+import jp.oiyokan.common.OiyoSqlInfo;
+import jp.oiyokan.common.OiyoUrlUtil;
+import jp.oiyokan.dto.OiyoSettingsEntitySet;
 
 /**
  * OiyoSqlQueryListExpr のテスト.
  */
 class OiyoSqlQueryListExprTest {
-    final OiyokanCsdlEntityContainer localTemplateEntityContainer = new OiyokanCsdlEntityContainer();
-
     /**
      * クラス内の共通関数
      * 
@@ -48,18 +48,15 @@ class OiyoSqlQueryListExprTest {
      * @throws Exception 例外が発生した場合.
      */
     private String getExprString(String rawODataPath, String rawQueryPath) throws Exception {
+        final OiyoInfo oiyoInfo = new OiyoInfo();
+        oiyoInfo.setSettings(OiyoInfoUtil.loadOiyokanSettings());
+
         OData odata = OData.newInstance();
         ServiceMetadata edm = odata.createServiceMetadata(new OiyokanEdmProvider(), new ArrayList<>());
 
-        localTemplateEntityContainer.ensureBuild();
         // アプリ情報が入っている内部DBをベースに処理。つまり h2 database 前提としての振る舞いをおこなう。
-        final OiyokanCsdlEntitySet entitySet = (OiyokanCsdlEntitySet) localTemplateEntityContainer
-                .getEntitySet("Oiyokans");
-
-        // EntityType をロード済み状態にする.
-        localTemplateEntityContainer.getEntityType(entitySet.getTypeFQN());
-
-        if (entitySet == null || entitySet.getEntityType() == null) {
+        OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, "ODataTests1");
+        if (entitySet == null) {
             final String message = "ERROR: Fail to load Oiyokans EntitySet.";
             System.err.println(message);
             throw new ODataApplicationException(message, 500, Locale.ENGLISH);
@@ -67,8 +64,8 @@ class OiyoSqlQueryListExprTest {
 
         final Parser parser = new Parser(edm.getEdm(), odata);
         final UriInfo uriInfo = parser.parseUri(rawODataPath, rawQueryPath, "", "http://localhost:8080/odata4.svc/");
-        OiyoSqlInfo sqlInfo = new OiyoSqlInfo(entitySet);
-        new OiyoSqlQueryListExpr(sqlInfo).expand(uriInfo.getFilterOption().getExpression());
+        OiyoSqlInfo sqlInfo = new OiyoSqlInfo(oiyoInfo, entitySet.getName());
+        new OiyoSqlQueryListExpr(oiyoInfo, sqlInfo).expand(uriInfo.getFilterOption().getExpression());
         return sqlInfo.getSqlBuilder().toString();
     }
 
@@ -81,7 +78,7 @@ class OiyoSqlQueryListExprTest {
             return;
 
         assertEquals("(ID = 1.0)", getExprString("/ODataTests1", //
-                OiyoBasicUrlUtil.encodeUrlQuery("$filter=ID eq 1.0")), //
+                OiyoUrlUtil.encodeUrlQuery("$filter=ID eq 1.0")), //
                 "Postgresの場合大文字小文字の差異が出る");
     }
 
@@ -91,7 +88,7 @@ class OiyoSqlQueryListExprTest {
             return;
 
         assertEquals("((Description = ?) AND (ID = 2.0))", getExprString("/ODataTests1", //
-                OiyoBasicUrlUtil.encodeUrlQuery("$filter=Description eq 'Mac' and ID eq 2.0")),
+                OiyoUrlUtil.encodeUrlQuery("$filter=Description eq 'Mac' and ID eq 2.0")),
                 "Postgres/ORACLEの場合大文字小文字の差異が出る");
     }
 
@@ -101,8 +98,8 @@ class OiyoSqlQueryListExprTest {
             return;
 
         assertEquals("((INSTR(Description,?) - 1) <> -1)", getExprString("/ODataTests1", //
-                OiyoBasicUrlUtil.encodeUrlQuery(
+                OiyoUrlUtil.encodeUrlQuery(
                         "$top=51&$filter= indexof(Description,'増殖タブレット7') ne -1 &$orderby=ID &$count=true &$select=Description,ID,Name")),
-                "Postgres/ORACLEの場合大文字小文字の差異が出る");
+                "Postgres/ORACLEの場合、命令の差異、大文字小文字の差異が出る");
     }
 }

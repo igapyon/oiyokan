@@ -20,17 +20,25 @@ import java.util.List;
 import org.apache.olingo.commons.api.data.Entity;
 import org.apache.olingo.commons.api.data.Property;
 import org.apache.olingo.commons.api.edm.EdmEntitySet;
-import org.apache.olingo.commons.api.edm.provider.CsdlProperty;
 import org.apache.olingo.server.api.ODataApplicationException;
 import org.apache.olingo.server.api.uri.UriParameter;
 
-import jp.oiyokan.basic.OiyoBasicJdbcUtil;
-import jp.oiyokan.settings.OiyokanNamingUtil;
+import jp.oiyokan.common.OiyoCommonJdbcUtil;
+import jp.oiyokan.common.OiyoInfo;
+import jp.oiyokan.common.OiyoInfoUtil;
+import jp.oiyokan.common.OiyoSqlInfo;
+import jp.oiyokan.dto.OiyoSettingsEntitySet;
+import jp.oiyokan.dto.OiyoSettingsProperty;
 
 /**
  * データベースの1件レコードを更新.
  */
 public class OiyoSqlUpdateOneBuilder {
+    /**
+     * Oiyokan Info.
+     */
+    private OiyoInfo oiyoInfo;
+
     /**
      * SQL構築のデータ構造.
      */
@@ -45,7 +53,8 @@ public class OiyoSqlUpdateOneBuilder {
         return sqlInfo;
     }
 
-    public OiyoSqlUpdateOneBuilder(OiyoSqlInfo sqlInfo) {
+    public OiyoSqlUpdateOneBuilder(OiyoInfo oiyoInfo, OiyoSqlInfo sqlInfo) {
+        this.oiyoInfo = oiyoInfo;
         this.sqlInfo = sqlInfo;
     }
 
@@ -59,9 +68,11 @@ public class OiyoSqlUpdateOneBuilder {
      */
     public void buildUpdatePatchDml(EdmEntitySet edmEntitySet, List<UriParameter> keyPredicates, Entity requestEntity)
             throws ODataApplicationException {
+        final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, edmEntitySet.getName());
+
         sqlInfo.getSqlBuilder().append("UPDATE ");
-        sqlInfo.getSqlBuilder().append(
-                OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, sqlInfo.getEntitySet().getDbTableNameTargetIyo()));
+        sqlInfo.getSqlBuilder()
+                .append(OiyoCommonJdbcUtil.escapeKakkoFieldName(sqlInfo, entitySet.getEntityType().getDbName()));
         sqlInfo.getSqlBuilder().append(" SET ");
         boolean isFirst = true;
         for (Property prop : requestEntity.getProperties()) {
@@ -71,11 +82,11 @@ public class OiyoSqlUpdateOneBuilder {
                 sqlInfo.getSqlBuilder().append(",");
             }
 
-            sqlInfo.getSqlBuilder().append(
-                    OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyokanNamingUtil.entity2Db(prop.getName())));
+            sqlInfo.getSqlBuilder().append(OiyoCommonJdbcUtil.escapeKakkoFieldName(sqlInfo,
+                    OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, entitySet.getName(), prop.getName()).getDbName()));
             sqlInfo.getSqlBuilder().append("=");
 
-            OiyoBasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo, prop.getType(), prop.getValue());
+            OiyoCommonJdbcUtil.expandLiteralOrBindParameter(sqlInfo, prop.getType(), prop.getValue());
         }
 
         sqlInfo.getSqlBuilder().append(" WHERE ");
@@ -87,12 +98,13 @@ public class OiyoSqlUpdateOneBuilder {
             } else {
                 sqlInfo.getSqlBuilder().append(" AND ");
             }
-            sqlInfo.getSqlBuilder().append(
-                    OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyokanNamingUtil.entity2Db(param.getName())));
+            sqlInfo.getSqlBuilder().append(OiyoCommonJdbcUtil.escapeKakkoFieldName(sqlInfo,
+                    OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, entitySet.getName(), param.getName()).getDbName()));
             sqlInfo.getSqlBuilder().append("=");
 
-            CsdlProperty csdlProp = sqlInfo.getEntitySet().getEntityType().getProperty(param.getName());
-            OiyoBasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo, csdlProp.getType(), param.getText());
+            final OiyoSettingsProperty prop = OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, edmEntitySet.getName(),
+                    param.getName());
+            OiyoCommonJdbcUtil.expandLiteralOrBindParameter(sqlInfo, prop.getEdmType(), param.getText());
         }
     }
 }

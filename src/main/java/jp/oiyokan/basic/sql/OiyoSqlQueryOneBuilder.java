@@ -18,17 +18,26 @@ package jp.oiyokan.basic.sql;
 import java.util.List;
 
 import org.apache.olingo.commons.api.edm.EdmEntitySet;
-import org.apache.olingo.commons.api.edm.provider.CsdlProperty;
 import org.apache.olingo.server.api.ODataApplicationException;
 import org.apache.olingo.server.api.uri.UriParameter;
 
-import jp.oiyokan.basic.OiyoBasicJdbcUtil;
-import jp.oiyokan.settings.OiyokanNamingUtil;
+import jp.oiyokan.OiyokanConstants;
+import jp.oiyokan.common.OiyoCommonJdbcUtil;
+import jp.oiyokan.common.OiyoInfo;
+import jp.oiyokan.common.OiyoInfoUtil;
+import jp.oiyokan.common.OiyoSqlInfo;
+import jp.oiyokan.dto.OiyoSettingsEntitySet;
+import jp.oiyokan.dto.OiyoSettingsProperty;
 
 /**
  * データベースから1件レコードを検索.
  */
 public class OiyoSqlQueryOneBuilder {
+    /**
+     * Oiyokan Info.
+     */
+    private OiyoInfo oiyoInfo;
+
     /**
      * SQL構築のデータ構造.
      */
@@ -43,7 +52,8 @@ public class OiyoSqlQueryOneBuilder {
         return sqlInfo;
     }
 
-    public OiyoSqlQueryOneBuilder(OiyoSqlInfo sqlInfo) {
+    public OiyoSqlQueryOneBuilder(OiyoInfo oiyoInfo, OiyoSqlInfo sqlInfo) {
+        this.oiyoInfo = oiyoInfo;
         this.sqlInfo = sqlInfo;
     }
 
@@ -56,12 +66,17 @@ public class OiyoSqlQueryOneBuilder {
      */
     public void buildSelectOneQuery(EdmEntitySet edmEntitySet, List<UriParameter> keyPredicates)
             throws ODataApplicationException {
+        final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, edmEntitySet.getName());
+
+        final OiyokanConstants.DatabaseType databaseType = OiyoInfoUtil
+                .getOiyoDatabaseTypeByEntitySetName(sqlInfo.getOiyoInfo(), sqlInfo.getEntitySetName());
+
         sqlInfo.getSqlBuilder().append("SELECT ");
 
         expandSelectKey(edmEntitySet);
 
-        sqlInfo.getSqlBuilder().append(" FROM "
-                + OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, sqlInfo.getEntitySet().getDbTableNameTargetIyo()));
+        sqlInfo.getSqlBuilder().append(
+                " FROM " + OiyoCommonJdbcUtil.escapeKakkoFieldName(sqlInfo, entitySet.getEntityType().getDbName()));
 
         sqlInfo.getSqlBuilder().append(" WHERE ");
         boolean isFirst = true;
@@ -71,14 +86,25 @@ public class OiyoSqlQueryOneBuilder {
             } else {
                 sqlInfo.getSqlBuilder().append(" AND ");
             }
-            sqlInfo.getSqlBuilder().append(
-                    OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyokanNamingUtil.entity2Db(param.getName())));
+            if ("ROWID".equalsIgnoreCase(param.getName()) //
+                    && OiyokanConstants.DatabaseType.ORACLE == databaseType) {
+                // ORACLE ROWID special.
+                sqlInfo.getSqlBuilder().append(param.getName());
+            } else {
+                sqlInfo.getSqlBuilder().append(OiyoCommonJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyoInfoUtil
+                        .getOiyoEntityProperty(oiyoInfo, entitySet.getName(), param.getName()).getDbName()));
+            }
             sqlInfo.getSqlBuilder().append("=");
 
-            CsdlProperty csdlProp = sqlInfo.getEntitySet().getEntityType().getProperty(param.getName());
-            // ORACLEのROWIDを利用する場合、この処理がnullになってしまうため、nullの場合は Edm.String 決め打ちで処理する。
-            final String propType = (csdlProp == null ? "Edm.String" : csdlProp.getType());
-            OiyoBasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo, propType, param.getText());
+            try {
+                final OiyoSettingsProperty prop = OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, edmEntitySet.getName(),
+                        param.getName());
+                OiyoCommonJdbcUtil.expandLiteralOrBindParameter(sqlInfo, prop.getEdmType(), param.getText());
+            } catch (ODataApplicationException ex) {
+                // ORACLEのROWIDを利用する場合、この処理で例外.
+                // 例外の場合は Edm.String 決め打ちで処理する。
+                OiyoCommonJdbcUtil.expandLiteralOrBindParameter(sqlInfo, "Edm.String", param.getText());
+            }
         }
     }
 
@@ -86,8 +112,9 @@ public class OiyoSqlQueryOneBuilder {
         int itemCount = 0;
         for (String name : edmEntitySet.getEntityType().getPropertyNames()) {
             sqlInfo.getSqlBuilder().append(itemCount++ == 0 ? "" : ",");
-            sqlInfo.getSqlBuilder().append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo,
-                    OiyokanNamingUtil.entity2Db(OiyoBasicJdbcUtil.unescapeKakkoFieldName(name))));
+            final String unescapedName = OiyoCommonJdbcUtil.unescapeKakkoFieldName(name);
+            sqlInfo.getSqlBuilder().append(OiyoCommonJdbcUtil.escapeKakkoFieldName(sqlInfo,
+                    OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, edmEntitySet.getName(), unescapedName).getDbName()));
         }
     }
 }

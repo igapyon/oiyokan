@@ -47,17 +47,31 @@ import org.apache.olingo.server.api.uri.UriResource;
 import org.apache.olingo.server.api.uri.UriResourceEntitySet;
 
 import jp.oiyokan.basic.OiyoBasicJdbcEntityOneBuilder;
-import jp.oiyokan.basic.OiyoBasicJdbcUtil;
+import jp.oiyokan.common.OiyoCommonJdbcUtil;
+import jp.oiyokan.common.OiyoInfo;
+import jp.oiyokan.common.OiyoInfoUtil;
+import jp.oiyokan.dto.OiyoSettingsDatabase;
+import jp.oiyokan.dto.OiyoSettingsEntitySet;
 
 /**
  * Oiyokan による Entity Processor
  */
 public class OiyokanEntityProcessor implements EntityProcessor {
+    /**
+     * デバッグ出力の有無.
+     * 
+     * OData Server の挙動のデバッグで困ったときにはこれを true にすること。
+     */
+    private static final boolean IS_DEBUG = false;
+
     private OData odata;
     private ServiceMetadata serviceMetadata;
 
     @Override
     public void init(OData odata, ServiceMetadata serviceMetadata) {
+        if (IS_DEBUG)
+            System.err.println("OiyokanEntityProcessor#init");
+
         this.odata = odata;
         this.serviceMetadata = serviceMetadata;
     }
@@ -65,7 +79,13 @@ public class OiyokanEntityProcessor implements EntityProcessor {
     @Override
     public void readEntity(ODataRequest request, ODataResponse response, UriInfo uriInfo, ContentType responseFormat)
             throws ODataApplicationException, ODataLibraryException {
+        if (IS_DEBUG)
+            System.err.println("OiyokanEntityProcessor#readEntity: " + request.getRawRequestUri());
+
         try {
+            // シングルトンな OiyoInfo を利用。
+            final OiyoInfo oiyoInfo = OiyokanEdmProvider.getOiyoInfoInstance();
+
             // 1. retrieve the Entity Type
             List<UriResource> resourcePaths = uriInfo.getUriResourceParts();
 
@@ -78,21 +98,26 @@ public class OiyokanEntityProcessor implements EntityProcessor {
             List<UriParameter> keyPredicates = uriResourceEntitySet.getKeyPredicates();
 
             // データベースに接続.
-            final OiyokanCsdlEntitySet entitySet = OiyoBasicJdbcEntityOneBuilder.findEntitySet(edmEntitySet);
-            if (entitySet == null) {
-                // [M211] No such EntitySet found (createEntity)
-                System.err.println(OiyokanMessages.M211);
-                throw new ODataApplicationException(OiyokanMessages.M211, 500, Locale.ENGLISH);
+            final OiyoSettingsDatabase database = OiyoInfoUtil.getOiyoDatabaseByEntitySetName(oiyoInfo,
+                    edmEntitySet.getName());
+
+            final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, edmEntitySet.getName());
+            if (entitySet.getCanRead() != null && entitySet.getCanRead() == false) {
+                // [M052] WARN: No Read access by canRead==false.
+                System.err.println(OiyokanMessages.IY8102 + ": Entity:" + edmEntitySet.getName());
+                throw new ODataApplicationException(OiyokanMessages.IY8102 + ": Entity:" + edmEntitySet.getName(), //
+                        OiyokanMessages.IY8102_CODE, Locale.ENGLISH);
             }
+
             Entity entity = null;
-            try (Connection connTargetDb = OiyoBasicJdbcUtil.getConnection(entitySet.getSettingsDatabase())) {
-                entity = new OiyoBasicJdbcEntityOneBuilder().readEntityData(connTargetDb, uriInfo, edmEntitySet,
+            try (Connection connTargetDb = OiyoCommonJdbcUtil.getConnection(database)) {
+                entity = new OiyoBasicJdbcEntityOneBuilder(oiyoInfo).readEntityData(connTargetDb, uriInfo, edmEntitySet,
                         keyPredicates);
             } catch (SQLException ex) {
                 // [M210] Database exception occured (readEntity)
-                System.err.println(OiyokanMessages.M210 + ": " + ex.toString());
-                throw new ODataApplicationException(OiyokanMessages.M210, //
-                        OiyokanMessages.M210_CODE, Locale.ENGLISH);
+                System.err.println(OiyokanMessages.IY3107 + ": " + ex.toString());
+                throw new ODataApplicationException(OiyokanMessages.IY3107, //
+                        OiyokanMessages.IY3107_CODE, Locale.ENGLISH);
             }
 
             // 3. serialize
@@ -120,7 +145,13 @@ public class OiyokanEntityProcessor implements EntityProcessor {
     @Override
     public void createEntity(ODataRequest request, ODataResponse response, UriInfo uriInfo, ContentType requestFormat,
             ContentType responseFormat) throws ODataApplicationException, ODataLibraryException {
+        if (IS_DEBUG)
+            System.err.println("OiyokanEntityProcessor#createEntity: " + request.getRawRequestUri());
+
         try {
+            // シングルトンな OiyoInfo を利用。
+            final OiyoInfo oiyoInfo = OiyokanEdmProvider.getOiyoInfoInstance();
+
             // https://olingo.apache.org/doc/odata4/tutorials/write/tutorial_write.html
 
             // 1. Retrieve the entity type from the URI
@@ -134,6 +165,14 @@ public class OiyokanEntityProcessor implements EntityProcessor {
             EdmEntitySet edmEntitySet = uriResourceEntitySet.getEntitySet();
             EdmEntityType edmEntityType = edmEntitySet.getEntityType();
 
+            final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, edmEntitySet.getName());
+            if (entitySet.getCanCreate() != null && entitySet.getCanCreate() == false) {
+                // [M051] WARN: No Create access by canCreate==false.
+                System.err.println(OiyokanMessages.IY8101 + ": Entity:" + edmEntitySet.getName());
+                throw new ODataApplicationException(OiyokanMessages.IY8101 + ": Entity:" + edmEntitySet.getName(), //
+                        OiyokanMessages.IY8101_CODE, Locale.ENGLISH);
+            }
+
             // 2. create the data in backend
             // 2.1. retrieve the payload from the POST request for the entity to create and
             // deserialize it
@@ -142,7 +181,7 @@ public class OiyokanEntityProcessor implements EntityProcessor {
             DeserializerResult result = deserializer.entity(requestInputStream, edmEntityType);
             Entity requestEntity = result.getEntity();
             // 2.2 do the creation in backend, which returns the newly created entity
-            Entity createdEntity = new OiyoBasicJdbcEntityOneBuilder().createEntityData(uriInfo, edmEntitySet,
+            Entity createdEntity = new OiyoBasicJdbcEntityOneBuilder(oiyoInfo).createEntityData(uriInfo, edmEntitySet,
                     requestEntity);
 
             // 3. serialize the response (we have to return the created entity)
@@ -169,13 +208,27 @@ public class OiyokanEntityProcessor implements EntityProcessor {
     @Override
     public void updateEntity(ODataRequest request, ODataResponse response, UriInfo uriInfo, ContentType requestFormat,
             ContentType responseFormat) throws ODataApplicationException, ODataLibraryException {
+        if (IS_DEBUG)
+            System.err.println("OiyokanEntityProcessor#updateEntity: " + request.getRawRequestUri());
+
         try {
+            // シングルトンな OiyoInfo を利用。
+            final OiyoInfo oiyoInfo = OiyokanEdmProvider.getOiyoInfoInstance();
+
             List<UriResource> resourcePaths = uriInfo.getUriResourceParts();
 
             // Note: only in our example we can assume that the first segment is the
             // EntitySet
             UriResourceEntitySet uriResourceEntitySet = (UriResourceEntitySet) resourcePaths.get(0);
             EdmEntitySet edmEntitySet = uriResourceEntitySet.getEntitySet();
+
+            final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, edmEntitySet.getName());
+            if (entitySet.getCanUpdate() != null && entitySet.getCanUpdate() == false) {
+                // [M053] WARN: No Update access by canUpdate==false.
+                System.err.println(OiyokanMessages.IY8103 + ": Entity:" + edmEntitySet.getName());
+                throw new ODataApplicationException(OiyokanMessages.IY8103 + ": Entity:" + edmEntitySet.getName(), //
+                        OiyokanMessages.IY8103_CODE, Locale.ENGLISH);
+            }
 
             // 2. retrieve the data from backend
             List<UriParameter> keyPredicates = uriResourceEntitySet.getKeyPredicates();
@@ -192,16 +245,16 @@ public class OiyokanEntityProcessor implements EntityProcessor {
 
                 // 指定項目のみ設定
                 // in case of PATCH, the existing property is not touched
-                new OiyoBasicJdbcEntityOneBuilder().updateEntityDataPatch(uriInfo, edmEntitySet, keyPredicates,
+                new OiyoBasicJdbcEntityOneBuilder(oiyoInfo).updateEntityDataPatch(uriInfo, edmEntitySet, keyPredicates,
                         requestEntity, ifMatch, ifNoneMatch);
             } else if (request.getMethod().equals(HttpMethod.PUT)) {
                 // [M016] NOT SUPPORTED: PUT: use PATCH to update Entity.
-                System.err.println(OiyokanMessages.M016);
-                throw new ODataApplicationException(OiyokanMessages.M016, OiyokanMessages.M206_CODE, Locale.ENGLISH);
+                System.err.println(OiyokanMessages.IY1106);
+                throw new ODataApplicationException(OiyokanMessages.IY1106, OiyokanMessages.IY3104_CODE, Locale.ENGLISH);
             } else {
                 // [M216] UNEXPECTED: Must NOT pass this case.
-                System.err.println(OiyokanMessages.M216);
-                throw new ODataApplicationException(OiyokanMessages.M216, OiyokanMessages.M216_CODE, Locale.ENGLISH);
+                System.err.println(OiyokanMessages.IY3113);
+                throw new ODataApplicationException(OiyokanMessages.IY3113, OiyokanMessages.IY3113_CODE, Locale.ENGLISH);
             }
 
             // TODO FIXME
@@ -224,7 +277,13 @@ public class OiyokanEntityProcessor implements EntityProcessor {
     @Override
     public void deleteEntity(ODataRequest request, ODataResponse response, UriInfo uriInfo)
             throws ODataApplicationException, ODataLibraryException {
+        if (IS_DEBUG)
+            System.err.println("OiyokanEntityProcessor#deleteEntity: " + request.getRawRequestUri());
+
         try {
+            // シングルトンな OiyoInfo を利用。
+            final OiyoInfo oiyoInfo = OiyokanEdmProvider.getOiyoInfoInstance();
+
             // 1. Retrieve the entity set which belongs to the requested entity
             List<UriResource> resourcePaths = uriInfo.getUriResourceParts();
             // Note: only in our example we can assume that the first segment is the
@@ -232,9 +291,17 @@ public class OiyokanEntityProcessor implements EntityProcessor {
             UriResourceEntitySet uriResourceEntitySet = (UriResourceEntitySet) resourcePaths.get(0);
             EdmEntitySet edmEntitySet = uriResourceEntitySet.getEntitySet();
 
+            final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, edmEntitySet.getName());
+            if (entitySet.getCanDelete() != null && entitySet.getCanDelete() == false) {
+                // [M054] WARN: No Delete access by canDelete==false.
+                System.err.println(OiyokanMessages.IY8104 + ": Entity:" + edmEntitySet.getName());
+                throw new ODataApplicationException(OiyokanMessages.IY8104 + ": Entity:" + edmEntitySet.getName(), //
+                        OiyokanMessages.IY8104_CODE, Locale.ENGLISH);
+            }
+
             // 2. delete the data in backend
             List<UriParameter> keyPredicates = uriResourceEntitySet.getKeyPredicates();
-            new OiyoBasicJdbcEntityOneBuilder().deleteEntityData(uriInfo, edmEntitySet, keyPredicates);
+            new OiyoBasicJdbcEntityOneBuilder(oiyoInfo).deleteEntityData(uriInfo, edmEntitySet, keyPredicates);
 
             // 3. configure the response object
             response.setStatusCode(HttpStatusCode.NO_CONTENT.getStatusCode());

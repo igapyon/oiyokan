@@ -20,10 +20,11 @@ import java.sql.SQLException;
 
 import org.junit.jupiter.api.Test;
 
-import jp.oiyokan.basic.OiyoBasicJdbcUtil;
+import jp.oiyokan.common.OiyoCommonJdbcUtil;
+import jp.oiyokan.common.OiyoInfo;
+import jp.oiyokan.common.OiyoInfoUtil;
 import jp.oiyokan.data.OiyokanResourceSqlUtil;
-import jp.oiyokan.dto.OiyokanSettingsDatabase;
-import jp.oiyokan.settings.OiyokanSettingsUtil;
+import jp.oiyokan.dto.OiyoSettingsDatabase;
 
 /**
  * テスト用の Postgres Test データベースを作成します。
@@ -46,9 +47,12 @@ class Build31PostgresTest {
         if (true)
             return;
 
-        OiyokanSettingsDatabase settingsDatabase = OiyokanSettingsUtil.getOiyokanDatabase("postgres1");
+        final OiyoInfo oiyoInfo = new OiyoInfo();
+        oiyoInfo.setSettings(OiyoInfoUtil.loadOiyokanSettings());
 
-        try (Connection connTargetDb = OiyoBasicJdbcUtil.getConnection(settingsDatabase)) {
+        OiyoSettingsDatabase settingsDatabase = OiyoInfoUtil.getOiyoDatabaseByName(oiyoInfo, "postgres1");
+
+        try (Connection connTargetDb = OiyoCommonJdbcUtil.getConnection(settingsDatabase)) {
             for (String sql : DROP_TABLE_SQLS) {
                 try (var stmt = connTargetDb.prepareStatement(sql)) {
                     stmt.executeUpdate();

@@ -21,132 +21,189 @@ import org.apache.olingo.commons.api.http.HttpStatusCode;
  * Messages of Oiyokan.
  */
 public class OiyokanMessages {
-    public static final String M001 = "[M001] ERROR: Can't decode specified decodec url";
-    public static final String M002 = "[M002] UNEXPECTED: Illegal data type in database settings";
-    public static final String M003 = "[M003] UNEXPECTED: Fail to load JDBC driver. Check JDBC Driver classname or JDBC Driver is on classpath.";
-    public static final String M004 = "[M004] UNEXPECTED: Database error in setup internal database.";
-    public static final String M005 = "[M005] ERROR: Fail to connect database. Please wait minutes and retry again.: データベースの接続に失敗しました。しばらく待って再度トライしてください。しばらく経っても改善しない場合はIT部門などに連絡してください。";
-    public static final String M006 = "[M006] NOT SUPPORTED: CSDL: JDBC Type";
-    public static final String M007 = "[M007] UNEXPECTED: fail to read from CLOB";
-    public static final String M008 = "[M008] UNEXPECTED: fail to read from binary";
-    public static final String M009 = "[M009] UNEXPECTED: missing impl";
-    public static final String M010 = "[M010] NOT SUPPORTED: Parameter Type";
-    public static final int M010_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
-    public static final String M011 = "[M011] NOT SUPPORTED: URI: $apply";
-    public static final int M011_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
-    public static final String M012 = "[M012] NOT SUPPORTED: URI: customQuery";
-    public static final int M012_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
-    public static final String M013 = "[M013] NOT SUPPORTED: URI: deltaToken";
-    public static final int M013_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
-    public static final String M014 = "[M014] NOT SUPPORTED: URI: $expand";
-    public static final int M014_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
-    public static final String M015 = "[M015] UNEXPECTED: An error occurred in SQL that counts the number of search results.";
-    public static final String M016 = "[M016] NOT SUPPORTED: PUT: use PATCH to update Entity.";
-    public static final int M016_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
-    public static final String M017 = "[M017] Fail to execute SQL";
-    public static final int M017_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
-    public static final String M018 = "[M018] UNEXPECTED: Fail to create ID EntitySet name";
-    public static final String M019 = "[M019] UNEXPECTED: Fail to get database meta";
-    public static final int M019_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
-    public static final String M020 = "[M020] NOT SUPPORTED: Database type";
-    public static final String M021 = "[M021] NOT SUPPORTED: JDBC Type";
-    public static final String M022 = "[M022] UNEXPECTED: Fail to load setting SQL file";
-    public static final String M023 = "[M023] UNEXPECTED: Fail to load Oiyokan naming settings";
-    public static final String M024 = "[M024] UNEXPECTED: Fail to load Oiyokan settings";
-    public static final String M025 = "[M025] UNEXPECTED: Database settings NOT found";
-    public static final String M026 = "[M026] UNEXPECTED: Database settings NOT found";
-    public static final String M027 = "[M027] UNEXPECTED: Fail to create local table: Oiyokan";
-    public static final String M028 = "[M028] UNEXPECTED: Fail to check local table exists: Oiyokan";
-    public static final String M029 = "[M029] UNEXPECTED: Fail to execute SQL for local internal table";
-    public static final String M030 = "[M030] UNEXPECTED: Fail to execute SQL for local internal table(2)";
-    public static final String M031 = "[M031] UNEXPECTED: Fail to execute Dabaase";
-    public static final String M032 = "[M032] NOT SUPPORTED: URI: $search";
-    public static final int M032_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
-    public static final String M033 = "[M033] NOT SUPPORTED: unknown UUID object given";
-    public static final int M033_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
-    public static final String M034 = "[M034] ERROR: An unknown field name was specified. The field names are case sensitive. Make sure the Oiyo field name matches the target field name.";
-    public static final String M035 = "[M035] SQL timeout at count";
-    public static final int M035_CODE = HttpStatusCode.REQUEST_TIMEOUT.getStatusCode();
-    public static final String M036 = "[M036] SQL timeout at execute";
-    public static final int M036_CODE = HttpStatusCode.REQUEST_TIMEOUT.getStatusCode();
-    public static final String M037 = "[M037] NOT SUPPORTED: Parameter Type";
-    public static final int M037_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
+    ////////////////////////////////////////////////////////////////////////////////
+    // Query
 
-    ///////////////////
-    // Expression
+    ////////////////////////////////////////////////////////////////////////////////
+    // IY11XX : Query Parameter
+    public static final String IY1101 = "[IY1101] NOT SUPPORTED: Parameter Type";
+    public static final int IY1101_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
+    public static final String IY1102 = "[IY1102] NOT SUPPORTED: URI: $apply";
+    public static final int IY1102_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
+    public static final String IY1103 = "[IY1103] NOT SUPPORTED: URI: customQuery";
+    public static final int IY1103_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
+    public static final String IY1104 = "[IY1104] NOT SUPPORTED: URI: deltaToken";
+    public static final int IY1104_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
+    public static final String IY1105 = "[IY1105] NOT SUPPORTED: URI: $expand";
+    public static final int IY1105_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
+    public static final String IY1106 = "[IY1106] NOT SUPPORTED: PUT: use PATCH to update Entity.";
+    public static final int IY1106_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
+    public static final String IY1107 = "[IY1107] NOT SUPPORTED: URI: $search";
+    public static final int IY1107_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
 
-    public static final String M101 = "[M101] NOT SUPPORTED: Filter Expression: AliasImpl";
-    public static final String M102 = "[M102] NOT SUPPORTED: Filter Expression: EnumerationImpl";
-    public static final String M103 = "[M103] NOT SUPPORTED: Filter Expression: LambdaRefImpl";
-    public static final String M104 = "[M104] NOT SUPPORTED: Filter Expression: TypeLiteralImpl";
-    public static final String M105 = "[M105] UNEXPECTED: Fail to process Expression";
-    public static final String M106 = "[M106] UNEXPECTED: Unsupported binary operator";
-    // M107
-    public static final String M108 = "[M108] NOT SUPPORTED: MethodKind.FRACTIONALSECONDS";
-    public static final String M109 = "[M109] NOT SUPPORTED: MethodKind.TOTALSECONDS";
-    public static final String M110 = "[M110] NOT SUPPORTED: MethodKind.DATE";
-    public static final String M111 = "[M111] NOT SUPPORTED: MethodKind.TIME";
-    public static final String M112 = "[M112] NOT SUPPORTED: MethodKind.TOTALOFFSETMINUTES";
-    public static final String M113 = "[M113] NOT SUPPORTED: MethodKind.MINDATETIME";
-    public static final String M114 = "[M114] NOT SUPPORTED: MethodKind.MAXDATETIME";
-    public static final String M115 = "[M115] NOT SUPPORTED: MethodKind.NOW";
-    public static final String M116 = "[M116] NOT SUPPORTED: MethodKind.GEODISTANCE";
-    public static final String M117 = "[M117] NOT SUPPORTED: MethodKind.GEOLENGTH";
-    public static final String M118 = "[M118] NOT SUPPORTED: MethodKind.GEOINTERSECTS";
-    public static final String M119 = "[M119] NOT SUPPORTED: MethodKind.CAST";
-    public static final String M120 = "[M120] NOT SUPPORTED: MethodKind.ISOF";
-    public static final String M121 = "[M121] UNEXPECTED: NOT SUPPORTED MethodKind";
-    public static final String M122 = "[M122] UNEXPECTED: Unsupported UnaryOperatorKind";
-    // M123
-    public static final String M124 = "[M124] NOT SUPPORTED: BinaryOperatorKind.HAS";
-    public static final String M125 = "[M125] NOT SUPPORTED: BinaryOperatorKind.IN";
-    public static final String M126 = "[M126] NOT SUPPORTED: BinaryOperatorKind.MUL";
-    public static final String M127 = "[M127] NOT SUPPORTED: BinaryOperatorKind.DIV";
-    public static final String M128 = "[M128] NOT SUPPORTED: BinaryOperatorKind.MOD";
-    public static final String M129 = "[M129] NOT SUPPORTED: BinaryOperatorKind.ADD";
-    public static final String M130 = "[M130] NOT SUPPORTED: BinaryOperatorKind.SUB";
-    public static final String M131 = "[M131] NOT SUPPORTED: UnaryOperatorKind.MINUS";
+    ////////////////////////////////////////////////////////////////////////////////
+    // EntityCollection
 
-    ///////////////////
+    ////////////////////////////////////////////////////////////////////////////////
+    // IY21XX : EntityCollection
+    public static final String IY2101 = "[IY2101] INFO: Skip count all by omitCountAll option.";
+    public static final String IY2102 = "[IY2102] Fail to execute SQL";
+    public static final int IY2102_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
+    public static final String IY2103 = "[IY2103] UNEXPECTED: An error occurred in SQL that counts the number of search results.";
+    public static final String IY2104 = "[IY2104] UNEXPECTED: Fail to create ID EntitySet name";
+    public static final String IY2105 = "[IY2105] UNEXPECTED: Fail to get database meta";
+    public static final int IY2105_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
+    public static final String IY2106 = "[IY2106] NOT SUPPORTED: unknown UUID object given";
+    public static final int IY2106_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
+    public static final String IY2107 = "[IY2107] ERROR: An unknown field name was specified. The field names are case sensitive. Make sure the Oiyo field name matches the target field name.";
+    public static final String IY2108 = "[IY2108] NOT SUPPORTED: Parameter Type";
+    public static final int IY2108_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
+
+    ////////////////////////////////////////////////////////////////////////////////
+    // IY25XX : EntityCollection - TIMEOUT
+    public static final String IY2501 = "[IY2501] SQL timeout at count";
+    public static final int IY2501_CODE = HttpStatusCode.REQUEST_TIMEOUT.getStatusCode();
+    public static final String IY2502 = "[IY2502] SQL timeout at execute";
+    public static final int IY2502_CODE = HttpStatusCode.REQUEST_TIMEOUT.getStatusCode();
+
+    ////////////////////////////////////////////////////////////////////////////////
     // Entity
 
-    public static final String M201 = "[M201] NO record processed. No Entity effects.";
-    public static final int M201_CODE = HttpStatusCode.NOT_FOUND.getStatusCode();
-    public static final String M202 = "[M202] Integrity constraint violation occured (DML). 制約違反.";
-    public static final int M202_CODE = HttpStatusCode.CONFLICT.getStatusCode();
-    public static final String M203 = "[M203] SQL timeout at execute.";
-    public static final int M203_CODE = HttpStatusCode.REQUEST_TIMEOUT.getStatusCode();
-    public static final String M204 = "[M204] Fail to execute SQL.";
-    public static final int M204_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
-    public static final String M205 = "[M205] Fail to execute SQL.";
-    public static final int M205_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
-    public static final String M206 = "[M206] No such EntitySet found (readEntity)";
-    public static final int M206_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
-    public static final String M207 = "[M207] No such Entity data";
-    public static final int M207_CODE = HttpStatusCode.NOT_FOUND.getStatusCode();
-    public static final String M208 = "[M208] SQL timeout at execute (readEntity)";
-    public static final int M208_CODE = HttpStatusCode.REQUEST_TIMEOUT.getStatusCode();
-    public static final String M209 = "[M209] Fail to execute SQL (readEntity)";
-    public static final int M209_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
-    public static final String M210 = "[M210] Database exception occured (readEntity)";
-    public static final int M210_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
-    public static final String M211 = "[M211] No such EntitySet found (createEntity)";
-    public static final int M211_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
-    public static final String M212 = "[M212] No such EntitySet found (deleteEntity)";
-    public static final int M212_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
-    public static final String M213 = "[M213] No such EntitySet found (updateEntity(PATCH))";
-    public static final int M213_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
-    public static final String M214 = "[M214] No such EntitySet found (updateEntity(PUT))";
-    public static final int M214_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
-    public static final String M215 = "[M215] UNEXPECTED: Too many rows found (readEntity)";
-    public static final int M215_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
-    public static final String M216 = "[M216] UNEXPECTED: Must NOT pass this case.";
-    public static final int M216_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
-    public static final String M217 = "[M217] UNEXPECTED: Can't retrieve PreparedStatement#getGeneratedKeys: Fail to map auto generated key field.";
-    public static final int M217_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
+    ////////////////////////////////////////////////////////////////////////////////
+    // IY31XX : Entity
+    public static final String IY3101 = "[IY3101] NO record processed. No Entity effects.";
+    public static final int IY3101_CODE = HttpStatusCode.NOT_FOUND.getStatusCode();
+    public static final String IY3102 = "[IY3102] Fail to execute SQL.";
+    public static final int IY3102_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
+    public static final String IY3103 = "[IY3103] Fail to execute SQL.";
+    public static final int IY3103_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
+    public static final String IY3104 = "[IY3104] No such EntitySet found (readEntity)";
+    public static final int IY3104_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
+    public static final String IY3105 = "[IY3105] No such Entity data";
+    public static final int IY3105_CODE = HttpStatusCode.NOT_FOUND.getStatusCode();
+    public static final String IY3106 = "[IY3106] Fail to execute SQL (readEntity)";
+    public static final int IY3106_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
+    public static final String IY3107 = "[IY3107] Database exception occured (readEntity)";
+    public static final int IY3107_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
+    public static final String IY3108 = "[IY3108] No such EntitySet found (createEntity)";
+    public static final int IY3108_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
+    public static final String IY3109 = "[IY3109] No such EntitySet found (deleteEntity)";
+    public static final int IY3109_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
+    public static final String IY3110 = "[IY3110] No such EntitySet found (updateEntity(PATCH))";
+    public static final int IY3110_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
+    public static final String IY3111 = "[IY3111] No such EntitySet found (updateEntity(PUT))";
+    public static final int IY3111_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
+    public static final String IY3112 = "[IY3112] UNEXPECTED: Too many rows found (readEntity)";
+    public static final int IY3112_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
+    public static final String IY3113 = "[IY3113] UNEXPECTED: Must NOT pass this case.";
+    public static final int IY3113_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
+    public static final String IY3114 = "[IY3114] UNEXPECTED: Can't retrieve PreparedStatement#getGeneratedKeys: Fail to map auto generated key field.";
+    public static final int IY3114_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
+
+    ////////////////////////////////////////////////////////////////////////////////
+    // IY34XX : Entity - Constraint
+    public static final String IY3401 = "[IY3401] Integrity constraint violation occured (DML). 制約違反.";
+    public static final int IY3401_CODE = HttpStatusCode.CONFLICT.getStatusCode();
+
+    ////////////////////////////////////////////////////////////////////////////////
+    // IY35XX : Entity - TIMEOUT
+    public static final String IY3501 = "[IY3501] SQL timeout at execute (readEntity)";
+    public static final int IY3501_CODE = HttpStatusCode.REQUEST_TIMEOUT.getStatusCode();
+    public static final String IY3502 = "[IY3502] SQL timeout at execute.";
+    public static final int IY3502_CODE = HttpStatusCode.REQUEST_TIMEOUT.getStatusCode();
+
+    ////////////////////////////////////////////////////////////////////////////////
+    // Expression
+
+    ////////////////////////////////////////////////////////////////////////////////
+    // IY41XX : Expression
+    public static final String IY4101 = "[IY4101] NOT SUPPORTED: Filter Expression: AliasImpl";
+    public static final String IY4102 = "[IY4102] NOT SUPPORTED: Filter Expression: EnumerationImpl";
+    public static final String IY4103 = "[IY4103] NOT SUPPORTED: Filter Expression: LambdaRefImpl";
+    public static final String IY4104 = "[IY4104] NOT SUPPORTED: Filter Expression: TypeLiteralImpl";
+    public static final String IY4105 = "[IY4105] NOT SUPPORTED: MethodKind.FRACTIONALSECONDS";
+    public static final String IY4106 = "[IY4106] NOT SUPPORTED: MethodKind.TOTALSECONDS";
+    public static final String IY4107 = "[IY4107] NOT SUPPORTED: MethodKind.DATE";
+    public static final String IY4108 = "[IY4108] NOT SUPPORTED: MethodKind.TIME";
+    public static final String IY4109 = "[IY4109] NOT SUPPORTED: MethodKind.TOTALOFFSETMINUTES";
+    public static final String IY4110 = "[IY4110] NOT SUPPORTED: MethodKind.MINDATETIME";
+    public static final String IY4111 = "[IY4111] NOT SUPPORTED: MethodKind.MAXDATETIME";
+    public static final String IY4112 = "[IY4112] NOT SUPPORTED: MethodKind.NOW";
+    public static final String IY4113 = "[IY4113] NOT SUPPORTED: MethodKind.GEODISTANCE";
+    public static final String IY4114 = "[IY4114] NOT SUPPORTED: MethodKind.GEOLENGTH";
+    public static final String IY4115 = "[IY4115] NOT SUPPORTED: MethodKind.GEOINTERSECTS";
+    public static final String IY4116 = "[IY4116] NOT SUPPORTED: MethodKind.CAST";
+    public static final String IY4117 = "[IY4117] NOT SUPPORTED: MethodKind.ISOF";
+    public static final String IY4118 = "[IY4118] NOT SUPPORTED: BinaryOperatorKind.HAS";
+    public static final String IY4119 = "[IY4119] NOT SUPPORTED: BinaryOperatorKind.IN";
+    public static final String IY4120 = "[IY4120] NOT SUPPORTED: BinaryOperatorKind.MUL";
+    public static final String IY4121 = "[IY4121] NOT SUPPORTED: BinaryOperatorKind.DIV";
+    public static final String IY4122 = "[IY4122] NOT SUPPORTED: BinaryOperatorKind.MOD";
+    public static final String IY4123 = "[IY4123] NOT SUPPORTED: BinaryOperatorKind.ADD";
+    public static final String IY4124 = "[IY4124] NOT SUPPORTED: BinaryOperatorKind.SUB";
+    public static final String IY4125 = "[IY4125] NOT SUPPORTED: UnaryOperatorKind.MINUS";
+
+    public static final String IY4151 = "[IY4151] UNEXPECTED: Fail to process Expression";
+    public static final String IY4152 = "[IY4152] UNEXPECTED: Unsupported binary operator";
+    public static final String IY4153 = "[IY4153] UNEXPECTED: NOT SUPPORTED MethodKind";
+    public static final String IY4154 = "[IY4154] UNEXPECTED: Unsupported UnaryOperatorKind";
+
+    ////////////////////////////////////////////////////////////////////////////////
+    // Generic
+
+    ////////////////////////////////////////////////////////////////////////////////
+    // IY71XX : Generic
+    public static final String IY7101 = "[IY7101] ERROR: Can't decode specified decodec url";
+    public static final String IY7102 = "[IY7102] UNEXPECTED: Illegal data type in database settings";
+    public static final String IY7103 = "[IY7103] UNEXPECTED: Fail to load JDBC driver. Check JDBC Driver classname or JDBC Driver is on classpath.";
+    public static final String IY7104 = "[IY7104] UNEXPECTED: Database error in setup internal database.";
+    public static final String IY7105 = "[IY7105] ERROR: Fail to connect database. Please wait minutes and retry again.: データベースの接続に失敗しました。しばらく待って再度トライしてください。しばらく経っても改善しない場合はIT部門などに連絡してください。";
+    public static final String IY7106 = "[IY7106] NOT SUPPORTED: CSDL: JDBC Type";
+    public static final String IY7107 = "[IY7107] UNEXPECTED: fail to read from CLOB";
+    public static final String IY7108 = "[IY7108] UNEXPECTED: fail to read from binary";
+    public static final String IY7109 = "[IY7109] UNEXPECTED: missing impl";
+    public static final String IY7110 = "[IY7110] UNEXPECTED: Fail to load setting SQL file";
+    public static final String IY7111 = "[IY7111] UNEXPECTED: Fail to load Oiyokan naming settings";
+    public static final String IY7112 = "[IY7112] UNEXPECTED: Fail to load Oiyokan settings";
+    public static final String IY7113 = "[IY7113] UNEXPECTED: Database settings NOT found";
+    public static final String IY7114 = "[IY7114] UNEXPECTED: Database settings NOT found";
+    public static final String IY7115 = "[IY7115] UNEXPECTED: Fail to create local table: Oiyokan";
+    public static final String IY7116 = "[IY7116] UNEXPECTED: Fail to check local table exists: Oiyokan";
+    public static final String IY7117 = "[IY7117] UNEXPECTED: Fail to execute SQL for local internal table";
+    public static final String IY7118 = "[IY7118] UNEXPECTED: Fail to execute SQL for local internal table(2)";
+    public static final String IY7119 = "[IY7119] UNEXPECTED: Fail to execute Dabaase";
+    public static final String IY7120 = "[IY7120] UNEXPECTED: null parameter given as EntitySet.";
+    public static final String IY7121 = "[IY7121] UNEXPECTED: EntitySet settings NOT found.";
+    public static final String IY7122 = "[IY7122] UNEXPECTED: EntitySet Property settings NOT found.";
+    public static final String IY7123 = "[IY7123] UNEXPECTED: Fail to find Property from DB name.";
+    public static final String IY7124 = "[IY7124] NOT SUPPORTED: Database type";
+    public static final String IY7125 = "[IY7125] NOT SUPPORTED: JDBC Type";
+
+    ////////////////////////////////////////////////////////////////////////////////
+    // Authz (Server Side)
+
+    ////////////////////////////////////////////////////////////////////////////////
+    // IY81XX : Authz
+    public static final String IY8101 = "[IY8101] WARN: No Create access by canCreate==false.";
+    public static final int IY8101_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
+    public static final String IY8102 = "[IY8102] WARN: No Read access by canRead==false.";
+    public static final int IY8102_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
+    public static final String IY8103 = "[IY8103] WARN: No Update access by canUpdate==false.";
+    public static final int IY8103_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
+    public static final String IY8104 = "[IY8104] WARN: No Delete access by canDelete==false.";
+    public static final int IY8104_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
+
+    ////////////////////////////////////////////////////////////////////////////////
+    // System
+
+    ////////////////////////////////////////////////////////////////////////////////
+    // IY91XX : System error
+
+    ////////////////////////////////////////////////////////////////////////////////
+    // IY9999 : Other error
 
     /**
      * 手早く未実装マークをつけるためのテンポラリなメッセージ.
      */
-    public static final String M999 = "[M999] NOT IMPLEMENTED: Generic NOT implemented message.";
+    public static final String IY9999 = "[IY9999] NOT IMPLEMENTED: Generic NOT implemented message.";
 }

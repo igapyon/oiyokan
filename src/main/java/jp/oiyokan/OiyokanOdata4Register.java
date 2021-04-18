@@ -53,8 +53,8 @@ public class OiyokanOdata4Register {
                 uri += "?" + new URLCodec().decode(req.getQueryString());
             } catch (DecoderException ex) {
                 // [M001] Can't decode specified decodec url
-                System.err.println(OiyokanMessages.M001 + ": " + ex.toString());
-                throw new ServletException(OiyokanMessages.M001);
+                System.err.println(OiyokanMessages.IY7101 + ": " + ex.toString());
+                throw new ServletException(OiyokanMessages.IY7101);
             }
         }
 

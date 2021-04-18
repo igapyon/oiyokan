@@ -16,47 +16,22 @@
 package jp.oiyokan.data;
 
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.Types;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
 import org.apache.olingo.server.api.ODataApplicationException;
 
 import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanMessages;
-import jp.oiyokan.basic.OiyoBasicJdbcUtil;
-import jp.oiyokan.dto.OiyokanSettingsDatabase;
-import jp.oiyokan.settings.OiyokanSettingsUtil;
+import jp.oiyokan.common.OiyoCommonJdbcUtil;
+import jp.oiyokan.common.OiyoInfo;
+import jp.oiyokan.common.OiyoInfoUtil;
+import jp.oiyokan.dto.OiyoSettingsDatabase;
 
 /**
  * Oiyokan (OData v4 server) が動作する際に必要になる内部管理データベースのバージョン情報および Oiyo情報 をセットアップ.
  */
 public class OiyokanKanDatabase {
-    /**
-     * Oiyokan の設定情報を記述したファイル.
-     */
-    private static final String[][] OIYOKAN_FILE_SQLS = new String[][] { //
-            /*
-             * Oiyokan の基本機能を確認およびビルド時の JUnitテストで利用. 変更するとビルドが動作しなくなる場合あり.
-             */
-            { OiyokanConstants.OIYOKAN_KAN_DB, "oiyokan-test-oiyo.sql" },
-
-            /*
-             * Sakila dvdrental サンプルDB に接続するための Oiyo 情報.
-             */
-            { OiyokanConstants.OIYOKAN_KAN_DB, "sample-sakila-oiyo.sql" },
-
-            /*
-             * Oiyokan のターゲットデータベースの Oiyo情報を記述。github上では空白ファイルとする.
-             */
-            { OiyokanConstants.OIYOKAN_KAN_DB, "oiyokan-oiyo.sql" }, };
-
     private OiyokanKanDatabase() {
     }
 
@@ -66,15 +41,15 @@ public class OiyokanKanDatabase {
      * @return true:新規作成, false:既に存在.
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
-    public static synchronized boolean setupKanDatabase() throws ODataApplicationException {
+    public static synchronized boolean setupKanDatabase(OiyoInfo oiyoInfo) throws ODataApplicationException {
         if (OiyokanConstants.IS_TRACE_ODATA_V4)
             System.err.println( //
                     "OData v4: setup oiyokanKan database (Oiyokan: " + OiyokanConstants.VERSION + ")");
 
-        OiyokanSettingsDatabase settingsInterDatabase = OiyokanSettingsUtil
-                .getOiyokanDatabase(OiyokanConstants.OIYOKAN_KAN_DB);
+        OiyoSettingsDatabase settingsInterDatabase = OiyoInfoUtil.getOiyoDatabaseByName(oiyoInfo,
+                OiyokanConstants.OIYOKAN_KAN_DB);
 
-        try (Connection connInterDb = OiyoBasicJdbcUtil.getConnection(settingsInterDatabase)) {
+        try (Connection connInterDb = OiyoCommonJdbcUtil.getConnection(settingsInterDatabase)) {
             // Internal Database の バージョン情報および Oiyokanテーブルを setup.
 
             // Oiyokan が動作する上で必要なテーブルのセットアップ.
@@ -87,8 +62,8 @@ public class OiyokanKanDatabase {
                 stmt.executeUpdate();
             } catch (SQLException ex) {
                 // [M027] UNEXPECTED: Fail to create local table: Oiyokan
-                System.err.println(OiyokanMessages.M027 + ": " + ex.toString());
-                throw new ODataApplicationException(OiyokanMessages.M027, 500, Locale.ENGLISH);
+                System.err.println(OiyokanMessages.IY7115 + ": " + ex.toString());
+                throw new ODataApplicationException(OiyokanMessages.IY7115, 500, Locale.ENGLISH);
             }
 
             // ODataAppInfos が既に存在するかどうか確認. 存在する場合は処理中断.
@@ -102,8 +77,8 @@ public class OiyokanKanDatabase {
                 }
             } catch (SQLException ex) {
                 // [M028] UNEXPECTED: Fail to check local table exists: Oiyokan
-                System.err.println(OiyokanMessages.M028 + ": " + ex.toString());
-                throw new ODataApplicationException(OiyokanMessages.M028, 500, Locale.ENGLISH);
+                System.err.println(OiyokanMessages.IY7116 + ": " + ex.toString());
+                throw new ODataApplicationException(OiyokanMessages.IY7116, 500, Locale.ENGLISH);
             }
 
             ///////////////////////////////////////////
@@ -115,7 +90,7 @@ public class OiyokanKanDatabase {
             ///////////////////////////////////////////
             // ODataAppInfos にバージョン情報などデータの追加
             try (var stmt = connInterDb.prepareStatement("INSERT INTO Oiyokan (KeyName, KeyValue) VALUES ("
-                    + OiyoBasicJdbcUtil.getQueryPlaceholderString(2) + ")")) {
+                    + OiyoCommonJdbcUtil.getQueryPlaceholderString(2) + ")")) {
                 stmt.setString(1, "Version");
                 stmt.setString(2, OiyokanConstants.VERSION);
                 stmt.executeUpdate();
@@ -128,260 +103,16 @@ public class OiyokanKanDatabase {
                 connInterDb.commit();
             } catch (SQLException ex) {
                 // [M029] UNEXPECTED: Fail to execute SQL for local internal table
-                System.err.println(OiyokanMessages.M029 + ": " + ex.toString());
-                throw new ODataApplicationException(OiyokanMessages.M029, 500, Locale.ENGLISH);
-            }
-
-            for (String[] sqlFileDef : OIYOKAN_FILE_SQLS) {
-                if (OiyokanConstants.IS_TRACE_ODATA_V4)
-                    System.err.println("OData v4: load: db:" + sqlFileDef[0] + ", sql: " + sqlFileDef[1]);
-
-                OiyokanSettingsDatabase lookDatabase = OiyokanSettingsUtil.getOiyokanDatabase(sqlFileDef[0]);
-
-                try (Connection connLoookDatabase = OiyoBasicJdbcUtil.getConnection(lookDatabase)) {
-                    final String[] sqls = OiyokanResourceSqlUtil.loadOiyokanResourceSql("oiyokan/sql/" + sqlFileDef[1]);
-                    for (String sql : sqls) {
-                        try (var stmt = connLoookDatabase.prepareStatement(sql.trim())) {
-                            // System.err.println("SQL: " + sql);
-                            stmt.executeUpdate();
-                            connLoookDatabase.commit();
-                        } catch (SQLException ex) {
-                            // [M030] UNEXPECTED: Fail to execute SQL for local internal table(2)
-                            System.err.println(OiyokanMessages.M030 + ": " + ex.toString());
-                            throw new ODataApplicationException(OiyokanMessages.M030, 500, Locale.ENGLISH);
-                        }
-                    }
-                } catch (SQLException ex) {
-                    // [M031] UNEXPECTED: Fail to execute Dabaase
-                    System.err.println(OiyokanMessages.M031 + ": " + ex.toString());
-                    throw new ODataApplicationException(OiyokanMessages.M031, 500, Locale.ENGLISH);
-                }
+                System.err.println(OiyokanMessages.IY7117 + ": " + ex.toString());
+                throw new ODataApplicationException(OiyokanMessages.IY7117, 500, Locale.ENGLISH);
             }
 
             // 新規作成.
             return true;
         } catch (SQLException ex) {
             // [M004] UNEXPECTED: Database error in setup internal database.
-            System.err.println(OiyokanMessages.M004 + ": " + ex.toString());
-            throw new ODataApplicationException(OiyokanMessages.M004, 500, Locale.ENGLISH);
+            System.err.println(OiyokanMessages.IY7104 + ": " + ex.toString());
+            throw new ODataApplicationException(OiyokanMessages.IY7104, 500, Locale.ENGLISH);
         }
-    }
-
-    /**
-     * Oiyo 用の DDL 文字列を取得.
-     * 
-     * 注意: このメソッドは内部的に全件検索します。内部用 DDL生成の場合以外このメソッドは呼ばないこと。
-     * 
-     * @param connTargetDb ターゲットDBへのDB接続.
-     * @param tableName    テーブル名.
-     * @return 作表のためのDDL.
-     * @throws SQLException SQL例外が発生した場合.
-     */
-    public static String generateCreateOiyoDdl(Connection connTargetDb, String tableName) throws SQLException {
-        final Map<String, String> defaultValueMap = new HashMap<>();
-        {
-            final ResultSet rsdbmetacolumns = connTargetDb.getMetaData().getColumns(null, null, tableName, "%");
-            for (; rsdbmetacolumns.next();) {
-                String colName = rsdbmetacolumns.getString("COLUMN_NAME");
-                String defValue = rsdbmetacolumns.getString("COLUMN_DEF");
-                defaultValueMap.put(colName, defValue);
-            }
-        }
-
-        final String sql = "SELECT * FROM " + tableName;
-        final StringBuilder sqlBuilder = new StringBuilder();
-        sqlBuilder.append("CREATE TABLE IF NOT EXISTS\n");
-        sqlBuilder.append("  Oiyo_" + tableName + " (\n");
-        try (PreparedStatement stmt = connTargetDb.prepareStatement(sql)) {
-            ResultSetMetaData rsmeta = stmt.getMetaData();
-            final int columnCount = rsmeta.getColumnCount();
-            boolean isFirstColumn = true;
-            for (int column = 1; column <= columnCount; column++) {
-                sqlBuilder.append("    ");
-                if (isFirstColumn) {
-                    isFirstColumn = false;
-                } else {
-                    sqlBuilder.append(", ");
-                }
-
-                String columnName = rsmeta.getColumnName(column);
-                if (columnName.indexOf(' ') > 0) {
-                    // 内部DB向け設定であるので、接続先DBの種類によらず h2 database 前提のエスケープを実施。
-                    columnName = "[" + columnName + "]";
-                }
-                sqlBuilder.append(columnName + " ");
-
-                switch (rsmeta.getColumnType(column)) {
-                case Types.TINYINT:
-                    sqlBuilder.append("TINYINT");
-                    break;
-                case Types.SMALLINT:
-                    sqlBuilder.append("SMALLINT");
-                    break;
-                case Types.INTEGER: /* INT */
-                    sqlBuilder.append("INT");
-                    break;
-                case Types.BIGINT:
-                    sqlBuilder.append("BIGINT");
-                    break;
-                case Types.DECIMAL:
-                    if (rsmeta.getPrecision(column) > 0) {
-                        sqlBuilder.append("DECIMAL(" //
-                                + rsmeta.getPrecision(column) + "," + rsmeta.getScale(column) + ")");
-                    } else {
-                        sqlBuilder.append("DECIMAL");
-                    }
-                    break;
-                case Types.NUMERIC:
-                    // postgres で発生.
-                    if (rsmeta.getPrecision(column) > 0) {
-                        sqlBuilder.append("NUMERIC(" //
-                                + rsmeta.getPrecision(column) + "," + rsmeta.getScale(column) + ")");
-                    } else {
-                        sqlBuilder.append("NUMERIC");
-                    }
-                    break;
-                case Types.BOOLEAN:
-                    sqlBuilder.append("BOOLEAN");
-                    break;
-                case Types.BIT:
-                    // postgres で発生.
-                    sqlBuilder.append("BOOLEAN");
-                    break;
-                case Types.REAL:
-                    sqlBuilder.append("REAL");
-                    break;
-                case Types.DOUBLE:
-                    sqlBuilder.append("DOUBLE");
-                    break;
-                case Types.DATE:
-                    sqlBuilder.append("DATE");
-                    break;
-                case Types.TIMESTAMP:
-                    sqlBuilder.append("TIMESTAMP");
-                    break;
-                case Types.TIME:
-                    sqlBuilder.append("TIME");
-                    break;
-                case Types.CHAR:
-                    sqlBuilder.append("CHAR(" + rsmeta.getColumnDisplaySize(column) + ")");
-                    break;
-                case Types.VARCHAR:
-                    if (rsmeta.getColumnDisplaySize(column) > 0
-                            && rsmeta.getColumnDisplaySize(column) != Integer.MAX_VALUE) {
-                        sqlBuilder.append("VARCHAR(" + rsmeta.getColumnDisplaySize(column) + ")");
-                    } else {
-                        sqlBuilder.append("VARCHAR");
-                    }
-                    break;
-                case Types.LONGVARCHAR:
-                    if (rsmeta.getColumnDisplaySize(column) > 0
-                            && rsmeta.getColumnDisplaySize(column) != Integer.MAX_VALUE) {
-                        sqlBuilder.append("LONGVARCHAR(" + rsmeta.getColumnDisplaySize(column) + ")");
-                    } else {
-                        sqlBuilder.append("LONGVARCHAR");
-                    }
-                    break;
-                case Types.LONGNVARCHAR:
-                    if (rsmeta.getColumnDisplaySize(column) > 0
-                            && rsmeta.getColumnDisplaySize(column) != Integer.MAX_VALUE) {
-                        sqlBuilder.append("LONGVARCHAR(" + rsmeta.getColumnDisplaySize(column) + ")");
-                    } else {
-                        sqlBuilder.append("LONGVARCHAR");
-                    }
-                    break;
-                case Types.CLOB:
-                    if (rsmeta.getColumnDisplaySize(column) > 0
-                            && rsmeta.getColumnDisplaySize(column) != Integer.MAX_VALUE) {
-                        sqlBuilder.append("CLOB(" + rsmeta.getColumnDisplaySize(column) + ")");
-                    } else {
-                        sqlBuilder.append("CLOB");
-                    }
-                    break;
-                case Types.BINARY:
-                    if ("UUID".equalsIgnoreCase(rsmeta.getColumnTypeName(column))) {
-                        // 型名が UUID の時だけ特殊な挙動をする.
-                        sqlBuilder.append("UUID");
-                    } else {
-                        if (rsmeta.getColumnDisplaySize(column) > 0
-                                && rsmeta.getColumnDisplaySize(column) != Integer.MAX_VALUE) {
-                            sqlBuilder.append("BINARY(" + rsmeta.getColumnDisplaySize(column) + ")");
-                        } else {
-                            sqlBuilder.append("BINARY");
-                        }
-                    }
-                    break;
-                case Types.VARBINARY:
-                    if (rsmeta.getColumnDisplaySize(column) > 0
-                            && rsmeta.getColumnDisplaySize(column) != Integer.MAX_VALUE) {
-                        sqlBuilder.append("VARBINARY(" + rsmeta.getColumnDisplaySize(column) + ")");
-                    } else {
-                        sqlBuilder.append("VARBINARY");
-                    }
-                    break;
-                case Types.LONGVARBINARY:
-                    if (rsmeta.getColumnDisplaySize(column) > 0
-                            && rsmeta.getColumnDisplaySize(column) != Integer.MAX_VALUE) {
-                        sqlBuilder.append("LONGVARBINARY(" + rsmeta.getColumnDisplaySize(column) + ")");
-                    } else {
-                        sqlBuilder.append("LONGVARBINARY");
-                    }
-                    break;
-                case Types.BLOB:
-                    if (rsmeta.getColumnDisplaySize(column) > 0
-                            && rsmeta.getColumnDisplaySize(column) != Integer.MAX_VALUE) {
-                        sqlBuilder.append("BLOB(" + rsmeta.getColumnDisplaySize(column) + ")");
-                    } else {
-                        sqlBuilder.append("BLOB");
-                    }
-                    break;
-                case Types.ARRAY:
-                    // postgres で発生. 対応しない.
-                    sqlBuilder.append("NOT_SUPPORT_ARRAY");
-                    break;
-                case Types.OTHER:
-                    // postgres で発生. 対応しない.
-                    sqlBuilder.append("NOT_SUPPORT_OTHER");
-                    break;
-                default:
-                    // [M021] NOT SUPPORTED: JDBC Type
-                    System.err.println(OiyokanMessages.M021 + ": " + rsmeta.getColumnType(column));
-                    new ODataApplicationException(OiyokanMessages.M021 + ": " + rsmeta.getColumnType(column), //
-                            500, Locale.ENGLISH);
-                    break;
-                }
-
-                if (defaultValueMap.get(columnName) != null) {
-                    sqlBuilder.append(" DEFAULT " + defaultValueMap.get(columnName));
-                }
-
-                if (ResultSetMetaData.columnNoNulls == rsmeta.isNullable(column)) {
-                    sqlBuilder.append(" NOT NULL");
-                }
-                sqlBuilder.append("\n");
-            }
-
-            // テーブルのキー情報
-            final DatabaseMetaData dbmeta = connTargetDb.getMetaData();
-            final ResultSet rsKey = dbmeta.getPrimaryKeys(null, null, tableName);
-            boolean isFirstPkey = true;
-            for (; rsKey.next();) {
-                String colName = rsKey.getString("COLUMN_NAME");
-                if (isFirstPkey) {
-                    isFirstPkey = false;
-                    sqlBuilder.append("    , PRIMARY KEY(");
-                } else {
-                    sqlBuilder.append(",");
-                }
-                sqlBuilder.append(colName);
-            }
-            if (isFirstPkey == false) {
-                sqlBuilder.append(")\n");
-            }
-        }
-
-        sqlBuilder.append("  );\n");
-
-        return sqlBuilder.toString();
     }
 }
