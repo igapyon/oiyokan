@@ -22,7 +22,6 @@ import org.apache.olingo.commons.api.data.ContextURL;
 import org.apache.olingo.commons.api.data.EntityCollection;
 import org.apache.olingo.commons.api.edm.EdmEntitySet;
 import org.apache.olingo.commons.api.edm.EdmEntityType;
-import org.apache.olingo.commons.api.edm.provider.CsdlEntitySet;
 import org.apache.olingo.commons.api.format.ContentType;
 import org.apache.olingo.commons.api.http.HttpHeader;
 import org.apache.olingo.commons.api.http.HttpStatusCode;
@@ -89,7 +88,7 @@ public class OiyokanEntityCollectionProcessor implements EntityCollectionProcess
             throws ODataApplicationException, SerializerException {
         try {
             // シングルトンな OiyoInfo を利用。
-            final OiyoInfo oiyoInfo = OiyokanCsdlEntityContainer.getOiyoInfoInstance();
+            final OiyoInfo oiyoInfo = OiyokanEdmProvider.getOiyoInfoInstance();
 
             // URI情報からURIリソースの指定を取得.
             List<UriResource> resourcePaths = uriInfo.getUriResourceParts();
@@ -149,15 +148,6 @@ public class OiyokanEntityCollectionProcessor implements EntityCollectionProcess
 
     private static final OiyokanEntityCollectionBuilderInterface getEntityCollectionBuilder(OiyoInfo oiyoInfo,
             EdmEntitySet edmEntitySet) throws ODataApplicationException {
-        OiyokanCsdlEntitySet entitySet = null;
-        OiyokanEdmProvider provider = new OiyokanEdmProvider();
-        for (CsdlEntitySet look : provider.getEntityContainer().getEntitySets()) {
-            if (edmEntitySet.getName().equals(look.getName())) {
-                entitySet = (OiyokanCsdlEntitySet) look;
-                break;
-            }
-        }
-
         final OiyokanConstants.DatabaseType databaseType = OiyoInfoUtil.getOiyoDatabaseTypeByEntitySetName(oiyoInfo,
                 edmEntitySet.getName());
 

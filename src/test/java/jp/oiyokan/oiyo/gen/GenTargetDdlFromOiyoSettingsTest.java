@@ -62,7 +62,7 @@ class GenTargetDdlFromOiyoSettingsTest {
             OiyokanConstants.DatabaseType databaseType = OiyokanConstants.DatabaseType.valueOf(database.getType());
 
             final OiyoSettingsEntityType entityType = entitySet.getEntityType();
-            System.err.println(entitySet.getName());
+            // System.err.println(entitySet.getName());
             sql.append("CREATE TABLE");
             sql.append(" IF NOT EXISTS");
             sql.append("\n");

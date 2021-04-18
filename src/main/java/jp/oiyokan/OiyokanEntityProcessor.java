@@ -84,7 +84,7 @@ public class OiyokanEntityProcessor implements EntityProcessor {
 
         try {
             // シングルトンな OiyoInfo を利用。
-            final OiyoInfo oiyoInfo = OiyokanCsdlEntityContainer.getOiyoInfoInstance();
+            final OiyoInfo oiyoInfo = OiyokanEdmProvider.getOiyoInfoInstance();
 
             // 1. retrieve the Entity Type
             List<UriResource> resourcePaths = uriInfo.getUriResourceParts();
@@ -150,7 +150,7 @@ public class OiyokanEntityProcessor implements EntityProcessor {
 
         try {
             // シングルトンな OiyoInfo を利用。
-            final OiyoInfo oiyoInfo = OiyokanCsdlEntityContainer.getOiyoInfoInstance();
+            final OiyoInfo oiyoInfo = OiyokanEdmProvider.getOiyoInfoInstance();
 
             // https://olingo.apache.org/doc/odata4/tutorials/write/tutorial_write.html
 
@@ -213,7 +213,7 @@ public class OiyokanEntityProcessor implements EntityProcessor {
 
         try {
             // シングルトンな OiyoInfo を利用。
-            final OiyoInfo oiyoInfo = OiyokanCsdlEntityContainer.getOiyoInfoInstance();
+            final OiyoInfo oiyoInfo = OiyokanEdmProvider.getOiyoInfoInstance();
 
             List<UriResource> resourcePaths = uriInfo.getUriResourceParts();
 
@@ -282,7 +282,7 @@ public class OiyokanEntityProcessor implements EntityProcessor {
 
         try {
             // シングルトンな OiyoInfo を利用。
-            final OiyoInfo oiyoInfo = OiyokanCsdlEntityContainer.getOiyoInfoInstance();
+            final OiyoInfo oiyoInfo = OiyokanEdmProvider.getOiyoInfoInstance();
 
             // 1. Retrieve the entity set which belongs to the requested entity
             List<UriResource> resourcePaths = uriInfo.getUriResourceParts();

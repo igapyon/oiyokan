@@ -24,7 +24,6 @@ import org.apache.olingo.commons.api.edm.provider.CsdlPropertyRef;
 import org.apache.olingo.server.api.ODataApplicationException;
 
 import jp.oiyokan.OiyokanConstants;
-import jp.oiyokan.OiyokanCsdlEntitySet;
 import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.common.OiyoInfoUtil;
 import jp.oiyokan.dto.OiyoSettingsEntitySet;
@@ -44,19 +43,16 @@ public class OiyoBasicJdbcEntityTypeBuilder {
     /**
      * 処理対象となる EntitySet.
      */
-    private OiyokanCsdlEntitySet entitySet = null;
+    private OiyoSettingsEntitySet entitySet = null;
 
     /**
      * コンストラクタ。
      * 
-     * @param entitySet OiyokanCsdlEntitySetのインスタンス.
+     * @param entitySet OiyoSettingsEntitySetのインスタンス.
      */
-    public OiyoBasicJdbcEntityTypeBuilder(OiyoInfo oiyoInfo, OiyokanCsdlEntitySet entitySet) {
+    public OiyoBasicJdbcEntityTypeBuilder(OiyoInfo oiyoInfo, OiyoSettingsEntitySet entitySet) {
         this.oiyoInfo = oiyoInfo;
         this.entitySet = entitySet;
-        if (OiyokanConstants.IS_TRACE_ODATA_V4)
-            System.err.println( //
-                    "OData v4: EntityType: " + entitySet.getName() + " (Oiyokan: " + OiyokanConstants.VERSION + ")");
     }
 
     /**
@@ -70,7 +66,7 @@ public class OiyoBasicJdbcEntityTypeBuilder {
 
         // CSDL要素型として情報を組み上げ.
         final CsdlEntityType entityType = new CsdlEntityType();
-        entityType.setName(entitySet.getEntityNameIyo());
+        entityType.setName(entitySet.getEntityType().getName());
 
         // 基本的な動作: 内部データベースである h2 データベースから該当する Oiyo による情報取得.
         final List<CsdlProperty> propertyList = new ArrayList<>();
@@ -100,8 +96,6 @@ public class OiyoBasicJdbcEntityTypeBuilder {
 
         entityType.setKey(keyRefList);
 
-        // 構築結果を記憶。
-        entitySet.setEntityType(entityType);
         return entityType;
         // } catch (SQLException ex) {
         // // [M019] UNEXPECTED: Fail to get database meta
