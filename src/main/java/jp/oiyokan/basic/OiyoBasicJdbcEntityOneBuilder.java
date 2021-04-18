@@ -38,7 +38,6 @@ import org.apache.olingo.server.core.uri.UriParameterImpl;
 
 import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanConstants.DatabaseType;
-import jp.oiyokan.OiyokanCsdlEntitySet;
 import jp.oiyokan.OiyokanEdmProvider;
 import jp.oiyokan.OiyokanMessages;
 import jp.oiyokan.basic.sql.OiyoSqlDeleteOneBuilder;
@@ -261,13 +260,7 @@ public class OiyoBasicJdbcEntityOneBuilder {
      */
     public void deleteEntityData(UriInfo uriInfo, EdmEntitySet edmEntitySet, List<UriParameter> keyPredicates)
             throws ODataApplicationException {
-        final OiyokanCsdlEntitySet entitySet = findEntitySet(edmEntitySet);
-        if (entitySet == null) {
-            // [M212] No such EntitySet found (deleteEntity)
-            System.err.println(OiyokanMessages.M212);
-            throw new ODataApplicationException(OiyokanMessages.M212, //
-                    OiyokanMessages.M212_CODE, Locale.ENGLISH);
-        }
+        final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, edmEntitySet.getName());
 
         if (OiyokanConstants.IS_TRACE_ODATA_V4)
             System.err.println("OData v4: TRACE: ENTITY: DELETE: " + edmEntitySet.getName());
@@ -322,13 +315,7 @@ public class OiyoBasicJdbcEntityOneBuilder {
      */
     public void updateEntityDataPatch(UriInfo uriInfo, EdmEntitySet edmEntitySet, List<UriParameter> keyPredicates,
             Entity requestEntity, final boolean ifMatch, final boolean ifNoneMatch) throws ODataApplicationException {
-        final OiyokanCsdlEntitySet entitySet = findEntitySet(edmEntitySet);
-        if (entitySet == null) {
-            // [M213] No such EntitySet found (updateEntity(PATCH))
-            System.err.println(OiyokanMessages.M213);
-            throw new ODataApplicationException(OiyokanMessages.M213, //
-                    OiyokanMessages.M213_CODE, Locale.ENGLISH);
-        }
+        final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, edmEntitySet.getName());
 
         final OiyoSqlInfo sqlInfo = new OiyoSqlInfo(oiyoInfo, entitySet.getName());
 
@@ -400,32 +387,5 @@ public class OiyoBasicJdbcEntityOneBuilder {
             throw new ODataApplicationException(OiyokanMessages.M205, //
                     OiyokanMessages.M205_CODE, Locale.ENGLISH);
         }
-    }
-
-    // TODO FIXME 以下のメソッドは共通関数化を検討すること.
-    /**
-     * Find EntitySet.
-     * 
-     * @param edmEntitySet EdmEntitySet.
-     * @return OiyokanCsdlEntitySet for specified edmEntitySet.
-     * @throws ODataApplicationException OData App exception occured.
-     * @deprecated
-     */
-    public static OiyokanCsdlEntitySet findEntitySet(EdmEntitySet edmEntitySet) throws ODataApplicationException {
-        final OiyokanEdmProvider provider = new OiyokanEdmProvider();
-        if (!edmEntitySet.getEntityContainer().getName().equals(provider.getEntityContainer().getName())) {
-            // Container 名が不一致. 処理せずに戻します.
-            // 例外処理は呼び出し元で実施.
-            return null;
-        }
-
-        for (CsdlEntitySet look : provider.getEntityContainer().getEntitySets()) {
-            if (edmEntitySet.getName().equals(look.getName())) {
-                return (OiyokanCsdlEntitySet) look;
-            }
-        }
-
-        // 例外処理は呼び出し元で実施.
-        return null;
     }
 }

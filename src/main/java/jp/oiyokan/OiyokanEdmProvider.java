@@ -161,7 +161,6 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
                 return null;
             }
 
-            
             final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, entitySetName);
             final CsdlEntitySet csdlEntitySet = new CsdlEntitySet();
             csdlEntitySet.setName(entitySetName);
@@ -192,7 +191,19 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
             // テンプレートを念押しビルド.
             localTemplateEntityContainer.ensureBuild();
 
-            return localTemplateEntityContainer;
+            // シングルトンな OiyoInfo を利用。
+            final OiyoInfo oiyoInfo = getOiyoInfoInstance();
+
+            final CsdlEntityContainer container = new CsdlEntityContainer();
+            container.setName(oiyoInfo.getSettings().getContainerName());
+            for (OiyoSettingsEntitySet entitySet : oiyoInfo.getSettings().getEntitySet()) {
+                FullQualifiedName fqn = new FullQualifiedName(oiyoInfo.getSettings().getNamespace(),
+                        oiyoInfo.getSettings().getContainerName());
+                System.err.println(fqn);
+                container.getEntitySets().add(getEntitySet(fqn, entitySet.getName()));
+            }
+
+            return container;
         } catch (RuntimeException ex) {
             System.err.println("OiyokanEdmProvider#getEntityContainer: exception: " + ex.toString());
             throw ex;

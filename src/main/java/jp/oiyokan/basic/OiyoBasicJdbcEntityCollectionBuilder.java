@@ -79,7 +79,7 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
         CsdlEntitySet csdlEntitySet = null;
         for (CsdlEntitySet look : provider.getEntityContainer().getEntitySets()) {
             if (edmEntitySet.getName().equals(look.getName())) {
-                csdlEntitySet = (OiyokanCsdlEntitySet) look;
+                csdlEntitySet =  look;
                 break;
             }
         }
