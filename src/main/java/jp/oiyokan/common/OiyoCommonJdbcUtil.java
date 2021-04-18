@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jp.oiyokan.basic;
+package jp.oiyokan.common;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -63,9 +63,6 @@ import org.springframework.util.StreamUtils;
 
 import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanMessages;
-import jp.oiyokan.common.OiyoInfo;
-import jp.oiyokan.common.OiyoInfoUtil;
-import jp.oiyokan.common.OiyoSqlInfo;
 import jp.oiyokan.dto.OiyoSettingsDatabase;
 import jp.oiyokan.dto.OiyoSettingsEntitySet;
 import jp.oiyokan.dto.OiyoSettingsProperty;
@@ -75,8 +72,8 @@ import jp.oiyokan.util.OiyoEdmUtil;
 /**
  * Oiyokan 関連の JDBC まわりユーティリティクラス.
  */
-public class OiyoBasicJdbcUtil {
-    private OiyoBasicJdbcUtil() {
+public class OiyoCommonJdbcUtil {
+    private OiyoCommonJdbcUtil() {
     }
 
     /**
@@ -778,7 +775,7 @@ public class OiyoBasicJdbcUtil {
             int idxColumn = 1;
             for (Object look : sqlInfo.getSqlParamList()) {
                 // System.err.println("TRACE: param: " + look.toString());
-                OiyoBasicJdbcUtil.bindPreparedParameter(stmt, idxColumn++, look);
+                OiyoCommonJdbcUtil.bindPreparedParameter(stmt, idxColumn++, look);
             }
 
             final int result = stmt.executeUpdate();

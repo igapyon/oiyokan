@@ -21,7 +21,7 @@ import org.apache.olingo.server.api.ODataResponse;
 import org.junit.jupiter.api.Test;
 
 import jp.oiyokan.OiyokanTestSettingConstants;
-import jp.oiyokan.basic.OiyoBasicUrlUtil;
+import jp.oiyokan.common.OiyoUrlUtil;
 import jp.oiyokan.util.OiyokanTestUtil;
 
 /**
@@ -41,7 +41,7 @@ class SakilaValueNullTest {
             return;
 
         final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/SklAddresses",
-                OiyoBasicUrlUtil.encodeUrlQuery(
+                OiyoUrlUtil.encodeUrlQuery(
                         "$top=1 &$count=true &$filter=address2 eq null &$select=address_id &$orderby=address_id"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
@@ -64,7 +64,7 @@ class SakilaValueNullTest {
 
         // NULLの件数をカウント.
         final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/SklAddresses",
-                OiyoBasicUrlUtil.encodeUrlQuery(
+                OiyoUrlUtil.encodeUrlQuery(
                         "$top=1 &$count=true &$filter=null eq address2 &$select=address_id &$orderby=address_id"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
@@ -87,7 +87,7 @@ class SakilaValueNullTest {
 
         // NOT EQUAL NULL の件数をカウント.
         final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/SklAddresses",
-                OiyoBasicUrlUtil.encodeUrlQuery(
+                OiyoUrlUtil.encodeUrlQuery(
                         "$top=1 &$count=true &$filter=address2 ne null &$select=address_id &$orderby=address_id"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 

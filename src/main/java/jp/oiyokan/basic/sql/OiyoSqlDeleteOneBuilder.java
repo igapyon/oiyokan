@@ -21,7 +21,7 @@ import org.apache.olingo.commons.api.edm.EdmEntitySet;
 import org.apache.olingo.server.api.ODataApplicationException;
 import org.apache.olingo.server.api.uri.UriParameter;
 
-import jp.oiyokan.basic.OiyoBasicJdbcUtil;
+import jp.oiyokan.common.OiyoCommonJdbcUtil;
 import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.common.OiyoInfoUtil;
 import jp.oiyokan.common.OiyoSqlInfo;
@@ -69,7 +69,7 @@ public class OiyoSqlDeleteOneBuilder {
 
         sqlInfo.getSqlBuilder().append("DELETE FROM ");
         sqlInfo.getSqlBuilder()
-                .append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, entitySet.getEntityType().getDbName()));
+                .append(OiyoCommonJdbcUtil.escapeKakkoFieldName(sqlInfo, entitySet.getEntityType().getDbName()));
         sqlInfo.getSqlBuilder().append(" WHERE ");
         boolean isFirst = true;
 
@@ -83,10 +83,10 @@ public class OiyoSqlDeleteOneBuilder {
             final OiyoSettingsProperty prop = OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, edmEntitySet.getName(),
                     param.getName());
 
-            sqlInfo.getSqlBuilder().append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo,
+            sqlInfo.getSqlBuilder().append(OiyoCommonJdbcUtil.escapeKakkoFieldName(sqlInfo,
                     OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, edmEntitySet.getName(), prop.getName()).getDbName()));
             sqlInfo.getSqlBuilder().append("=");
-            OiyoBasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo, prop.getEdmType(), param.getText());
+            OiyoCommonJdbcUtil.expandLiteralOrBindParameter(sqlInfo, prop.getEdmType(), param.getText());
         }
     }
 }

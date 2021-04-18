@@ -23,7 +23,7 @@ import org.apache.olingo.commons.api.edm.EdmEntitySet;
 import org.apache.olingo.server.api.ODataApplicationException;
 import org.apache.olingo.server.api.uri.UriParameter;
 
-import jp.oiyokan.basic.OiyoBasicJdbcUtil;
+import jp.oiyokan.common.OiyoCommonJdbcUtil;
 import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.common.OiyoInfoUtil;
 import jp.oiyokan.common.OiyoSqlInfo;
@@ -72,7 +72,7 @@ public class OiyoSqlUpdateOneBuilder {
 
         sqlInfo.getSqlBuilder().append("UPDATE ");
         sqlInfo.getSqlBuilder()
-                .append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo, entitySet.getEntityType().getDbName()));
+                .append(OiyoCommonJdbcUtil.escapeKakkoFieldName(sqlInfo, entitySet.getEntityType().getDbName()));
         sqlInfo.getSqlBuilder().append(" SET ");
         boolean isFirst = true;
         for (Property prop : requestEntity.getProperties()) {
@@ -82,11 +82,11 @@ public class OiyoSqlUpdateOneBuilder {
                 sqlInfo.getSqlBuilder().append(",");
             }
 
-            sqlInfo.getSqlBuilder().append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo,
+            sqlInfo.getSqlBuilder().append(OiyoCommonJdbcUtil.escapeKakkoFieldName(sqlInfo,
                     OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, entitySet.getName(), prop.getName()).getDbName()));
             sqlInfo.getSqlBuilder().append("=");
 
-            OiyoBasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo, prop.getType(), prop.getValue());
+            OiyoCommonJdbcUtil.expandLiteralOrBindParameter(sqlInfo, prop.getType(), prop.getValue());
         }
 
         sqlInfo.getSqlBuilder().append(" WHERE ");
@@ -98,13 +98,13 @@ public class OiyoSqlUpdateOneBuilder {
             } else {
                 sqlInfo.getSqlBuilder().append(" AND ");
             }
-            sqlInfo.getSqlBuilder().append(OiyoBasicJdbcUtil.escapeKakkoFieldName(sqlInfo,
+            sqlInfo.getSqlBuilder().append(OiyoCommonJdbcUtil.escapeKakkoFieldName(sqlInfo,
                     OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, entitySet.getName(), param.getName()).getDbName()));
             sqlInfo.getSqlBuilder().append("=");
 
             final OiyoSettingsProperty prop = OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, edmEntitySet.getName(),
                     param.getName());
-            OiyoBasicJdbcUtil.expandLiteralOrBindParameter(sqlInfo, prop.getEdmType(), param.getText());
+            OiyoCommonJdbcUtil.expandLiteralOrBindParameter(sqlInfo, prop.getEdmType(), param.getText());
         }
     }
 }

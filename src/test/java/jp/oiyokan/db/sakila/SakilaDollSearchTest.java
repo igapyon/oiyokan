@@ -23,7 +23,7 @@ import org.junit.jupiter.api.Test;
 import jp.app.ctrl.ThSakilaCtrl;
 import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanTestSettingConstants;
-import jp.oiyokan.basic.OiyoBasicUrlUtil;
+import jp.oiyokan.common.OiyoUrlUtil;
 import jp.oiyokan.util.OiyokanTestUtil;
 
 /**
@@ -49,7 +49,7 @@ class SakilaDollSearchTest {
             final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
             if (true) {
-                System.err.println("TRACE: " + OiyoBasicUrlUtil.decodeUrlQuery(entrys[1]));
+                System.err.println("TRACE: " + OiyoUrlUtil.decodeUrlQuery(entrys[1]));
                 System.err.println("[" + entrys[0] + "], [" + entrys[1] + "], result: " + result);
             }
             int statusCode = resp.getStatusCode();

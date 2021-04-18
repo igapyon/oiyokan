@@ -35,6 +35,7 @@ import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.common.OiyoInfoUtil;
 import jp.oiyokan.data.OiyokanKanDatabase;
 import jp.oiyokan.dto.OiyoSettings;
+import jp.oiyokan.dto.OiyoSettingsDatabase;
 import jp.oiyokan.dto.OiyoSettingsEntitySet;
 
 /**
@@ -193,6 +194,39 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
             }
 
             if (isKanDatabaseSetupDone == false) {
+                if (OiyokanConstants.IS_TRACE_ODATA_V4)
+                    System.err.println( //
+                            "OData v4: Start Oiyokan (Oiyokan: " + OiyokanConstants.VERSION + ")");
+
+                for (OiyoSettingsDatabase settingsDatabase : getOiyoInfoInstance().getSettings().getDatabase()) {
+                    if (OiyokanConstants.IS_TRACE_ODATA_V4)
+                        System.err.println("OData v4: Check JDBC Driver: " + settingsDatabase.getJdbcDriver());
+                    try {
+                        // Database Driver が loadable か念押し確認.
+                        Class.forName(settingsDatabase.getJdbcDriver());
+                    } catch (ClassNotFoundException ex) {
+                        // [M003] UNEXPECTED: Fail to load JDBC driver. Check JDBC Driver classname or
+                        // JDBC Driver is on classpath."
+                        System.err.println(OiyokanMessages.M003 + ": " + settingsDatabase.getJdbcDriver() //
+                                + ": " + ex.toString());
+                        throw new ODataApplicationException(
+                                OiyokanMessages.M003 + ": " + settingsDatabase.getJdbcDriver(), 500, Locale.ENGLISH);
+                    }
+
+                    try {
+                        // 指定のデータベース名の文字列が妥当かどうかチェック。
+                        OiyokanConstants.DatabaseType.valueOf(settingsDatabase.getType());
+                    } catch (IllegalArgumentException ex) {
+                        // [M002] UNEXPECTED: Illegal data type in database settings
+                        System.err.println(OiyokanMessages.M002 + ": dbname:" + settingsDatabase.getName() //
+                                + ", type:" + settingsDatabase.getType());
+                        throw new ODataApplicationException(
+                                OiyokanMessages.M002 + ": dbname:" + settingsDatabase.getName() //
+                                        + ", type:" + settingsDatabase.getType(),
+                                500, Locale.ENGLISH);
+                    }
+                }
+
                 // Oiyokan の動作で利用する内部データベースをセットアップ.
                 OiyokanKanDatabase.setupKanDatabase(OiyokanEdmProvider.getOiyoInfoInstance());
                 isKanDatabaseSetupDone = true;

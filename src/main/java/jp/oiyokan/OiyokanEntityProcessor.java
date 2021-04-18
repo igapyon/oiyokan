@@ -47,7 +47,7 @@ import org.apache.olingo.server.api.uri.UriResource;
 import org.apache.olingo.server.api.uri.UriResourceEntitySet;
 
 import jp.oiyokan.basic.OiyoBasicJdbcEntityOneBuilder;
-import jp.oiyokan.basic.OiyoBasicJdbcUtil;
+import jp.oiyokan.common.OiyoCommonJdbcUtil;
 import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.common.OiyoInfoUtil;
 import jp.oiyokan.dto.OiyoSettingsDatabase;
@@ -110,7 +110,7 @@ public class OiyokanEntityProcessor implements EntityProcessor {
             }
 
             Entity entity = null;
-            try (Connection connTargetDb = OiyoBasicJdbcUtil.getConnection(database)) {
+            try (Connection connTargetDb = OiyoCommonJdbcUtil.getConnection(database)) {
                 entity = new OiyoBasicJdbcEntityOneBuilder(oiyoInfo).readEntityData(connTargetDb, uriInfo, edmEntitySet,
                         keyPredicates);
             } catch (SQLException ex) {

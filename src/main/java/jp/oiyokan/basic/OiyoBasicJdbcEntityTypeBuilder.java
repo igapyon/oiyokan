@@ -24,6 +24,7 @@ import org.apache.olingo.commons.api.edm.provider.CsdlPropertyRef;
 import org.apache.olingo.server.api.ODataApplicationException;
 
 import jp.oiyokan.OiyokanConstants;
+import jp.oiyokan.common.OiyoCommonJdbcUtil;
 import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.common.OiyoInfoUtil;
 import jp.oiyokan.dto.OiyoSettingsEntitySet;
@@ -75,7 +76,7 @@ public class OiyoBasicJdbcEntityTypeBuilder {
         OiyoSettingsEntitySet oiyoEntitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, entitySet.getName());
 
         for (OiyoSettingsProperty oiyoProp : oiyoEntitySet.getEntityType().getProperty()) {
-            propertyList.add(OiyoBasicJdbcUtil.resultSetMetaData2CsdlProperty(oiyoProp));
+            propertyList.add(OiyoCommonJdbcUtil.resultSetMetaData2CsdlProperty(oiyoProp));
         }
 
         // テーブルのキー情報

@@ -32,7 +32,7 @@ import org.apache.olingo.server.api.ODataApplicationException;
 
 import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanMessages;
-import jp.oiyokan.basic.OiyoBasicJdbcUtil;
+import jp.oiyokan.common.OiyoCommonJdbcUtil;
 import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.common.OiyoInfoUtil;
 import jp.oiyokan.dto.OiyoSettingsDatabase;
@@ -64,7 +64,7 @@ public class OiyokanKanDatabase {
         OiyoSettingsDatabase settingsInterDatabase = OiyoInfoUtil.getOiyoDatabaseByName(oiyoInfo,
                 OiyokanConstants.OIYOKAN_KAN_DB);
 
-        try (Connection connInterDb = OiyoBasicJdbcUtil.getConnection(settingsInterDatabase)) {
+        try (Connection connInterDb = OiyoCommonJdbcUtil.getConnection(settingsInterDatabase)) {
             // Internal Database の バージョン情報および Oiyokanテーブルを setup.
 
             // Oiyokan が動作する上で必要なテーブルのセットアップ.
@@ -105,7 +105,7 @@ public class OiyokanKanDatabase {
             ///////////////////////////////////////////
             // ODataAppInfos にバージョン情報などデータの追加
             try (var stmt = connInterDb.prepareStatement("INSERT INTO Oiyokan (KeyName, KeyValue) VALUES ("
-                    + OiyoBasicJdbcUtil.getQueryPlaceholderString(2) + ")")) {
+                    + OiyoCommonJdbcUtil.getQueryPlaceholderString(2) + ")")) {
                 stmt.setString(1, "Version");
                 stmt.setString(2, OiyokanConstants.VERSION);
                 stmt.executeUpdate();
@@ -380,7 +380,7 @@ public class OiyokanKanDatabase {
 
         // TODO FIXME テーブル名エスケープが暫定対処。
         try (PreparedStatement stmt = connTargetDb
-                .prepareStatement("SELECT * FROM " + OiyoBasicJdbcUtil.escapeKakkoFieldName(databaseType, tableName))) {
+                .prepareStatement("SELECT * FROM " + OiyoCommonJdbcUtil.escapeKakkoFieldName(databaseType, tableName))) {
             ResultSetMetaData rsmeta = stmt.getMetaData();
             final int columnCount = rsmeta.getColumnCount();
             for (int column = 1; column <= columnCount; column++) {

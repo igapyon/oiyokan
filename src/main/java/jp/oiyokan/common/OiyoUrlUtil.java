@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jp.oiyokan.basic;
+package jp.oiyokan.common;
 
 import java.io.UnsupportedEncodingException;
 import java.util.BitSet;
@@ -24,9 +24,9 @@ import org.apache.commons.codec.net.URLCodec;
 /**
  * Oiyokan 関連の URL まわりユーティリティクラス.
  */
-public class OiyoBasicUrlUtil {
+public class OiyoUrlUtil {
     // TODO FIXME パッケージを util に移動.
-    private OiyoBasicUrlUtil() {
+    private OiyoUrlUtil() {
     }
 
     /**
