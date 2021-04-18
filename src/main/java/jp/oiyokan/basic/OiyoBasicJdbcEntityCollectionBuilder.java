@@ -141,12 +141,12 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
                     System.err.println(OiyokanMessages.IY2101);
                 } else {
                     // $count.
-                    processCountQuery(csdlEntitySet, uriInfo, connTargetDb, entityCollection);
+                    processCountQuery(csdlEntitySet.getName(), uriInfo, connTargetDb, entityCollection);
                 }
             }
 
             // 実際のデータ取得処理を実行。
-            processCollectionQuery(csdlEntitySet, uriInfo, connTargetDb, entityCollection);
+            processCollectionQuery(csdlEntitySet.getName(), uriInfo, connTargetDb, entityCollection);
 
             return entityCollection;
         } catch (
@@ -159,11 +159,10 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
         }
     }
 
-    // TODO CsdlEntitySet を廃止。
-    private void processCountQuery(CsdlEntitySet entitySet, UriInfo uriInfo, Connection connTargetDb,
+    private void processCountQuery(String entitySetName, UriInfo uriInfo, Connection connTargetDb,
             EntityCollection entityCollection) throws ODataApplicationException {
         // 件数をカウントして設定。
-        OiyoSqlQueryListBuilder basicSqlBuilder = new OiyoSqlQueryListBuilder(oiyoInfo, entitySet.getName());
+        OiyoSqlQueryListBuilder basicSqlBuilder = new OiyoSqlQueryListBuilder(oiyoInfo, entitySetName);
         basicSqlBuilder.buildSelectCountQuery(uriInfo);
         final String sql = basicSqlBuilder.getSqlInfo().getSqlBuilder().toString();
 
@@ -218,10 +217,9 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
      * @param entityCollection result of search.
      * @throws ODataApplicationException OData App Exception occured.
      */
-    // TODO CsdlEntitySet を廃止。
-    public void processCollectionQuery(CsdlEntitySet csdlEntitySet, UriInfo uriInfo, Connection connTargetDb,
+    public void processCollectionQuery(String entitySetName, UriInfo uriInfo, Connection connTargetDb,
             EntityCollection entityCollection) throws ODataApplicationException {
-        OiyoSqlQueryListBuilder basicSqlBuilder = new OiyoSqlQueryListBuilder(oiyoInfo, csdlEntitySet.getName());
+        OiyoSqlQueryListBuilder basicSqlBuilder = new OiyoSqlQueryListBuilder(oiyoInfo, entitySetName);
 
         // UriInfo 情報を元に SQL文を組み立て.
         basicSqlBuilder.buildSelectQuery(uriInfo);
@@ -230,7 +228,7 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
         if (OiyokanConstants.IS_TRACE_ODATA_V4)
             System.err.println("OData v4: TRACE: SQL: " + sql);
 
-        final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, csdlEntitySet.getName());
+        final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, entitySetName);
 
         final long startMillisec = System.currentTimeMillis();
         try (var stmt = connTargetDb.prepareStatement(sql)) {
@@ -273,7 +271,7 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
                             // TODO FIXME Property の値を文字列に変換する共通関数を期待したい.
                             idVal = "'" + OiyoUrlUtil.encodeUrl4Key(idVal) + "'";
                         }
-                        ent.setId(createId(csdlEntitySet.getName(), idVal));
+                        ent.setId(createId(entitySetName, idVal));
                     } else {
                         // 複数項目によるキー
                         String keyString = "";
@@ -293,7 +291,7 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
                             }
                             keyString += idVal;
                         }
-                        ent.setId(createId(csdlEntitySet.getName(), keyString));
+                        ent.setId(createId(entitySetName, keyString));
                     }
                 }
 

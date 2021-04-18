@@ -9,6 +9,8 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
+import jp.oiyokan.OiyokanMessages;
+
 /**
  * Basic DateTime util for Oiyokan.
  */
@@ -86,9 +88,9 @@ public class OiyoDateTimeUtil {
         } catch (ParseException e) {
         }
 
-        // TODO to be message
-        System.err.println("Illegal DateTime pattern: Fail to parse: [" + inputDateString + "]");
-        throw new IllegalArgumentException("Illegal DateTime pattern: Fail to parse: [" + inputDateString + "]");
+        // [IY7161] Error: Fail to parse DateTime string.
+        System.err.println(OiyokanMessages.IY7161 + ": " + inputDateString);
+        throw new IllegalArgumentException(OiyokanMessages.IY7161 + ": " + inputDateString);
     }
 
     public static ZonedDateTime date2ZonedDateTime(java.util.Date arg) {

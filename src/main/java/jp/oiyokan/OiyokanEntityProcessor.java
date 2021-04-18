@@ -259,7 +259,7 @@ public class OiyokanEntityProcessor implements EntityProcessor {
                         Locale.ENGLISH);
             }
 
-            // TODO FIXME
+            // TODO FIXME 下記仕様が未実装。
             // Upon successful completion the service responds with either 200 OK and a
             // representation of the updated entity, or 204 No Content. The client may
             // request that the response SHOULD include a body by specifying a Prefer header

@@ -84,7 +84,6 @@ public class OiyokanSettingsGenUtil {
         entitySet.getEntityType().setProperty(new ArrayList<OiyoSettingsProperty>());
         entitySet.getEntityType().setKeyName(new ArrayList<String>());
 
-        // TODO FIXME テーブル名エスケープが暫定対処。
         try (PreparedStatement stmt = connTargetDb.prepareStatement(
                 "SELECT * FROM " + OiyoCommonJdbcUtil.escapeKakkoFieldName(databaseType, tableName))) {
             ResultSetMetaData rsmeta = stmt.getMetaData();
