@@ -17,16 +17,29 @@ package jp.oiyokan.common;
 
 import jp.oiyokan.dto.OiyoSettings;
 
+/**
+ * Oiyokan の実行に関する基本的な情報。
+ */
 public class OiyoInfo {
     /**
      * JSONから読み込んだ oiyokan-settings.json の内容.
      */
     private OiyoSettings settings = null;
 
+    /**
+     * oiyokan-settings.json 設定情報の取得.
+     * 
+     * @return oiyokan-settings.json setting info.
+     */
     public OiyoSettings getSettings() {
         return settings;
     }
 
+    /**
+     * oiyokan-settings.json 設定情報の設定.
+     * 
+     * @param settings oiyokan-settings.json setting info.
+     */
     public void setSettings(OiyoSettings settings) {
         this.settings = settings;
     }
