@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.olingo.commons.api.edm.FullQualifiedName;
 import org.apache.olingo.commons.api.edm.provider.CsdlAbstractEdmProvider;
 import org.apache.olingo.commons.api.edm.provider.CsdlEntityContainer;
@@ -44,6 +46,8 @@ import jp.oiyokan.dto.OiyoSettingsEntitySet;
  * Apache Olingo からのエントリポイント. ここに記載あるコードの多くは Apache Olingo のための基礎的な記述.
  */
 public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
+    private static final Log logger = LogFactory.getLog(OiyokanEdmProvider.class);
+
     /**
      * デバッグ出力の有無.
      * 
@@ -90,6 +94,8 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
      */
     @Override
     public CsdlEntityType getEntityType(FullQualifiedName entityTypeName) throws ODataApplicationException {
+        logger.trace("OiyokanEdmProvider#getEntityType(" + entityTypeName + ")");
+
         try {
             if (IS_DEBUG)
                 System.err.println("OiyokanEdmProvider#getEntityType(" + entityTypeName + ")");
@@ -123,7 +129,7 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
             }
             return entityType;
         } catch (RuntimeException ex) {
-            System.err.println("OiyokanEdmProvider#getEntityType: exception: " + ex.toString());
+            logger.error("ERROR: OiyokanEdmProvider#getEntityType(" + entityTypeName + ")", ex);
             throw ex;
         }
     }
@@ -138,6 +144,8 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
     @Override
     public CsdlEntitySet getEntitySet(FullQualifiedName entityContainer, String entitySetName)
             throws ODataApplicationException {
+        logger.trace("OiyokanEdmProvider#getEntitySet(" + entitySetName + ")");
+
         try {
             if (IS_DEBUG)
                 System.err.println("OiyokanEdmProvider#getEntitySet(" //
@@ -164,7 +172,7 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
             // ヒットしない場合は対象外。その場合は null返却.
             return csdlEntitySet;
         } catch (RuntimeException ex) {
-            System.err.println("OiyokanEdmProvider#getEntitySet: exception: " + ex.toString());
+            logger.error("ERROR: OiyokanEdmProvider#getEntitySet(" + entitySetName + ")", ex);
             throw ex;
         }
     }
@@ -177,6 +185,8 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
      */
     @Override
     public CsdlEntityContainer getEntityContainer() throws ODataApplicationException {
+        logger.trace("OiyokanEdmProvider#getEntityContainer()");
+
         try {
             if (IS_DEBUG)
                 System.err.println("OiyokanEdmProvider#getEntityContainer()");
@@ -233,7 +243,7 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
 
             return container;
         } catch (RuntimeException ex) {
-            System.err.println("OiyokanEdmProvider#getEntityContainer: exception: " + ex.toString());
+            logger.error("ERROR: OiyokanEdmProvider#getEntityContainer()", ex);
             throw ex;
         }
     }
@@ -246,6 +256,8 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
      */
     @Override
     public List<CsdlSchema> getSchemas() throws ODataApplicationException {
+        logger.trace("OiyokanEdmProvider#getSchemas()");
+
         try {
             if (IS_DEBUG)
                 System.err.println("OiyokanEdmProvider#getSchemas()");
@@ -277,7 +289,7 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
 
             return newSchemaList;
         } catch (RuntimeException ex) {
-            System.err.println("OiyokanEdmProvider#getSchemas: exception: " + ex.toString());
+            logger.error("ERROR: OiyokanEdmProvider#getSchemas()", ex);
             throw ex;
         }
     }
@@ -294,6 +306,8 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
     @Override
     public CsdlEntityContainerInfo getEntityContainerInfo(FullQualifiedName entityContainerName)
             throws ODataApplicationException {
+        logger.trace("OiyokanEdmProvider#getEntityContainerInfo()");
+
         try {
             if (IS_DEBUG)
                 System.err.println("OiyokanEdmProvider#getEntityContainerInfo(" + entityContainerName + ")");
@@ -312,8 +326,7 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
 
             return null;
         } catch (RuntimeException ex) {
-            ex.printStackTrace();
-            System.err.println("OiyokanEdmProvider#getEntityContainerInfo: exception: " + ex.toString());
+            logger.error("ERROR: OiyokanEdmProvider#getEntityContainerInfo()", ex);
             throw ex;
         }
     }
