@@ -41,7 +41,6 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.olingo.commons.api.data.Property;
 import org.apache.olingo.commons.api.data.ValueType;
 import org.apache.olingo.commons.api.edm.EdmPrimitiveType;
-import org.apache.olingo.commons.api.edm.EdmPrimitiveTypeKind;
 import org.apache.olingo.commons.api.edm.provider.CsdlProperty;
 import org.apache.olingo.commons.core.edm.primitivetype.EdmBinary;
 import org.apache.olingo.commons.core.edm.primitivetype.EdmBoolean;
@@ -143,60 +142,18 @@ public class OiyoCommonJdbcUtil {
      */
     public static CsdlProperty resultSetMetaData2CsdlProperty(OiyoSettingsProperty oiyoProp)
             throws ODataApplicationException {
-        // DB上の名称直接ではなく命名ユーティリティを通過させてから処理.
-        final CsdlProperty csdlProp = new CsdlProperty().setName(oiyoProp.getName());
-        if (EdmPrimitiveTypeKind.SByte.getFullQualifiedName().getFullQualifiedNameAsString()
-                .equals(oiyoProp.getEdmType())) {
-            csdlProp.setType(EdmPrimitiveTypeKind.SByte.getFullQualifiedName());
-        } else if (EdmPrimitiveTypeKind.Int16.getFullQualifiedName().getFullQualifiedNameAsString()
-                .equals(oiyoProp.getEdmType())) {
-            csdlProp.setType(EdmPrimitiveTypeKind.Int16.getFullQualifiedName());
-        } else if (EdmPrimitiveTypeKind.Int32.getFullQualifiedName().getFullQualifiedNameAsString()
-                .equals(oiyoProp.getEdmType())) {
-            csdlProp.setType(EdmPrimitiveTypeKind.Int32.getFullQualifiedName());
-        } else if (EdmPrimitiveTypeKind.Int64.getFullQualifiedName().getFullQualifiedNameAsString()
-                .equals(oiyoProp.getEdmType())) {
-            csdlProp.setType(EdmPrimitiveTypeKind.Int64.getFullQualifiedName());
-        } else if (EdmPrimitiveTypeKind.Decimal.getFullQualifiedName().getFullQualifiedNameAsString()
-                .equals(oiyoProp.getEdmType())) {
-            csdlProp.setType(EdmPrimitiveTypeKind.Decimal.getFullQualifiedName());
-        } else if (EdmPrimitiveTypeKind.Boolean.getFullQualifiedName().getFullQualifiedNameAsString()
-                .equals(oiyoProp.getEdmType())) {
-            csdlProp.setType(EdmPrimitiveTypeKind.Boolean.getFullQualifiedName());
-        } else if (EdmPrimitiveTypeKind.Single.getFullQualifiedName().getFullQualifiedNameAsString()
-                .equals(oiyoProp.getEdmType())) {
-            csdlProp.setType(EdmPrimitiveTypeKind.Single.getFullQualifiedName());
-        } else if (EdmPrimitiveTypeKind.Double.getFullQualifiedName().getFullQualifiedNameAsString()
-                .equals(oiyoProp.getEdmType())) {
-            csdlProp.setType(EdmPrimitiveTypeKind.Double.getFullQualifiedName());
-        } else if (EdmPrimitiveTypeKind.Date.getFullQualifiedName().getFullQualifiedNameAsString()
-                .equals(oiyoProp.getEdmType())) {
-            csdlProp.setType(EdmPrimitiveTypeKind.Date.getFullQualifiedName());
-        } else if (EdmPrimitiveTypeKind.DateTimeOffset.getFullQualifiedName().getFullQualifiedNameAsString()
-                .equals(oiyoProp.getEdmType())) {
-            csdlProp.setType(EdmPrimitiveTypeKind.DateTimeOffset.getFullQualifiedName());
-        } else if (EdmPrimitiveTypeKind.TimeOfDay.getFullQualifiedName().getFullQualifiedNameAsString()
-                .equals(oiyoProp.getEdmType())) {
-            csdlProp.setType(EdmPrimitiveTypeKind.TimeOfDay.getFullQualifiedName());
-        } else if (EdmPrimitiveTypeKind.String.getFullQualifiedName().getFullQualifiedNameAsString()
-                .equals(oiyoProp.getEdmType())) {
-            csdlProp.setType(EdmPrimitiveTypeKind.String.getFullQualifiedName());
-        } else if (EdmPrimitiveTypeKind.Binary.getFullQualifiedName().getFullQualifiedNameAsString()
-                .equals(oiyoProp.getEdmType())) {
-            csdlProp.setType(EdmPrimitiveTypeKind.Binary.getFullQualifiedName());
-        } else if (EdmPrimitiveTypeKind.Guid.getFullQualifiedName().getFullQualifiedNameAsString()
-                .equals(oiyoProp.getEdmType())) {
-            csdlProp.setType(EdmPrimitiveTypeKind.Guid.getFullQualifiedName());
-        } else {
+        // 型名の正しさをチェック。
+        // 正しくなければ例外。
+        OiyoEdmUtil.string2EdmType(oiyoProp.getEdmType());
 
-            // [M006] NOT SUPPORTED: CSDL: JDBC Type
-            System.err.println(OiyokanMessages.M006 + ": " + oiyoProp.getEdmType());
-            throw new ODataApplicationException(OiyokanMessages.M006 + ": " + oiyoProp.getEdmType(), //
-                    500, Locale.ENGLISH);
-        }
-
+        final CsdlProperty csdlProp = new CsdlProperty();
+        csdlProp.setName(oiyoProp.getName());
+        csdlProp.setType(oiyoProp.getEdmType());
         if (oiyoProp.getMaxLength() != null) {
             csdlProp.setMaxLength(oiyoProp.getMaxLength());
+        }
+        if (oiyoProp.getNullable() != null) {
+            csdlProp.setNullable(oiyoProp.getNullable());
         }
         if (oiyoProp.getPrecision() != null) {
             csdlProp.setPrecision(oiyoProp.getPrecision());
@@ -204,13 +161,9 @@ public class OiyoCommonJdbcUtil {
         if (oiyoProp.getScale() != null) {
             csdlProp.setScale(oiyoProp.getScale());
         }
-
-        // NULL許容かどうか。不明な場合は設定しない。
-        if (oiyoProp.getNullable() != null) {
-            csdlProp.setNullable(oiyoProp.getNullable());
+        if (oiyoProp.getDbDefault() != null) {
+            csdlProp.setDefaultValue(oiyoProp.getDbDefault());
         }
-
-        // TODO デフォルト値の取得???
 
         return csdlProp;
     }
