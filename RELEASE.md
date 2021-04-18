@@ -1,3 +1,21 @@
+# Release 1.5 (2021-04-18)
+
+## EN
+
+- Spring Boot log settings. Output spring.log to runtime current by default
+- Massive refactoring
+- Removal of unnecessary classes
+- Rebuild message system
+- Created JDBC / Edm common functions
+
+## JA
+
+- Spring Boot のログ設定。デフォルトで実行時カレントに spring.log を出力
+- 大規模なリファクタリング
+- 不要クラスの除去
+- メッセージ体系を再構築
+- JDBC/Edmの共通関数の作成
+
 # Release 1.4 (2021-04-17)
 
 ## EN
