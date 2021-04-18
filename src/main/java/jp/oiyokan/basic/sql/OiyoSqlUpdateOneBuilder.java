@@ -19,7 +19,6 @@ import java.util.List;
 
 import org.apache.olingo.commons.api.data.Entity;
 import org.apache.olingo.commons.api.data.Property;
-import org.apache.olingo.commons.api.edm.EdmEntitySet;
 import org.apache.olingo.server.api.ODataApplicationException;
 import org.apache.olingo.server.api.uri.UriParameter;
 
@@ -66,9 +65,9 @@ public class OiyoSqlUpdateOneBuilder {
      * @param requestEntity entity to delete.
      * @throws ODataApplicationException OData App exception occured.
      */
-    public void buildUpdatePatchDml(EdmEntitySet edmEntitySet, List<UriParameter> keyPredicates, Entity requestEntity)
+    public void buildUpdatePatchDml(String entitySetName, List<UriParameter> keyPredicates, Entity requestEntity)
             throws ODataApplicationException {
-        final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, edmEntitySet.getName());
+        final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, entitySetName);
 
         sqlInfo.getSqlBuilder().append("UPDATE ");
         sqlInfo.getSqlBuilder()
@@ -102,7 +101,7 @@ public class OiyoSqlUpdateOneBuilder {
                     OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, entitySet.getName(), param.getName()).getDbName()));
             sqlInfo.getSqlBuilder().append("=");
 
-            final OiyoSettingsProperty prop = OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, edmEntitySet.getName(),
+            final OiyoSettingsProperty prop = OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, entitySetName,
                     param.getName());
             OiyoCommonJdbcUtil.expandLiteralOrBindParameter(sqlInfo, prop.getEdmType(), param.getText());
         }

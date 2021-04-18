@@ -103,10 +103,10 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
                 }
             }
             if (entitySet == null) {
-                // TODO FIXME メッセージ番号
-                System.err.println(OiyokanMessages.IY9999 + ": EntitySet検索失敗");
-                throw new ODataApplicationException(OiyokanMessages.IY9999 + ": EntitySet検索失敗", //
-                        500, Locale.ENGLISH);
+                // [IY7119] UNEXPECTED: EntitySet settings NOT found.
+                System.err.println(OiyokanMessages.IY7119 + ": " + entityTypeName);
+                throw new ODataApplicationException(OiyokanMessages.IY7119 + ": " + entityTypeName, //
+                        OiyokanMessages.IY7119_CODE, Locale.ENGLISH);
             }
 
             OiyoBasicJdbcEntityTypeBuilder entityTypeBuilder = new OiyoBasicJdbcEntityTypeBuilder(

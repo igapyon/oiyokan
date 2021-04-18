@@ -101,17 +101,17 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
             throw new ODataApplicationException(OiyokanMessages.IY1107, OiyokanMessages.IY1107_CODE, Locale.ENGLISH);
         }
         if (uriInfo.getApplyOption() != null) {
-            // [M011] NOT SUPPORTED: URI: $apply
+            // [IY1102] NOT SUPPORTED: URI: $apply
             System.err.println(OiyokanMessages.IY1102);
             throw new ODataApplicationException(OiyokanMessages.IY1102, OiyokanMessages.IY1102_CODE, Locale.ENGLISH);
         }
         if (uriInfo.getCustomQueryOptions() != null && uriInfo.getCustomQueryOptions().size() > 0) {
-            // [M012] NOT SUPPORTED: URI: customQuery
+            // [IY1103] NOT SUPPORTED: URI: customQuery
             System.err.println(OiyokanMessages.IY1103);
             throw new ODataApplicationException(OiyokanMessages.IY1103, OiyokanMessages.IY1103_CODE, Locale.ENGLISH);
         }
         if (uriInfo.getDeltaTokenOption() != null) {
-            // [M013] NOT SUPPORTED: URI: deltaToken
+            // [IY1104] NOT SUPPORTED: URI: deltaToken
             System.err.println(OiyokanMessages.IY1104);
             throw new ODataApplicationException(OiyokanMessages.IY1104, OiyokanMessages.IY1104_CODE, Locale.ENGLISH);
         }
@@ -159,6 +159,7 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
         }
     }
 
+    // TODO CsdlEntitySet を廃止。
     private void processCountQuery(CsdlEntitySet entitySet, UriInfo uriInfo, Connection connTargetDb,
             EntityCollection entityCollection) throws ODataApplicationException {
         // 件数をカウントして設定。
@@ -192,8 +193,8 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
         } catch (SQLException ex) {
             // [M015] UNEXPECTED: An error occurred in SQL that counts the number of search
             // results.
-            System.err.println(OiyokanMessages.IY2103 + ": " + sql + ", " + ex.toString());
-            throw new ODataApplicationException(OiyokanMessages.IY2103 + ": " + sql, 500, Locale.ENGLISH);
+            System.err.println(OiyokanMessages.IY2104 + ": " + sql + ", " + ex.toString());
+            throw new ODataApplicationException(OiyokanMessages.IY2104 + ": " + sql, 500, Locale.ENGLISH);
         }
 
         final long endMillisec = System.currentTimeMillis();
@@ -217,6 +218,7 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
      * @param entityCollection result of search.
      * @throws ODataApplicationException OData App Exception occured.
      */
+    // TODO CsdlEntitySet を廃止。
     public void processCollectionQuery(CsdlEntitySet csdlEntitySet, UriInfo uriInfo, Connection connTargetDb,
             EntityCollection entityCollection) throws ODataApplicationException {
         OiyoSqlQueryListBuilder basicSqlBuilder = new OiyoSqlQueryListBuilder(oiyoInfo, csdlEntitySet.getName());
@@ -332,9 +334,9 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
             return new URI(entitySetName + "(" + id + ")");
         } catch (URISyntaxException ex) {
             // [M018] UNEXPECTED: Fail to create ID EntitySet name
-            System.err.println(OiyokanMessages.IY2104 + ": " + entitySetName + ": " + ex.toString());
+            System.err.println(OiyokanMessages.IY2105 + ": " + entitySetName + ": " + ex.toString());
             ex.printStackTrace();
-            throw new ODataRuntimeException(OiyokanMessages.IY2104 + ": " + entitySetName);
+            throw new ODataRuntimeException(OiyokanMessages.IY2105 + ": " + entitySetName);
         }
     }
 }

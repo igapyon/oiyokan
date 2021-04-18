@@ -63,8 +63,6 @@ public class OiyoBasicJdbcEntityTypeBuilder {
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
     public CsdlEntityType getEntityType() throws ODataApplicationException {
-        // TODO JSONベースに切り替え
-
         // CSDL要素型として情報を組み上げ.
         final CsdlEntityType entityType = new CsdlEntityType();
         entityType.setName(entitySet.getEntityType().getName());

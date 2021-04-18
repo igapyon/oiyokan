@@ -163,10 +163,9 @@ public class OiyoEdmUtil {
             return EdmTimeOfDay.getInstance();
         }
 
-        // TODO 番号取り直し
-        // [M021] NOT SUPPORTED: JDBC Type
-        System.err.println(OiyokanMessages.IY7125 + ": " + edmType);
-        throw new IllegalArgumentException(OiyokanMessages.IY7125 + ": " + edmType);
+        // [IY7152] NOT SUPPORTED: Edm Type
+        System.err.println(OiyokanMessages.IY7152 + ": " + edmType);
+        throw new IllegalArgumentException(OiyokanMessages.IY7152 + ": " + edmType);
     }
 
     public static String edmType2String(EdmPrimitiveType primitiveType) {
