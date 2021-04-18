@@ -202,12 +202,10 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
         }
 
         final long endMillisec = System.currentTimeMillis();
-        if (OiyokanConstants.IS_TRACE_ODATA_V4) {
-            final long elapsed = endMillisec - startMillisec;
-            // [IY1063] OData v4: COUNT =
-            log.info(OiyokanMessages.IY1063 + countWithWhere //
-                    + (elapsed >= 10 ? " (elapsed: " + (endMillisec - startMillisec) + ")" : ""));
-        }
+        final long elapsed = endMillisec - startMillisec;
+        // [IY1063] OData v4: COUNT =
+        log.info(OiyokanMessages.IY1063 + countWithWhere //
+                + (elapsed >= 10 ? " (elapsed: " + (endMillisec - startMillisec) + ")" : ""));
 
         // 取得できたレコード件数を設定.
         entityCollection.setCount(countWithWhere);
@@ -305,12 +303,10 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
             }
 
             final long endMillisec = System.currentTimeMillis();
-            if (OiyokanConstants.IS_TRACE_ODATA_V4) {
-                final long elapsed = endMillisec - startMillisec;
-                if (elapsed >= 10) {
-                    // [IY1065] OData v4: SQL: elapsed
-                    log.info(OiyokanMessages.IY1065 + ": " + (endMillisec - startMillisec));
-                }
+            final long elapsed = endMillisec - startMillisec;
+            if (elapsed >= 10) {
+                // [IY1065] OData v4: SQL: elapsed
+                log.info(OiyokanMessages.IY1065 + ": " + (endMillisec - startMillisec));
             }
         } catch (SQLTimeoutException ex) {
             // [IY2502] SQL timeout at execute

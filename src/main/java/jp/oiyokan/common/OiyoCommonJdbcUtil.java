@@ -754,12 +754,10 @@ public class OiyoCommonJdbcUtil {
             }
 
             final long endMillisec = System.currentTimeMillis();
-            if (OiyokanConstants.IS_TRACE_ODATA_V4) {
-                final long elapsed = endMillisec - startMillisec;
-                if (elapsed >= 10) {
-                    // TODO message
-                    log.info("OData v4: TRACE: SQL: elapsed: " + (endMillisec - startMillisec));
-                }
+            final long elapsed = endMillisec - startMillisec;
+            if (elapsed >= 10) {
+                // TODO message
+                log.info("OData v4: TRACE: SQL: elapsed: " + (endMillisec - startMillisec));
             }
 
             return generatedKeys;

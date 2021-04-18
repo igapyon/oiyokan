@@ -127,12 +127,10 @@ public class OiyoBasicJdbcEntityOneBuilder {
             }
 
             final long endMillisec = System.currentTimeMillis();
-            if (OiyokanConstants.IS_TRACE_ODATA_V4) {
-                final long elapsed = endMillisec - startMillisec;
-                if (elapsed >= 10) {
-                    // [IY1073] OData v4: SQL: elapsed
-                    log.info(OiyokanMessages.IY1073 + ": " + (endMillisec - startMillisec));
-                }
+            final long elapsed = endMillisec - startMillisec;
+            if (elapsed >= 10) {
+                // [IY1073] OData v4: SQL: elapsed
+                log.info(OiyokanMessages.IY1073 + ": " + (endMillisec - startMillisec));
             }
 
             return ent;
