@@ -33,8 +33,8 @@ class OiyokanOdata4RegisterTest {
         req.setMethod("GET");
         req.setRequestURI(url);
         new OiyokanOdata4Register().serv(req, resp);
-        assertEquals(200, resp.getStatus());
         // System.err.println(resp.getContentAsString());
+        assertEquals(200, resp.getStatus());
     }
 
     @Test

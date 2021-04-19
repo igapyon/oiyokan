@@ -1557,14 +1557,6 @@
             "jdbcType": "Types.CLOB",
             "dbType": "CLOB",
             "nullable": true
-          },
-          {
-            "name": "fulltext",
-            "dbName": "fulltext",
-            "edmType": "Edm.String",
-            "jdbcType": "Types.VARCHAR",
-            "dbType": "VARCHAR",
-            "nullable": false
           }
         ]
       }
