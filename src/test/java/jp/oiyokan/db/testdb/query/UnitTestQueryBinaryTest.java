@@ -200,8 +200,8 @@ class UnitTestQueryBinaryTest {
         if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
             return;
 
-        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1",
-                OiyoUrlUtil.encodeUrlQuery(
+        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse( //
+                "/ODataTests1", OiyoUrlUtil.encodeUrlQuery(
                         "&$filter=StringVar255 eq 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' or StringVar255 eq 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' and StringLongVar1 eq 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' or Clob1 eq 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' &$count=true &$select=ID"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
@@ -231,8 +231,9 @@ class UnitTestQueryBinaryTest {
         if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
             return;
 
-        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1", OiyoUrlUtil
-                .encodeUrlQuery("&$filter=Clob1 eq 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' &$count=true &$select=ID"));
+        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse( //
+                "/ODataTests1",
+                OiyoUrlUtil.encodeUrlQuery("&$filter=Clob1 eq 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' &$count=true &$select=ID"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         // System.err.println("result: " + result);
