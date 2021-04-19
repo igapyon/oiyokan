@@ -118,8 +118,11 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
                 }
             }
             return entityType;
+        } catch (ODataApplicationException ex) {
+            log.error("ERROR: OiyokanEdmProvider#getEntityType(" + entityTypeName + "): " + ex.toString());
+            throw ex;
         } catch (RuntimeException ex) {
-            log.error("ERROR: OiyokanEdmProvider#getEntityType(" + entityTypeName + ")", ex);
+            log.fatal("FATAL: OiyokanEdmProvider#getEntityType(" + entityTypeName + "): " + ex.toString(), ex);
             throw ex;
         }
     }
@@ -157,8 +160,11 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
             // 要素セット名が一致する場合はそれを返却.
             // ヒットしない場合は対象外。その場合は null返却.
             return csdlEntitySet;
+        } catch (ODataApplicationException ex) {
+            log.error("ERROR: OiyokanEdmProvider#getEntitySet(" + entitySetName + "): " + ex.toString());
+            throw ex;
         } catch (RuntimeException ex) {
-            log.error("ERROR: OiyokanEdmProvider#getEntitySet(" + entitySetName + ")", ex);
+            log.fatal("FATAL: OiyokanEdmProvider#getEntitySet(" + entitySetName + "): " + ex.toString(), ex);
             throw ex;
         }
     }
@@ -199,9 +205,11 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
                     } catch (ClassNotFoundException ex) {
                         // [IY7103] ERROR: Fail to load JDBC driver. Check JDBC Driver classname or
                         // JDBC Driver is on classpath.
-                        log.error(OiyokanMessages.IY7103 + ": " + settingsDatabase.getJdbcDriver() + ": ", ex);
+                        log.error(OiyokanMessages.IY7103 + ": " + settingsDatabase.getJdbcDriver() + ": "
+                                + ex.toString());
                         throw new ODataApplicationException(
-                                OiyokanMessages.IY7103 + ": " + settingsDatabase.getJdbcDriver(), 500, Locale.ENGLISH);
+                                OiyokanMessages.IY7103 + ": " + settingsDatabase.getJdbcDriver() + ": " + ex.toString(),
+                                500, Locale.ENGLISH);
                     }
 
                     try {
@@ -224,8 +232,11 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
             }
 
             return container;
+        } catch (ODataApplicationException ex) {
+            log.error("ERROR: OiyokanEdmProvider#getEntityContainer(): " + ex.toString());
+            throw ex;
         } catch (RuntimeException ex) {
-            log.error("ERROR: OiyokanEdmProvider#getEntityContainer()", ex);
+            log.fatal("FATAL: OiyokanEdmProvider#getEntityContainer(): " + ex.toString(), ex);
             throw ex;
         }
     }
@@ -267,8 +278,11 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
             newSchemaList.add(newSchema);
 
             return newSchemaList;
+        } catch (ODataApplicationException ex) {
+            log.error("ERROR: OiyokanEdmProvider#getSchemas(): " + ex.toString());
+            throw ex;
         } catch (RuntimeException ex) {
-            log.error("ERROR: OiyokanEdmProvider#getSchemas()", ex);
+            log.fatal("FATAL: OiyokanEdmProvider#getSchemas(): " + ex.toString(), ex);
             throw ex;
         }
     }
@@ -301,8 +315,11 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
             }
 
             return null;
+        } catch (ODataApplicationException ex) {
+            log.error("ERROR: OiyokanEdmProvider#getEntityContainerInfo(): " + ex.toString());
+            throw ex;
         } catch (RuntimeException ex) {
-            log.error("ERROR: OiyokanEdmProvider#getEntityContainerInfo()", ex);
+            log.fatal("FATAL: OiyokanEdmProvider#getEntityContainerInfo(): " + ex.toString(), ex);
             throw ex;
         }
     }

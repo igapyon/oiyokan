@@ -190,15 +190,22 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
             rset.next();
             countWithWhere = rset.getInt(1);
         } catch (SQLTimeoutException ex) {
-            // [M035] SQL timeout at count
+            // [IY2501] SQL timeout at count query
             log.error(OiyokanMessages.IY2501 + ": " + sql + ", " + ex.toString());
             throw new ODataApplicationException(OiyokanMessages.IY2501 + ": " + sql, //
                     OiyokanMessages.IY2501_CODE, Locale.ENGLISH);
         } catch (SQLException ex) {
-            // [M015] UNEXPECTED: An error occurred in SQL that counts the number of search
-            // results.
-            log.error(OiyokanMessages.IY2104 + ": " + sql + ", " + ex.toString(), ex);
-            throw new ODataApplicationException(OiyokanMessages.IY2104 + ": " + sql, 500, Locale.ENGLISH);
+            if (ex.toString().indexOf("timed out") >= 0 /* SQL Server 2008 */) {
+                // [IY2502] SQL timeout at count query
+                log.error(OiyokanMessages.IY2502 + ": " + sql + ", " + ex.toString());
+                throw new ODataApplicationException(OiyokanMessages.IY2502 + ": " + sql, //
+                        OiyokanMessages.IY2502_CODE, Locale.ENGLISH);
+            } else {
+                // [IY2104] UNEXPECTED: An error occurred in SQL that counts the number of
+                // search results.
+                log.error(OiyokanMessages.IY2104 + ": " + sql + ", " + ex.toString(), ex);
+                throw new ODataApplicationException(OiyokanMessages.IY2104 + ": " + sql, 500, Locale.ENGLISH);
+            }
         }
 
         final long endMillisec = System.currentTimeMillis();
@@ -309,16 +316,22 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
                 log.info(OiyokanMessages.IY1065 + ": " + (endMillisec - startMillisec));
             }
         } catch (SQLTimeoutException ex) {
-            // [IY2502] SQL timeout at execute
-            log.error(OiyokanMessages.IY2502 + ": " + sql + ", " + ex.toString());
-            throw new ODataApplicationException(OiyokanMessages.IY2502 + ": " + sql, //
-                    OiyokanMessages.IY2502_CODE, Locale.ENGLISH);
+            // [IY2511] SQL timeout at exec query
+            log.error(OiyokanMessages.IY2511 + ": " + sql + ", " + ex.toString());
+            throw new ODataApplicationException(OiyokanMessages.IY2511 + ": " + sql, //
+                    OiyokanMessages.IY2511_CODE, Locale.ENGLISH);
         } catch (SQLException ex) {
-            // ex.printStackTrace();
-            // [M017] Fail to execute SQL
-            log.error(OiyokanMessages.IY2102 + ": " + sql + ", " + ex.toString(), ex);
-            throw new ODataApplicationException(OiyokanMessages.IY2102 + ": " + sql, //
-                    OiyokanMessages.IY2102_CODE, Locale.ENGLISH);
+            if (ex.toString().indexOf("timed out") >= 0 /* SQL Server 2008 */) {
+                // [IY2512] SQL timeout at exec query
+                log.error(OiyokanMessages.IY2512 + ": " + sql + ", " + ex.toString());
+                throw new ODataApplicationException(OiyokanMessages.IY2512 + ": " + sql, //
+                        OiyokanMessages.IY2512_CODE, Locale.ENGLISH);
+            } else {
+                // [IY2102] Fail to execute SQL
+                log.error(OiyokanMessages.IY2102 + ": " + sql + ", " + ex.toString(), ex);
+                throw new ODataApplicationException(OiyokanMessages.IY2102 + ": " + sql, //
+                        OiyokanMessages.IY2102_CODE, Locale.ENGLISH);
+            }
         }
     }
 

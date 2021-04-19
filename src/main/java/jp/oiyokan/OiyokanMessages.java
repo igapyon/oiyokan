@@ -86,10 +86,14 @@ public class OiyokanMessages {
 
     ////////////////////////////////////////////////////////////////////////////////
     // IY25XX : EntityCollection - TIMEOUT
-    public static final String IY2501 = "[IY2501] SQL timeout at count";
+    public static final String IY2501 = "[IY2501] SQL timeout at count query";
     public static final int IY2501_CODE = HttpStatusCode.REQUEST_TIMEOUT.getStatusCode();
-    public static final String IY2502 = "[IY2502] SQL timeout at execute";
+    public static final String IY2502 = "[IY2502] SQL timeout at count query";
     public static final int IY2502_CODE = HttpStatusCode.REQUEST_TIMEOUT.getStatusCode();
+    public static final String IY2511 = "[IY2511] SQL timeout at exec query";
+    public static final int IY2511_CODE = HttpStatusCode.REQUEST_TIMEOUT.getStatusCode();
+    public static final String IY2512 = "[IY2512] SQL timeout at exec query";
+    public static final int IY2512_CODE = HttpStatusCode.REQUEST_TIMEOUT.getStatusCode();
 
     ////////////////////////////////////////////////////////////////////////////////
     // Entity
@@ -133,10 +137,14 @@ public class OiyokanMessages {
 
     ////////////////////////////////////////////////////////////////////////////////
     // IY35XX : Entity - TIMEOUT
-    public static final String IY3501 = "[IY3501] SQL timeout at execute (readEntity)";
+    public static final String IY3501 = "[IY3501] SQL timeout at query one";
     public static final int IY3501_CODE = HttpStatusCode.REQUEST_TIMEOUT.getStatusCode();
-    public static final String IY3502 = "[IY3502] SQL timeout at execute.";
+    public static final String IY3502 = "[IY3502] SQL timeout at query one";
     public static final int IY3502_CODE = HttpStatusCode.REQUEST_TIMEOUT.getStatusCode();
+    public static final String IY3511 = "[IY3511] SQL timeout at exec insert/update/delete.";
+    public static final int IY3511_CODE = HttpStatusCode.REQUEST_TIMEOUT.getStatusCode();
+    public static final String IY3512 = "[IY3512] SQL timeout at exec insert/update/delete.";
+    public static final int IY3512_CODE = HttpStatusCode.REQUEST_TIMEOUT.getStatusCode();
 
     ////////////////////////////////////////////////////////////////////////////////
     // Expression
