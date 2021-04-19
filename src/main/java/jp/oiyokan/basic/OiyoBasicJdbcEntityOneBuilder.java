@@ -92,11 +92,9 @@ public class OiyoBasicJdbcEntityOneBuilder {
         final String sql = sqlInfo.getSqlBuilder().toString();
 
         if (sqlInfo.getSelectColumnNameList().size() == 0) {
-            new Exception("TRACE: ここはどこ").printStackTrace();
-            // TODO FIXME message
-            log.error(OiyokanMessages.IY9999 + ": 想定外。サイズが0");
-            throw new ODataApplicationException(OiyokanMessages.IY9999 + ": 想定外。サイズが0", //
-                    OiyokanMessages.IY9999_CODE, Locale.ENGLISH);
+            // [IY7106] UNEXPECTED: At least one selected column is required.
+            log.error(OiyokanMessages.IY7106);
+            throw new ODataApplicationException(OiyokanMessages.IY7106, 500, Locale.ENGLISH);
         }
 
         // [IY1072] OData v4: SQL single

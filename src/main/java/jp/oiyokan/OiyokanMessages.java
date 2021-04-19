@@ -191,8 +191,8 @@ public class OiyokanMessages {
     public static final String IY7102 = "[IY7102] ERROR: Illegal data type in database settings";
     public static final String IY7103 = "[IY7103] ERROR: Fail to load JDBC driver. Check JDBC Driver classname or JDBC Driver is on classpath.";
     public static final String IY7104 = "[IY7104] UNEXPECTED: Database error in setup internal database.";
-    // IY7105
-    // IY7106
+    public static final String IY7105 = "[IY7105] UNEXPECTED: At least one selected column is required.";
+    public static final String IY7106 = "[IY7106] UNEXPECTED: At least one selected column is required.";
     public static final String IY7107 = "[IY7107] UNEXPECTED: fail to read from CLOB";
     public static final String IY7108 = "[IY7108] UNEXPECTED: fail to read from binary";
     public static final String IY7109 = "[IY7109] UNEXPECTED: missing impl";

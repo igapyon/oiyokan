@@ -243,12 +243,9 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
         final OiyoSqlInfo sqlInfo = basicSqlBuilder.getSqlInfo();
 
         if (sqlInfo.getSelectColumnNameList().size() == 0) {
-            new Exception("TRACE: ここはどこ").printStackTrace();
-
-            // TODO FIXME message
-            log.error(OiyokanMessages.IY9999 + ": 想定外。サイズが0");
-            throw new ODataApplicationException(OiyokanMessages.IY9999 + ": 想定外。サイズが0", //
-                    OiyokanMessages.IY9999_CODE, Locale.ENGLISH);
+            // [IY7105] UNEXPECTED: At least one selected column is required.
+            log.error(OiyokanMessages.IY7105);
+            throw new ODataApplicationException(OiyokanMessages.IY7105, 500, Locale.ENGLISH);
         }
 
         // [IY1064] OData v4: SQL collect
