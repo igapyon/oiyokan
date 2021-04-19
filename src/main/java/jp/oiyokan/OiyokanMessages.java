@@ -248,4 +248,5 @@ public class OiyokanMessages {
      * 手早く未実装マークをつけるためのテンポラリなメッセージ.
      */
     public static final String IY9999 = "[IY9999] NOT IMPLEMENTED: Generic NOT implemented message.";
+    public static final int IY9999_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
 }

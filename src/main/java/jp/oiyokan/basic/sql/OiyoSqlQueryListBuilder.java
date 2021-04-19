@@ -78,6 +78,7 @@ public class OiyoSqlQueryListBuilder {
     public void buildSelectCountQuery(UriInfo uriInfo) throws ODataApplicationException {
         final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, entitySetName);
 
+        sqlInfo.getColumnNameList().add("COUNT");
         sqlInfo.getSqlBuilder().append("SELECT COUNT(*) FROM "
                 + OiyoCommonJdbcUtil.escapeKakkoFieldName(sqlInfo, entitySet.getEntityType().getDbName()));
         if (uriInfo.getFilterOption() != null) {
@@ -176,6 +177,7 @@ public class OiyoSqlQueryListBuilder {
                 strColumns += ",";
             }
 
+            sqlInfo.getColumnNameList().add(prop.getName());
             // もし空白を含む場合はエスケープ。
             strColumns += OiyoCommonJdbcUtil.escapeKakkoFieldName(sqlInfo,
                     OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, entitySet.getName(), prop.getName()).getDbName());
@@ -194,7 +196,9 @@ public class OiyoSqlQueryListBuilder {
         for (SelectItem item : uriInfo.getSelectOption().getSelectItems()) {
             for (UriResource res : item.getResourcePath().getUriResourceParts()) {
                 sqlInfo.getSqlBuilder().append(itemCount++ == 0 ? "" : ",");
+
                 final String unescapedName = OiyoCommonJdbcUtil.unescapeKakkoFieldName(res.toString());
+                sqlInfo.getColumnNameList().add(unescapedName);
                 sqlInfo.getSqlBuilder().append(OiyoCommonJdbcUtil.escapeKakkoFieldName(sqlInfo,
                         OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, entitySet.getName(), unescapedName).getDbName()));
                 for (int index = 0; index < keyTarget.size(); index++) {
@@ -208,7 +212,9 @@ public class OiyoSqlQueryListBuilder {
         for (int index = 0; index < keyTarget.size(); index++) {
             // レコードを一意に表すID項目が必須。検索対象にない場合は追加.
             sqlInfo.getSqlBuilder().append(itemCount++ == 0 ? "" : ",");
-            sqlInfo.getSqlBuilder().append(OiyoCommonJdbcUtil.unescapeKakkoFieldName(keyTarget.get(index)));
+            final String unescapedName = OiyoCommonJdbcUtil.unescapeKakkoFieldName(keyTarget.get(index));
+            sqlInfo.getColumnNameList().add(unescapedName);
+            sqlInfo.getSqlBuilder().append(unescapedName);
         }
     }
 
