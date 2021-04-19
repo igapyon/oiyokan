@@ -77,7 +77,7 @@ public class OiyoBasicJdbcEntityTypeBuilder {
         OiyoSettingsEntitySet oiyoEntitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, entitySet.getName());
 
         for (OiyoSettingsProperty oiyoProp : oiyoEntitySet.getEntityType().getProperty()) {
-            propertyList.add(OiyoCommonJdbcUtil.resultSetMetaData2CsdlProperty(oiyoProp));
+            propertyList.add(OiyoCommonJdbcUtil.settingsProperty2CsdlProperty(oiyoProp));
         }
 
         // テーブルのキー情報

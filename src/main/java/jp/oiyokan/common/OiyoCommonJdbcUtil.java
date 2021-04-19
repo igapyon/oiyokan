@@ -136,6 +136,8 @@ public class OiyoCommonJdbcUtil {
     }
 
     /**
+     * oiyokan-settings.json の Property 情報から CSDL Property 情報を取得.
+     * 
      * CsdlEntityType 生成時にテーブル情報からプロパティを生成.
      * 
      * see:
@@ -145,10 +147,11 @@ public class OiyoCommonJdbcUtil {
      * @return CsdlProperty 情報.
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
-    public static CsdlProperty resultSetMetaData2CsdlProperty(OiyoSettingsProperty oiyoProp)
+    public static CsdlProperty settingsProperty2CsdlProperty(OiyoSettingsProperty oiyoProp)
             throws ODataApplicationException {
         // 型名の正しさをチェック。
         // 正しくなければ例外。
+        // チェック実施のみなので左辺がない。
         OiyoEdmUtil.string2EdmType(oiyoProp.getEdmType());
 
         final CsdlProperty csdlProp = new CsdlProperty();
