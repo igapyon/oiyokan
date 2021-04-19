@@ -117,7 +117,8 @@ public class OiyoSqlQueryOneBuilder {
         int itemCount = 0;
         for (OiyoSettingsProperty prop : entitySet.getEntityType().getProperty()) {
             sqlInfo.getSqlBuilder().append(itemCount++ == 0 ? "" : ",");
-            sqlInfo.getColumnNameList().add(prop.getName());
+            // SELECTの検索項目名を追加。
+            sqlInfo.getSelectColumnNameList().add(prop.getName());
             sqlInfo.getSqlBuilder().append(OiyoCommonJdbcUtil.escapeKakkoFieldName(sqlInfo,
                     OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, entitySetName, prop.getName()).getDbName()));
         }

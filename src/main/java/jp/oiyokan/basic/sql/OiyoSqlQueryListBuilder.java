@@ -78,7 +78,8 @@ public class OiyoSqlQueryListBuilder {
     public void buildSelectCountQuery(UriInfo uriInfo) throws ODataApplicationException {
         final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, entitySetName);
 
-        sqlInfo.getColumnNameList().add("COUNT");
+        // SELECTの検索項目名を追加。ここでは Property としては存在しない COUNT というダミーの名称をセット
+        sqlInfo.getSelectColumnNameList().add("COUNT");
         sqlInfo.getSqlBuilder().append("SELECT COUNT(*) FROM "
                 + OiyoCommonJdbcUtil.escapeKakkoFieldName(sqlInfo, entitySet.getEntityType().getDbName()));
         if (uriInfo.getFilterOption() != null) {
@@ -177,10 +178,10 @@ public class OiyoSqlQueryListBuilder {
                 strColumns += ",";
             }
 
-            sqlInfo.getColumnNameList().add(prop.getName());
-            // もし空白を含む場合はエスケープ。
-            strColumns += OiyoCommonJdbcUtil.escapeKakkoFieldName(sqlInfo,
-                    OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, entitySet.getName(), prop.getName()).getDbName());
+            // SELECTの検索項目名を追加。
+            sqlInfo.getSelectColumnNameList().add(prop.getName());
+            // 項目名について空白が含まれている場合はカッコなどでエスケープ。
+            strColumns += OiyoCommonJdbcUtil.escapeKakkoFieldName(sqlInfo, prop.getDbName());
         }
         sqlInfo.getSqlBuilder().append(strColumns);
     }
@@ -198,11 +199,16 @@ public class OiyoSqlQueryListBuilder {
                 sqlInfo.getSqlBuilder().append(itemCount++ == 0 ? "" : ",");
 
                 final String unescapedName = OiyoCommonJdbcUtil.unescapeKakkoFieldName(res.toString());
-                sqlInfo.getColumnNameList().add(unescapedName);
-                sqlInfo.getSqlBuilder().append(OiyoCommonJdbcUtil.escapeKakkoFieldName(sqlInfo,
-                        OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, entitySet.getName(), unescapedName).getDbName()));
+                OiyoSettingsProperty prop = OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, entitySet.getName(),
+                        unescapedName);
+
+                // SELECTの検索項目名を追加。
+                sqlInfo.getSelectColumnNameList().add(prop.getName());
+                sqlInfo.getSqlBuilder().append(OiyoCommonJdbcUtil.escapeKakkoFieldName(sqlInfo, prop.getDbName()));
                 for (int index = 0; index < keyTarget.size(); index++) {
-                    if (keyTarget.get(index).equals(res.toString())) {
+                    if (keyTarget.get(index).equals(prop.getName())) {
+                        // 検索項目がキーであれば、すでに検索済みキーとしてリストから除去。
+                        // これは、キー項目は選択された検索項目であろうがなかろうが検索する必要があるための一連の処理。
                         keyTarget.remove(index);
                         break;
                     }
@@ -213,7 +219,8 @@ public class OiyoSqlQueryListBuilder {
             // レコードを一意に表すID項目が必須。検索対象にない場合は追加.
             sqlInfo.getSqlBuilder().append(itemCount++ == 0 ? "" : ",");
             final String unescapedName = OiyoCommonJdbcUtil.unescapeKakkoFieldName(keyTarget.get(index));
-            sqlInfo.getColumnNameList().add(unescapedName);
+            // SELECTの検索項目名を追加。
+            sqlInfo.getSelectColumnNameList().add(unescapedName);
             sqlInfo.getSqlBuilder().append(unescapedName);
         }
     }

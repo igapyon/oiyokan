@@ -242,13 +242,10 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
         final String sql = basicSqlBuilder.getSqlInfo().getSqlBuilder().toString();
         final OiyoSqlInfo sqlInfo = basicSqlBuilder.getSqlInfo();
 
-        if (sqlInfo.getColumnNameList().size() == 0) {
-            new Exception("TRACE: ここはどこ").printStackTrace();
-
-            // TODO FIXME message
-            log.error(OiyokanMessages.IY9999 + ": 想定外。サイズが0");
-            throw new ODataApplicationException(OiyokanMessages.IY9999 + ": 想定外。サイズが0", //
-                    OiyokanMessages.IY9999_CODE, Locale.ENGLISH);
+        if (sqlInfo.getSelectColumnNameList().size() == 0) {
+            // [IY7105] UNEXPECTED: At least one selected column is required.
+            log.error(OiyokanMessages.IY7105);
+            throw new ODataApplicationException(OiyokanMessages.IY7105, 500, Locale.ENGLISH);
         }
 
         // [IY1064] OData v4: SQL collect
@@ -272,11 +269,12 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
             var rset = stmt.getResultSet();
             for (; rset.next();) {
                 final Entity ent = new Entity();
-                for (int column = 1; column <= sqlInfo.getColumnNameList().size(); column++) {
+                for (int index = 0; index < sqlInfo.getSelectColumnNameList().size(); index++) {
                     // 取得された検索結果を Property に組み替え.
                     OiyoSettingsProperty oiyoProp = OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, entitySetName,
-                            sqlInfo.getColumnNameList().get(column - 1));
-                    Property prop = OiyoCommonJdbcUtil.resultSet2Property(oiyoInfo, rset, column, entitySet, oiyoProp);
+                            sqlInfo.getSelectColumnNameList().get(index));
+                    Property prop = OiyoCommonJdbcUtil.resultSet2Property(oiyoInfo, rset, index + 1, entitySet,
+                            oiyoProp);
                     ent.addProperty(prop);
                 }
 

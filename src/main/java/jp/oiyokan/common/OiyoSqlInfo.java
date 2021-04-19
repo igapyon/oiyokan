@@ -34,7 +34,7 @@ public class OiyoSqlInfo {
     private String entitySetName;
 
     private final StringBuilder sqlBuilder = new StringBuilder();
-    private final List<String> columnNameList = new ArrayList<>();
+    private final List<String> selectColumnNameList = new ArrayList<>();
     private final List<Object> sqlParamList = new ArrayList<>();
 
     /**
@@ -66,12 +66,12 @@ public class OiyoSqlInfo {
     }
 
     /**
-     * 項目名.
+     * SELECT で選択た項目を取得.
      * 
      * @return 項目名のリスト.
      */
-    public List<String> getColumnNameList() {
-        return columnNameList;
+    public List<String> getSelectColumnNameList() {
+        return selectColumnNameList;
     }
 
     /**
