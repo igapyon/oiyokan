@@ -42,7 +42,8 @@ class Build34ORACLETest {
 
     @Test
     void test01() throws Exception {
-        if (true)
+        final boolean IS_RUN_THISMETHOD = false;
+        if (!IS_RUN_THISMETHOD)
             return;
 
         final OiyoInfo oiyoInfo = new OiyoInfo();

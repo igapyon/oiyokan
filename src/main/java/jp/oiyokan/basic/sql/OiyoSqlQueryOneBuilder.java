@@ -34,6 +34,7 @@ import jp.oiyokan.dto.OiyoSettingsProperty;
  * データベースから1件レコードを検索.
  */
 public class OiyoSqlQueryOneBuilder {
+    @SuppressWarnings("unused")
     private static final Log log = LogFactory.getLog(OiyoSqlQueryOneBuilder.class);
 
     /**

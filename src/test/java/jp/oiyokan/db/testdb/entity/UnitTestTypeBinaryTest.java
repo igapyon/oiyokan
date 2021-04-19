@@ -65,7 +65,8 @@ class UnitTestTypeBinaryTest {
         // System.err.println(result);
         assertEquals(200, resp.getStatusCode(), "INSERTしたレコードが格納されていることを確認.");
 
-        if (false/* ここは h2 database のときのみ通過が可能 */) {
+        final boolean IS_H2_DATABASE = false;
+        if (IS_H2_DATABASE) {
             // generic JDBC
             try (Connection conn = OiyoCommonJdbcUtil.getConnection(
                     OiyoInfoUtil.getOiyoDatabaseByName(oiyoInfo, OiyokanConstants.OIYOKAN_UNITTEST_DB))) {

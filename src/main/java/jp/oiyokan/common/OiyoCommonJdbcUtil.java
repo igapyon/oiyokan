@@ -582,6 +582,8 @@ public class OiyoCommonJdbcUtil {
                 sqlInfo.getSqlParamList().add(inputParam);
             } else if (inputParam instanceof java.util.Calendar) {
                 java.util.Calendar cal = (java.util.Calendar) inputParam;
+                // TODO FIXME 以下の箇所をいつか内容確認。
+                @SuppressWarnings("deprecation")
                 java.sql.Time look = new java.sql.Time(cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE),
                         cal.get(Calendar.SECOND));
                 sqlInfo.getSqlBuilder().append("?");

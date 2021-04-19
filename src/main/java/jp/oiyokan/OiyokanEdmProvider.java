@@ -108,15 +108,16 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
                     OiyokanEdmProvider.getOiyoInfoInstance(), entitySet);
             CsdlEntityType entityType = entityTypeBuilder.getEntityType();
 
-            if (false) {
-                log.trace("csdlEntityType: " + entityType.getName());
+            if (log.isTraceEnabled()) {
+                log.trace("[TRACE] CsdlEntityType: " + entityType.getName());
                 for (CsdlPropertyRef key : entityType.getKey()) {
-                    log.trace("  key: " + key.getName());
+                    log.trace("[TRACE]  key: " + key.getName());
                 }
                 for (CsdlProperty prop : entityType.getProperties()) {
-                    log.trace("  prop: " + prop.getName());
+                    log.trace("[TRACE]  prop: " + prop.getName());
                 }
             }
+
             return entityType;
         } catch (ODataApplicationException ex) {
             log.error("ERROR: OiyokanEdmProvider#getEntityType(" + entityTypeName + "): " + ex.toString());

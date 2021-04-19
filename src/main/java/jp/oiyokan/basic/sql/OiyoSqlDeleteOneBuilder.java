@@ -33,6 +33,7 @@ import jp.oiyokan.dto.OiyoSettingsProperty;
  * データベースから1件レコードを削除.
  */
 public class OiyoSqlDeleteOneBuilder {
+    @SuppressWarnings("unused")
     private static final Log log = LogFactory.getLog(OiyoSqlDeleteOneBuilder.class);
 
     /**
