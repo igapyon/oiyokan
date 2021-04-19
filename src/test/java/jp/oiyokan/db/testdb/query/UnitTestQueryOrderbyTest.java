@@ -49,6 +49,7 @@ class UnitTestQueryOrderbyTest {
             return;
 
         final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1", "$orderby=ID&$top=2");
+        @SuppressWarnings("unused")
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         // コンテンツ内容は確認なし.

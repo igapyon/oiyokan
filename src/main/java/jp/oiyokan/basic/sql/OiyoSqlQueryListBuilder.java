@@ -40,6 +40,7 @@ import jp.oiyokan.dto.OiyoSettingsProperty;
  * SQL文を構築するための簡易クラス.
  */
 public class OiyoSqlQueryListBuilder {
+    @SuppressWarnings("unused")
     private static final Log log = LogFactory.getLog(OiyoSqlQueryListBuilder.class);
 
     /**

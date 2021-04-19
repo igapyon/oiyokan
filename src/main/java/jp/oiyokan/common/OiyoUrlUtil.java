@@ -27,6 +27,7 @@ import org.apache.commons.logging.LogFactory;
  * Oiyokan 関連の URL まわりユーティリティクラス.
  */
 public class OiyoUrlUtil {
+    @SuppressWarnings("unused")
     private static final Log log = LogFactory.getLog(OiyoUrlUtil.class);
 
     private OiyoUrlUtil() {

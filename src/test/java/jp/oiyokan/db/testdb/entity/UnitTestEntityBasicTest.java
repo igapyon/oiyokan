@@ -72,6 +72,7 @@ class UnitTestEntityBasicTest {
                 + "  \"ID\":" + TEST_ID + ",\n" //
                 + "  \"Name\":\"Name\",\n" //
                 + "  \"Description\":\"Description\"\n" + "}");
+        @SuppressWarnings("unused")
         String result = OiyokanTestUtil.stream2String(resp.getContent());
         // System.err.println(result);
         assertEquals(201, resp.getStatusCode());

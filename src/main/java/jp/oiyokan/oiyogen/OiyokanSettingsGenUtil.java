@@ -44,6 +44,7 @@ import jp.oiyokan.util.OiyoMapJdbcEdmUtil;
  * Oiyokan (OData v4 server) が動作する際に必要になる内部管理データベースのバージョン情報および Oiyo情報 をセットアップ.
  */
 public class OiyokanSettingsGenUtil {
+    @SuppressWarnings("unused")
     private static final Log log = LogFactory.getLog(OiyokanSettingsGenUtil.class);
 
     private OiyokanSettingsGenUtil() {

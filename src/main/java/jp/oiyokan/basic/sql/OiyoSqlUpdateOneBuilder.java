@@ -35,6 +35,7 @@ import jp.oiyokan.dto.OiyoSettingsProperty;
  * データベースの1件レコードを更新.
  */
 public class OiyoSqlUpdateOneBuilder {
+    @SuppressWarnings("unused")
     private static final Log log = LogFactory.getLog(OiyoSqlUpdateOneBuilder.class);
 
     /**
