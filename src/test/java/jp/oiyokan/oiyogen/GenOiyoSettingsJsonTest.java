@@ -234,7 +234,7 @@ class GenOiyoSettingsJsonTest {
                         { "mssql1", "MSSQL2008",
                                 "Sample MS SQL Server 2008 settings. Change the settings to suit your environment.", //
                                 "com.microsoft.sqlserver.jdbc.SQLServerDriver", //
-                                "jdbc:sqlserver://localhost\\SQLExpress;SelectMethod=cursor", //
+                                "jdbc:sqlserver://localhost\\SQLExpress", //
                                 "sa", "passwd123" }, //
                         { "oracle1", "ORACLE",
                                 "Sample Oracle XE (18c) settings. Change the settings to suit your environment.", //
@@ -306,8 +306,12 @@ class GenOiyoSettingsJsonTest {
 
             for (String tableName : tableNameList) {
                 // System.err.println("tabname: "+tableName);
-                oiyoSettings.getEntitySet().add(OiyokanSettingsGenUtil.generateCreateOiyoJson(connTargetDb, tableName,
-                        OiyokanConstants.DatabaseType.valueOf(settingsDatabase.getType())));
+                try {
+                    oiyoSettings.getEntitySet().add(OiyokanSettingsGenUtil.generateCreateOiyoJson(connTargetDb,
+                            tableName, OiyokanConstants.DatabaseType.valueOf(settingsDatabase.getType())));
+                } catch (Exception ex) {
+                    System.err.println(ex.toString());
+                }
             }
 
             for (OiyoSettingsEntitySet entitySet : oiyoSettings.getEntitySet()) {

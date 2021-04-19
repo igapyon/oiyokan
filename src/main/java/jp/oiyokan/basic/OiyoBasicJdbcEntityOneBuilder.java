@@ -127,25 +127,30 @@ public class OiyoBasicJdbcEntityOneBuilder {
             }
 
             final long endMillisec = System.currentTimeMillis();
-            if (OiyokanConstants.IS_TRACE_ODATA_V4) {
-                final long elapsed = endMillisec - startMillisec;
-                if (elapsed >= 10) {
-                    // [IY1073] OData v4: SQL: elapsed
-                    log.info(OiyokanMessages.IY1073 + ": " + (endMillisec - startMillisec));
-                }
+            final long elapsed = endMillisec - startMillisec;
+            if (elapsed >= 10) {
+                // [IY1073] OData v4: SQL: elapsed
+                log.info(OiyokanMessages.IY1073 + ": " + (endMillisec - startMillisec));
             }
 
             return ent;
         } catch (SQLTimeoutException ex) {
-            // [M208] SQL timeout at execute (readEntity)
+            // [IY3501] SQL timeout at query one
             log.error(OiyokanMessages.IY3501 + ": " + sql + ", " + ex.toString());
             throw new ODataApplicationException(OiyokanMessages.IY3501 + ": " + sql, //
                     OiyokanMessages.IY3501_CODE, Locale.ENGLISH);
         } catch (SQLException ex) {
-            // [M209] Fail to execute SQL (readEntity)
-            log.error(OiyokanMessages.IY3106 + ": " + sql + ", " + ex.toString());
-            throw new ODataApplicationException(OiyokanMessages.IY3106 + ": " + sql, //
-                    OiyokanMessages.IY3106_CODE, Locale.ENGLISH);
+            if (ex.toString().indexOf("timed out") >= 0 /* SQL Server 2008 */) {
+                // [IY3502] SQL timeout at query one
+                log.error(OiyokanMessages.IY3502 + ": " + sql + ", " + ex.toString());
+                throw new ODataApplicationException(OiyokanMessages.IY3502 + ": " + sql, //
+                        OiyokanMessages.IY3502_CODE, Locale.ENGLISH);
+            } else {
+                // [IY3106] Fail to execute SQL (readEntity)
+                log.error(OiyokanMessages.IY3106 + ": " + sql + ", " + ex.toString());
+                throw new ODataApplicationException(OiyokanMessages.IY3106 + ": " + sql, //
+                        OiyokanMessages.IY3106_CODE, Locale.ENGLISH);
+            }
         }
     }
 

@@ -27,7 +27,7 @@ public class OiyokanConstants {
     /**
      * Oiyokan のバージョン番号
      */
-    public static final String VERSION = "1.5.20210418d";
+    public static final String VERSION = "1.5.20210419c";
 
     /**
      * OData のルートパス.
@@ -38,11 +38,6 @@ public class OiyokanConstants {
      * JDBC Statement のタイムアウト値.
      */
     public static final int JDBC_STMT_TIMEOUT = 30;
-
-    /**
-     * Oiyokan がリクエストを処理する際の 'OData v4' からはじまるトレースを出力するかどうか。
-     */
-    public static final boolean IS_TRACE_ODATA_V4 = true;
 
     /**
      * 実験的な $search 機能(全文検索)が有効化されているかどうか。

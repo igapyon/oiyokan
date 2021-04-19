@@ -132,9 +132,13 @@ public class OiyokanEntityProcessor implements EntityProcessor {
             response.setStatusCode(HttpStatusCode.OK.getStatusCode());
             response.setHeader(HttpHeader.CONTENT_TYPE, responseFormat.toContentTypeString());
 
-        } catch (RuntimeException ex) {
+        } catch (ODataApplicationException ex) {
             log.error("ERROR: OiyokanEntityProcessor#readEntity(" + request.getRawODataPath() + ","
-                    + request.getRawQueryPath() + ")", ex);
+                    + request.getRawQueryPath() + "): " + ex.toString());
+            throw ex;
+        } catch (RuntimeException ex) {
+            log.fatal("FATAL: OiyokanEntityProcessor#readEntity(" + request.getRawODataPath() + ","
+                    + request.getRawQueryPath() + "): " + ex.toString(), ex);
             throw ex;
         }
     }
@@ -195,9 +199,13 @@ public class OiyokanEntityProcessor implements EntityProcessor {
             response.setStatusCode(HttpStatusCode.CREATED.getStatusCode());
             response.setHeader(HttpHeader.CONTENT_TYPE, responseFormat.toContentTypeString());
 
-        } catch (RuntimeException ex) {
+        } catch (ODataApplicationException ex) {
             log.error("ERROR: OiyokanEntityProcessor#createEntity(" + request.getRawODataPath() + ","
-                    + request.getRawQueryPath() + ")");
+                    + request.getRawQueryPath() + "): " + ex.toString());
+            throw ex;
+        } catch (RuntimeException ex) {
+            log.fatal("FATAL: OiyokanEntityProcessor#createEntity(" + request.getRawODataPath() + ","
+                    + request.getRawQueryPath() + "): " + ex.toString(), ex);
             throw ex;
         }
     }
@@ -266,9 +274,13 @@ public class OiyokanEntityProcessor implements EntityProcessor {
             response.setStatusCode(HttpStatusCode.NO_CONTENT.getStatusCode());
             response.setHeader(HttpHeader.CONTENT_TYPE, responseFormat.toContentTypeString());
 
-        } catch (RuntimeException ex) {
+        } catch (ODataApplicationException ex) {
             log.error("ERROR: OiyokanEntityProcessor#updateEntity(" + request.getRawODataPath() + ","
-                    + request.getRawQueryPath() + ")");
+                    + request.getRawQueryPath() + "): " + ex.toString());
+            throw ex;
+        } catch (RuntimeException ex) {
+            log.fatal("FATAL: OiyokanEntityProcessor#updateEntity(" + request.getRawODataPath() + ","
+                    + request.getRawQueryPath() + "): " + ex.toString(), ex);
             throw ex;
         }
     }
@@ -305,9 +317,13 @@ public class OiyokanEntityProcessor implements EntityProcessor {
             // 3. configure the response object
             response.setStatusCode(HttpStatusCode.NO_CONTENT.getStatusCode());
 
-        } catch (RuntimeException ex) {
+        } catch (ODataApplicationException ex) {
             log.error("ERROR: OiyokanEntityProcessor#deleteEntity(" + request.getRawODataPath() + ","
-                    + request.getRawQueryPath() + ")");
+                    + request.getRawQueryPath() + "): " + ex.toString());
+            throw ex;
+        } catch (RuntimeException ex) {
+            log.fatal("FATAL: OiyokanEntityProcessor#deleteEntity(" + request.getRawODataPath() + ","
+                    + request.getRawQueryPath() + "): " + ex.toString(), ex);
             throw ex;
         }
     }

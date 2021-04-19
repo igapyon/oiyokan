@@ -20,6 +20,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Locale;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.olingo.server.api.ODataApplicationException;
 import org.junit.jupiter.api.Test;
 
@@ -34,6 +36,8 @@ import jp.oiyokan.dto.OiyoSettingsDatabase;
  * テスト用の内部データベースを作成します。この内部データベースは動作の上で必要です。
  */
 class Build00H2InterDbTest {
+    private static final Log log = LogFactory.getLog(Build00H2InterDbTest.class);
+
     private static final String[][] OIYOKAN_FILE_SQLS = new String[][] { //
             /*
              * Oiyokan の基本機能を確認およびビルド時の JUnitテストで利用. 変更するとビルドが動作しなくなる場合あり.
@@ -53,9 +57,8 @@ class Build00H2InterDbTest {
     void test01() throws Exception {
         if (new File("./src/main/resources/db/oiyokan-internal.mv.db").exists()) {
             // すでにファイルが存在する場合は処理スキップ。
-            System.err.println("TRACE: InternalTarget (テスト用内部データベース) ファイルはすでに存在するので作成をスキップ。");
-            System.err.println(
-                    "TRACE: InternalTarget (テスト用内部データベース) テスト用内部データベースの内容を更新する場合には、データベースファイルを削除して再度テスト実行してください。");
+            log.info("TRACE: InternalTarget (テスト用内部データベース) ファイルはすでに存在するので作成をスキップ。");
+            log.info("TRACE: InternalTarget (テスト用内部データベース) テスト用内部データベースの内容を更新する場合には、データベースファイルを削除して再度テスト実行してください。");
             return;
         }
 
@@ -63,8 +66,7 @@ class Build00H2InterDbTest {
         oiyoInfo.setSettings(OiyoInfoUtil.loadOiyokanSettings());
 
         for (String[] sqlFileDef : OIYOKAN_FILE_SQLS) {
-            if (OiyokanConstants.IS_TRACE_ODATA_V4)
-                System.err.println("OData: load: internal db:" + sqlFileDef[0] + ", sql: " + sqlFileDef[1]);
+            log.info("OData: load: internal db:" + sqlFileDef[0] + ", sql: " + sqlFileDef[1]);
 
             OiyoSettingsDatabase lookDatabase = OiyoInfoUtil.getOiyoDatabaseByName(oiyoInfo, sqlFileDef[0]);
 
@@ -72,21 +74,18 @@ class Build00H2InterDbTest {
                 final String[] sqls = OiyokanResourceSqlUtil.loadOiyokanResourceSql("oiyokan/sql/" + sqlFileDef[1]);
                 for (String sql : sqls) {
                     try (var stmt = connLoookDatabase.prepareStatement(sql.trim())) {
-                        // System.err.println("SQL: " + sql);
                         stmt.executeUpdate();
                         connLoookDatabase.commit();
                     } catch (SQLException ex) {
-                        System.err.println(
-                                "UNEXPECTED: Fail to execute SQL for local internal table(2): " + ex.toString());
+                        log.error("UNEXPECTED: Fail to execute SQL for local internal table(2): " + ex.toString());
                         throw new ODataApplicationException(
                                 "UNEXPECTED: Fail to execute SQL for local internal table(2)", 500, Locale.ENGLISH);
                     }
                 }
 
-                if (OiyokanConstants.IS_TRACE_ODATA_V4)
-                    System.err.println("OData: load: internal db: end: " + sqlFileDef[0] + ", sql: " + sqlFileDef[1]);
+                log.info("OData: load: internal db: end: " + sqlFileDef[0] + ", sql: " + sqlFileDef[1]);
             } catch (SQLException ex) {
-                System.err.println("UNEXPECTED: Fail to execute Dabaase: " + ex.toString());
+                log.error("UNEXPECTED: Fail to execute Dabaase: " + ex.toString());
                 throw new ODataApplicationException("UNEXPECTED: Fail to execute Dabaase", 500, Locale.ENGLISH);
             }
         }
