@@ -52,9 +52,10 @@ class SakilaDollSearchTest {
                 System.err.println("TRACE: " + OiyoUrlUtil.decodeUrlQuery(entrys[1]));
                 System.err.println("[" + entrys[0] + "], [" + entrys[1] + "], result: " + result);
             }
+            // System.err.println(result);
             int statusCode = resp.getStatusCode();
             if (entrys[0].equals("SklFilmLists")
-                    && result.startsWith("{\"error\":{\"code\":null,\"message\":\"[M015] UNEXPECTED:")
+                    && result.startsWith("{\"error\":{\"code\":null,\"message\":\"[IY2104] UNEXPECTED:")
                     && statusCode != 200) {
                 // Postgresでこのパターンでエラーになるが気にしない。
             } else if (entrys[0].equals("SklFilms")
