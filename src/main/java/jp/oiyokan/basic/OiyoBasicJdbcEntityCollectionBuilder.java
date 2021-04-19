@@ -18,7 +18,6 @@ package jp.oiyokan.basic;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.Connection;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.SQLTimeoutException;
 import java.util.Locale;
@@ -42,9 +41,11 @@ import jp.oiyokan.basic.sql.OiyoSqlQueryListBuilder;
 import jp.oiyokan.common.OiyoCommonJdbcUtil;
 import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.common.OiyoInfoUtil;
+import jp.oiyokan.common.OiyoSqlInfo;
 import jp.oiyokan.common.OiyoUrlUtil;
 import jp.oiyokan.dto.OiyoSettingsDatabase;
 import jp.oiyokan.dto.OiyoSettingsEntitySet;
+import jp.oiyokan.dto.OiyoSettingsProperty;
 import jp.oiyokan.h2.data.OiyoExperimentalH2FullTextSearch;
 
 /**
@@ -166,6 +167,8 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
 
     private void processCountQuery(String entitySetName, UriInfo uriInfo, Connection connTargetDb,
             EntityCollection entityCollection) throws ODataApplicationException {
+        final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, entitySetName);
+
         // 件数をカウントして設定。
         OiyoSqlQueryListBuilder basicSqlBuilder = new OiyoSqlQueryListBuilder(oiyoInfo, entitySetName);
         basicSqlBuilder.buildSelectCountQuery(uriInfo);
@@ -177,8 +180,8 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
         int countWithWhere = 0;
         final long startMillisec = System.currentTimeMillis();
         try (var stmt = connTargetDb.prepareStatement(sql)) {
-            // set query timeout
-            stmt.setQueryTimeout(OiyokanConstants.JDBC_STMT_TIMEOUT);
+            final int jdbcStmtTimeout = (entitySet.getJdbcStmtTimeout() == null ? 30 : entitySet.getJdbcStmtTimeout());
+            stmt.setQueryTimeout(jdbcStmtTimeout);
 
             int column = 1;
             for (Object look : basicSqlBuilder.getSqlInfo().getSqlParamList()) {
@@ -230,25 +233,35 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
      */
     public void processCollectionQuery(String entitySetName, UriInfo uriInfo, Connection connTargetDb,
             EntityCollection entityCollection) throws ODataApplicationException {
+        final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, entitySetName);
+
         OiyoSqlQueryListBuilder basicSqlBuilder = new OiyoSqlQueryListBuilder(oiyoInfo, entitySetName);
 
         // UriInfo 情報を元に SQL文を組み立て.
         basicSqlBuilder.buildSelectQuery(uriInfo);
         final String sql = basicSqlBuilder.getSqlInfo().getSqlBuilder().toString();
+        final OiyoSqlInfo sqlInfo = basicSqlBuilder.getSqlInfo();
+
+        if (sqlInfo.getColumnNameList().size() == 0) {
+            new Exception("TRACE: ここはどこ").printStackTrace();
+
+            // TODO FIXME message
+            log.error(OiyokanMessages.IY9999 + ": 想定外。サイズが0");
+            throw new ODataApplicationException(OiyokanMessages.IY9999 + ": 想定外。サイズが0", //
+                    OiyokanMessages.IY9999_CODE, Locale.ENGLISH);
+        }
 
         // [IY1064] OData v4: SQL collect
         log.info(OiyokanMessages.IY1064 + ": " + sql);
 
-        final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, entitySetName);
-
         final long startMillisec = System.currentTimeMillis();
         try (var stmt = connTargetDb.prepareStatement(sql)) {
-            // set query timeout
-            stmt.setQueryTimeout(OiyokanConstants.JDBC_STMT_TIMEOUT);
+            final int jdbcStmtTimeout = (entitySet.getJdbcStmtTimeout() == null ? 30 : entitySet.getJdbcStmtTimeout());
+            stmt.setQueryTimeout(jdbcStmtTimeout);
 
             // 組み立て後のバインド変数を PreparedStatement にセット.
             int idxColumn = 1;
-            for (Object look : basicSqlBuilder.getSqlInfo().getSqlParamList()) {
+            for (Object look : sqlInfo.getSqlParamList()) {
                 OiyoCommonJdbcUtil.bindPreparedParameter(stmt, idxColumn++, look);
             }
 
@@ -257,15 +270,13 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
 
             // 検索結果を取得.
             var rset = stmt.getResultSet();
-            ResultSetMetaData rsmeta = null;
             for (; rset.next();) {
-                if (rsmeta == null) {
-                    rsmeta = rset.getMetaData();
-                }
                 final Entity ent = new Entity();
-                for (int column = 1; column <= rsmeta.getColumnCount(); column++) {
+                for (int column = 1; column <= sqlInfo.getColumnNameList().size(); column++) {
                     // 取得された検索結果を Property に組み替え.
-                    Property prop = OiyoCommonJdbcUtil.resultSet2Property(oiyoInfo, rset, rsmeta, column, entitySet);
+                    OiyoSettingsProperty oiyoProp = OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, entitySetName,
+                            sqlInfo.getColumnNameList().get(column - 1));
+                    Property prop = OiyoCommonJdbcUtil.resultSet2Property(oiyoInfo, rset, column, entitySet, oiyoProp);
                     ent.addProperty(prop);
                 }
 

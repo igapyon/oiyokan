@@ -101,7 +101,7 @@ class UnitTestTypeCharTest {
         assertEquals(204, resp.getStatusCode());
 
         resp = OiyokanTestUtil.callRequestGetResponse( //
-        "/ODataTests2(" + OiyoUrlUtil.encodeUrlQuery(uri) + ")", null);
+                "/ODataTests2(" + OiyoUrlUtil.encodeUrlQuery(uri) + ")", null);
         assertEquals(404, resp.getStatusCode());
     }
 
@@ -147,7 +147,7 @@ class UnitTestTypeCharTest {
         assertEquals(204, resp.getStatusCode());
 
         resp = OiyokanTestUtil.callRequestGetResponse( //
-        "/ODataTests2(" + OiyoUrlUtil.encodeUrlQuery(uri) + ")", null);
+                "/ODataTests2(" + OiyoUrlUtil.encodeUrlQuery(uri) + ")", null);
         assertEquals(404, resp.getStatusCode());
     }
 }

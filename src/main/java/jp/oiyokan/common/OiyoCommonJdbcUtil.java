@@ -71,6 +71,7 @@ import jp.oiyokan.dto.OiyoSettingsEntitySet;
 import jp.oiyokan.dto.OiyoSettingsProperty;
 import jp.oiyokan.util.OiyoDateTimeUtil;
 import jp.oiyokan.util.OiyoEdmUtil;
+import jp.oiyokan.util.OiyoJdbcUtil;
 
 /**
  * Oiyokan 関連の JDBC まわりユーティリティクラス.
@@ -189,30 +190,26 @@ public class OiyoCommonJdbcUtil {
      * @throws SQLException              SQL例外が発生した場合.
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
-    public static Property resultSet2Property(OiyoInfo oiyoInfo, ResultSet rset, ResultSetMetaData rsmeta, int column,
-            OiyoSettingsEntitySet entitySet) throws ODataApplicationException, SQLException {
-        // 基本的に CSDL で処理するが、やむを得ない場所のみ ResultSetMetaData を利用する
-        OiyoSettingsProperty prop = null;
+    public static Property resultSet2Property(OiyoInfo oiyoInfo, ResultSet rset, int column,
+            OiyoSettingsEntitySet entitySet, OiyoSettingsProperty property)
+            throws ODataApplicationException, SQLException {
+        OiyoSettingsProperty oiyoProp = null;
         for (OiyoSettingsProperty look : OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, entitySet.getName()).getEntityType()
                 .getProperty()) {
-            // 大文字小文字を無視。
-            if (rsmeta.getColumnName(column).equalsIgnoreCase(look.getDbName())) {
-                prop = look;
+            if (property.getName().equals(look.getName())) {
+                oiyoProp = look;
+                break;
             }
         }
-        if (prop == null) {
+        if (oiyoProp == null) {
             // [M041] Fail to find Property from DB name.
-            log.error(OiyokanMessages.IY7123 + "EntitySet:" + entitySet.getName() + " DB:"
-                    + rsmeta.getColumnName(column));
-            throw new ODataApplicationException(
-                    OiyokanMessages.IY7123 + "EntitySet:" + entitySet.getName() + " DB:" + rsmeta.getColumnName(column), //
-                    500, Locale.ENGLISH);
+            log.error(OiyokanMessages.IY7123 + "EntitySet:" + entitySet.getName() + " Prop:" + property.getName());
+            throw new ODataApplicationException(OiyokanMessages.IY7123 + "EntitySet:" + entitySet.getName() + " Prop:" //
+                    + property.getName(), 500, Locale.ENGLISH);
         }
 
-        final String propName = prop.getName();
-        final OiyoSettingsProperty csdlProp = OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, entitySet.getName(),
-                propName);
-        final String edmTypeName = csdlProp.getEdmType();
+        final String propName = oiyoProp.getName();
+        final String edmTypeName = oiyoProp.getEdmType();
         final EdmPrimitiveType edmType = OiyoEdmUtil.string2EdmType(edmTypeName);
         if (EdmSByte.getInstance() == edmType) {
             return new Property(edmTypeName, propName, ValueType.PRIMITIVE, rset.getByte(column));
@@ -241,22 +238,21 @@ public class OiyoCommonJdbcUtil {
         } else if (EdmTimeOfDay.getInstance() == edmType) {
             return new Property(edmTypeName, propName, ValueType.PRIMITIVE, rset.getTime(column));
         } else if (EdmString.getInstance() == edmType) {
-            // 基本的に OiyoInfo以下 EntitySet で処理するが、やむを得ない場所のみ ResultSetMetaData を利用する
-            if (Types.CLOB == rsmeta.getColumnType(column)) {
+            if (Types.CLOB == OiyoJdbcUtil.string2Types(property.getJdbcType())) {
                 try {
                     return new Property(edmTypeName, propName, ValueType.PRIMITIVE,
                             StreamUtils.copyToString(rset.getAsciiStream(column), Charset.forName("UTF-8")));
                 } catch (IOException ex) {
                     // [M007] UNEXPECTED: fail to read from CLOB
-                    log.error(OiyokanMessages.IY7107 + ": " + rsmeta.getColumnName(column) + ": " + ex.toString(), ex);
-                    throw new ODataApplicationException(OiyokanMessages.IY7107 + ": " + rsmeta.getColumnName(column), //
+                    log.error(OiyokanMessages.IY7107 + ": " + property.getName() + ": " + ex.toString(), ex);
+                    throw new ODataApplicationException(OiyokanMessages.IY7107 + ": " + property.getName(), //
                             500, Locale.ENGLISH);
                 }
             } else {
                 String value = rset.getString(column);
-                if (prop.getLengthFixed() != null && prop.getLengthFixed() && prop.getMaxLength() != null) {
+                if (oiyoProp.getLengthFixed() != null && oiyoProp.getLengthFixed() && oiyoProp.getMaxLength() != null) {
                     // 固定朝文字列。CHAR の後方に空白をFILL。
-                    final int fixedLength = prop.getMaxLength();
+                    final int fixedLength = oiyoProp.getMaxLength();
                     value = StringUtils.padString(value, fixedLength);
                 }
                 return new Property(edmTypeName, propName, ValueType.PRIMITIVE, value);
@@ -267,8 +263,8 @@ public class OiyoCommonJdbcUtil {
                         StreamUtils.copyToByteArray(rset.getBinaryStream(column)));
             } catch (IOException ex) {
                 // [M008] UNEXPECTED: fail to read from binary
-                log.error(OiyokanMessages.IY7108 + ": " + rsmeta.getColumnName(column) + ": " + ex.toString(), ex);
-                throw new ODataApplicationException(OiyokanMessages.IY7108 + ": " + rsmeta.getColumnName(column), //
+                log.error(OiyokanMessages.IY7108 + ": " + property.getName() + ": " + ex.toString(), ex);
+                throw new ODataApplicationException(OiyokanMessages.IY7108 + ": " + property.getName(), //
                         500, Locale.ENGLISH);
             }
         } else if (EdmGuid.getInstance() == edmType) {
@@ -286,17 +282,17 @@ public class OiyoCommonJdbcUtil {
                 return new Property(edmTypeName, propName, ValueType.PRIMITIVE, look);
             } else {
                 // [M033] NOT SUPPORTED: unknown UUID object given
-                log.error(OiyokanMessages.IY2106 + ": type[" + csdlProp.getEdmType() + "], "
+                log.error(OiyokanMessages.IY2106 + ": type[" + oiyoProp.getEdmType() + "], "
                         + obj.getClass().getCanonicalName());
-                throw new ODataApplicationException(OiyokanMessages.IY2106 + ": type[" + csdlProp.getEdmType() + "], "
+                throw new ODataApplicationException(OiyokanMessages.IY2106 + ": type[" + oiyoProp.getEdmType() + "], "
                         + obj.getClass().getCanonicalName(), OiyokanMessages.IY2106_CODE, Locale.ENGLISH);
             }
         } else {
             // ARRAY と OTHER には対応しない。そもそもここ通過しないのじゃないの?
             // [M009] UNEXPECTED: missing impl
-            log.error(OiyokanMessages.IY7109 + ": type[" + edmTypeName + "], " + rsmeta.getColumnName(column));
+            log.error(OiyokanMessages.IY7109 + ": type[" + edmTypeName + "], " + property.getName());
             throw new ODataApplicationException(
-                    OiyokanMessages.IY7109 + ": type[" + edmTypeName + "], " + rsmeta.getColumnName(column), //
+                    OiyokanMessages.IY7109 + ": type[" + edmTypeName + "], " + property.getName(), //
                     500, Locale.ENGLISH);
         }
     }
@@ -728,8 +724,8 @@ public class OiyoCommonJdbcUtil {
      * @return (もしあれば)生成されたキーのリスト.
      * @throws ODataApplicationException
      */
-    public static List<String> executeDml(Connection connTargetDb, OiyoSqlInfo sqlInfo, boolean returnGeneratedKeys)
-            throws ODataApplicationException {
+    public static List<String> executeDml(Connection connTargetDb, OiyoSqlInfo sqlInfo, OiyoSettingsEntitySet entitySet,
+            boolean returnGeneratedKeys) throws ODataApplicationException {
         final String sql = sqlInfo.getSqlBuilder().toString();
         // TODO message
         log.info("OData v4: TRACE: SQL exec: " + sql);
@@ -737,8 +733,8 @@ public class OiyoCommonJdbcUtil {
         final long startMillisec = System.currentTimeMillis();
         try (var stmt = connTargetDb.prepareStatement(sql, //
                 (returnGeneratedKeys ? Statement.RETURN_GENERATED_KEYS : Statement.NO_GENERATED_KEYS))) {
-            // set query timeout
-            stmt.setQueryTimeout(OiyokanConstants.JDBC_STMT_TIMEOUT);
+            final int jdbcStmtTimeout = (entitySet.getJdbcStmtTimeout() == null ? 30 : entitySet.getJdbcStmtTimeout());
+            stmt.setQueryTimeout(jdbcStmtTimeout);
 
             int idxColumn = 1;
             for (Object look : sqlInfo.getSqlParamList()) {

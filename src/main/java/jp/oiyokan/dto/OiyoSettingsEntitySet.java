@@ -32,7 +32,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({ "name", "description", "dbSettingName", "canCreate", "canRead", "canUpdate", "canDelete",
-        "omitCountAll", "entityType" })
+        "omitCountAll", "jdbcStmtTimeout", "entityType" })
 @Generated("jsonschema2pojo")
 public class OiyoSettingsEntitySet {
     @JsonProperty("name")
@@ -51,6 +51,8 @@ public class OiyoSettingsEntitySet {
     private Boolean canDelete;
     @JsonProperty("omitCountAll")
     private Boolean omitCountAll;
+    @JsonProperty("jdbcStmtTimeout")
+    private Integer jdbcStmtTimeout;
     @JsonProperty("entityType")
     private OiyoSettingsEntityType entityType;
     @JsonIgnore
@@ -134,6 +136,16 @@ public class OiyoSettingsEntitySet {
     @JsonProperty("omitCountAll")
     public void setOmitCountAll(Boolean omitCountAll) {
         this.omitCountAll = omitCountAll;
+    }
+
+    @JsonProperty("jdbcStmtTimeout")
+    public Integer getJdbcStmtTimeout() {
+        return jdbcStmtTimeout;
+    }
+
+    @JsonProperty("jdbcStmtTimeout")
+    public void setJdbcStmtTimeout(Integer jdbcStmtTimeout) {
+        this.jdbcStmtTimeout = jdbcStmtTimeout;
     }
 
     @JsonProperty("entityType")

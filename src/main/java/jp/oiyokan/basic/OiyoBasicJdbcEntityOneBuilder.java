@@ -50,6 +50,7 @@ import jp.oiyokan.common.OiyoInfoUtil;
 import jp.oiyokan.common.OiyoSqlInfo;
 import jp.oiyokan.dto.OiyoSettingsDatabase;
 import jp.oiyokan.dto.OiyoSettingsEntitySet;
+import jp.oiyokan.dto.OiyoSettingsProperty;
 
 /**
  * Entity 1件の検索に関する基本的なJDBC処理
@@ -90,13 +91,22 @@ public class OiyoBasicJdbcEntityOneBuilder {
         new OiyoSqlQueryOneBuilder(oiyoInfo, sqlInfo).buildSelectOneQuery(edmEntitySet.getName(), keyPredicates);
 
         final String sql = sqlInfo.getSqlBuilder().toString();
+
+        if (sqlInfo.getColumnNameList().size() == 0) {
+            new Exception("TRACE: ここはどこ").printStackTrace();
+            // TODO FIXME message
+            log.error(OiyokanMessages.IY9999 + ": 想定外。サイズが0");
+            throw new ODataApplicationException(OiyokanMessages.IY9999 + ": 想定外。サイズが0", //
+                    OiyokanMessages.IY9999_CODE, Locale.ENGLISH);
+        }
+
         // [IY1072] OData v4: SQL single
         log.info(OiyokanMessages.IY1072 + "OData v4: TRACE: SQL single: " + sql);
 
         final long startMillisec = System.currentTimeMillis();
         try (var stmt = connTargetDb.prepareStatement(sql)) {
-            // set query timeout
-            stmt.setQueryTimeout(OiyokanConstants.JDBC_STMT_TIMEOUT);
+            final int jdbcStmtTimeout = (entitySet.getJdbcStmtTimeout() == null ? 30 : entitySet.getJdbcStmtTimeout());
+            stmt.setQueryTimeout(jdbcStmtTimeout);
 
             int idxColumn = 1;
             for (Object look : sqlInfo.getSqlParamList()) {
@@ -115,7 +125,21 @@ public class OiyoBasicJdbcEntityOneBuilder {
             final ResultSetMetaData rsmeta = rset.getMetaData();
             final Entity ent = new Entity();
             for (int column = 1; column <= rsmeta.getColumnCount(); column++) {
-                Property prop = OiyoCommonJdbcUtil.resultSet2Property(oiyoInfo, rset, rsmeta, column, entitySet);
+                OiyoSettingsProperty oiyoProp = null;
+                for (OiyoSettingsProperty prop : entitySet.getEntityType().getProperty()) {
+                    if (prop.getDbName().equalsIgnoreCase(rsmeta.getColumnName(column))) {
+                        oiyoProp = prop;
+                        break;
+                    }
+                }
+                if (oiyoProp == null) {
+                    // TODO FIXME message
+                    log.fatal(OiyokanMessages.IY9999 + ": " + "該当項目発見できず");
+                    throw new ODataApplicationException(OiyokanMessages.IY9999 + ": " + "該当項目発見できず", //
+                            OiyokanMessages.IY9999_CODE, Locale.ENGLISH);
+                }
+
+                Property prop = OiyoCommonJdbcUtil.resultSet2Property(oiyoInfo, rset, column, entitySet, oiyoProp);
                 ent.addProperty(prop);
             }
 
@@ -187,7 +211,8 @@ public class OiyoBasicJdbcEntityOneBuilder {
             // Set auto commit OFF.
             connTargetDb.setAutoCommit(false);
             try {
-                final List<String> generatedKeys = OiyoCommonJdbcUtil.executeDml(connTargetDb, sqlInfo, true);
+                final List<String> generatedKeys = OiyoCommonJdbcUtil.executeDml(connTargetDb, sqlInfo, entitySet,
+                        true);
                 // 生成されたキーをその後の処理に反映。
                 final List<UriParameter> keyPredicates = new ArrayList<>();
                 if (DatabaseType.ORACLE == databaseType) {
@@ -286,7 +311,7 @@ public class OiyoBasicJdbcEntityOneBuilder {
             // Set auto commit OFF.
             connTargetDb.setAutoCommit(false);
             try {
-                OiyoCommonJdbcUtil.executeDml(connTargetDb, sqlInfo, false);
+                OiyoCommonJdbcUtil.executeDml(connTargetDb, sqlInfo, entitySet, false);
 
                 // トランザクションを成功としてマーク.
                 isTranSuccessed = true;
@@ -376,7 +401,7 @@ public class OiyoBasicJdbcEntityOneBuilder {
             }
 
             try {
-                OiyoCommonJdbcUtil.executeDml(connTargetDb, sqlInfo, false);
+                OiyoCommonJdbcUtil.executeDml(connTargetDb, sqlInfo, entitySet, false);
 
                 // トランザクションを成功としてマーク.
                 isTranSuccessed = true;
