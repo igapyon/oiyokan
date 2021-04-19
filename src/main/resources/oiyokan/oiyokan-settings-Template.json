@@ -76,6 +76,7 @@
       "canUpdate": true,
       "canDelete": true,
       "omitCountAll": false,
+      "jdbcStmtTimeout": 30,
       "entityType": {
         "name": "Oiyokan",
         "dbName": "Oiyokan",

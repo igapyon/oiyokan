@@ -166,6 +166,8 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
 
     private void processCountQuery(String entitySetName, UriInfo uriInfo, Connection connTargetDb,
             EntityCollection entityCollection) throws ODataApplicationException {
+        final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, entitySetName);
+
         // 件数をカウントして設定。
         OiyoSqlQueryListBuilder basicSqlBuilder = new OiyoSqlQueryListBuilder(oiyoInfo, entitySetName);
         basicSqlBuilder.buildSelectCountQuery(uriInfo);
@@ -177,8 +179,8 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
         int countWithWhere = 0;
         final long startMillisec = System.currentTimeMillis();
         try (var stmt = connTargetDb.prepareStatement(sql)) {
-            // set query timeout
-            stmt.setQueryTimeout(OiyokanConstants.JDBC_STMT_TIMEOUT);
+            final int jdbcStmtTimeout = (entitySet.getJdbcStmtTimeout() == null ? 30 : entitySet.getJdbcStmtTimeout());
+            stmt.setQueryTimeout(jdbcStmtTimeout);
 
             int column = 1;
             for (Object look : basicSqlBuilder.getSqlInfo().getSqlParamList()) {
@@ -230,6 +232,8 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
      */
     public void processCollectionQuery(String entitySetName, UriInfo uriInfo, Connection connTargetDb,
             EntityCollection entityCollection) throws ODataApplicationException {
+        final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, entitySetName);
+
         OiyoSqlQueryListBuilder basicSqlBuilder = new OiyoSqlQueryListBuilder(oiyoInfo, entitySetName);
 
         // UriInfo 情報を元に SQL文を組み立て.
@@ -239,12 +243,10 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
         // [IY1064] OData v4: SQL collect
         log.info(OiyokanMessages.IY1064 + ": " + sql);
 
-        final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, entitySetName);
-
         final long startMillisec = System.currentTimeMillis();
         try (var stmt = connTargetDb.prepareStatement(sql)) {
-            // set query timeout
-            stmt.setQueryTimeout(OiyokanConstants.JDBC_STMT_TIMEOUT);
+            final int jdbcStmtTimeout = (entitySet.getJdbcStmtTimeout() == null ? 30 : entitySet.getJdbcStmtTimeout());
+            stmt.setQueryTimeout(jdbcStmtTimeout);
 
             // 組み立て後のバインド変数を PreparedStatement にセット.
             int idxColumn = 1;

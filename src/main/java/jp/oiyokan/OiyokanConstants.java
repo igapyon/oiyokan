@@ -35,11 +35,6 @@ public class OiyokanConstants {
     public static final String ODATA_ROOTPATH = "/odata4.svc";
 
     /**
-     * JDBC Statement のタイムアウト値.
-     */
-    public static final int JDBC_STMT_TIMEOUT = 30;
-
-    /**
      * 実験的な $search 機能(全文検索)が有効化されているかどうか。
      * 
      * 当面、リリース時には false.

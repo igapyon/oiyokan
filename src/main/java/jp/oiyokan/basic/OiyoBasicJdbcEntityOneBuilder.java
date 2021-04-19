@@ -95,8 +95,8 @@ public class OiyoBasicJdbcEntityOneBuilder {
 
         final long startMillisec = System.currentTimeMillis();
         try (var stmt = connTargetDb.prepareStatement(sql)) {
-            // set query timeout
-            stmt.setQueryTimeout(OiyokanConstants.JDBC_STMT_TIMEOUT);
+            final int jdbcStmtTimeout = (entitySet.getJdbcStmtTimeout() == null ? 30 : entitySet.getJdbcStmtTimeout());
+            stmt.setQueryTimeout(jdbcStmtTimeout);
 
             int idxColumn = 1;
             for (Object look : sqlInfo.getSqlParamList()) {
@@ -187,7 +187,8 @@ public class OiyoBasicJdbcEntityOneBuilder {
             // Set auto commit OFF.
             connTargetDb.setAutoCommit(false);
             try {
-                final List<String> generatedKeys = OiyoCommonJdbcUtil.executeDml(connTargetDb, sqlInfo, true);
+                final List<String> generatedKeys = OiyoCommonJdbcUtil.executeDml(connTargetDb, sqlInfo, entitySet,
+                        true);
                 // 生成されたキーをその後の処理に反映。
                 final List<UriParameter> keyPredicates = new ArrayList<>();
                 if (DatabaseType.ORACLE == databaseType) {
@@ -286,7 +287,7 @@ public class OiyoBasicJdbcEntityOneBuilder {
             // Set auto commit OFF.
             connTargetDb.setAutoCommit(false);
             try {
-                OiyoCommonJdbcUtil.executeDml(connTargetDb, sqlInfo, false);
+                OiyoCommonJdbcUtil.executeDml(connTargetDb, sqlInfo, entitySet, false);
 
                 // トランザクションを成功としてマーク.
                 isTranSuccessed = true;
@@ -376,7 +377,7 @@ public class OiyoBasicJdbcEntityOneBuilder {
             }
 
             try {
-                OiyoCommonJdbcUtil.executeDml(connTargetDb, sqlInfo, false);
+                OiyoCommonJdbcUtil.executeDml(connTargetDb, sqlInfo, entitySet, false);
 
                 // トランザクションを成功としてマーク.
                 isTranSuccessed = true;

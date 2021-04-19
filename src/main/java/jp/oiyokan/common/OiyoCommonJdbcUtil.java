@@ -728,8 +728,8 @@ public class OiyoCommonJdbcUtil {
      * @return (もしあれば)生成されたキーのリスト.
      * @throws ODataApplicationException
      */
-    public static List<String> executeDml(Connection connTargetDb, OiyoSqlInfo sqlInfo, boolean returnGeneratedKeys)
-            throws ODataApplicationException {
+    public static List<String> executeDml(Connection connTargetDb, OiyoSqlInfo sqlInfo, OiyoSettingsEntitySet entitySet,
+            boolean returnGeneratedKeys) throws ODataApplicationException {
         final String sql = sqlInfo.getSqlBuilder().toString();
         // TODO message
         log.info("OData v4: TRACE: SQL exec: " + sql);
@@ -737,8 +737,8 @@ public class OiyoCommonJdbcUtil {
         final long startMillisec = System.currentTimeMillis();
         try (var stmt = connTargetDb.prepareStatement(sql, //
                 (returnGeneratedKeys ? Statement.RETURN_GENERATED_KEYS : Statement.NO_GENERATED_KEYS))) {
-            // set query timeout
-            stmt.setQueryTimeout(OiyokanConstants.JDBC_STMT_TIMEOUT);
+            final int jdbcStmtTimeout = (entitySet.getJdbcStmtTimeout() == null ? 30 : entitySet.getJdbcStmtTimeout());
+            stmt.setQueryTimeout(jdbcStmtTimeout);
 
             int idxColumn = 1;
             for (Object look : sqlInfo.getSqlParamList()) {
