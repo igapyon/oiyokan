@@ -242,7 +242,7 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
         final String sql = basicSqlBuilder.getSqlInfo().getSqlBuilder().toString();
         final OiyoSqlInfo sqlInfo = basicSqlBuilder.getSqlInfo();
 
-        if (sqlInfo.getColumnNameList().size() == 0) {
+        if (sqlInfo.getSelectColumnNameList().size() == 0) {
             new Exception("TRACE: ここはどこ").printStackTrace();
 
             // TODO FIXME message
@@ -272,11 +272,12 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
             var rset = stmt.getResultSet();
             for (; rset.next();) {
                 final Entity ent = new Entity();
-                for (int column = 1; column <= sqlInfo.getColumnNameList().size(); column++) {
+                for (int index = 0; index < sqlInfo.getSelectColumnNameList().size(); index++) {
                     // 取得された検索結果を Property に組み替え.
                     OiyoSettingsProperty oiyoProp = OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, entitySetName,
-                            sqlInfo.getColumnNameList().get(column - 1));
-                    Property prop = OiyoCommonJdbcUtil.resultSet2Property(oiyoInfo, rset, column, entitySet, oiyoProp);
+                            sqlInfo.getSelectColumnNameList().get(index));
+                    Property prop = OiyoCommonJdbcUtil.resultSet2Property(oiyoInfo, rset, index + 1, entitySet,
+                            oiyoProp);
                     ent.addProperty(prop);
                 }
 

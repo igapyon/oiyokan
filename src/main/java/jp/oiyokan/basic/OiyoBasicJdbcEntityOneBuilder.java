@@ -16,7 +16,6 @@
 package jp.oiyokan.basic;
 
 import java.sql.Connection;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.SQLTimeoutException;
 import java.time.Instant;
@@ -92,7 +91,7 @@ public class OiyoBasicJdbcEntityOneBuilder {
 
         final String sql = sqlInfo.getSqlBuilder().toString();
 
-        if (sqlInfo.getColumnNameList().size() == 0) {
+        if (sqlInfo.getSelectColumnNameList().size() == 0) {
             new Exception("TRACE: ここはどこ").printStackTrace();
             // TODO FIXME message
             log.error(OiyokanMessages.IY9999 + ": 想定外。サイズが0");
@@ -122,12 +121,11 @@ public class OiyoBasicJdbcEntityOneBuilder {
                         + sql, OiyokanMessages.IY3105_CODE, Locale.ENGLISH);
             }
 
-            final ResultSetMetaData rsmeta = rset.getMetaData();
             final Entity ent = new Entity();
-            for (int column = 1; column <= rsmeta.getColumnCount(); column++) {
+            for (int index = 0; index < sqlInfo.getSelectColumnNameList().size(); index++) {
                 OiyoSettingsProperty oiyoProp = null;
                 for (OiyoSettingsProperty prop : entitySet.getEntityType().getProperty()) {
-                    if (prop.getDbName().equalsIgnoreCase(rsmeta.getColumnName(column))) {
+                    if (prop.getName().equals(sqlInfo.getSelectColumnNameList().get(index))) {
                         oiyoProp = prop;
                         break;
                     }
@@ -139,7 +137,7 @@ public class OiyoBasicJdbcEntityOneBuilder {
                             OiyokanMessages.IY9999_CODE, Locale.ENGLISH);
                 }
 
-                Property prop = OiyoCommonJdbcUtil.resultSet2Property(oiyoInfo, rset, column, entitySet, oiyoProp);
+                Property prop = OiyoCommonJdbcUtil.resultSet2Property(oiyoInfo, rset, index + 1, entitySet, oiyoProp);
                 ent.addProperty(prop);
             }
 
