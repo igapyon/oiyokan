@@ -62,6 +62,8 @@ import org.apache.olingo.commons.core.edm.primitivetype.EdmTimeOfDay;
 import org.apache.olingo.server.api.ODataApplicationException;
 import org.springframework.util.StreamUtils;
 
+import com.mysql.cj.util.StringUtils;
+
 import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanMessages;
 import jp.oiyokan.dto.OiyoSettingsDatabase;
@@ -190,15 +192,15 @@ public class OiyoCommonJdbcUtil {
     public static Property resultSet2Property(OiyoInfo oiyoInfo, ResultSet rset, ResultSetMetaData rsmeta, int column,
             OiyoSettingsEntitySet entitySet) throws ODataApplicationException, SQLException {
         // 基本的に CSDL で処理するが、やむを得ない場所のみ ResultSetMetaData を利用する
-        String propName = null;
-        for (OiyoSettingsProperty prop : OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, entitySet.getName()).getEntityType()
+        OiyoSettingsProperty prop = null;
+        for (OiyoSettingsProperty look : OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, entitySet.getName()).getEntityType()
                 .getProperty()) {
             // 大文字小文字を無視。
-            if (rsmeta.getColumnName(column).equalsIgnoreCase(prop.getDbName())) {
-                propName = prop.getName();
+            if (rsmeta.getColumnName(column).equalsIgnoreCase(look.getDbName())) {
+                prop = look;
             }
         }
-        if (propName == null) {
+        if (prop == null) {
             // [M041] Fail to find Property from DB name.
             log.error(OiyokanMessages.IY7123 + "EntitySet:" + entitySet.getName() + " DB:"
                     + rsmeta.getColumnName(column));
@@ -207,6 +209,7 @@ public class OiyoCommonJdbcUtil {
                     500, Locale.ENGLISH);
         }
 
+        final String propName = prop.getName();
         final OiyoSettingsProperty csdlProp = OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, entitySet.getName(),
                 propName);
         final String edmTypeName = csdlProp.getEdmType();
@@ -250,7 +253,13 @@ public class OiyoCommonJdbcUtil {
                             500, Locale.ENGLISH);
                 }
             } else {
-                return new Property(edmTypeName, propName, ValueType.PRIMITIVE, rset.getString(column));
+                String value = rset.getString(column);
+                if (prop.getLengthFixed() != null && prop.getLengthFixed() && prop.getMaxLength() != null) {
+                    // 固定朝文字列。CHAR の後方に空白をFILL。
+                    final int fixedLength = prop.getMaxLength();
+                    value = StringUtils.padString(value, fixedLength);
+                }
+                return new Property(edmTypeName, propName, ValueType.PRIMITIVE, value);
             }
         } else if (EdmBinary.getInstance() == edmType) {
             try {

@@ -33,8 +33,8 @@ class SakilaActualFailCaseTest {
         if (!OiyokanTestSettingConstants.IS_TEST_SAKILA)
             return;
 
-        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/SklFilmActors",
-                OiyoUrlUtil.encodeUrlQuery(
+        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse( //
+                "/SklFilmActors", OiyoUrlUtil.encodeUrlQuery( //
                         "$top=2001 &$filter=actor_id eq 1 and film_id eq 140 &$count=true &$select=actor_id,film_id,last_update"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
