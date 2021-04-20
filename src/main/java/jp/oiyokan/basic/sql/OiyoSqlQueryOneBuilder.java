@@ -103,11 +103,12 @@ public class OiyoSqlQueryOneBuilder {
             try {
                 final OiyoSettingsProperty prop = OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, entitySetName,
                         param.getName());
-                OiyoCommonJdbcUtil.expandLiteralOrBindParameter(sqlInfo, prop.getEdmType(), param.getText());
+                OiyoCommonJdbcUtil.expandLiteralOrBindParameter(sqlInfo, prop.getEdmType(), prop, param.getText());
             } catch (ODataApplicationException ex) {
                 // ORACLEのROWIDを利用する場合、この処理で例外.
                 // 例外の場合は Edm.String 決め打ちで処理する。
-                OiyoCommonJdbcUtil.expandLiteralOrBindParameter(sqlInfo, "Edm.String", param.getText());
+                OiyoCommonJdbcUtil.expandLiteralOrBindParameter(sqlInfo, "Edm.String", null/* TODO Property化を検討 */,
+                        param.getText());
             }
         }
     }

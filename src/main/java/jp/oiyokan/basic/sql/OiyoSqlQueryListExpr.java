@@ -41,6 +41,7 @@ import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.common.OiyoInfoUtil;
 import jp.oiyokan.common.OiyoSqlInfo;
 import jp.oiyokan.dto.OiyoSettingsEntitySet;
+import jp.oiyokan.dto.OiyoSettingsProperty;
 
 /**
  * SQL文を構築するための簡易クラスの、Expression を SQLに変換する処理.
@@ -93,7 +94,7 @@ public class OiyoSqlQueryListExpr {
             log.error(OiyokanMessages.IY4103);
             throw new ODataApplicationException(OiyokanMessages.IY4103, 500, Locale.ENGLISH);
         } else if (filterExpression instanceof LiteralImpl) {
-            expandLiteral((LiteralImpl) filterExpression);
+            expandLiteral((LiteralImpl) filterExpression, null);
             return;
         } else if (filterExpression instanceof MemberImpl) {
             expandMember((MemberImpl) filterExpression);
@@ -186,6 +187,7 @@ public class OiyoSqlQueryListExpr {
         } else if (opKind == BinaryOperatorKind.EQ) {
             // EQ
             sqlInfo.getSqlBuilder().append("(");
+            // IS NULL対応(右辺がNULL)
             if (impl.getRightOperand() instanceof LiteralImpl //
                     && null == ((LiteralImpl) impl.getRightOperand()).getType()) {
                 expand(impl.getLeftOperand());
@@ -193,20 +195,45 @@ public class OiyoSqlQueryListExpr {
                 // また、リテラルに null が指定されている場合に、LiteralImpl の getType() 自体が null で渡ってくる。
                 sqlInfo.getSqlBuilder().append(" IS NULL)");
                 return;
-            } else if (impl.getLeftOperand() instanceof LiteralImpl //
+            }
+            // IS NULL対応(左辺がNULL)
+            if (impl.getLeftOperand() instanceof LiteralImpl //
                     && null == ((LiteralImpl) impl.getLeftOperand()).getType()) {
                 expand(impl.getRightOperand());
                 // 特殊処理 : 左辺が Literal かつ nullの場合は IS NULL 展開する。こうしないと h2 database は NULL検索できない.
                 // また、リテラルに null が指定されている場合に、LiteralImpl の getType() 自体が null で渡ってくる。
                 sqlInfo.getSqlBuilder().append(" IS NULL)");
                 return;
-            } else {
-                expand(impl.getLeftOperand());
+            }
+
+            // 左辺が MemberImpl で右辺が LiteralImpl
+            if (impl.getLeftOperand() instanceof MemberImpl //
+                    && impl.getRightOperand() instanceof LiteralImpl) {
+                final MemberImpl member = (MemberImpl) impl.getLeftOperand();
+                final LiteralImpl literal = (LiteralImpl) impl.getRightOperand();
+                OiyoSettingsProperty property = expandMember(member);
                 sqlInfo.getSqlBuilder().append(" = ");
-                expand(impl.getRightOperand());
+                expandLiteral(literal, property);
                 sqlInfo.getSqlBuilder().append(")");
                 return;
             }
+            // 左辺が LiteralImpl で右辺が MemberImpl
+            if (impl.getLeftOperand() instanceof LiteralImpl //
+                    && impl.getRightOperand() instanceof MemberImpl) {
+                final LiteralImpl literal = (LiteralImpl) impl.getLeftOperand();
+                final MemberImpl member = (MemberImpl) impl.getRightOperand();
+                OiyoSettingsProperty property = expandMember(member);
+                sqlInfo.getSqlBuilder().append(" = ");
+                expandLiteral(literal, property);
+                sqlInfo.getSqlBuilder().append(")");
+                return;
+            }
+
+            expand(impl.getLeftOperand());
+            sqlInfo.getSqlBuilder().append(" = ");
+            expand(impl.getRightOperand());
+            sqlInfo.getSqlBuilder().append(")");
+            return;
         } else if (opKind == BinaryOperatorKind.NE) {
             // NE
             sqlInfo.getSqlBuilder().append("(");
@@ -218,11 +245,24 @@ public class OiyoSqlQueryListExpr {
                 // また、リテラルに null が指定されている場合に、LiteralImpl の getType() 自体が null で渡ってくる。
                 sqlInfo.getSqlBuilder().append(" IS NOT NULL");
                 // なお、 「null ne 項目」のように左辺に NULL を記述する IS NOT NULL は Olingoにて指定不可。
-            } else {
-                expand(impl.getLeftOperand());
-                sqlInfo.getSqlBuilder().append(" <> ");
-                expand(impl.getRightOperand());
+                sqlInfo.getSqlBuilder().append(")");
+                return;
             }
+            // 左辺が MemberImpl で右辺が LiteralImpl
+            if (impl.getLeftOperand() instanceof MemberImpl //
+                    && impl.getRightOperand() instanceof LiteralImpl) {
+                final MemberImpl member = (MemberImpl) impl.getLeftOperand();
+                final LiteralImpl literal = (LiteralImpl) impl.getRightOperand();
+                OiyoSettingsProperty property = expandMember(member);
+                sqlInfo.getSqlBuilder().append(" <> ");
+                expandLiteral(literal, property);
+                sqlInfo.getSqlBuilder().append(")");
+                return;
+            }
+
+            expand(impl.getLeftOperand());
+            sqlInfo.getSqlBuilder().append(" <> ");
+            expand(impl.getRightOperand());
             sqlInfo.getSqlBuilder().append(")");
             return;
         } else if (opKind == BinaryOperatorKind.AND) {
@@ -254,7 +294,7 @@ public class OiyoSqlQueryListExpr {
      * @param impl リテラル
      * @throws ODataApplicationException Odataアプリ例外が発生した場合.
      */
-    private void expandLiteral(LiteralImpl impl) throws ODataApplicationException {
+    private void expandLiteral(LiteralImpl impl, OiyoSettingsProperty property) throws ODataApplicationException {
         if (null == impl.getType()) {
             // リテラルに null が指定されている場合に、LiteralImpl の getType() 自体が null で渡ってくる。
             if (IS_DEBUG_EXPAND_LITERAL)
@@ -264,16 +304,19 @@ public class OiyoSqlQueryListExpr {
         }
 
         OiyoCommonJdbcUtil.expandLiteralOrBindParameter(sqlInfo,
-                impl.getType().getFullQualifiedName().getFullQualifiedNameAsString(), impl.getText());
+                impl.getType().getFullQualifiedName().getFullQualifiedNameAsString(), property, impl.getText());
     }
 
-    private void expandMember(MemberImpl impl) throws ODataApplicationException {
+    private OiyoSettingsProperty expandMember(MemberImpl impl) throws ODataApplicationException {
         final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, sqlInfo.getEntitySetName());
 
         // そのままSQLのメンバーとせず、項目名エスケープを除去.
         final String unescapedName = OiyoCommonJdbcUtil.unescapeKakkoFieldName(impl.toString());
-        sqlInfo.getSqlBuilder().append(OiyoCommonJdbcUtil.escapeKakkoFieldName(sqlInfo,
-                OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, entitySet.getName(), unescapedName).getDbName()));
+        final OiyoSettingsProperty property = OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, entitySet.getName(),
+                unescapedName);
+        sqlInfo.getSqlBuilder().append(OiyoCommonJdbcUtil.escapeKakkoFieldName(sqlInfo, property.getDbName()));
+
+        return property;
     }
 
     /**
