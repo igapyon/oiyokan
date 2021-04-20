@@ -667,7 +667,7 @@ public class OiyoCommonJdbcUtil {
             throws ODataApplicationException {
         switch (databaseType) {
         case h2:
-        case MSSQL2008:
+        case SQLSV2008:
             if (fieldName.indexOf(" ") <= 0 && fieldName.indexOf(".") <= 0) {
                 // 空白のない場合はエスケープしない.
                 return fieldName;
@@ -675,7 +675,7 @@ public class OiyoCommonJdbcUtil {
             return "[" + fieldName + "]";
 
         case postgres:
-        case ORACLE:
+        case ORCL18:
             if (fieldName.indexOf(" ") <= 0 && fieldName.indexOf(".") <= 0) {
                 // 空白のない場合はエスケープしない.
                 return fieldName;

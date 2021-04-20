@@ -103,7 +103,7 @@ class GenOiyoSettingsJsonTest {
                     continue;
                 }
 
-                // for ORACLE XE
+                // for ORCL18
                 if (tableName.contains("$") //
                         || tableName.equals("AV_DUAL") //
                         || tableName.equals("CATALOG") //
@@ -231,12 +231,12 @@ class GenOiyoSettingsJsonTest {
                                 "com.mysql.jdbc.Driver", //
                                 "jdbc:mysql://localhost/sakila?useUnicode=true&characterEncoding=UTF-8&characterSetResults=UTF-8&useCursorFetch=true&defaultFetchSize=128&useServerPrepStmts=true&emulateUnsupportedPstmts=false", //
                                 "root", "passwd123" }, //
-                        { "mssql1", "MSSQL2008",
+                        { "mssql1", "SQLSV2008",
                                 "Sample MS SQL Server 2008 settings. Change the settings to suit your environment.", //
                                 "com.microsoft.sqlserver.jdbc.SQLServerDriver", //
                                 "jdbc:sqlserver://localhost\\SQLExpress", //
                                 "sa", "passwd123" }, //
-                        { "oracle1", "ORACLE",
+                        { "oracle1", "ORCL18",
                                 "Sample Oracle XE (18c) settings. Change the settings to suit your environment.", //
                                 "oracle.jdbc.driver.OracleDriver", //
                                 "jdbc:oracle:thin:@10.0.2.15:1521/xepdb1", //

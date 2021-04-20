@@ -32,7 +32,7 @@ src/main/resources/iyokan/oiyokan-settings.json
 | key            | description                                                       |
 | -------------- | ----------------------------------------------------------------- |
 | name           | Name of database setting. ex `oiyokanKan`                         |
-| type           | Database Type. ex: `h2`, `postgres`, `MySQL`, `MSSQL2008`, `ORACLE` |
+| type           | Database Type. ex: `h2`, `postgres`, `MySQL`, `SQLSV2008`, `ORCL18` |
 | description    | Description of this database setting.                             |
 | jdbcDriver     | Classname of JDBC driver. ex: `org.h2.Driver`                     |
 | jdbcUrl        | JDBC url to connect. ex: `jdbc:h2:mem:oiyokan;DB_CLOSE_DELAY=-1;` |
