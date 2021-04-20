@@ -99,7 +99,8 @@ public class OiyoSqlQueryListBuilder {
     public void buildSelectQuery(UriInfo uriInfo) throws ODataApplicationException {
         sqlInfo.getSqlBuilder().append("SELECT ");
 
-        expandSelect(uriInfo);
+        // 初回呼び出しとして SELECT を展開
+        expandSelect(uriInfo, false);
 
         expandFrom(uriInfo);
 
@@ -161,15 +162,15 @@ public class OiyoSqlQueryListBuilder {
         sqlInfo.getSqlBuilder().append("rownum4between BETWEEN " + start + " AND " + (start + count - 1));
     }
 
-    private void expandSelect(UriInfo uriInfo) throws ODataApplicationException {
+    private void expandSelect(UriInfo uriInfo, boolean isSecondPass) throws ODataApplicationException {
         if (uriInfo.getSelectOption() == null) {
-            expandSelectWild(uriInfo);
+            expandSelectWild(uriInfo, isSecondPass);
         } else {
-            expandSelectEach(uriInfo);
+            expandSelectEach(uriInfo, isSecondPass);
         }
     }
 
-    private void expandSelectWild(UriInfo uriInfo) throws ODataApplicationException {
+    private void expandSelectWild(UriInfo uriInfo, boolean isSecondPass) throws ODataApplicationException {
         final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, sqlInfo.getEntitySetName());
 
         // アスタリスクは利用せず、項目を指定する。
@@ -179,15 +180,17 @@ public class OiyoSqlQueryListBuilder {
                 strColumns += ",";
             }
 
-            // SELECTの検索項目名を追加。
-            sqlInfo.getSelectColumnNameList().add(prop.getName());
+            if (!isSecondPass) {
+                // 初回呼び出し時にのみ、SELECTの検索項目名を追加。
+                sqlInfo.getSelectColumnNameList().add(prop.getName());
+            }
             // 項目名について空白が含まれている場合はカッコなどでエスケープ。
             strColumns += OiyoCommonJdbcUtil.escapeKakkoFieldName(sqlInfo, prop.getDbName());
         }
         sqlInfo.getSqlBuilder().append(strColumns);
     }
 
-    private void expandSelectEach(UriInfo uriInfo) throws ODataApplicationException {
+    private void expandSelectEach(UriInfo uriInfo, boolean isSecondPass) throws ODataApplicationException {
         final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, sqlInfo.getEntitySetName());
 
         final List<String> keyTarget = new ArrayList<>();
@@ -203,8 +206,10 @@ public class OiyoSqlQueryListBuilder {
                 OiyoSettingsProperty prop = OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, entitySet.getName(),
                         unescapedName);
 
-                // SELECTの検索項目名を追加。
-                sqlInfo.getSelectColumnNameList().add(prop.getName());
+                if (!isSecondPass) {
+                    // 初回呼び出し時にのみ、SELECTの検索項目名を追加。
+                    sqlInfo.getSelectColumnNameList().add(prop.getName());
+                }
                 sqlInfo.getSqlBuilder().append(OiyoCommonJdbcUtil.escapeKakkoFieldName(sqlInfo, prop.getDbName()));
                 for (int index = 0; index < keyTarget.size(); index++) {
                     if (keyTarget.get(index).equals(prop.getName())) {
@@ -268,8 +273,8 @@ public class OiyoSqlQueryListBuilder {
             }
 
             sqlInfo.getSqlBuilder().append("AS rownum4between,");
-            // 必要な分だけ項目展開.
-            expandSelect(uriInfo);
+            // 2回目の呼び出しとして SELECT を展開
+            expandSelect(uriInfo, true);
             sqlInfo.getSqlBuilder().append(
                     " FROM " + OiyoCommonJdbcUtil.escapeKakkoFieldName(sqlInfo, entitySet.getEntityType().getDbName()));
             if (uriInfo.getFilterOption() != null) {
