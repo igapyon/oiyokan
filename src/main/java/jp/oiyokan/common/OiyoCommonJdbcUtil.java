@@ -38,6 +38,7 @@ import java.util.Locale;
 import java.util.UUID;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.olingo.commons.api.data.Property;
@@ -61,8 +62,6 @@ import org.apache.olingo.commons.core.edm.primitivetype.EdmString;
 import org.apache.olingo.commons.core.edm.primitivetype.EdmTimeOfDay;
 import org.apache.olingo.server.api.ODataApplicationException;
 import org.springframework.util.StreamUtils;
-
-import com.mysql.cj.util.StringUtils;
 
 import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanMessages;
@@ -251,9 +250,11 @@ public class OiyoCommonJdbcUtil {
             } else {
                 String value = rset.getString(column);
                 if (oiyoProp.getLengthFixed() != null && oiyoProp.getLengthFixed() && oiyoProp.getMaxLength() != null) {
-                    // 固定朝文字列。CHAR の後方に空白をFILL。
-                    final int fixedLength = oiyoProp.getMaxLength();
-                    value = StringUtils.padString(value, fixedLength);
+                    if (value != null) {
+                        // NULLではない場合は、固定長文字列。CHAR の後方に空白をFILL。
+                        final int fixedLength = oiyoProp.getMaxLength();
+                        value = StringUtils.rightPad(value, fixedLength);
+                    }
                 }
                 return new Property(edmTypeName, propName, ValueType.PRIMITIVE, value);
             }
