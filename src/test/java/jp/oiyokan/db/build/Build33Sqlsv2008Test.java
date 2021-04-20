@@ -29,7 +29,7 @@ import jp.oiyokan.dto.OiyoSettingsDatabase;
 /**
  * 内部データベース用のCSDL用内部テーブルのDDLをコマンドライン生成.
  */
-class Build33MSSQLTest {
+class Build33Sqlsv2008Test {
     private static final String[] DROP_TABLE_SQLS = new String[] { //
             "DROP TABLE ODataTest1", //
             "DROP TABLE ODataTest2", //
