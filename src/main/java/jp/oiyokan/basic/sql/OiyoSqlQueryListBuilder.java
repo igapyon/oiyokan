@@ -111,24 +111,24 @@ public class OiyoSqlQueryListBuilder {
         final OiyokanConstants.DatabaseType databaseType = OiyoInfoUtil
                 .getOiyoDatabaseTypeByEntitySetName(sqlInfo.getOiyoInfo(), sqlInfo.getEntitySetName());
 
-        boolean isMssql2008OrOracleSpecial = false;
-        if (OiyokanConstants.DatabaseType.MSSQL2008 == databaseType //
+        boolean isSqlsv2008OrOrclSpecial = false;
+        if (OiyokanConstants.DatabaseType.SQLSV2008 == databaseType //
                 && uriInfo.getSkipOption() == null) {
-            // SQL Server 2008 で SKIP指定なしの場合はサブクエリの挙動を抑止してTOP記述のみ.
+            // SQLSV2008 で SKIP指定なしの場合はサブクエリの挙動を抑止してTOP記述のみ.
             // このため、WHERE 部分の展開は h2 などのDBと同じ挙動になる。
-            isMssql2008OrOracleSpecial = false;
-        } else if (OiyokanConstants.DatabaseType.MSSQL2008 == databaseType //
-                || OiyokanConstants.DatabaseType.ORACLE == databaseType) {
-            isMssql2008OrOracleSpecial = true;
-            // SQL Server / ORACLE 検索は WHERE絞り込みは既にサブクエリにて適用済み.
+            isSqlsv2008OrOrclSpecial = false;
+        } else if (OiyokanConstants.DatabaseType.SQLSV2008 == databaseType //
+                || OiyokanConstants.DatabaseType.ORCL18 == databaseType) {
+            isSqlsv2008OrOrclSpecial = true;
+            // SQLSV2008 / ORCL18 検索は WHERE絞り込みは既にサブクエリにて適用済み.
         } else {
-            isMssql2008OrOracleSpecial = false;
+            isSqlsv2008OrOrclSpecial = false;
         }
 
-        if (isMssql2008OrOracleSpecial) {
+        if (isSqlsv2008OrOrclSpecial) {
             sqlInfo.getSqlBuilder().append(" WHERE ");
             expandRowNumberBetween(uriInfo);
-            // SQL Server検索は WHERE絞り込みは既にサブクエリにて適用済み.
+            // SQLSV2008 検索は WHERE絞り込みは既にサブクエリにて適用済み.
         } else {
             if (uriInfo.getFilterOption() != null) {
                 FilterOptionImpl filterOpt = (FilterOptionImpl) uriInfo.getFilterOption();
@@ -138,7 +138,7 @@ public class OiyoSqlQueryListBuilder {
             }
         }
 
-        if (isMssql2008OrOracleSpecial) {
+        if (isSqlsv2008OrOrclSpecial) {
             // 必ず rownum4between 順でソート.
             sqlInfo.getSqlBuilder().append(" ORDER BY rownum4between");
         } else {
@@ -177,7 +177,7 @@ public class OiyoSqlQueryListBuilder {
     private void expandSelect(UriInfo uriInfo, boolean isSecondPass) throws ODataApplicationException {
         final OiyokanConstants.DatabaseType databaseType = OiyoInfoUtil
                 .getOiyoDatabaseTypeByEntitySetName(sqlInfo.getOiyoInfo(), sqlInfo.getEntitySetName());
-        if (OiyokanConstants.DatabaseType.MSSQL2008 == databaseType //
+        if (OiyokanConstants.DatabaseType.SQLSV2008 == databaseType //
                 && uriInfo.getTopOption() != null && uriInfo.getSkipOption() == null) {
             // SQL Server 2008 で SKIP指定なしの場合はサブクエリの挙動を抑止してTOP記述のみ.
             // 一方 TOP については、SQL 2008固有文法であるこの場所への TOP 展開。
@@ -264,9 +264,9 @@ public class OiyoSqlQueryListBuilder {
             sqlInfo.getSqlBuilder().append(
                     " FROM " + OiyoCommonJdbcUtil.escapeKakkoFieldName(sqlInfo, entitySet.getEntityType().getDbName()));
             break;
-        case MSSQL2008:
-        case ORACLE: {
-            if (OiyokanConstants.DatabaseType.MSSQL2008 == databaseType //
+        case SQLSV2008:
+        case ORCL18: {
+            if (OiyokanConstants.DatabaseType.SQLSV2008 == databaseType //
                     // SQL Server 2008 で SKIP指定なしの場合はサブクエリの挙動を抑止してTOP記述のみ.
                     // このため、WHERE 部分の展開は h2 などのDBと同じ挙動になる。
                     && uriInfo.getSkipOption() == null) {
@@ -276,10 +276,10 @@ public class OiyoSqlQueryListBuilder {
             }
 
             ///////////////////////////////////
-            // SQL Server / ORACLE 用特殊記述
+            // SQLSV2008 / ORCL18 用特殊記述
             // 現在、無条件にサブクエリ展開
             String topfilterForSql2000 = "";
-            if (OiyokanConstants.DatabaseType.MSSQL2008 == databaseType) {
+            if (OiyokanConstants.DatabaseType.SQLSV2008 == databaseType) {
                 // SQL Server の場合 SKIP 指定がある場合のコースとなる。
                 int total = 1;
                 if (uriInfo.getTopOption() != null) {
@@ -312,11 +312,11 @@ public class OiyoSqlQueryListBuilder {
                 new OiyoSqlQueryListExpr(oiyoInfo, sqlInfo).expand(uriInfo.getFilterOption().getExpression());
             }
             sqlInfo.getSqlBuilder().append(")");
-            if (OiyokanConstants.DatabaseType.MSSQL2008 == databaseType) {
-                // 以下記述は SQL2008のみ。ORACLEではエラー。
+            if (OiyokanConstants.DatabaseType.SQLSV2008 == databaseType) {
+                // 以下記述は SQLSV2008のみ。ORCL18ではエラー。
                 sqlInfo.getSqlBuilder().append(" AS rownum4subquery");
             }
-            // SQL Server / ORACLE 用特殊記述
+            // SQLSV2008 / ORCL18 用特殊記述
             ///////////////////////////////////
         }
             break;
@@ -367,8 +367,8 @@ public class OiyoSqlQueryListBuilder {
         final OiyokanConstants.DatabaseType databaseType = OiyoInfoUtil
                 .getOiyoDatabaseTypeByEntitySetName(sqlInfo.getOiyoInfo(), sqlInfo.getEntitySetName());
 
-        if (OiyokanConstants.DatabaseType.MSSQL2008 != databaseType //
-                && OiyokanConstants.DatabaseType.ORACLE != databaseType) {
+        if (OiyokanConstants.DatabaseType.SQLSV2008 != databaseType //
+                && OiyokanConstants.DatabaseType.ORCL18 != databaseType) {
             if (uriInfo.getTopOption() != null) {
                 sqlInfo.getSqlBuilder().append(" LIMIT ");
                 sqlInfo.getSqlBuilder().append(uriInfo.getTopOption().getValue());

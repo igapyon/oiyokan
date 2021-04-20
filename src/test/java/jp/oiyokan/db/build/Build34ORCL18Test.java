@@ -29,7 +29,7 @@ import jp.oiyokan.dto.OiyoSettingsDatabase;
 /**
  * テスト用の内部データベースを作成します。この内部データベースは動作の上で必要です。
  */
-class Build34ORACLETest {
+class Build34ORCL18Test {
     private static final String[] DROP_TABLE_SQLS = new String[] { //
             "DROP TABLE ODataTest1", //
             "DROP TABLE ODataTest2", //
@@ -67,7 +67,7 @@ class Build34ORACLETest {
             }
 
             String[] sqls = OiyokanResourceSqlUtil
-                    .loadOiyokanResourceSql("oiyokan/sql/" + "oiyokan-test-db-ORACLE.sql");
+                    .loadOiyokanResourceSql("oiyokan/sql/" + "oiyokan-test-db-ORCL18.sql");
             for (String sql : sqls) {
                 if (sql.trim().length() == 0) {
                     continue;

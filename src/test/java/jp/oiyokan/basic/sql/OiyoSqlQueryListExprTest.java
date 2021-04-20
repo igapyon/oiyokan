@@ -89,7 +89,7 @@ class OiyoSqlQueryListExprTest {
 
         assertEquals("((Description = ?) AND (ID = 2.0))", getExprString("/ODataTests1", //
                 OiyoUrlUtil.encodeUrlQuery("$filter=Description eq 'Mac' and ID eq 2.0")),
-                "Postgres/ORACLEの場合大文字小文字の差異が出る");
+                "Postgres/ORCL18の場合大文字小文字の差異が出る");
     }
 
     @Test
@@ -100,6 +100,6 @@ class OiyoSqlQueryListExprTest {
         assertEquals("((INSTR(Description,?) - 1) <> -1)", getExprString("/ODataTests1", //
                 OiyoUrlUtil.encodeUrlQuery(
                         "$top=51&$filter= indexof(Description,'増殖タブレット7') ne -1 &$orderby=ID &$count=true &$select=Description,ID,Name")),
-                "Postgres/ORACLEの場合、命令の差異、大文字小文字の差異が出る");
+                "Postgres/ORCL18の場合、命令の差異、大文字小文字の差異が出る");
     }
 }

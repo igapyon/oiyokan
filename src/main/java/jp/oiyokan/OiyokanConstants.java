@@ -27,7 +27,7 @@ public class OiyokanConstants {
     /**
      * Oiyokan のバージョン番号
      */
-    public static final String VERSION = "1.5.20210420d";
+    public static final String VERSION = "1.5.20210420e";
 
     /**
      * OData のルートパス.
@@ -49,12 +49,12 @@ public class OiyokanConstants {
         h2,
         /** Postgres */
         postgres,
-        /** MySQL : not tested */
+        /** MySQL */
         MySQL,
-        /** MSSQL 2008 */
-        MSSQL2008,
-        /** Oracle : placeholder, not tested */
-        ORACLE,
+        /** MSSQLSV 2008 */
+        SQLSV2008,
+        /** ORCL18 */
+        ORCL18,
         /** BigQuery : placeholder, not supported, not tested */
         BigQuery,
     };

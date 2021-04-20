@@ -347,7 +347,7 @@ public class OiyoSqlQueryListExpr {
                 expand(impl.getParameters().get(1));
                 sqlInfo.getSqlBuilder().append(") > 0)");
                 return;
-            case MSSQL2008:
+            case SQLSV2008:
                 sqlInfo.getSqlBuilder().append("(CHARINDEX(");
                 expand(impl.getParameters().get(1));
                 sqlInfo.getSqlBuilder().append(",");
@@ -375,7 +375,7 @@ public class OiyoSqlQueryListExpr {
                 expand(impl.getParameters().get(1));
                 sqlInfo.getSqlBuilder().append(") = 1)");
                 return;
-            case MSSQL2008:
+            case SQLSV2008:
                 sqlInfo.getSqlBuilder().append("(CHARINDEX(");
                 expand(impl.getParameters().get(1));
                 sqlInfo.getSqlBuilder().append(",");
@@ -398,7 +398,7 @@ public class OiyoSqlQueryListExpr {
                 expand(impl.getParameters().get(1));
                 sqlInfo.getSqlBuilder().append(")");
                 return;
-            case MSSQL2008:
+            case SQLSV2008:
                 sqlInfo.getSqlBuilder().append("(RIGHT(");
                 expand(impl.getParameters().get(0));
                 sqlInfo.getSqlBuilder().append(",LEN(");
@@ -407,7 +407,7 @@ public class OiyoSqlQueryListExpr {
                 expand(impl.getParameters().get(1));
                 sqlInfo.getSqlBuilder().append(")");
                 return;
-            case ORACLE:
+            case ORCL18:
                 sqlInfo.getSqlBuilder().append("(SUBSTR(");
                 expand(impl.getParameters().get(0));
                 sqlInfo.getSqlBuilder().append(",-LENGTH(");
@@ -428,7 +428,7 @@ public class OiyoSqlQueryListExpr {
                 expand(impl.getParameters().get(0));
                 sqlInfo.getSqlBuilder().append("))");
                 return;
-            case MSSQL2008:
+            case SQLSV2008:
                 sqlInfo.getSqlBuilder().append("(LEN(");
                 expand(impl.getParameters().get(0));
                 sqlInfo.getSqlBuilder().append("))");
@@ -456,7 +456,7 @@ public class OiyoSqlQueryListExpr {
                 expand(impl.getParameters().get(1));
                 sqlInfo.getSqlBuilder().append(") - 1)");
                 return;
-            case MSSQL2008:
+            case SQLSV2008:
                 sqlInfo.getSqlBuilder().append("(CHARINDEX(");
                 expand(impl.getParameters().get(1));
                 sqlInfo.getSqlBuilder().append(",");
@@ -480,7 +480,7 @@ public class OiyoSqlQueryListExpr {
                 }
                 sqlInfo.getSqlBuilder().append("))");
                 return;
-            case ORACLE:
+            case ORCL18:
                 sqlInfo.getSqlBuilder().append("(SUBSTR(");
                 expand(impl.getParameters().get(0));
                 sqlInfo.getSqlBuilder().append(",");
@@ -524,7 +524,7 @@ public class OiyoSqlQueryListExpr {
                 expand(impl.getParameters().get(0));
                 sqlInfo.getSqlBuilder().append(")");
                 return;
-            case MSSQL2008:
+            case SQLSV2008:
                 // SQL Server 2008 には TRIM がない
                 sqlInfo.getSqlBuilder().append("LTRIM(RTRIM(");
                 expand(impl.getParameters().get(0));
@@ -544,7 +544,7 @@ public class OiyoSqlQueryListExpr {
                 expand(impl.getParameters().get(1));
                 sqlInfo.getSqlBuilder().append(")");
                 return;
-            case MSSQL2008:
+            case SQLSV2008:
                 sqlInfo.getSqlBuilder().append("(CAST(");
                 expand(impl.getParameters().get(0));
                 sqlInfo.getSqlBuilder().append(" AS VARCHAR)");
@@ -745,7 +745,7 @@ public class OiyoSqlQueryListExpr {
                 expand(impl.getParameters().get(1));
                 sqlInfo.getSqlBuilder().append(") > 0)");
                 return;
-            case MSSQL2008:
+            case SQLSV2008:
                 sqlInfo.getSqlBuilder().append("(CHARINDEX(");
                 expand(impl.getParameters().get(1));
                 sqlInfo.getSqlBuilder().append(",");

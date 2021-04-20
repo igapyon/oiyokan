@@ -91,8 +91,8 @@ public class OiyoSqlQueryOneBuilder {
                 sqlInfo.getSqlBuilder().append(" AND ");
             }
             if ("ROWID".equalsIgnoreCase(param.getName()) //
-                    && OiyokanConstants.DatabaseType.ORACLE == databaseType) {
-                // ORACLE ROWID special.
+                    && OiyokanConstants.DatabaseType.ORCL18 == databaseType) {
+                // ORCL18 ROWID special.
                 sqlInfo.getSqlBuilder().append(param.getName());
             } else {
                 sqlInfo.getSqlBuilder().append(OiyoCommonJdbcUtil.escapeKakkoFieldName(sqlInfo, OiyoInfoUtil
@@ -105,7 +105,7 @@ public class OiyoSqlQueryOneBuilder {
                         param.getName());
                 OiyoCommonJdbcUtil.expandLiteralOrBindParameter(sqlInfo, prop.getEdmType(), prop, param.getText());
             } catch (ODataApplicationException ex) {
-                // ORACLEのROWIDを利用する場合、この処理で例外.
+                // ORCL18 のROWIDを利用する場合、この処理で例外.
                 // 例外の場合は Edm.String 決め打ちで処理する。
                 OiyoCommonJdbcUtil.expandLiteralOrBindParameter(sqlInfo, "Edm.String", null/* TODO Property化を検討 */,
                         param.getText());

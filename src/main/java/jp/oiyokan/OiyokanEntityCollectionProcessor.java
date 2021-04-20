@@ -167,8 +167,8 @@ public class OiyokanEntityCollectionProcessor implements EntityCollectionProcess
         case h2:
         case postgres:
         case MySQL:
-        case MSSQL2008:
-        case ORACLE:
+        case SQLSV2008:
+        case ORCL18:
         default:
             // 大抵のデータベース向けには BasicJdbcEntityCollectionBuilder を利用する。
             return new OiyoBasicJdbcEntityCollectionBuilder(oiyoInfo);

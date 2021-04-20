@@ -49,7 +49,7 @@
     },
     {
       "name": "mssql1",
-      "type": "MSSQL2008",
+      "type": "SQLSV2008",
       "description": "Sample MS SQL Server 2008 settings. Change the settings to suit your environment.",
       "jdbcDriver": "com.microsoft.sqlserver.jdbc.SQLServerDriver",
       "jdbcUrl": "jdbc:sqlserver://localhost\\SQLExpress",
@@ -58,7 +58,7 @@
     },
     {
       "name": "oracle1",
-      "type": "ORACLE",
+      "type": "ORCL18",
       "description": "Sample Oracle XE (18c) settings. Change the settings to suit your environment.",
       "jdbcDriver": "oracle.jdbc.driver.OracleDriver",
       "jdbcUrl": "jdbc:oracle:thin:@10.0.2.15:1521/xepdb1",

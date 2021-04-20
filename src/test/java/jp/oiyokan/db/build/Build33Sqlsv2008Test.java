@@ -29,7 +29,7 @@ import jp.oiyokan.dto.OiyoSettingsDatabase;
 /**
  * 内部データベース用のCSDL用内部テーブルのDDLをコマンドライン生成.
  */
-class Build33MSSQLTest {
+class Build33Sqlsv2008Test {
     private static final String[] DROP_TABLE_SQLS = new String[] { //
             "DROP TABLE ODataTest1", //
             "DROP TABLE ODataTest2", //
@@ -60,7 +60,7 @@ class Build33MSSQLTest {
                 }
             }
 
-            String[] sqls = OiyokanResourceSqlUtil.loadOiyokanResourceSql("oiyokan/sql/" + "oiyokan-test-db-MSSQL.sql");
+            String[] sqls = OiyokanResourceSqlUtil.loadOiyokanResourceSql("oiyokan/sql/" + "oiyokan-test-db-SQLSV2008.sql");
             for (String sql : sqls) {
                 try (var stmt = connTargetDb.prepareStatement(sql)) {
                     System.err.println(sql);
@@ -82,7 +82,7 @@ class Build33MSSQLTest {
 
         try (Connection connTargetDb = OiyoCommonJdbcUtil.getConnection(settingsDatabase)) {
             String[] sqls = OiyokanResourceSqlUtil
-                    .loadOiyokanResourceSql("oiyokan/sql/" + "sample-sakila-db-MSSQL.sql");
+                    .loadOiyokanResourceSql("oiyokan/sql/" + "sample-sakila-db-SQLSV2008.sql");
             for (String sql : sqls) {
                 try (var stmt = connTargetDb.prepareStatement(sql)) {
                     System.err.println(sql);

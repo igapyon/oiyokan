@@ -44,7 +44,7 @@ class UnitTestEntityBasicTest {
                 + "  \"Description\":\"Description\"\n" + "}");
         String result = OiyokanTestUtil.stream2String(resp.getContent());
         System.err.println("TRACE: " + result);
-        assertEquals(201, resp.getStatusCode(), "SQLServer2008でエラー。(既知の問題). varbinaryとtextと混同.");
+        assertEquals(201, resp.getStatusCode(), "SQLSV2008でエラー。(既知の問題). varbinaryとtextと混同.");
 
         resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests3(" + TEST_ID + ")", null);
         assertEquals(200, resp.getStatusCode());
