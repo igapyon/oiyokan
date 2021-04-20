@@ -111,8 +111,21 @@ public class OiyoSqlQueryListBuilder {
         final OiyokanConstants.DatabaseType databaseType = OiyoInfoUtil
                 .getOiyoDatabaseTypeByEntitySetName(sqlInfo.getOiyoInfo(), sqlInfo.getEntitySetName());
 
+        boolean isMssql2008OrOracleSpecial = false;
         if (OiyokanConstants.DatabaseType.MSSQL2008 == databaseType //
+                && uriInfo.getSkipOption() == null) {
+            // SQL Server 2008 で SKIP指定なしの場合はサブクエリの挙動を抑止してTOP記述のみ.
+            // このため、WHERE 部分の展開は h2 などのDBと同じ挙動になる。
+            isMssql2008OrOracleSpecial = false;
+        } else if (OiyokanConstants.DatabaseType.MSSQL2008 == databaseType //
                 || OiyokanConstants.DatabaseType.ORACLE == databaseType) {
+            isMssql2008OrOracleSpecial = true;
+            // SQL Server / ORACLE 検索は WHERE絞り込みは既にサブクエリにて適用済み.
+        } else {
+            isMssql2008OrOracleSpecial = false;
+        }
+
+        if (isMssql2008OrOracleSpecial) {
             sqlInfo.getSqlBuilder().append(" WHERE ");
             expandRowNumberBetween(uriInfo);
             // SQL Server検索は WHERE絞り込みは既にサブクエリにて適用済み.
@@ -125,8 +138,7 @@ public class OiyoSqlQueryListBuilder {
             }
         }
 
-        if (OiyokanConstants.DatabaseType.MSSQL2008 == databaseType //
-                || OiyokanConstants.DatabaseType.ORACLE == databaseType) {
+        if (isMssql2008OrOracleSpecial) {
             // 必ず rownum4between 順でソート.
             sqlInfo.getSqlBuilder().append(" ORDER BY rownum4between");
         } else {
@@ -163,6 +175,15 @@ public class OiyoSqlQueryListBuilder {
     }
 
     private void expandSelect(UriInfo uriInfo, boolean isSecondPass) throws ODataApplicationException {
+        final OiyokanConstants.DatabaseType databaseType = OiyoInfoUtil
+                .getOiyoDatabaseTypeByEntitySetName(sqlInfo.getOiyoInfo(), sqlInfo.getEntitySetName());
+        if (OiyokanConstants.DatabaseType.MSSQL2008 == databaseType //
+                && uriInfo.getTopOption() != null && uriInfo.getSkipOption() == null) {
+            // SQL Server 2008 で SKIP指定なしの場合はサブクエリの挙動を抑止してTOP記述のみ.
+            // 一方 TOP については、SQL 2008固有文法であるこの場所への TOP 展開。
+            sqlInfo.getSqlBuilder().append("TOP " + uriInfo.getTopOption().getValue() + " ");
+        }
+
         if (uriInfo.getSelectOption() == null) {
             expandSelectWild(uriInfo, isSecondPass);
         } else {
@@ -245,22 +266,30 @@ public class OiyoSqlQueryListBuilder {
             break;
         case MSSQL2008:
         case ORACLE: {
+            if (OiyokanConstants.DatabaseType.MSSQL2008 == databaseType //
+                    // SQL Server 2008 で SKIP指定なしの場合はサブクエリの挙動を抑止してTOP記述のみ.
+                    // このため、WHERE 部分の展開は h2 などのDBと同じ挙動になる。
+                    && uriInfo.getSkipOption() == null) {
+                sqlInfo.getSqlBuilder().append(" FROM "
+                        + OiyoCommonJdbcUtil.escapeKakkoFieldName(sqlInfo, entitySet.getEntityType().getDbName()));
+                break;
+            }
+
             ///////////////////////////////////
             // SQL Server / ORACLE 用特殊記述
             // 現在、無条件にサブクエリ展開
-            String topfilter = "";
+            String topfilterForSql2000 = "";
             if (OiyokanConstants.DatabaseType.MSSQL2008 == databaseType) {
+                // SQL Server の場合 SKIP 指定がある場合のコースとなる。
+                int total = 1;
                 if (uriInfo.getTopOption() != null) {
-                    int total = uriInfo.getTopOption().getValue();
-                    if (uriInfo.getSkipOption() != null) {
-                        total += uriInfo.getSkipOption().getValue();
-                    }
-                    topfilter = "TOP " + (total + 1) + " ";
+                    total += uriInfo.getTopOption().getValue();
                 }
-
+                total += uriInfo.getSkipOption().getValue();
+                topfilterForSql2000 = "TOP " + total + " ";
             }
 
-            sqlInfo.getSqlBuilder().append(" FROM (SELECT " + topfilter + "ROW_NUMBER()");
+            sqlInfo.getSqlBuilder().append(" FROM (SELECT " + topfilterForSql2000 + "ROW_NUMBER()");
             if (uriInfo.getOrderByOption() != null) {
                 sqlInfo.getSqlBuilder().append(" OVER (");
                 sqlInfo.getSqlBuilder().append("ORDER BY ");
