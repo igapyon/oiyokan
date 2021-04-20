@@ -603,16 +603,16 @@ public class OiyoCommonJdbcUtil {
             if (value.startsWith("'") && value.endsWith("'")) {
                 // 文字列リテラルについては前後のクオートを除去して記憶.
                 value = value.substring(1, value.length() - 1);
-
-                // 文字列リテラルとしてパラメータ化クエリで扱う.
-                sqlInfo.getSqlBuilder().append("?");
-                sqlInfo.getSqlParamList().add(value);
-            } else {
-                // 文字列リテラルとしてパラメータ化クエリで扱う.
-                // そのまま出力するとエラーになる点に注意!
-                sqlInfo.getSqlBuilder().append("?");
-                sqlInfo.getSqlParamList().add(value);
             }
+
+            if (property != null && property.getLengthFixed() != null && property.getLengthFixed()) {
+                // CHAR 型の場合は rightPadを実施。
+                value = StringUtils.rightPad(value, property.getMaxLength());
+            }
+
+            // 文字列リテラルとしてパラメータ化クエリで扱う.
+            sqlInfo.getSqlBuilder().append("?");
+            sqlInfo.getSqlParamList().add(value);
             return;
         }
         if (EdmBinary.getInstance() == edmType) {
