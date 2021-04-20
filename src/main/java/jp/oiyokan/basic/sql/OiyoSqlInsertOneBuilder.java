@@ -119,7 +119,7 @@ public class OiyoSqlInsertOneBuilder {
 
                 final OiyoSettingsProperty prop = OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, entitySetName,
                         param.getName());
-                OiyoCommonJdbcUtil.expandLiteralOrBindParameter(sqlInfo, prop.getEdmType(), param.getText());
+                OiyoCommonJdbcUtil.expandLiteralOrBindParameter(sqlInfo, prop.getEdmType(), prop, param.getText());
             }
         }
 
@@ -129,7 +129,10 @@ public class OiyoSqlInsertOneBuilder {
             } else {
                 sqlInfo.getSqlBuilder().append(",");
             }
-            OiyoCommonJdbcUtil.expandLiteralOrBindParameter(sqlInfo, prop.getType(), prop.getValue());
+
+            final OiyoSettingsProperty oiyoProp = OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, entitySetName,
+                    prop.getName());
+            OiyoCommonJdbcUtil.expandLiteralOrBindParameter(sqlInfo, prop.getType(), oiyoProp, prop.getValue());
         }
 
         sqlInfo.getSqlBuilder().append(")");

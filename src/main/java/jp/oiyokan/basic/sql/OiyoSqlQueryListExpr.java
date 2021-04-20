@@ -281,11 +281,11 @@ public class OiyoSqlQueryListExpr {
 
         if (property == null) {
             OiyoCommonJdbcUtil.expandLiteralOrBindParameter(sqlInfo,
-                    impl.getType().getFullQualifiedName().getFullQualifiedNameAsString(), impl.getText());
+                    impl.getType().getFullQualifiedName().getFullQualifiedNameAsString(), null, impl.getText());
         } else {
             System.err.println("TRACE: TODO: member情報付き展開:" + property.getName());
             OiyoCommonJdbcUtil.expandLiteralOrBindParameter(sqlInfo,
-                    impl.getType().getFullQualifiedName().getFullQualifiedNameAsString(), impl.getText());
+                    impl.getType().getFullQualifiedName().getFullQualifiedNameAsString(), property, impl.getText());
         }
     }
 

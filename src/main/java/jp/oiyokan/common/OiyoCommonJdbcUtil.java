@@ -409,8 +409,8 @@ public class OiyoCommonJdbcUtil {
      * @param inputParam  parameter text.
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
-    public static void expandLiteralOrBindParameter(final OiyoSqlInfo sqlInfo, String edmTypeName, Object inputParam)
-            throws ODataApplicationException {
+    public static void expandLiteralOrBindParameter(final OiyoSqlInfo sqlInfo, String edmTypeName,
+            OiyoSettingsProperty property, Object inputParam) throws ODataApplicationException {
         if (inputParam == null) {
             if (IS_DEBUG_EXPAND_LITERAL)
                 System.err.println("TRACE: null: ");
