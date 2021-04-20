@@ -217,6 +217,17 @@ public class OiyoSqlQueryListExpr {
                 sqlInfo.getSqlBuilder().append(")");
                 return;
             }
+            // 左辺が LiteralImpl で右辺が MemberImpl
+            if (impl.getLeftOperand() instanceof LiteralImpl //
+                    && impl.getRightOperand() instanceof MemberImpl) {
+                final LiteralImpl literal = (LiteralImpl) impl.getLeftOperand();
+                final MemberImpl member = (MemberImpl) impl.getRightOperand();
+                OiyoSettingsProperty property = expandMember(member);
+                sqlInfo.getSqlBuilder().append(" = ");
+                expandLiteral(literal, property);
+                sqlInfo.getSqlBuilder().append(")");
+                return;
+            }
 
             expand(impl.getLeftOperand());
             sqlInfo.getSqlBuilder().append(" = ");
@@ -234,11 +245,24 @@ public class OiyoSqlQueryListExpr {
                 // また、リテラルに null が指定されている場合に、LiteralImpl の getType() 自体が null で渡ってくる。
                 sqlInfo.getSqlBuilder().append(" IS NOT NULL");
                 // なお、 「null ne 項目」のように左辺に NULL を記述する IS NOT NULL は Olingoにて指定不可。
-            } else {
-                expand(impl.getLeftOperand());
-                sqlInfo.getSqlBuilder().append(" <> ");
-                expand(impl.getRightOperand());
+                sqlInfo.getSqlBuilder().append(")");
+                return;
             }
+            // 左辺が MemberImpl で右辺が LiteralImpl
+            if (impl.getLeftOperand() instanceof MemberImpl //
+                    && impl.getRightOperand() instanceof LiteralImpl) {
+                final MemberImpl member = (MemberImpl) impl.getLeftOperand();
+                final LiteralImpl literal = (LiteralImpl) impl.getRightOperand();
+                OiyoSettingsProperty property = expandMember(member);
+                sqlInfo.getSqlBuilder().append(" <> ");
+                expandLiteral(literal, property);
+                sqlInfo.getSqlBuilder().append(")");
+                return;
+            }
+
+            expand(impl.getLeftOperand());
+            sqlInfo.getSqlBuilder().append(" <> ");
+            expand(impl.getRightOperand());
             sqlInfo.getSqlBuilder().append(")");
             return;
         } else if (opKind == BinaryOperatorKind.AND) {
