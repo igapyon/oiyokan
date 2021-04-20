@@ -113,8 +113,8 @@ public class OiyoSqlQueryListBuilder {
 
         boolean isMssql2008OrOracleSpecial = false;
         if (OiyokanConstants.DatabaseType.MSSQL2008 == databaseType //
-                && uriInfo.getTopOption() != null && uriInfo.getSkipOption() == null) {
-            // SQL Server 2008 で TOP 指定あり、SKIP指定なしの場合はサブクエリの挙動を抑止してTOP記述のみ.
+                && uriInfo.getSkipOption() == null) {
+            // SQL Server 2008 で SKIP指定なしの場合はサブクエリの挙動を抑止してTOP記述のみ.
             // このため、WHERE 部分の展開は h2 などのDBと同じ挙動になる。
             isMssql2008OrOracleSpecial = false;
         } else if (OiyokanConstants.DatabaseType.MSSQL2008 == databaseType //
@@ -179,7 +179,8 @@ public class OiyoSqlQueryListBuilder {
                 .getOiyoDatabaseTypeByEntitySetName(sqlInfo.getOiyoInfo(), sqlInfo.getEntitySetName());
         if (OiyokanConstants.DatabaseType.MSSQL2008 == databaseType //
                 && uriInfo.getTopOption() != null && uriInfo.getSkipOption() == null) {
-            // SQL Server 2008 で TOP 指定あり、SKIP指定なしの場合はサブクエリの挙動を抑止してTOP記述のみ.
+            // SQL Server 2008 で SKIP指定なしの場合はサブクエリの挙動を抑止してTOP記述のみ.
+            // 一方 TOP については、SQL 2008固有文法であるこの場所への TOP 展開。
             sqlInfo.getSqlBuilder().append("TOP " + uriInfo.getTopOption().getValue() + " ");
         }
 
@@ -266,9 +267,9 @@ public class OiyoSqlQueryListBuilder {
         case MSSQL2008:
         case ORACLE: {
             if (OiyokanConstants.DatabaseType.MSSQL2008 == databaseType //
-                    // SQL Server 2008 で TOP 指定あり、SKIP指定なしの場合はサブクエリの挙動を抑止してTOP記述のみ.
+                    // SQL Server 2008 で SKIP指定なしの場合はサブクエリの挙動を抑止してTOP記述のみ.
                     // このため、WHERE 部分の展開は h2 などのDBと同じ挙動になる。
-                    && uriInfo.getTopOption() != null && uriInfo.getSkipOption() == null) {
+                    && uriInfo.getSkipOption() == null) {
                 sqlInfo.getSqlBuilder().append(" FROM "
                         + OiyoCommonJdbcUtil.escapeKakkoFieldName(sqlInfo, entitySet.getEntityType().getDbName()));
                 break;
@@ -277,19 +278,18 @@ public class OiyoSqlQueryListBuilder {
             ///////////////////////////////////
             // SQL Server / ORACLE 用特殊記述
             // 現在、無条件にサブクエリ展開
-            String topfilter = "";
+            String topfilterForSql2000 = "";
             if (OiyokanConstants.DatabaseType.MSSQL2008 == databaseType) {
+                // SQL Server の場合 SKIP 指定がある場合のコースとなる。
+                int total = 1;
                 if (uriInfo.getTopOption() != null) {
-                    int total = uriInfo.getTopOption().getValue();
-                    if (uriInfo.getSkipOption() != null) {
-                        total += uriInfo.getSkipOption().getValue();
-                    }
-                    topfilter = "TOP " + (total + 1) + " ";
+                    total += uriInfo.getTopOption().getValue();
                 }
-
+                total += uriInfo.getSkipOption().getValue();
+                topfilterForSql2000 = "TOP " + total + " ";
             }
 
-            sqlInfo.getSqlBuilder().append(" FROM (SELECT " + topfilter + "ROW_NUMBER()");
+            sqlInfo.getSqlBuilder().append(" FROM (SELECT " + topfilterForSql2000 + "ROW_NUMBER()");
             if (uriInfo.getOrderByOption() != null) {
                 sqlInfo.getSqlBuilder().append(" OVER (");
                 sqlInfo.getSqlBuilder().append("ORDER BY ");
