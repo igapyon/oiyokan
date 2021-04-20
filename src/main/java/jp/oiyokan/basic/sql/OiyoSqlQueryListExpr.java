@@ -279,14 +279,8 @@ public class OiyoSqlQueryListExpr {
             return;
         }
 
-        if (property == null) {
-            OiyoCommonJdbcUtil.expandLiteralOrBindParameter(sqlInfo,
-                    impl.getType().getFullQualifiedName().getFullQualifiedNameAsString(), null, impl.getText());
-        } else {
-            System.err.println("TRACE: TODO: member情報付き展開:" + property.getName());
-            OiyoCommonJdbcUtil.expandLiteralOrBindParameter(sqlInfo,
-                    impl.getType().getFullQualifiedName().getFullQualifiedNameAsString(), property, impl.getText());
-        }
+        OiyoCommonJdbcUtil.expandLiteralOrBindParameter(sqlInfo,
+                impl.getType().getFullQualifiedName().getFullQualifiedNameAsString(), property, impl.getText());
     }
 
     private OiyoSettingsProperty expandMember(MemberImpl impl) throws ODataApplicationException {
