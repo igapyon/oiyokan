@@ -1,3 +1,29 @@
+# Release 1.6 (2021-04-21)
+
+## EN
+
+- Splitted the repository into two repositories, a library and an executable web.
+    - https://github.com/igapyon/oiyokan
+    - https://github.com/igapyon/oiyokan-demosite
+- Improved SQL Server efficiency.
+- Changed to use information from Property instead of object type when reading Query execution result.
+- Added the function to supplement the shortage of CHAR.
+- Reduced internal ResultSetMetaData calls as much as possible.
+- DB timeout time can be specified in JSON.
+- Refactoring.
+
+## JA
+
+- リポジトリを ライブラリと実行可能なWebの2リポジトリに分割
+    - https://github.com/igapyon/oiyokan
+    - https://github.com/igapyon/oiyokan-demosite
+- SQL Server効率アップ
+- Query 実行結果の読み込み時に、オブジェクト型ではなくPropertyからの情報を利用するように変更
+- CHAR の長さ不足を補完する機能を追加
+- 内部的な ResultSetMetaData 呼び出しを極力減らす
+- DBタイムアウト時間をJSONで指定可能にする
+- リファクタリング
+
 # Release 1.5 (2021-04-18)
 
 ## EN
