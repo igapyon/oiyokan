@@ -66,9 +66,9 @@ src/main/resources/oiyokan/oiyokan-settings.json
 
 oiyokan プロジェクトは、OData v4 server のシンプルなサンプル(https://github.com/igapyon/simple-odata4) を祖先に作成されたものです。
 
-# Oiyokanに関連するその他情報
+## Oiyokanに関連するその他情報
 
-## Olingo による OData v4 server チュートリアル
+### Olingo による OData v4 server チュートリアル
 
 OData v4 / Apache Olingo そのものの学習には Apache Olingo サイトの参照が有益です。
 
