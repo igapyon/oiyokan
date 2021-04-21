@@ -46,11 +46,6 @@ import jp.oiyokan.dto.OiyoSettingsProperty;
 class GenOiyoSettingsJsonTest {
     private static final String TARGET_UNITTEST_DATABASE = "oiyoUnitTestDb";
 
-    /**
-     * このテストを実施するかどうか。
-     */
-    private static final boolean IS_PROCESS = true;
-
     private static final boolean SHOW_JDBCINFO = true;
 
     /**
@@ -71,123 +66,13 @@ class GenOiyoSettingsJsonTest {
             ResultSet rset = connTargetDb.getMetaData().getTables(null, "%", "%", new String[] { "TABLE", "VIEW" });
             for (; rset.next();) {
                 final String tableName = rset.getString("TABLE_NAME");
-                final String tableCat = rset.getString("TABLE_CAT");
+                // final String tableCat = rset.getString("TABLE_CAT");
 
                 if (SHOW_JDBCINFO) {
                     System.err.println(
                             "table: " + rset.getString("TABLE_NAME") + " (" + rset.getString("TABLE_TYPE") + ")");
                     System.err.println("    TABLE_CAT   : " + rset.getString("TABLE_CAT"));
                     // System.err.println(" TABLE_SCHEM : " + rset.getString("TABLE_SCHEM"));
-                }
-
-                // for h2 database
-                if ("IGNORELIST".equals(tableName) //
-                        || "INDEXES".equals(tableName)//
-                        || "MAP".equals(tableName)//
-                        || "ROWS".equals(tableName)//
-                        || "SETTINGS".equals(tableName)//
-                        || "WORDS".equals(tableName)) {
-                    System.err.println("    skip.");
-                    continue;
-                }
-
-                // for MySQL.
-                if ("sys".equals(tableCat)) {
-                    if (SHOW_JDBCINFO) {
-                        System.err.println("    skip.");
-                    }
-                    continue;
-                }
-
-                // for ORCL18
-                if (tableName.contains("$") //
-                        || tableName.equals("AV_DUAL") //
-                        || tableName.equals("CATALOG") //
-                        || tableName.equals("COL") //
-                        || tableName.equals("HELP") //
-                        || tableName.equals("SYNONYMS") //
-                        || tableName.equals("SYSCATALOG") //
-                        || tableName.equals("SYSFILES") //
-                        || tableName.equals("SYSSEGOBJ") //
-                        || tableName.equals("TAB") //
-                        || tableName.equals("TABQUOTAS") //
-                        || tableName.startsWith("ALL$") //
-                        || tableName.startsWith("ALL_") //
-                        || tableName.startsWith("AUDITABLE_") //
-                        || tableName.startsWith("AUDIT_") //
-                        || tableName.startsWith("AW$") //
-                        || tableName.startsWith("CDB_") //
-                        || tableName.startsWith("COAD$") //
-                        || tableName.startsWith("COLUMN_") //
-                        || tableName.startsWith("CS_") //
-                        || tableName.startsWith("CTX_") //
-                        || tableName.startsWith("DATABASE_") //
-                        || tableName.startsWith("DATAPUMP_") //
-                        || tableName.startsWith("DATA_PUMP_") //
-                        || tableName.startsWith("DBA_") //
-                        || tableName.startsWith("DBMS_") //
-                        || tableName.startsWith("DICTIONARY") //
-                        || tableName.startsWith("DICT_") //
-                        || tableName.startsWith("DM_") //
-                        || tableName.startsWith("DOCUMENT_") //
-                        || tableName.startsWith("DR$") //
-                        || tableName.startsWith("DRV$") //
-                        || tableName.startsWith("EXP") //
-                        || tableName.startsWith("EXU") //
-                        || tableName.startsWith("FLASHBACK_") //
-                        || tableName.startsWith("GEO") //
-                        || tableName.startsWith("GLOBAL_") //
-                        || tableName.startsWith("HS_") //
-                        || tableName.startsWith("IMP") //
-                        || tableName.startsWith("INDEX_") //
-                        || tableName.startsWith("JAVAS") //
-                        || tableName.startsWith("KU_") //
-                        || tableName.startsWith("LOADER_") //
-                        || tableName.startsWith("LOCAL_") //
-                        || tableName.startsWith("MY_SDO") //
-                        || tableName.startsWith("NLS_") //
-                        || tableName.startsWith("NTV2_") //
-                        || tableName.startsWith("OGIS_") //
-                        || tableName.startsWith("ORA_") //
-                        || tableName.startsWith("ORDDCM_") //
-                        || tableName.startsWith("PATH_") //
-                        || tableName.startsWith("PRODUCT_") //
-                        || tableName.startsWith("PSTU") //
-                        || tableName.startsWith("PUBL") //
-                        || tableName.startsWith("QUEUE_") //
-                        || tableName.startsWith("RDF_") //
-                        || tableName.startsWith("REDACTION_") //
-                        || tableName.startsWith("REPORT_") //
-                        || tableName.startsWith("RESOURCE_") //
-                        || tableName.startsWith("ROLE_") //
-                        || tableName.startsWith("RULE_") //
-                        || tableName.startsWith("SAM_") //
-                        || tableName.startsWith("SCHEDULER_") //
-                        || tableName.startsWith("SCHEMA_") //
-                        || tableName.startsWith("SDO_") //
-                        || tableName.startsWith("SESSION_") //
-                        || tableName.startsWith("SI_") //
-                        || tableName.startsWith("SPD_") //
-                        || tableName.startsWith("SQT_") //
-                        || tableName.startsWith("SRS") //
-                        || tableName.startsWith("STMT_") //
-                        || tableName.startsWith("SYSTEM_") //
-                        || tableName.startsWith("TABLESPACE_") //
-                        || tableName.startsWith("TABLE_") //
-                        || tableName.startsWith("TRANSPORTABLE_") //
-                        || tableName.startsWith("USABLE_") //
-                        || tableName.startsWith("USER_") //
-                        || tableName.startsWith("UTL_") //
-                        || tableName.startsWith("WM_") //
-                        || tableName.startsWith("XDB$") //
-                        || tableName.startsWith("XDB_") //
-                        || tableName.startsWith("XDS_") //
-                        || tableName.startsWith("_") //
-                ) {
-                    if (SHOW_JDBCINFO) {
-                        System.err.println("    skip.");
-                    }
-                    continue;
                 }
 
                 tableNameList.add(tableName);
@@ -204,11 +89,7 @@ class GenOiyoSettingsJsonTest {
                 oiyoSettings.setContainerName("Container");
                 oiyoSettings.setDatabase(new ArrayList<>());
 
-                final String[][] DATABASE_SETTINGS = new String[][] {
-                        { "oiyokanKan", "h2", "Oiyokan internal DB. Do not change.", //
-                                "org.h2.Driver", //
-                                "jdbc:h2:mem:oiyokan;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=FALSE;MODE=MSSQLServer", //
-                                "sa", "" }, //
+                final String[][] DATABASE_SETTINGS = new String[][] { //
                         { "oiyoUnitTestDb", "h2", "Oiyokan internal Target Test DB. Used for build unit test.", //
                                 "org.h2.Driver", //
                                 "jdbc:h2:file:./src/main/resources/db/oiyokan-internal;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=FALSE;MODE=MSSQLServer", //
@@ -253,7 +134,7 @@ class GenOiyoSettingsJsonTest {
 
             }
 
-            if (true) {
+            if (false) {
                 OiyoSettingsEntitySet entitySet = new OiyoSettingsEntitySet();
                 oiyoSettings.getEntitySet().add(entitySet);
                 entitySet.setName("Oiyokans");
@@ -306,10 +187,11 @@ class GenOiyoSettingsJsonTest {
                     oiyoSettings.getEntitySet().add(OiyokanSettingsGenUtil.generateCreateOiyoJson(connTargetDb,
                             tableName, OiyokanConstants.DatabaseType.valueOf(settingsDatabase.getType())));
                 } catch (Exception ex) {
-                    System.err.println(ex.toString());
+                    System.err.println("Fail to read table: " + tableName);
                 }
             }
 
+            // UnitTestテーブルの名称調整
             for (OiyoSettingsEntitySet entitySet : oiyoSettings.getEntitySet()) {
                 if ("ODataTest1".equals(entitySet.getEntityType().getDbName())) {
                     entitySet.setName("ODataTests1");
@@ -335,6 +217,7 @@ class GenOiyoSettingsJsonTest {
                 }
             }
 
+            // Sakila Sample db の名称調整。
             for (OiyoSettingsEntitySet entitySet : oiyoSettings.getEntitySet()) {
                 if (entitySet.getName().equals("actors")) {
                     entitySet.setName("SklActors");
