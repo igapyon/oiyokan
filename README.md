@@ -34,6 +34,7 @@ You can use Oiyokan to turn RDBMS into OData v4 services.
 ## Sample implementation using Oiyokan
 
 - Oiyokan provides OData server sample of Sakila DVD rental.
+- see details at: https://github.com/igapyon/oiyokan-demosite
 
 # Try the Oiyokan OData v4 sample server
 
@@ -42,16 +43,6 @@ You can use Oiyokan to turn RDBMS into OData v4 services.
 You can find the running OData v4 sample server at Heroku.
 
 - https://oiyokan.herokuapp.com/
-
-## Local
-
-You can try OData v4 sample server at your computer.
-
-Check out source code repository and you can run it as Spring Boot Web Server.
-
-```sh
-mvn clean install spring-boot:run
-```
 
 # How to setup OData v4 setting
 
@@ -63,10 +54,6 @@ mvn clean install spring-boot:run
 ```sh
 src/main/resources/oiyokan/oiyokan-settings.json
 ```
-
-## 設定変更後は Spring Boot を再起動
-
-Spring Boot を再起動することにより設定情報の更新を反映。
 
 # OData v4 server のサンプル(simple-odata4) を祖先
 
