@@ -28,7 +28,7 @@ import org.apache.olingo.server.core.uri.parser.Parser;
 import org.junit.jupiter.api.Test;
 
 import jp.oiyokan.OiyokanEdmProvider;
-import jp.oiyokan.OiyokanTestSettingConstants;
+import jp.oiyokan.OiyokanUnittestUtil;
 import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.common.OiyoInfoUtil;
 import jp.oiyokan.common.OiyoSqlInfo;
@@ -48,8 +48,7 @@ class OiyoSqlQueryListExprTest {
      * @throws Exception 例外が発生した場合.
      */
     private String getExprString(String rawODataPath, String rawQueryPath) throws Exception {
-        final OiyoInfo oiyoInfo = new OiyoInfo();
-        oiyoInfo.setSettings(OiyoInfoUtil.loadOiyokanSettings());
+        final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
 
         OData odata = OData.newInstance();
         ServiceMetadata edm = odata.createServiceMetadata(new OiyokanEdmProvider(), new ArrayList<>());
@@ -74,9 +73,6 @@ class OiyoSqlQueryListExprTest {
 
     @Test
     void test01() throws Exception {
-        if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
-            return;
-
         assertEquals("(ID = 1.0)", getExprString("/ODataTests1", //
                 OiyoUrlUtil.encodeUrlQuery("$filter=ID eq 1.0")), //
                 "Postgresの場合大文字小文字の差異が出る");
@@ -84,9 +80,6 @@ class OiyoSqlQueryListExprTest {
 
     @Test
     void test02() throws Exception {
-        if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
-            return;
-
         assertEquals("((Description = ?) AND (ID = 2.0))", getExprString("/ODataTests1", //
                 OiyoUrlUtil.encodeUrlQuery("$filter=Description eq 'Mac' and ID eq 2.0")),
                 "Postgres/ORCL18の場合大文字小文字の差異が出る");
@@ -94,9 +87,6 @@ class OiyoSqlQueryListExprTest {
 
     @Test
     void test03() throws Exception {
-        if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
-            return;
-
         assertEquals("((INSTR(Description,?) - 1) <> -1)", getExprString("/ODataTests1", //
                 OiyoUrlUtil.encodeUrlQuery(
                         "$top=51&$filter= indexof(Description,'増殖タブレット7') ne -1 &$orderby=ID &$count=true &$select=Description,ID,Name")),

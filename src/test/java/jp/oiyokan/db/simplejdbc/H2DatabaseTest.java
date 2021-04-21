@@ -24,7 +24,7 @@ import java.sql.ResultSetMetaData;
 import org.junit.jupiter.api.Test;
 
 import jp.oiyokan.OiyokanConstants;
-import jp.oiyokan.OiyokanTestSettingConstants;
+import jp.oiyokan.OiyokanUnittestUtil;
 import jp.oiyokan.common.OiyoCommonJdbcUtil;
 import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.common.OiyoInfoUtil;
@@ -34,16 +34,14 @@ import jp.oiyokan.data.OiyokanKanDatabase;
  * ごく基本的で大雑把な JDBC + h2 database 挙動の確認.
  */
 class H2DatabaseTest {
+    private static final String OIYOKAN_UNITTEST_DB = "oiyoUnitTestDb";
+
     @Test
     void test01() throws Exception {
-        if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
-            return;
-
-        final OiyoInfo oiyoInfo = new OiyoInfo();
-        oiyoInfo.setSettings(OiyoInfoUtil.loadOiyokanSettings());
+        final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
 
         try (Connection conn = OiyoCommonJdbcUtil
-                .getConnection(OiyoInfoUtil.getOiyoDatabaseByName(oiyoInfo, OiyokanConstants.OIYOKAN_UNITTEST_DB))) {
+                .getConnection(OiyoInfoUtil.getOiyoDatabaseByName(oiyoInfo, OIYOKAN_UNITTEST_DB))) {
 
             try (var stmt = conn.prepareStatement("SELECT ID, Name, Description FROM ODataTest1 ORDER BY ID LIMIT 3")) {
                 stmt.executeQuery();
@@ -55,14 +53,10 @@ class H2DatabaseTest {
 
     @Test
     void testo2() throws Exception {
-        if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
-            return;
-
-        final OiyoInfo oiyoInfo = new OiyoInfo();
-        oiyoInfo.setSettings(OiyoInfoUtil.loadOiyokanSettings());
+        final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
 
         try (Connection conn = OiyoCommonJdbcUtil
-                .getConnection(OiyoInfoUtil.getOiyoDatabaseByName(oiyoInfo, OiyokanConstants.OIYOKAN_UNITTEST_DB))) {
+                .getConnection(OiyoInfoUtil.getOiyoDatabaseByName(oiyoInfo, OIYOKAN_UNITTEST_DB))) {
 
             try (var stmt = conn.prepareStatement("SELECT ID, Name, Description" //
                     + ",Sbyte1,Int16a,Int32a,Int64a,Decimal1,StringChar8,StringVar255,Boolean1,Single1,Double1,DateTimeOffset1,TimeOfDay1" //
@@ -86,10 +80,7 @@ class H2DatabaseTest {
      */
     @Test
     void test03() throws Exception {
-        if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
-            return;
-        final OiyoInfo oiyoInfo = new OiyoInfo();
-        oiyoInfo.setSettings(OiyoInfoUtil.loadOiyokanSettings());
+        final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
 
         try (Connection conn = OiyoCommonJdbcUtil
                 .getConnection(OiyoInfoUtil.getOiyoDatabaseByName(oiyoInfo, OiyokanConstants.OIYOKAN_KAN_DB))) {
@@ -97,20 +88,17 @@ class H2DatabaseTest {
             OiyokanKanDatabase.setupKanDatabase(oiyoInfo);
         }
 
-        try (Connection conn = OiyoCommonJdbcUtil
-                .getConnection(OiyoInfoUtil.getOiyoDatabaseByName(oiyoInfo, OiyokanConstants.OIYOKAN_UNITTEST_DB))) {
-
-            try (var stmt = conn.prepareStatement(
-                    "SELECT address_id FROM address WHERE ((address2 IS NULL) AND (address = ?)) LIMIT 2001")) {
-                int column = 1;
-                stmt.setString(column++, "47 MySakila Drive");
-                stmt.executeQuery();
-                var rset = stmt.getResultSet();
-                if (rset.next()) {
-                    assertEquals("1", rset.getString(1));
-                }
-            }
-        }
+        /*
+         * try (Connection conn = OiyoCommonJdbcUtil
+         * .getConnection(OiyoInfoUtil.getOiyoDatabaseByName(oiyoInfo,
+         * OIYOKAN_UNITTEST_DB))) {
+         * 
+         * try (var stmt = conn.prepareStatement(
+         * "SELECT address_id FROM address WHERE ((address2 IS NULL) AND (address = ?)) LIMIT 2001"
+         * )) { int column = 1; stmt.setString(column++, "47 MySakila Drive");
+         * stmt.executeQuery(); var rset = stmt.getResultSet(); if (rset.next()) {
+         * assertEquals("1", rset.getString(1)); } } }
+         */
     }
 
     /**
@@ -118,11 +106,7 @@ class H2DatabaseTest {
      */
     // @Test
     void testListTables() throws Exception {
-        if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
-            return;
-
-        final OiyoInfo oiyoInfo = new OiyoInfo();
-        oiyoInfo.setSettings(OiyoInfoUtil.loadOiyokanSettings());
+        final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
 
         try (Connection conn = OiyoCommonJdbcUtil
                 .getConnection(OiyoInfoUtil.getOiyoDatabaseByName(oiyoInfo, "mysql1"))) {

@@ -18,6 +18,7 @@ package jp.oiyokan.common;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Locale;
 
 import org.apache.commons.logging.Log;
@@ -48,20 +49,46 @@ public class OiyoInfoUtil {
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
     public static OiyoSettings loadOiyokanSettings() throws ODataApplicationException {
-        log.info("OData v4: resources: load: settings: oiyokan-settings.json");
+        log.info("OData v4: resources: load: oiyokan settings");
 
-        // resources から読み込み。
-        final ClassPathResource cpres = new ClassPathResource("oiyokan/oiyokan-settings.json");
-        try (InputStream inStream = cpres.getInputStream()) {
-            String strOiyokanSettings = StreamUtils.copyToString(inStream, Charset.forName("UTF-8"));
+        final OiyoSettings mergedOiyoSettings = new OiyoSettings();
+        mergedOiyoSettings.setDatabase(new ArrayList<>());
+        mergedOiyoSettings.setEntitySet(new ArrayList<>());
 
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(strOiyokanSettings, OiyoSettings.class);
-        } catch (IOException ex) {
-            // [M024] UNEXPECTED: Fail to load Oiyokan settings
-            log.fatal(OiyokanMessages.IY7112 + ": " + ex.toString(), ex);
-            throw new ODataApplicationException(OiyokanMessages.IY7112, 500, Locale.ENGLISH);
+        final String[] OIYOKAN_SETTINGS = new String[] { //
+                "oiyokan/oiyokanKan-settings.json", //
+                "oiyokan/oiyokan-settings.json", //
+        };
+
+        for (String settings : OIYOKAN_SETTINGS) {
+            log.info("OData v4: resources: load: " + settings);
+            // resources から読み込み。
+            final ClassPathResource cpres = new ClassPathResource(settings);
+            try (InputStream inStream = cpres.getInputStream()) {
+                final String strOiyokanSettings = StreamUtils.copyToString(inStream, Charset.forName("UTF-8"));
+
+                final ObjectMapper mapper = new ObjectMapper();
+                final OiyoSettings loadedSettings = mapper.readValue(strOiyokanSettings, OiyoSettings.class);
+                if (mergedOiyoSettings.getNamespace() == null) {
+                    mergedOiyoSettings.setNamespace(loadedSettings.getNamespace());
+                }
+                if (mergedOiyoSettings.getContainerName() == null) {
+                    mergedOiyoSettings.setContainerName(loadedSettings.getContainerName());
+                }
+                for (OiyoSettingsDatabase database : loadedSettings.getDatabase()) {
+                    mergedOiyoSettings.getDatabase().add(database);
+                }
+                for (OiyoSettingsEntitySet entitySet : loadedSettings.getEntitySet()) {
+                    mergedOiyoSettings.getEntitySet().add(entitySet);
+                }
+            } catch (IOException ex) {
+                // [M024] UNEXPECTED: Fail to load Oiyokan settings
+                log.error(OiyokanMessages.IY7112 + ": " + ex.toString());
+                // しかし例外は発生させず処理続行。
+            }
         }
+
+        return mergedOiyoSettings;
     }
 
     /**

@@ -21,7 +21,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.apache.olingo.server.api.ODataResponse;
 import org.junit.jupiter.api.Test;
 
-import jp.oiyokan.OiyokanTestSettingConstants;
+import jp.oiyokan.OiyokanUnittestUtil;
+import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.common.OiyoUrlUtil;
 import jp.oiyokan.util.OiyokanTestUtil;
 
@@ -31,8 +32,7 @@ import jp.oiyokan.util.OiyokanTestUtil;
 class UnitTestTypeCharTest {
     @Test
     void test01() throws Exception {
-        if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
-            return;
+        final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
 
         final int TEST_ID = OiyokanTestUtil.getNextUniqueId();
 
@@ -63,8 +63,7 @@ class UnitTestTypeCharTest {
 
     @Test
     void test02() throws Exception {
-        if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
-            return;
+        final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
 
         final String decVal = "1304";
 
@@ -107,8 +106,7 @@ class UnitTestTypeCharTest {
 
     @Test
     void test03() throws Exception {
-        if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
-            return;
+        final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
 
         final String decVal = "1404";
 
@@ -153,8 +151,7 @@ class UnitTestTypeCharTest {
 
     @Test
     void test04() throws Exception {
-        if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
-            return;
+        final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
 
         final String decVal = "1404";
 

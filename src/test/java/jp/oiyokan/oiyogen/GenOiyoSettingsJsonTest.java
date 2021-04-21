@@ -30,6 +30,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 import jp.oiyokan.OiyokanConstants;
+import jp.oiyokan.OiyokanUnittestUtil;
 import jp.oiyokan.common.OiyoCommonJdbcUtil;
 import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.common.OiyoInfoUtil;
@@ -59,12 +60,7 @@ class GenOiyoSettingsJsonTest {
      */
     @Test
     void test01() throws Exception {
-        if (!IS_PROCESS) {
-            return;
-        }
-
-        final OiyoInfo oiyoInfo = new OiyoInfo();
-        oiyoInfo.setSettings(OiyoInfoUtil.loadOiyokanSettings());
+        final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
 
         OiyoSettingsDatabase settingsDatabase = OiyoInfoUtil.getOiyoDatabaseByName(oiyoInfo, TARGET_UNITTEST_DATABASE);
         System.err.println("確認対象データベース: " + settingsDatabase.getName());

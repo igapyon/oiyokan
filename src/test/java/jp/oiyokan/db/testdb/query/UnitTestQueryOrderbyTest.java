@@ -21,7 +21,8 @@ import org.apache.olingo.server.api.ODataResponse;
 import org.junit.jupiter.api.Test;
 
 import jp.oiyokan.OiyokanConstants;
-import jp.oiyokan.OiyokanTestSettingConstants;
+import jp.oiyokan.OiyokanUnittestUtil;
+import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.util.OiyokanTestUtil;
 
 /**
@@ -30,8 +31,7 @@ import jp.oiyokan.util.OiyokanTestUtil;
 class UnitTestQueryOrderbyTest {
     @Test
     void testSimpleOrderBy() throws Exception {
-        if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
-            return;
+        final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
 
         final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1",
                 "$orderby=ID&$top=1&$select=ID,Name,Description");
@@ -45,8 +45,7 @@ class UnitTestQueryOrderbyTest {
 
     @Test
     void testSimpleAllWithoutSelect() throws Exception {
-        if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
-            return;
+        final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
 
         final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1", "$orderby=ID&$top=2");
         @SuppressWarnings("unused")
@@ -59,8 +58,7 @@ class UnitTestQueryOrderbyTest {
 
     @Test
     void testSimpleFilter() throws Exception {
-        if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
-            return;
+        final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
 
         final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1",
                 "$top=2&$filter=ID%20eq%205.0&$count=true&$select=ID,Name");
@@ -77,8 +75,7 @@ class UnitTestQueryOrderbyTest {
 
     @Test
     void testSimpleSearch() throws Exception {
-        if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
-            return;
+        final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
 
         if (!OiyokanConstants.IS_EXPERIMENTAL_SEARCH_ENABLED) {
             System.err.println("$search はサポート外: テストスキップします.");
