@@ -20,7 +20,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.apache.olingo.server.api.ODataResponse;
 import org.junit.jupiter.api.Test;
 
-import jp.oiyokan.OiyokanTestSettingConstants;
+import jp.oiyokan.OiyokanUnittestUtil;
+import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.common.OiyoUrlUtil;
 import jp.oiyokan.util.OiyokanTestUtil;
 
@@ -30,8 +31,7 @@ import jp.oiyokan.util.OiyokanTestUtil;
 class UnitTestQueryNotTest {
     @Test
     void testNotA() throws Exception {
-        if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
-            return;
+        final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
 
         final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1", OiyoUrlUtil
                 .encodeUrlQuery("&$filter=not contains(StringVar255,'VARCHAR255') &$count=true &$select=ID"));

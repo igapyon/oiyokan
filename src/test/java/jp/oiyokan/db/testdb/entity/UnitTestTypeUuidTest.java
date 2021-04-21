@@ -21,7 +21,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.apache.olingo.server.api.ODataResponse;
 import org.junit.jupiter.api.Test;
 
-import jp.oiyokan.OiyokanTestSettingConstants;
+import jp.oiyokan.OiyokanUnittestUtil;
+import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.util.OiyokanTestUtil;
 
 /**
@@ -30,8 +31,7 @@ import jp.oiyokan.util.OiyokanTestUtil;
 class UnitTestTypeUuidTest {
     @Test
     void test01() throws Exception {
-        if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
-            return;
+        final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
 
         final int TEST_ID = OiyokanTestUtil.getNextUniqueId();
 
