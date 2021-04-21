@@ -19,6 +19,7 @@ import java.util.Locale;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.olingo.commons.core.edm.primitivetype.EdmString;
 import org.apache.olingo.server.api.ODataApplicationException;
 import org.apache.olingo.server.api.uri.queryoption.expression.BinaryOperatorKind;
 import org.apache.olingo.server.api.uri.queryoption.expression.Expression;
@@ -187,41 +188,39 @@ public class OiyoSqlQueryListExpr {
         } else if (opKind == BinaryOperatorKind.EQ) {
             // EQ
             sqlInfo.getSqlBuilder().append("(");
-            // IS NULL対応(右辺がNULL)
-            if (impl.getRightOperand() instanceof LiteralImpl //
-                    && null == ((LiteralImpl) impl.getRightOperand()).getType()) {
-                expand(impl.getLeftOperand());
-                // 特殊処理 : 右辺が Literal かつ nullの場合は IS NULL 展開する。こうしないと h2 database は NULL検索できない.
-                // また、リテラルに null が指定されている場合に、LiteralImpl の getType() 自体が null で渡ってくる。
-                sqlInfo.getSqlBuilder().append(" IS NULL)");
-                return;
-            }
-            // IS NULL対応(左辺がNULL)
-            if (impl.getLeftOperand() instanceof LiteralImpl //
-                    && null == ((LiteralImpl) impl.getLeftOperand()).getType()) {
-                expand(impl.getRightOperand());
-                // 特殊処理 : 左辺が Literal かつ nullの場合は IS NULL 展開する。こうしないと h2 database は NULL検索できない.
-                // また、リテラルに null が指定されている場合に、LiteralImpl の getType() 自体が null で渡ってくる。
-                sqlInfo.getSqlBuilder().append(" IS NULL)");
-                return;
-            }
 
-            // 左辺が MemberImpl で右辺が LiteralImpl
-            if (impl.getLeftOperand() instanceof MemberImpl //
-                    && impl.getRightOperand() instanceof LiteralImpl) {
-                final MemberImpl member = (MemberImpl) impl.getLeftOperand();
-                final LiteralImpl literal = (LiteralImpl) impl.getRightOperand();
-                OiyoSettingsProperty property = expandMember(member);
-                sqlInfo.getSqlBuilder().append(" = ");
-                expandLiteral(literal, property);
-                sqlInfo.getSqlBuilder().append(")");
-                return;
-            }
-            // 左辺が LiteralImpl で右辺が MemberImpl
-            if (impl.getLeftOperand() instanceof LiteralImpl //
-                    && impl.getRightOperand() instanceof MemberImpl) {
-                final LiteralImpl literal = (LiteralImpl) impl.getLeftOperand();
-                final MemberImpl member = (MemberImpl) impl.getRightOperand();
+            // 一方が MemberImpl で他方が LiteralImpl
+            if ((impl.getLeftOperand() instanceof MemberImpl && impl.getRightOperand() instanceof LiteralImpl)
+                    || (impl.getLeftOperand() instanceof LiteralImpl && impl.getRightOperand() instanceof MemberImpl)) {
+                MemberImpl member = null;
+                LiteralImpl literal = null;
+                if (impl.getLeftOperand() instanceof MemberImpl) {
+                    member = (MemberImpl) impl.getLeftOperand();
+                    literal = (LiteralImpl) impl.getRightOperand();
+                } else {
+                    literal = (LiteralImpl) impl.getLeftOperand();
+                    member = (MemberImpl) impl.getRightOperand();
+                }
+
+                // IS NULL対応
+                if (null == literal.getType()) {
+                    // 特殊処理 : Literal が nullの場合は IS NULL 展開する。こうしないと h2 database は NULL検索できない.
+                    // また、リテラルに null が指定されている場合に、LiteralImpl の getType() 自体が null で渡ってくる。
+                    OiyoSettingsProperty property = expandMember(member);
+                    sqlInfo.getSqlBuilder().append(" IS NULL");
+
+                    if (property.getFilterTreatNullAsBlank() != null && property.getFilterTreatNullAsBlank()) {
+                        // NULLでfilterの際に '' も一致と見做す特殊コース.
+                        sqlInfo.getSqlBuilder().append(" OR ");
+                        expandMember(member);
+                        sqlInfo.getSqlBuilder().append(" = ");
+                        expandLiteral(new LiteralImpl("", EdmString.getInstance()), property);
+                    }
+                    sqlInfo.getSqlBuilder().append(")");
+                    return;
+                }
+
+                // 通常コースには復帰せず、取得できた property を利用した処理に入る。
                 OiyoSettingsProperty property = expandMember(member);
                 sqlInfo.getSqlBuilder().append(" = ");
                 expandLiteral(literal, property);
@@ -229,6 +228,7 @@ public class OiyoSqlQueryListExpr {
                 return;
             }
 
+            // 与えられた条件をそのまま展開.
             expand(impl.getLeftOperand());
             sqlInfo.getSqlBuilder().append(" = ");
             expand(impl.getRightOperand());
@@ -237,22 +237,39 @@ public class OiyoSqlQueryListExpr {
         } else if (opKind == BinaryOperatorKind.NE) {
             // NE
             sqlInfo.getSqlBuilder().append("(");
-            if (impl.getRightOperand() instanceof LiteralImpl //
-                    && null == ((LiteralImpl) impl.getRightOperand()).getType()) {
-                expand(impl.getLeftOperand());
-                // 特殊処理 : 右辺が Literal かつ nullの場合は IS NOT NULL 展開する。こうしないと h2 database は
-                // NULL検索できない.
-                // また、リテラルに null が指定されている場合に、LiteralImpl の getType() 自体が null で渡ってくる。
-                sqlInfo.getSqlBuilder().append(" IS NOT NULL");
-                // なお、 「null ne 項目」のように左辺に NULL を記述する IS NOT NULL は Olingoにて指定不可。
-                sqlInfo.getSqlBuilder().append(")");
-                return;
-            }
-            // 左辺が MemberImpl で右辺が LiteralImpl
-            if (impl.getLeftOperand() instanceof MemberImpl //
-                    && impl.getRightOperand() instanceof LiteralImpl) {
-                final MemberImpl member = (MemberImpl) impl.getLeftOperand();
-                final LiteralImpl literal = (LiteralImpl) impl.getRightOperand();
+
+            // 一方が MemberImpl で他方が LiteralImpl
+            if ((impl.getLeftOperand() instanceof MemberImpl && impl.getRightOperand() instanceof LiteralImpl)
+                    || (impl.getLeftOperand() instanceof LiteralImpl && impl.getRightOperand() instanceof MemberImpl)) {
+                MemberImpl member = null;
+                LiteralImpl literal = null;
+                if (impl.getLeftOperand() instanceof MemberImpl) {
+                    member = (MemberImpl) impl.getLeftOperand();
+                    literal = (LiteralImpl) impl.getRightOperand();
+                } else {
+                    literal = (LiteralImpl) impl.getLeftOperand();
+                    member = (MemberImpl) impl.getRightOperand();
+                }
+
+                // IS NOT NULL対応
+                if (null == literal.getType()) {
+                    // 特殊処理 : Literal が nullの場合は IS NULL 展開する。こうしないと h2 database は NOT NULL検索できない.
+                    // また、リテラルに null が指定されている場合に、LiteralImpl の getType() 自体が null で渡ってくる。
+                    OiyoSettingsProperty property = expandMember(member);
+                    sqlInfo.getSqlBuilder().append(" IS NOT NULL");
+
+                    if (property.getFilterTreatNullAsBlank() != null && property.getFilterTreatNullAsBlank()) {
+                        // NULLでfilterの際に '' も一致と見做す特殊コース.
+                        sqlInfo.getSqlBuilder().append(" AND ");
+                        expandMember(member);
+                        sqlInfo.getSqlBuilder().append(" <> ");
+                        expandLiteral(new LiteralImpl("", EdmString.getInstance()), property);
+                    }
+                    sqlInfo.getSqlBuilder().append(")");
+                    return;
+                }
+
+                // 通常コースには復帰せず、取得できた property を利用した処理に入る。
                 OiyoSettingsProperty property = expandMember(member);
                 sqlInfo.getSqlBuilder().append(" <> ");
                 expandLiteral(literal, property);
@@ -260,6 +277,7 @@ public class OiyoSqlQueryListExpr {
                 return;
             }
 
+            // 与えられた条件をそのまま展開.
             expand(impl.getLeftOperand());
             sqlInfo.getSqlBuilder().append(" <> ");
             expand(impl.getRightOperand());

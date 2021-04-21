@@ -107,7 +107,8 @@
             "lengthFixed": false,
             "precision": null,
             "scale": null,
-            "dbDefault": "Value"
+            "dbDefault": "Value",
+            "filterTreatNullAsBlank": false
           }
         ]
       }
