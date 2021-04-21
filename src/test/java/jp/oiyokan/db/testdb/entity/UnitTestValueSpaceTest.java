@@ -20,7 +20,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.apache.olingo.server.api.ODataResponse;
 import org.junit.jupiter.api.Test;
 
-import jp.oiyokan.OiyokanTestSettingConstants;
+import jp.oiyokan.OiyokanUnittestUtil;
+import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.util.OiyokanTestUtil;
 
 /**
@@ -29,8 +30,7 @@ import jp.oiyokan.util.OiyokanTestUtil;
 class UnitTestValueSpaceTest {
     @Test
     void test01() throws Exception {
-        if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
-            return;
+        final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
 
         final int TEST_ID = OiyokanTestUtil.getNextUniqueId();
 
@@ -41,7 +41,7 @@ class UnitTestValueSpaceTest {
                 + "}");
         String result = OiyokanTestUtil.stream2String(resp.getContent());
         System.err.println(result);
-        assertEquals(201, resp.getStatusCode(), "ORACLEでエラー(既知の問題)");
+        assertEquals(201, resp.getStatusCode(), "ORCL18でエラー(既知の問題)");
         assertEquals("{\"@odata.context\":\"$metadata#ODataTests4\",\"I_D\":" + TEST_ID
                 + ",\"Na_me\":\"Name\",\"Va_lue1\":\"VALUEVALUE12345\"}", result);
 

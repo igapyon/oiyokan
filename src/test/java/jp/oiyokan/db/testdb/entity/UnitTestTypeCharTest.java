@@ -16,11 +16,13 @@
 package jp.oiyokan.db.testdb.entity;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.apache.olingo.server.api.ODataResponse;
 import org.junit.jupiter.api.Test;
 
-import jp.oiyokan.OiyokanTestSettingConstants;
+import jp.oiyokan.OiyokanUnittestUtil;
+import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.common.OiyoUrlUtil;
 import jp.oiyokan.util.OiyokanTestUtil;
 
@@ -30,8 +32,7 @@ import jp.oiyokan.util.OiyokanTestUtil;
 class UnitTestTypeCharTest {
     @Test
     void test01() throws Exception {
-        if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
-            return;
+        final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
 
         final int TEST_ID = OiyokanTestUtil.getNextUniqueId();
 
@@ -62,8 +63,7 @@ class UnitTestTypeCharTest {
 
     @Test
     void test02() throws Exception {
-        if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
-            return;
+        final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
 
         final String decVal = "1304";
 
@@ -99,15 +99,14 @@ class UnitTestTypeCharTest {
         System.err.println(result);
         assertEquals(204, resp.getStatusCode());
 
-        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests2(" + OiyoUrlUtil.encodeUrlQuery(uri) + ")",
-                null);
+        resp = OiyokanTestUtil.callRequestGetResponse( //
+                "/ODataTests2(" + OiyoUrlUtil.encodeUrlQuery(uri) + ")", null);
         assertEquals(404, resp.getStatusCode());
     }
 
     @Test
     void test03() throws Exception {
-        if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
-            return;
+        final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
 
         final String decVal = "1404";
 
@@ -129,6 +128,7 @@ class UnitTestTypeCharTest {
         result = OiyokanTestUtil.stream2String(resp.getContent());
         System.err.println(result);
         assertEquals(200, resp.getStatusCode());
+        assertTrue(result.indexOf("  3456  ") >= 0, "CHAR型の後方FILLがおこなわれること.");
 
         final String uri = "Decimal1=" + decVal + ",StringChar8='  3456  ',StringVar255='ABCXYZ'";
         // System.err.println("uri: " + uri);
@@ -144,8 +144,53 @@ class UnitTestTypeCharTest {
         // System.err.println(result);
         assertEquals(204, resp.getStatusCode());
 
-        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests2(" + OiyoUrlUtil.encodeUrlQuery(uri) + ")",
-                null);
+        resp = OiyokanTestUtil.callRequestGetResponse( //
+                "/ODataTests2(" + OiyoUrlUtil.encodeUrlQuery(uri) + ")", null);
+        assertEquals(404, resp.getStatusCode());
+    }
+
+    @Test
+    void test04() throws Exception {
+        final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
+
+        final String decVal = "1404";
+
+        // キーの文字列. 長さの足りない CHAR でも動作すること。
+        ODataResponse resp = OiyokanTestUtil.callRequestPost("/ODataTests2", //
+                "{\n" //
+                        + "  \"Decimal1\": " + decVal + ",\n" //
+                        + "  \"StringChar8\": \"  3456\",\n" //
+                        + "  \"Name\": \"CHARキー確認\",\n" //
+                        + "  \"Description\": \"CHARキーの挙動確認\",\n" //
+                        + "  \"StringVar255\": \"ABCXYZ\"\n" //
+                        + "}");
+        String result = OiyokanTestUtil.stream2String(resp.getContent());
+        System.err.println("TRACE: " + result);
+        assertEquals(201, resp.getStatusCode(), //
+                "CHAR項目がINSERTできることの確認. MySQL ではここが失敗する。後方に半角スペースを付与が必要 (既知の問題)");
+
+        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests2", null);
+        result = OiyokanTestUtil.stream2String(resp.getContent());
+        System.err.println(result);
+        assertEquals(200, resp.getStatusCode());
+        assertTrue(result.indexOf("  3456  ") >= 0, "CHAR型の後方FILLがおこなわれること.");
+
+        final String uri = "Decimal1=" + decVal + ",StringChar8='  3456  ',StringVar255='ABCXYZ'";
+        // System.err.println("uri: " + uri);
+        resp = OiyokanTestUtil.callRequestGetResponse( //
+                "/ODataTests2(" + OiyoUrlUtil.encodeUrlQuery(uri) + ")", null);
+        result = OiyokanTestUtil.stream2String(resp.getContent());
+        System.err.println(result);
+        assertEquals(200, resp.getStatusCode());
+
+        // DELETE
+        resp = OiyokanTestUtil.callRequestDelete("/ODataTests2(" + OiyoUrlUtil.encodeUrlQuery(uri) + ")");
+        result = OiyokanTestUtil.stream2String(resp.getContent());
+        // System.err.println(result);
+        assertEquals(204, resp.getStatusCode());
+
+        resp = OiyokanTestUtil.callRequestGetResponse( //
+                "/ODataTests2(" + OiyoUrlUtil.encodeUrlQuery(uri) + ")", null);
         assertEquals(404, resp.getStatusCode());
     }
 }

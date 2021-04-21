@@ -18,8 +18,11 @@ package jp.oiyokan.common;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Locale;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.olingo.server.api.ODataApplicationException;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.StreamUtils;
@@ -37,6 +40,8 @@ import jp.oiyokan.dto.OiyoSettingsProperty;
  * oiyokan-settings.json ファイルに関する処理。
  */
 public class OiyoInfoUtil {
+    private static final Log log = LogFactory.getLog(OiyoInfoUtil.class);
+
     /**
      * resources フォルダから設定ファイルを読み込み.
      * 
@@ -44,22 +49,46 @@ public class OiyoInfoUtil {
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
     public static OiyoSettings loadOiyokanSettings() throws ODataApplicationException {
-        if (OiyokanConstants.IS_TRACE_ODATA_V4)
-            System.err.println("OData v4: resources: load: settings: oiyokan-settings.json");
+        log.info("OData v4: resources: load: oiyokan settings");
 
-        // resources から読み込み。
-        final ClassPathResource cpres = new ClassPathResource("oiyokan/oiyokan-settings.json");
-        try (InputStream inStream = cpres.getInputStream()) {
-            String strOiyokanSettings = StreamUtils.copyToString(inStream, Charset.forName("UTF-8"));
+        final OiyoSettings mergedOiyoSettings = new OiyoSettings();
+        mergedOiyoSettings.setDatabase(new ArrayList<>());
+        mergedOiyoSettings.setEntitySet(new ArrayList<>());
 
-            ObjectMapper mapper = new ObjectMapper();
-            return mapper.readValue(strOiyokanSettings, OiyoSettings.class);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            // [M024] UNEXPECTED: Fail to load Oiyokan settings
-            System.err.println(OiyokanMessages.IY7112 + ": " + ex.toString());
-            throw new ODataApplicationException(OiyokanMessages.IY7112, 500, Locale.ENGLISH);
+        final String[] OIYOKAN_SETTINGS = new String[] { //
+                "oiyokan/oiyokanKan-settings.json", //
+                "oiyokan/oiyokan-settings.json", //
+        };
+
+        for (String settings : OIYOKAN_SETTINGS) {
+            log.info("OData v4: resources: load: " + settings);
+            // resources から読み込み。
+            final ClassPathResource cpres = new ClassPathResource(settings);
+            try (InputStream inStream = cpres.getInputStream()) {
+                final String strOiyokanSettings = StreamUtils.copyToString(inStream, Charset.forName("UTF-8"));
+
+                final ObjectMapper mapper = new ObjectMapper();
+                final OiyoSettings loadedSettings = mapper.readValue(strOiyokanSettings, OiyoSettings.class);
+                if (mergedOiyoSettings.getNamespace() == null) {
+                    mergedOiyoSettings.setNamespace(loadedSettings.getNamespace());
+                }
+                if (mergedOiyoSettings.getContainerName() == null) {
+                    mergedOiyoSettings.setContainerName(loadedSettings.getContainerName());
+                }
+                for (OiyoSettingsDatabase database : loadedSettings.getDatabase()) {
+                    mergedOiyoSettings.getDatabase().add(database);
+                }
+                for (OiyoSettingsEntitySet entitySet : loadedSettings.getEntitySet()) {
+                    mergedOiyoSettings.getEntitySet().add(entitySet);
+                }
+            } catch (IOException ex) {
+                // [M024] UNEXPECTED: Fail to load Oiyokan settings
+                log.error(OiyokanMessages.IY7112 + ": " + ex.toString());
+                // しかし例外は発生させず処理続行。
+            }
         }
+
+        return mergedOiyoSettings;
     }
 
     /**
@@ -73,7 +102,7 @@ public class OiyoInfoUtil {
             throws ODataApplicationException {
         if (databaseDefName == null) {
             // [M026] UNEXPECTED: Database settings NOT found
-            System.err.println(OiyokanMessages.IY7114 + ": " + databaseDefName);
+            log.fatal(OiyokanMessages.IY7114 + ": " + databaseDefName);
             throw new ODataApplicationException(OiyokanMessages.IY7114 + ": " + databaseDefName, 500, Locale.ENGLISH);
         }
 
@@ -85,7 +114,7 @@ public class OiyoInfoUtil {
         }
 
         // [M026] UNEXPECTED: Database settings NOT found
-        System.err.println(OiyokanMessages.IY7114 + ": " + databaseDefName);
+        log.fatal(OiyokanMessages.IY7114 + ": " + databaseDefName);
         throw new ODataApplicationException(OiyokanMessages.IY7114 + ": " + databaseDefName, 500, Locale.ENGLISH);
     }
 
@@ -93,7 +122,6 @@ public class OiyoInfoUtil {
             throws ODataApplicationException {
         final OiyoSettingsEntitySet entitySet = getOiyoEntitySet(oiyoInfo, entitySetName);
 
-        // TODO FIXME エラーメッセージ処理。
         return getOiyoDatabaseByName(oiyoInfo, entitySet.getDbSettingName());
     }
 
@@ -101,7 +129,6 @@ public class OiyoInfoUtil {
             String entitySetName) throws ODataApplicationException {
         final OiyoSettingsEntitySet entitySet = getOiyoEntitySet(oiyoInfo, entitySetName);
 
-        // TODO FIXME エラーメッセージ処理。
         OiyoSettingsDatabase database = getOiyoDatabaseByName(oiyoInfo, entitySet.getDbSettingName());
 
         return OiyokanConstants.DatabaseType.valueOf(database.getType());
@@ -111,11 +138,10 @@ public class OiyoInfoUtil {
             throws ODataApplicationException {
         if (entitySetName == null) {
             // [M038] UNEXPECTED: null parameter given as EntitySet.
-            System.err.println(OiyokanMessages.IY7120 + ": " + entitySetName);
+            log.error(OiyokanMessages.IY7120 + ": " + entitySetName);
             throw new ODataApplicationException(OiyokanMessages.IY7120 + ": " + entitySetName, 500, Locale.ENGLISH);
         }
 
-        // TODO FIXME このシングルトン取得を回避したい。引数に変えたい。
         final OiyoSettings settingsOiyokan = oiyoInfo.getSettings();
         for (OiyoSettingsEntitySet entitySet : settingsOiyokan.getEntitySet()) {
             if (entitySetName.equals(entitySet.getName())) {
@@ -123,9 +149,10 @@ public class OiyoInfoUtil {
             }
         }
 
-        // [M039] UNEXPECTED: EntitySet settings NOT found.
-        System.err.println(OiyokanMessages.IY7121 + ": " + entitySetName);
-        throw new ODataApplicationException(OiyokanMessages.IY7121 + ": " + entitySetName, 500, Locale.ENGLISH);
+        // [IY7121] UNEXPECTED: EntitySet settings NOT found.
+        log.error(OiyokanMessages.IY7121 + ": " + entitySetName);
+        throw new ODataApplicationException(OiyokanMessages.IY7121 + ": " + entitySetName, //
+                OiyokanMessages.IY7121_CODE, Locale.ENGLISH);
     }
 
     public static OiyoSettingsProperty getOiyoEntityProperty(OiyoInfo oiyoInfo, String entitySetName,
@@ -139,7 +166,7 @@ public class OiyoInfoUtil {
         }
 
         // [M040] UNEXPECTED: EntitySet Property settings NOT found.
-        System.err.println(OiyokanMessages.IY7122 + ": entitySet:" + entitySetName + ", property:" + propertyName);
+        log.error(OiyokanMessages.IY7122 + ": entitySet:" + entitySetName + ", property:" + propertyName);
         throw new ODataApplicationException(
                 OiyokanMessages.IY7122 + ": entitySet:" + entitySetName + ", property:" + propertyName, //
                 500, Locale.ENGLISH);

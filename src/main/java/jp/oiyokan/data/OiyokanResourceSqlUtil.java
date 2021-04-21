@@ -20,6 +20,8 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.Locale;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.olingo.server.api.ODataApplicationException;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.StreamUtils;
@@ -30,6 +32,8 @@ import jp.oiyokan.OiyokanMessages;
  * oiyokan-sampledb.sql ファイルに関する処理。
  */
 public class OiyokanResourceSqlUtil {
+    private static final Log log = LogFactory.getLog(OiyokanResourceSqlUtil.class);
+
     /**
      * 指定されたSQLリソースからSQL文の配列を読み込み.
      * 
@@ -47,7 +51,7 @@ public class OiyokanResourceSqlUtil {
             return sqls;
         } catch (IOException ex) {
             // [M022] UNEXPECTED: Fail to load setting SQL file
-            System.err.println(OiyokanMessages.IY7110 + ": " + resourceSqlFileName + ": " + ex.toString());
+            log.error(OiyokanMessages.IY7110 + ": " + resourceSqlFileName + ": " + ex.toString(), ex);
             throw new ODataApplicationException(OiyokanMessages.IY7110, 500, Locale.ENGLISH);
         }
     }

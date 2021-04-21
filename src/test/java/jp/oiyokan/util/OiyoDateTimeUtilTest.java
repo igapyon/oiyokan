@@ -26,6 +26,7 @@ class OiyoDateTimeUtilTest {
 
     @Test
     void test() {
+        @SuppressWarnings("unused")
         ZonedDateTime zdt = OiyoDateTimeUtil.parseStringDateTime("2021-04-10T19:12:49.082Z");
         // System.err.println(zdt.toString());
 

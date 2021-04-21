@@ -17,12 +17,17 @@ package jp.oiyokan.util;
 
 import java.sql.Types;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import jp.oiyokan.OiyokanMessages;
 
 /**
  * JDBCの超基本ユーティリティ. 鉄板なメソッドのみここに記載する. Oiyokan の対応有無とは関わらず、数値文字変換を実施。
  */
 public class OiyoJdbcUtil {
+    private static final Log log = LogFactory.getLog(OiyoJdbcUtil.class);
+
     /**
      * 与えられた java.sql.Types を文字列に変換.
      * 
@@ -111,10 +116,9 @@ public class OiyoJdbcUtil {
         case Types.TIMESTAMP_WITH_TIMEZONE: // 2014
             return "Types.TIMESTAMP_WITH_TIMEZONE";
         default:
-            // TODO 番号取り直し
-            // [M021] NOT SUPPORTED: JDBC Type
-            System.err.println(OiyokanMessages.IY7125 + ": " + types);
-            throw new IllegalArgumentException(OiyokanMessages.IY7125 + ": " + types);
+            // [IY7154] NOT SUPPORTED: JDBC Type
+            log.error(OiyokanMessages.IY7154 + ": " + types);
+            throw new IllegalArgumentException(OiyokanMessages.IY7154 + ": " + types);
         }
     }
 
@@ -245,9 +249,8 @@ public class OiyoJdbcUtil {
             return Types.TIMESTAMP_WITH_TIMEZONE; // 2014
         }
 
-        // TODO 番号取り直し
-        // [M021] NOT SUPPORTED: JDBC Type
-        System.err.println(OiyokanMessages.IY7125 + ": " + typesString);
-        throw new IllegalArgumentException(OiyokanMessages.IY7125 + ": " + typesString);
+        // [IY7153] NOT SUPPORTED: JDBC Type String.
+        log.error(OiyokanMessages.IY7153 + ": " + typesString);
+        throw new IllegalArgumentException(OiyokanMessages.IY7153 + ": " + typesString);
     }
 }

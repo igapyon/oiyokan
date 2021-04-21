@@ -1,0 +1,846 @@
+{
+  "namespace": "Oiyokan",
+  "containerName": "Container",
+  "database": [
+    {
+      "name": "oiyoUnitTestDb",
+      "type": "h2",
+      "description": "Oiyokan internal Target Test DB. Used for build unit test.",
+      "jdbcDriver": "org.h2.Driver",
+      "jdbcUrl": "jdbc:h2:mem:oiyoUnitTestDb;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=FALSE;MODE=MSSQLServer",
+      "jdbcUser": "sa",
+      "jdbcPass": ""
+    }
+  ],
+  "entitySet": [
+    {
+      "name": "ODataTests1",
+      "description": "Description.",
+      "dbSettingName": "oiyoUnitTestDb",
+      "canCreate": true,
+      "canRead": true,
+      "canUpdate": true,
+      "canDelete": true,
+      "entityType": {
+        "name": "ODataTest1",
+        "dbName": "ODataTest1",
+        "keyName": ["ID"],
+        "property": [
+          {
+            "name": "ID",
+            "dbName": "ID",
+            "edmType": "Edm.Int32",
+            "jdbcType": "Types.INTEGER",
+            "dbType": "INTEGER",
+            "nullable": false
+          },
+          {
+            "name": "Name",
+            "dbName": "Name",
+            "edmType": "Edm.String",
+            "jdbcType": "Types.VARCHAR",
+            "dbType": "VARCHAR",
+            "nullable": false,
+            "maxLength": 80
+          },
+          {
+            "name": "Description",
+            "dbName": "Description",
+            "edmType": "Edm.String",
+            "jdbcType": "Types.VARCHAR",
+            "dbType": "VARCHAR",
+            "nullable": false,
+            "maxLength": 250
+          },
+          {
+            "name": "Sbyte1",
+            "dbName": "Sbyte1",
+            "edmType": "Edm.SByte",
+            "jdbcType": "Types.TINYINT",
+            "dbType": "TINYINT",
+            "nullable": true
+          },
+          {
+            "name": "Int16a",
+            "dbName": "Int16a",
+            "edmType": "Edm.Int16",
+            "jdbcType": "Types.SMALLINT",
+            "dbType": "SMALLINT",
+            "nullable": true
+          },
+          {
+            "name": "Int32a",
+            "dbName": "Int32a",
+            "edmType": "Edm.Int32",
+            "jdbcType": "Types.INTEGER",
+            "dbType": "INTEGER",
+            "nullable": true
+          },
+          {
+            "name": "Int64a",
+            "dbName": "Int64a",
+            "edmType": "Edm.Int64",
+            "jdbcType": "Types.BIGINT",
+            "dbType": "BIGINT",
+            "nullable": true
+          },
+          {
+            "name": "Decimal1",
+            "dbName": "Decimal1",
+            "edmType": "Edm.Decimal",
+            "jdbcType": "Types.DECIMAL",
+            "dbType": "DECIMAL",
+            "nullable": true,
+            "precision": 6,
+            "scale": 2
+          },
+          {
+            "name": "StringChar8",
+            "dbName": "StringChar8",
+            "edmType": "Edm.String",
+            "jdbcType": "Types.CHAR",
+            "dbType": "CHAR",
+            "nullable": true,
+            "maxLength": 8,
+            "lengthFixed": true
+          },
+          {
+            "name": "StringVar255",
+            "dbName": "StringVar255",
+            "edmType": "Edm.String",
+            "jdbcType": "Types.VARCHAR",
+            "dbType": "VARCHAR",
+            "nullable": true,
+            "maxLength": 255
+          },
+          {
+            "name": "StringLongVar1",
+            "dbName": "StringLongVar1",
+            "edmType": "Edm.String",
+            "jdbcType": "Types.VARCHAR",
+            "dbType": "VARCHAR",
+            "nullable": true
+          },
+          {
+            "name": "Clob1",
+            "dbName": "Clob1",
+            "edmType": "Edm.String",
+            "jdbcType": "Types.CLOB",
+            "dbType": "CLOB",
+            "nullable": true
+          },
+          {
+            "name": "Boolean1",
+            "dbName": "Boolean1",
+            "edmType": "Edm.Boolean",
+            "jdbcType": "Types.BOOLEAN",
+            "dbType": "BOOLEAN",
+            "nullable": false
+          },
+          {
+            "name": "Single1",
+            "dbName": "Single1",
+            "edmType": "Edm.Single",
+            "jdbcType": "Types.REAL",
+            "dbType": "REAL",
+            "nullable": true
+          },
+          {
+            "name": "Double1",
+            "dbName": "Double1",
+            "edmType": "Edm.Double",
+            "jdbcType": "Types.DOUBLE",
+            "dbType": "DOUBLE",
+            "nullable": true
+          },
+          {
+            "name": "Date1",
+            "dbName": "Date1",
+            "edmType": "Edm.Date",
+            "jdbcType": "Types.DATE",
+            "dbType": "DATE",
+            "nullable": false
+          },
+          {
+            "name": "DateTimeOffset1",
+            "dbName": "DateTimeOffset1",
+            "edmType": "Edm.DateTimeOffset",
+            "jdbcType": "Types.TIMESTAMP",
+            "dbType": "TIMESTAMP",
+            "nullable": false
+          },
+          {
+            "name": "TimeOfDay1",
+            "dbName": "TimeOfDay1",
+            "edmType": "Edm.TimeOfDay",
+            "jdbcType": "Types.TIME",
+            "dbType": "TIME",
+            "nullable": true
+          },
+          {
+            "name": "Binary1",
+            "dbName": "Binary1",
+            "edmType": "Edm.Binary",
+            "jdbcType": "Types.VARBINARY",
+            "dbType": "VARBINARY",
+            "nullable": true,
+            "maxLength": 256
+          },
+          {
+            "name": "VarBinary1",
+            "dbName": "VarBinary1",
+            "edmType": "Edm.Binary",
+            "jdbcType": "Types.VARBINARY",
+            "dbType": "VARBINARY",
+            "nullable": true,
+            "maxLength": 256
+          },
+          {
+            "name": "LongVarBinary1",
+            "dbName": "LongVarBinary1",
+            "edmType": "Edm.Binary",
+            "jdbcType": "Types.VARBINARY",
+            "dbType": "VARBINARY",
+            "nullable": true
+          },
+          {
+            "name": "Blob1",
+            "dbName": "Blob1",
+            "edmType": "Edm.Binary",
+            "jdbcType": "Types.BLOB",
+            "dbType": "BLOB",
+            "nullable": true,
+            "maxLength": 128
+          }
+        ]
+      }
+    },
+    {
+      "name": "ODataTests2",
+      "description": "Description.",
+      "dbSettingName": "oiyoUnitTestDb",
+      "canCreate": true,
+      "canRead": true,
+      "canUpdate": true,
+      "canDelete": true,
+      "entityType": {
+        "name": "ODataTest2",
+        "dbName": "ODataTest2",
+        "keyName": ["Decimal1", "StringChar8", "StringVar255"],
+        "property": [
+          {
+            "name": "Decimal1",
+            "dbName": "Decimal1",
+            "edmType": "Edm.Decimal",
+            "jdbcType": "Types.DECIMAL",
+            "dbType": "DECIMAL",
+            "nullable": false,
+            "precision": 6,
+            "scale": 2
+          },
+          {
+            "name": "StringChar8",
+            "dbName": "StringChar8",
+            "edmType": "Edm.String",
+            "jdbcType": "Types.CHAR",
+            "dbType": "CHAR",
+            "nullable": false,
+            "maxLength": 8,
+            "lengthFixed": true
+          },
+          {
+            "name": "StringVar255",
+            "dbName": "StringVar255",
+            "edmType": "Edm.String",
+            "jdbcType": "Types.VARCHAR",
+            "dbType": "VARCHAR",
+            "nullable": false,
+            "maxLength": 255
+          },
+          {
+            "name": "Name",
+            "dbName": "Name",
+            "edmType": "Edm.String",
+            "jdbcType": "Types.VARCHAR",
+            "dbType": "VARCHAR",
+            "nullable": false,
+            "maxLength": 80
+          },
+          {
+            "name": "Description",
+            "dbName": "Description",
+            "edmType": "Edm.String",
+            "jdbcType": "Types.VARCHAR",
+            "dbType": "VARCHAR",
+            "nullable": true,
+            "maxLength": 250
+          }
+        ]
+      }
+    },
+    {
+      "name": "ODataTests3",
+      "description": "Description.",
+      "dbSettingName": "oiyoUnitTestDb",
+      "canCreate": true,
+      "canRead": true,
+      "canUpdate": true,
+      "canDelete": true,
+      "entityType": {
+        "name": "ODataTest3",
+        "dbName": "ODataTest3",
+        "keyName": ["ID"],
+        "property": [
+          {
+            "name": "ID",
+            "dbName": "ID",
+            "edmType": "Edm.Int32",
+            "jdbcType": "Types.INTEGER",
+            "dbType": "INTEGER",
+            "nullable": false
+          },
+          {
+            "name": "Name",
+            "dbName": "Name",
+            "edmType": "Edm.String",
+            "jdbcType": "Types.VARCHAR",
+            "dbType": "VARCHAR",
+            "nullable": true,
+            "maxLength": 80
+          },
+          {
+            "name": "Description",
+            "dbName": "Description",
+            "edmType": "Edm.String",
+            "jdbcType": "Types.VARCHAR",
+            "dbType": "VARCHAR",
+            "nullable": true,
+            "maxLength": 250
+          },
+          {
+            "name": "Sbyte1",
+            "dbName": "Sbyte1",
+            "edmType": "Edm.SByte",
+            "jdbcType": "Types.TINYINT",
+            "dbType": "TINYINT",
+            "nullable": true
+          },
+          {
+            "name": "Int16a",
+            "dbName": "Int16a",
+            "edmType": "Edm.Int16",
+            "jdbcType": "Types.SMALLINT",
+            "dbType": "SMALLINT",
+            "nullable": true
+          },
+          {
+            "name": "Int32a",
+            "dbName": "Int32a",
+            "edmType": "Edm.Int32",
+            "jdbcType": "Types.INTEGER",
+            "dbType": "INTEGER",
+            "nullable": true
+          },
+          {
+            "name": "Int64a",
+            "dbName": "Int64a",
+            "edmType": "Edm.Int64",
+            "jdbcType": "Types.BIGINT",
+            "dbType": "BIGINT",
+            "nullable": true
+          },
+          {
+            "name": "Decimal1",
+            "dbName": "Decimal1",
+            "edmType": "Edm.Decimal",
+            "jdbcType": "Types.DECIMAL",
+            "dbType": "DECIMAL",
+            "nullable": true,
+            "precision": 6,
+            "scale": 2
+          },
+          {
+            "name": "StringChar8",
+            "dbName": "StringChar8",
+            "edmType": "Edm.String",
+            "jdbcType": "Types.CHAR",
+            "dbType": "CHAR",
+            "nullable": true,
+            "maxLength": 8,
+            "lengthFixed": true
+          },
+          {
+            "name": "StringVar255",
+            "dbName": "StringVar255",
+            "edmType": "Edm.String",
+            "jdbcType": "Types.VARCHAR",
+            "dbType": "VARCHAR",
+            "nullable": true,
+            "maxLength": 255
+          },
+          {
+            "name": "StringLongVar1",
+            "dbName": "StringLongVar1",
+            "edmType": "Edm.String",
+            "jdbcType": "Types.VARCHAR",
+            "dbType": "VARCHAR",
+            "nullable": true
+          },
+          {
+            "name": "Clob1",
+            "dbName": "Clob1",
+            "edmType": "Edm.String",
+            "jdbcType": "Types.CLOB",
+            "dbType": "CLOB",
+            "nullable": true
+          },
+          {
+            "name": "Boolean1",
+            "dbName": "Boolean1",
+            "edmType": "Edm.Boolean",
+            "jdbcType": "Types.BOOLEAN",
+            "dbType": "BOOLEAN",
+            "nullable": true
+          },
+          {
+            "name": "Single1",
+            "dbName": "Single1",
+            "edmType": "Edm.Single",
+            "jdbcType": "Types.REAL",
+            "dbType": "REAL",
+            "nullable": true
+          },
+          {
+            "name": "Double1",
+            "dbName": "Double1",
+            "edmType": "Edm.Double",
+            "jdbcType": "Types.DOUBLE",
+            "dbType": "DOUBLE",
+            "nullable": true
+          },
+          {
+            "name": "Date1",
+            "dbName": "Date1",
+            "edmType": "Edm.Date",
+            "jdbcType": "Types.DATE",
+            "dbType": "DATE",
+            "nullable": true
+          },
+          {
+            "name": "DateTimeOffset1",
+            "dbName": "DateTimeOffset1",
+            "edmType": "Edm.DateTimeOffset",
+            "jdbcType": "Types.TIMESTAMP",
+            "dbType": "TIMESTAMP",
+            "nullable": true
+          },
+          {
+            "name": "TimeOfDay1",
+            "dbName": "TimeOfDay1",
+            "edmType": "Edm.TimeOfDay",
+            "jdbcType": "Types.TIME",
+            "dbType": "TIME",
+            "nullable": true
+          },
+          {
+            "name": "Binary1",
+            "dbName": "Binary1",
+            "edmType": "Edm.Binary",
+            "jdbcType": "Types.VARBINARY",
+            "dbType": "VARBINARY",
+            "nullable": true,
+            "maxLength": 256
+          },
+          {
+            "name": "VarBinary1",
+            "dbName": "VarBinary1",
+            "edmType": "Edm.Binary",
+            "jdbcType": "Types.VARBINARY",
+            "dbType": "VARBINARY",
+            "nullable": true,
+            "maxLength": 256
+          },
+          {
+            "name": "LongVarBinary1",
+            "dbName": "LongVarBinary1",
+            "edmType": "Edm.Binary",
+            "jdbcType": "Types.VARBINARY",
+            "dbType": "VARBINARY",
+            "nullable": true
+          },
+          {
+            "name": "Blob1",
+            "dbName": "Blob1",
+            "edmType": "Edm.Binary",
+            "jdbcType": "Types.BLOB",
+            "dbType": "BLOB",
+            "nullable": true,
+            "maxLength": 128
+          }
+        ]
+      }
+    },
+    {
+      "name": "ODataTests4",
+      "description": "Description.",
+      "dbSettingName": "oiyoUnitTestDb",
+      "canCreate": true,
+      "canRead": true,
+      "canUpdate": true,
+      "canDelete": true,
+      "entityType": {
+        "name": "ODataTest4",
+        "dbName": "OData Test4",
+        "keyName": ["I_D", "Na_me"],
+        "property": [
+          {
+            "name": "I_D",
+            "dbName": "I D",
+            "edmType": "Edm.Int32",
+            "jdbcType": "Types.INTEGER",
+            "dbType": "INTEGER",
+            "nullable": false
+          },
+          {
+            "name": "Na_me",
+            "dbName": "Na me",
+            "edmType": "Edm.String",
+            "jdbcType": "Types.VARCHAR",
+            "dbType": "VARCHAR",
+            "nullable": false,
+            "maxLength": 80
+          },
+          {
+            "name": "Va_lue1",
+            "dbName": "Va lue1",
+            "edmType": "Edm.String",
+            "jdbcType": "Types.VARCHAR",
+            "dbType": "VARCHAR",
+            "nullable": true,
+            "maxLength": 255
+          }
+        ]
+      }
+    },
+    {
+      "name": "ODataTests5",
+      "description": "Description.",
+      "dbSettingName": "oiyoUnitTestDb",
+      "canCreate": true,
+      "canRead": true,
+      "canUpdate": true,
+      "canDelete": true,
+      "entityType": {
+        "name": "ODataTest5",
+        "dbName": "ODataTest5",
+        "keyName": ["Iden1"],
+        "property": [
+          {
+            "name": "Iden1",
+            "dbName": "Iden1",
+            "edmType": "Edm.Int64",
+            "jdbcType": "Types.BIGINT",
+            "dbType": "BIGINT",
+            "nullable": false
+          },
+          {
+            "name": "Name",
+            "dbName": "Name",
+            "edmType": "Edm.String",
+            "jdbcType": "Types.VARCHAR",
+            "dbType": "VARCHAR",
+            "nullable": true,
+            "maxLength": 80
+          },
+          {
+            "name": "Value1",
+            "dbName": "Value1",
+            "edmType": "Edm.String",
+            "jdbcType": "Types.VARCHAR",
+            "dbType": "VARCHAR",
+            "nullable": true,
+            "maxLength": 255
+          }
+        ]
+      }
+    },
+    {
+      "name": "ODataTests6",
+      "description": "Description.",
+      "dbSettingName": "oiyoUnitTestDb",
+      "canCreate": true,
+      "canRead": true,
+      "canUpdate": true,
+      "canDelete": true,
+      "entityType": {
+        "name": "ODataTest6",
+        "dbName": "ODataTest6",
+        "keyName": ["ID"],
+        "property": [
+          {
+            "name": "ID",
+            "dbName": "ID",
+            "edmType": "Edm.Int32",
+            "jdbcType": "Types.INTEGER",
+            "dbType": "INTEGER",
+            "nullable": false
+          },
+          {
+            "name": "Name",
+            "dbName": "Name",
+            "edmType": "Edm.String",
+            "jdbcType": "Types.VARCHAR",
+            "dbType": "VARCHAR",
+            "nullable": true,
+            "maxLength": 80
+          },
+          {
+            "name": "Description",
+            "dbName": "Description",
+            "edmType": "Edm.String",
+            "jdbcType": "Types.VARCHAR",
+            "dbType": "VARCHAR",
+            "nullable": true,
+            "maxLength": 250
+          },
+          {
+            "name": "Binary1",
+            "dbName": "Binary1",
+            "edmType": "Edm.Binary",
+            "jdbcType": "Types.VARBINARY",
+            "dbType": "VARBINARY",
+            "nullable": true,
+            "maxLength": 256
+          },
+          {
+            "name": "VarBinary1",
+            "dbName": "VarBinary1",
+            "edmType": "Edm.Binary",
+            "jdbcType": "Types.VARBINARY",
+            "dbType": "VARBINARY",
+            "nullable": true,
+            "maxLength": 256
+          },
+          {
+            "name": "LongVarBinary1",
+            "dbName": "LongVarBinary1",
+            "edmType": "Edm.Binary",
+            "jdbcType": "Types.VARBINARY",
+            "dbType": "VARBINARY",
+            "nullable": true
+          },
+          {
+            "name": "Blob1",
+            "dbName": "Blob1",
+            "edmType": "Edm.Binary",
+            "jdbcType": "Types.BLOB",
+            "dbType": "BLOB",
+            "nullable": true,
+            "maxLength": 128
+          }
+        ]
+      }
+    },
+    {
+      "name": "ODataTests7",
+      "description": "Description.",
+      "dbSettingName": "oiyoUnitTestDb",
+      "canCreate": true,
+      "canRead": true,
+      "canUpdate": true,
+      "canDelete": true,
+      "entityType": {
+        "name": "ODataTest7",
+        "dbName": "ODataTest7",
+        "keyName": ["ID"],
+        "property": [
+          {
+            "name": "ID",
+            "dbName": "ID",
+            "edmType": "Edm.Int32",
+            "jdbcType": "Types.INTEGER",
+            "dbType": "INTEGER",
+            "nullable": false
+          },
+          {
+            "name": "Name",
+            "dbName": "Name",
+            "edmType": "Edm.String",
+            "jdbcType": "Types.VARCHAR",
+            "dbType": "VARCHAR",
+            "nullable": true,
+            "maxLength": 80
+          },
+          {
+            "name": "Description",
+            "dbName": "Description",
+            "edmType": "Edm.String",
+            "jdbcType": "Types.VARCHAR",
+            "dbType": "VARCHAR",
+            "nullable": true,
+            "maxLength": 250
+          },
+          {
+            "name": "Uuid1",
+            "dbName": "Uuid1",
+            "edmType": "Edm.Guid",
+            "jdbcType": "Types.BINARY",
+            "dbType": "UUID",
+            "nullable": true
+          }
+        ]
+      }
+    },
+    {
+      "name": "ODataTestFulls1s",
+      "description": "Description.",
+      "dbSettingName": "oiyoUnitTestDb",
+      "canCreate": true,
+      "canRead": true,
+      "canUpdate": true,
+      "canDelete": true,
+      "entityType": {
+        "name": "ODataTestFulls1",
+        "dbName": "ODataTestFulls1",
+        "keyName": ["ID"],
+        "property": [
+          {
+            "name": "ID",
+            "dbName": "ID",
+            "edmType": "Edm.Int32",
+            "jdbcType": "Types.INTEGER",
+            "dbType": "INTEGER",
+            "nullable": false
+          },
+          {
+            "name": "Name",
+            "dbName": "Name",
+            "edmType": "Edm.String",
+            "jdbcType": "Types.VARCHAR",
+            "dbType": "VARCHAR",
+            "nullable": false,
+            "maxLength": 80
+          },
+          {
+            "name": "Description",
+            "dbName": "Description",
+            "edmType": "Edm.String",
+            "jdbcType": "Types.VARCHAR",
+            "dbType": "VARCHAR",
+            "nullable": true,
+            "maxLength": 250
+          },
+          {
+            "name": "Sbyte1",
+            "dbName": "Sbyte1",
+            "edmType": "Edm.SByte",
+            "jdbcType": "Types.TINYINT",
+            "dbType": "TINYINT",
+            "nullable": true
+          },
+          {
+            "name": "Int16a",
+            "dbName": "Int16a",
+            "edmType": "Edm.Int16",
+            "jdbcType": "Types.SMALLINT",
+            "dbType": "SMALLINT",
+            "nullable": true
+          },
+          {
+            "name": "Int32a",
+            "dbName": "Int32a",
+            "edmType": "Edm.Int32",
+            "jdbcType": "Types.INTEGER",
+            "dbType": "INTEGER",
+            "nullable": true
+          },
+          {
+            "name": "Int64a",
+            "dbName": "Int64a",
+            "edmType": "Edm.Int64",
+            "jdbcType": "Types.BIGINT",
+            "dbType": "BIGINT",
+            "nullable": true
+          },
+          {
+            "name": "Decimal1",
+            "dbName": "Decimal1",
+            "edmType": "Edm.Decimal",
+            "jdbcType": "Types.DECIMAL",
+            "dbType": "DECIMAL",
+            "nullable": true,
+            "precision": 6,
+            "scale": 2
+          },
+          {
+            "name": "StringChar8",
+            "dbName": "StringChar8",
+            "edmType": "Edm.String",
+            "jdbcType": "Types.CHAR",
+            "dbType": "CHAR",
+            "nullable": true,
+            "maxLength": 8,
+            "lengthFixed": true
+          },
+          {
+            "name": "StringVar255",
+            "dbName": "StringVar255",
+            "edmType": "Edm.String",
+            "jdbcType": "Types.VARCHAR",
+            "dbType": "VARCHAR",
+            "nullable": true,
+            "maxLength": 255
+          },
+          {
+            "name": "Boolean1",
+            "dbName": "Boolean1",
+            "edmType": "Edm.Boolean",
+            "jdbcType": "Types.BOOLEAN",
+            "dbType": "BOOLEAN",
+            "nullable": false
+          },
+          {
+            "name": "Single1",
+            "dbName": "Single1",
+            "edmType": "Edm.Single",
+            "jdbcType": "Types.REAL",
+            "dbType": "REAL",
+            "nullable": true
+          },
+          {
+            "name": "Double1",
+            "dbName": "Double1",
+            "edmType": "Edm.Double",
+            "jdbcType": "Types.DOUBLE",
+            "dbType": "DOUBLE",
+            "nullable": true
+          },
+          {
+            "name": "Date1",
+            "dbName": "Date1",
+            "edmType": "Edm.Date",
+            "jdbcType": "Types.DATE",
+            "dbType": "DATE",
+            "nullable": false
+          },
+          {
+            "name": "DateTimeOffset1",
+            "dbName": "DateTimeOffset1",
+            "edmType": "Edm.DateTimeOffset",
+            "jdbcType": "Types.TIMESTAMP",
+            "dbType": "TIMESTAMP",
+            "nullable": false
+          },
+          {
+            "name": "TimeOfDay1",
+            "dbName": "TimeOfDay1",
+            "edmType": "Edm.TimeOfDay",
+            "jdbcType": "Types.TIME",
+            "dbType": "TIME",
+            "nullable": true
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -21,6 +21,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Locale;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.olingo.commons.api.data.Entity;
 import org.apache.olingo.commons.api.data.EntityCollection;
 import org.apache.olingo.commons.api.data.Property;
@@ -30,12 +32,12 @@ import org.apache.olingo.server.api.ODataApplicationException;
 import org.apache.olingo.server.api.uri.UriInfo;
 import org.apache.olingo.server.core.uri.queryoption.SearchOptionImpl;
 
-import jp.oiyokan.OiyokanConstants;
-
 /**
  * h2 用の全文検索の実験的な実装。
  */
 public class OiyoExperimentalH2FullTextSearch {
+    private static final Log log = LogFactory.getLog(OiyoExperimentalH2FullTextSearch.class);
+
     /**
      * 全文検索を処理.
      * 
@@ -63,14 +65,13 @@ public class OiyoExperimentalH2FullTextSearch {
 
             String sql = "SELECT QUERY,SCORE FROM FT_SEARCH(?, " + topValue + ", " + offsetValue + ")";
             try (PreparedStatement stmt = connTargetDb.prepareStatement(sql)) {
-                if (OiyokanConstants.IS_TRACE_ODATA_V4)
-                    System.err.println("OData v4: TRACE: $search: SQL: " + sql);
+                // TODO FIXME メッセージ外だし
+                log.info("OData v4: TRACE: $search: SQL: " + sql);
 
                 stmt.setString(1, searchOpt.getText());
                 ResultSet rset = stmt.executeQuery();
                 for (; rset.next();) {
                     String valQuery = rset.getString(1);
-                    // System.err.println("QUERY:" + valQuery);
                     // TODO , FIXME ハードコード。なぜなら現状このテーブルにしか全文検索が対応しない。
                     if (valQuery.contains("ODataTestFulls1") == false) {
                         continue;
@@ -93,7 +94,7 @@ public class OiyoExperimentalH2FullTextSearch {
                 }
             }
         } catch (SQLException ex) {
-            System.err.println("UNEXPECTED: SQL related Error: " + ex.toString());
+            log.error("UNEXPECTED: SQL related Error: " + ex.toString(), ex);
             throw new ODataApplicationException("UNEXPECTED: SQL related Error", 500, Locale.ENGLISH);
         }
     }

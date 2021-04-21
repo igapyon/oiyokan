@@ -32,7 +32,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({ "name", "dbName", "edmType", "jdbcType", "dbType", "jdbcSetMethod", "nullable", "maxLength",
-        "lengthFixed", "precision", "scale", "dbDefault" })
+        "lengthFixed", "precision", "scale", "dbDefault", "filterTreatNullAsBlank" })
 @Generated("jsonschema2pojo")
 public class OiyoSettingsProperty {
     @JsonProperty("name")
@@ -59,6 +59,8 @@ public class OiyoSettingsProperty {
     private Integer scale;
     @JsonProperty("dbDefault")
     private String dbDefault;
+    @JsonProperty("filterTreatNullAsBlank")
+    private Boolean filterTreatNullAsBlank;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -180,6 +182,16 @@ public class OiyoSettingsProperty {
     @JsonProperty("dbDefault")
     public void setDbDefault(String dbDefault) {
         this.dbDefault = dbDefault;
+    }
+
+    @JsonProperty("filterTreatNullAsBlank")
+    public Boolean getFilterTreatNullAsBlank() {
+        return filterTreatNullAsBlank;
+    }
+
+    @JsonProperty("filterTreatNullAsBlank")
+    public void setFilterTreatNullAsBlank(Boolean filterTreatNullAsBlank) {
+        this.filterTreatNullAsBlank = filterTreatNullAsBlank;
     }
 
     @JsonAnyGetter

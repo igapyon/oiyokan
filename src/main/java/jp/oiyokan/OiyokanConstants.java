@@ -27,22 +27,7 @@ public class OiyokanConstants {
     /**
      * Oiyokan のバージョン番号
      */
-    public static final String VERSION = "1.4.20210418b";
-
-    /**
-     * OData のルートパス.
-     */
-    public static final String ODATA_ROOTPATH = "/odata4.svc";
-
-    /**
-     * JDBC Statement のタイムアウト値.
-     */
-    public static final int JDBC_STMT_TIMEOUT = 30;
-
-    /**
-     * Oiyokan がリクエストを処理する際の 'OData v4' からはじまるトレースを出力するかどうか。
-     */
-    public static final boolean IS_TRACE_ODATA_V4 = true;
+    public static final String VERSION = "1.6.20210421e";
 
     /**
      * 実験的な $search 機能(全文検索)が有効化されているかどうか。
@@ -59,12 +44,12 @@ public class OiyokanConstants {
         h2,
         /** Postgres */
         postgres,
-        /** MySQL : not tested */
+        /** MySQL */
         MySQL,
-        /** MSSQL 2008 */
-        MSSQL2008,
-        /** Oracle : placeholder, not tested */
-        ORACLE,
+        /** MSSQLSV 2008 */
+        SQLSV2008,
+        /** ORCL18 */
+        ORCL18,
         /** BigQuery : placeholder, not supported, not tested */
         BigQuery,
     };
@@ -73,9 +58,4 @@ public class OiyokanConstants {
      * 内部DBへの定義名. この DBはアプリ起動都度初期化される揮発的なもの. Oiyo および Oiyokan 設定及びバージョン番号を格納.
      */
     public static final String OIYOKAN_KAN_DB = "oiyokanKan";
-
-    /**
-     * 内部DBへの定義名. ほぼビルドテスト用途.
-     */
-    public static final String OIYOKAN_UNITTEST_DB = "oiyoUnitTestDb";
 }

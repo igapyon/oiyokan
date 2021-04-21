@@ -18,6 +18,8 @@ package jp.oiyokan;
 import java.util.List;
 import java.util.Locale;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.olingo.commons.api.data.ContextURL;
 import org.apache.olingo.commons.api.data.EntityCollection;
 import org.apache.olingo.commons.api.edm.EdmEntitySet;
@@ -50,6 +52,8 @@ import jp.oiyokan.common.OiyoInfoUtil;
  * 実際のデータ取得処理を担当.
  */
 public class OiyokanEntityCollectionProcessor implements EntityCollectionProcessor {
+    private static final Log log = LogFactory.getLog(OiyokanEntityCollectionProcessor.class);
+
     /**
      * OData.
      */
@@ -68,6 +72,8 @@ public class OiyokanEntityCollectionProcessor implements EntityCollectionProcess
      */
     @Override
     public void init(OData odata, ServiceMetadata serviceMetadata) {
+        log.trace("OiyokanEntityCollectionProcessor#init()");
+
         this.odata = odata;
         this.serviceMetadata = serviceMetadata;
     }
@@ -86,6 +92,9 @@ public class OiyokanEntityCollectionProcessor implements EntityCollectionProcess
     public void readEntityCollection(ODataRequest request, ODataResponse response, //
             UriInfo uriInfo, ContentType responseFormat) //
             throws ODataApplicationException, SerializerException {
+        log.trace("OiyokanEntityCollectionProcessor#readEntityCollection(" + request.getRawODataPath() + ","
+                + request.getRawQueryPath() + ")");
+
         try {
             // シングルトンな OiyoInfo を利用。
             final OiyoInfo oiyoInfo = OiyokanEdmProvider.getOiyoInfoInstance();
@@ -137,17 +146,20 @@ public class OiyokanEntityCollectionProcessor implements EntityCollectionProcess
             response.setStatusCode(HttpStatusCode.OK.getStatusCode());
             response.setHeader(HttpHeader.CONTENT_TYPE, responseFormat.toContentTypeString());
         } catch (ODataApplicationException ex) {
+            log.error("ERROR: OiyokanEntityCollectionProcessor#readEntityCollection(" + request.getRawODataPath() + ","
+                    + request.getRawQueryPath() + "): " + ex.toString());
             throw ex;
         } catch (RuntimeException ex) {
-            // NullPointerException など想定しない例外の場合にここを通過させてスタックトレースを出力させる。
-            // ODataRuntimeException についてもこちらを通過させてスタックトレース出力させる。
-            ex.printStackTrace();
+            log.fatal("FATAL: OiyokanEntityCollectionProcessor#readEntityCollection(" + request.getRawODataPath() + ","
+                    + request.getRawQueryPath() + "): " + ex.toString(), ex);
             throw ex;
         }
     }
 
     private static final OiyokanEntityCollectionBuilderInterface getEntityCollectionBuilder(OiyoInfo oiyoInfo,
             EdmEntitySet edmEntitySet) throws ODataApplicationException {
+        log.trace("OiyokanEntityCollectionProcessor#getEntityCollectionBuilder(" + edmEntitySet.getName() + ")");
+
         final OiyokanConstants.DatabaseType databaseType = OiyoInfoUtil.getOiyoDatabaseTypeByEntitySetName(oiyoInfo,
                 edmEntitySet.getName());
 
@@ -155,15 +167,14 @@ public class OiyokanEntityCollectionProcessor implements EntityCollectionProcess
         case h2:
         case postgres:
         case MySQL:
-        case MSSQL2008:
-        case ORACLE:
+        case SQLSV2008:
+        case ORCL18:
         default:
             // 大抵のデータベース向けには BasicJdbcEntityCollectionBuilder を利用する。
             return new OiyoBasicJdbcEntityCollectionBuilder(oiyoInfo);
         case BigQuery:
-            // TODO FIXME BigQuery用の実装が必要.
-            // [M999] NOT IMPLEMENTED: Generic NOT implemented message.
-            System.err.println(OiyokanMessages.IY9999);
+            // [IY9999] NOT IMPLEMENTED: Generic NOT implemented message.
+            log.error(OiyokanMessages.IY9999);
             throw new ODataApplicationException(OiyokanMessages.IY9999, 500, Locale.ENGLISH);
         }
     }

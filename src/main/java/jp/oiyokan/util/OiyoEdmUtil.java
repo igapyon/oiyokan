@@ -15,6 +15,8 @@
  */
 package jp.oiyokan.util;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.olingo.commons.api.edm.EdmPrimitiveType;
 import org.apache.olingo.commons.core.edm.primitivetype.EdmBinary;
 import org.apache.olingo.commons.core.edm.primitivetype.EdmBoolean;
@@ -56,6 +58,8 @@ import jp.oiyokan.OiyokanMessages;
  * Edmの超基本ユーティリティ. 鉄板なメソッドのみここに記載する. Oiyokan の対応有無とは関わらず、数値文字変換を実施。
  */
 public class OiyoEdmUtil {
+    private static final Log log = LogFactory.getLog(OiyoEdmUtil.class);
+
     /**
      * EdmPrimitiveType.getInstanceと酷似したメソッド。
      * 
@@ -163,10 +167,9 @@ public class OiyoEdmUtil {
             return EdmTimeOfDay.getInstance();
         }
 
-        // TODO 番号取り直し
-        // [M021] NOT SUPPORTED: JDBC Type
-        System.err.println(OiyokanMessages.IY7125 + ": " + edmType);
-        throw new IllegalArgumentException(OiyokanMessages.IY7125 + ": " + edmType);
+        // [IY7152] NOT SUPPORTED: Edm Type
+        log.error(OiyokanMessages.IY7152 + ": " + edmType);
+        throw new IllegalArgumentException(OiyokanMessages.IY7152 + ": " + edmType);
     }
 
     public static String edmType2String(EdmPrimitiveType primitiveType) {

@@ -17,18 +17,11 @@ package jp.oiyokan.db.testdb.entity;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.io.InputStream;
-import java.sql.Connection;
-
 import org.apache.olingo.server.api.ODataResponse;
 import org.junit.jupiter.api.Test;
-import org.springframework.util.StreamUtils;
 
-import jp.oiyokan.OiyokanConstants;
-import jp.oiyokan.OiyokanTestSettingConstants;
-import jp.oiyokan.common.OiyoCommonJdbcUtil;
+import jp.oiyokan.OiyokanUnittestUtil;
 import jp.oiyokan.common.OiyoInfo;
-import jp.oiyokan.common.OiyoInfoUtil;
 import jp.oiyokan.util.OiyokanTestUtil;
 
 /**
@@ -37,11 +30,7 @@ import jp.oiyokan.util.OiyokanTestUtil;
 class UnitTestTypeBinaryTest {
     @Test
     void test01() throws Exception {
-        if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
-            return;
-
-        final OiyoInfo oiyoInfo = new OiyoInfo();
-        oiyoInfo.setSettings(OiyoInfoUtil.loadOiyokanSettings());
+        final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
 
         final int TEST_ID = OiyokanTestUtil.getNextUniqueId();
 
@@ -57,33 +46,13 @@ class UnitTestTypeBinaryTest {
                 + ",\"Name\":\"Binary UnitTest\",\"Description\":\"Binary UnitTest table.\"" //
                 + ",\"Binary1\":\"VG9uYXJpIG5vIGt5YWt1Lg==\",\"VarBinary1\":\"VG9uYXJpIG5vIGt5YWt1Lg==\",\"LongVarBinary1\":\"VG9uYXJpIG5vIGt5YWt1Lg==\",\"Blob1\":\"VG9uYXJpIG5vIGt5YWt1Lg==\"}",
                 result, //
-                "INSERTできることを確認. MySQLではエラー Binary1が固定長扱いで後方に自動埋め込みが発生(既知の問題。だが解決方法にアイデア現状なし), MySQLでエラー(テストの既知の問題)、 SQLServer2008でエラー(既知の問題)");
+                "INSERTできることを確認. MySQLではエラー Binary1が固定長扱いで後方に自動埋め込みが発生(既知の問題。だが解決方法にアイデア現状なし), MySQLでエラー(テストの既知の問題)、 SQLSV2008でエラー(既知の問題)");
         assertEquals(201, resp.getStatusCode());
 
         resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests6(" + TEST_ID + ")", null);
         result = OiyokanTestUtil.stream2String(resp.getContent());
         // System.err.println(result);
         assertEquals(200, resp.getStatusCode(), "INSERTしたレコードが格納されていることを確認.");
-
-        if (false/* ここは h2 database のときのみ通過が可能 */) {
-            // generic JDBC
-            try (Connection conn = OiyoCommonJdbcUtil.getConnection(
-                    OiyoInfoUtil.getOiyoDatabaseByName(oiyoInfo, OiyokanConstants.OIYOKAN_UNITTEST_DB))) {
-
-                try (var stmt = conn.prepareStatement("SELECT Binary1 FROM ODataTest6 WHERE ID = " + TEST_ID)) {
-                    stmt.executeQuery();
-                    var rset = stmt.getResultSet();
-                    assertEquals(true, rset.next());
-
-                    try (InputStream inStream = rset.getBinaryStream(1)) {
-                        byte[] binary1 = StreamUtils.copyToByteArray(inStream);
-                        String val = new String(binary1, "UTF-8");
-                        // System.err.println(val);
-                        assertEquals("Tonari no kyaku.", val, "INSERT後の値の正しさを確認.");
-                    }
-                }
-            }
-        }
 
         // UPDATE (PATCH)
         resp = OiyokanTestUtil.callRequestPatch("/ODataTests6(" + TEST_ID + ")", "{\n" //

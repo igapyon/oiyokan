@@ -1,0 +1,63 @@
+{
+  "namespace": "Oiyokan",
+  "containerName": "Container",
+  "database": [
+    {
+      "name": "oiyokanKan",
+      "type": "h2",
+      "description": "Oiyokan internal DB. Do not change.",
+      "jdbcDriver": "org.h2.Driver",
+      "jdbcUrl": "jdbc:h2:mem:oiyokan;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=FALSE;MODE=MSSQLServer",
+      "jdbcUser": "sa",
+      "jdbcPass": ""
+    }
+  ],
+  "entitySet": [
+    {
+      "name": "Oiyokans",
+      "description": "Oiyokan internal info. Do not change.",
+      "dbSettingName": "oiyokanKan",
+      "canCreate": true,
+      "canRead": true,
+      "canUpdate": true,
+      "canDelete": true,
+      "omitCountAll": false,
+      "jdbcStmtTimeout": 30,
+      "entityType": {
+        "name": "Oiyokan",
+        "dbName": "Oiyokan",
+        "keyName": ["KeyName"],
+        "property": [
+          {
+            "name": "KeyName",
+            "dbName": "KeyName",
+            "edmType": "Edm.String",
+            "jdbcType": "Types.VARCHAR",
+            "dbType": "VARCHAR",
+            "jdbcSetMethod": "setString",
+            "nullable": false,
+            "maxLength": 20,
+            "lengthFixed": false,
+            "precision": null,
+            "scale": null
+          },
+          {
+            "name": "KeyValue",
+            "dbName": "KeyValue",
+            "edmType": "Edm.String",
+            "jdbcType": "Types.VARCHAR",
+            "dbType": "VARCHAR",
+            "jdbcSetMethod": "setString",
+            "nullable": true,
+            "maxLength": 255,
+            "lengthFixed": false,
+            "precision": null,
+            "scale": null,
+            "dbDefault": "Value",
+            "filterTreatNullAsBlank": false
+          }
+        ]
+      }
+    }
+  ]
+}

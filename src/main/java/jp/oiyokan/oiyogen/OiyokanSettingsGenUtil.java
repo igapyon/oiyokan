@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.olingo.commons.api.edm.EdmPrimitiveType;
 import org.apache.olingo.server.api.ODataApplicationException;
 
@@ -42,6 +44,9 @@ import jp.oiyokan.util.OiyoMapJdbcEdmUtil;
  * Oiyokan (OData v4 server) が動作する際に必要になる内部管理データベースのバージョン情報および Oiyo情報 をセットアップ.
  */
 public class OiyokanSettingsGenUtil {
+    @SuppressWarnings("unused")
+    private static final Log log = LogFactory.getLog(OiyokanSettingsGenUtil.class);
+
     private OiyokanSettingsGenUtil() {
     }
 
@@ -84,7 +89,6 @@ public class OiyokanSettingsGenUtil {
         entitySet.getEntityType().setProperty(new ArrayList<OiyoSettingsProperty>());
         entitySet.getEntityType().setKeyName(new ArrayList<String>());
 
-        // TODO FIXME テーブル名エスケープが暫定対処。
         try (PreparedStatement stmt = connTargetDb.prepareStatement(
                 "SELECT * FROM " + OiyoCommonJdbcUtil.escapeKakkoFieldName(databaseType, tableName))) {
             ResultSetMetaData rsmeta = stmt.getMetaData();

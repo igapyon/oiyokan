@@ -17,6 +17,9 @@ package jp.oiyokan.basic.sql;
 
 import java.util.Locale;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.olingo.commons.core.edm.primitivetype.EdmString;
 import org.apache.olingo.server.api.ODataApplicationException;
 import org.apache.olingo.server.api.uri.queryoption.expression.BinaryOperatorKind;
 import org.apache.olingo.server.api.uri.queryoption.expression.Expression;
@@ -39,11 +42,14 @@ import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.common.OiyoInfoUtil;
 import jp.oiyokan.common.OiyoSqlInfo;
 import jp.oiyokan.dto.OiyoSettingsEntitySet;
+import jp.oiyokan.dto.OiyoSettingsProperty;
 
 /**
  * SQL文を構築するための簡易クラスの、Expression を SQLに変換する処理.
  */
 public class OiyoSqlQueryListExpr {
+    private static final Log log = LogFactory.getLog(OiyoSqlQueryListExpr.class);
+
     private static final boolean IS_DEBUG_EXPAND_LITERAL = false;
 
     /**
@@ -75,21 +81,21 @@ public class OiyoSqlQueryListExpr {
     public void expand(Expression filterExpression) throws ODataApplicationException {
         if (filterExpression instanceof AliasImpl) {
             // [M101] NOT SUPPORTED: Filter Expression: AliasImpl
-            System.err.println(OiyokanMessages.IY4101);
+            log.error(OiyokanMessages.IY4101);
             throw new ODataApplicationException(OiyokanMessages.IY4101, 500, Locale.ENGLISH);
         } else if (filterExpression instanceof BinaryImpl) {
             expandBinary((BinaryImpl) filterExpression);
             return;
         } else if (filterExpression instanceof EnumerationImpl) {
             // [M102] NOT SUPPORTED: Filter Expression: EnumerationImpl
-            System.err.println(OiyokanMessages.IY4102);
+            log.error(OiyokanMessages.IY4102);
             throw new ODataApplicationException(OiyokanMessages.IY4102, 500, Locale.ENGLISH);
         } else if (filterExpression instanceof LambdaRefImpl) {
             // [M103] NOT SUPPORTED: Filter Expression: LambdaRefImpl
-            System.err.println(OiyokanMessages.IY4103);
+            log.error(OiyokanMessages.IY4103);
             throw new ODataApplicationException(OiyokanMessages.IY4103, 500, Locale.ENGLISH);
         } else if (filterExpression instanceof LiteralImpl) {
-            expandLiteral((LiteralImpl) filterExpression);
+            expandLiteral((LiteralImpl) filterExpression, null);
             return;
         } else if (filterExpression instanceof MemberImpl) {
             expandMember((MemberImpl) filterExpression);
@@ -99,7 +105,7 @@ public class OiyoSqlQueryListExpr {
             return;
         } else if (filterExpression instanceof TypeLiteralImpl) {
             // [M104] NOT SUPPORTED: Filter Expression: TypeLiteralImpl"
-            System.err.println(OiyokanMessages.IY4104);
+            log.error(OiyokanMessages.IY4104);
             throw new ODataApplicationException(OiyokanMessages.IY4104, 500, Locale.ENGLISH);
         } else if (filterExpression instanceof UnaryImpl) {
             UnaryImpl impl = (UnaryImpl) filterExpression;
@@ -108,7 +114,7 @@ public class OiyoSqlQueryListExpr {
         }
 
         // [M105] UNEXPECTED: Fail to process Expression
-        System.err.println(OiyokanMessages.IY4151 + ": " + filterExpression.toString() + ": "
+        log.fatal(OiyokanMessages.IY4151 + ": " + filterExpression.toString() + ": "
                 + filterExpression.getClass().getName() + "," + "]");
         throw new ODataApplicationException(OiyokanMessages.IY4151 + ": " + filterExpression.toString(), 500,
                 Locale.ENGLISH);
@@ -121,31 +127,31 @@ public class OiyoSqlQueryListExpr {
         BinaryOperatorKind opKind = impl.getOperator();
         if (opKind == BinaryOperatorKind.HAS) {
             // [M124] NOT SUPPORTED: BinaryOperatorKind.HAS
-            System.err.println(OiyokanMessages.IY4118 + ": " + impl.toString());
+            log.error(OiyokanMessages.IY4118 + ": " + impl.toString());
             throw new ODataApplicationException(OiyokanMessages.IY4118, 500, Locale.ENGLISH);
         } else if (opKind == BinaryOperatorKind.IN) {
             // [M125] NOT SUPPORTED: BinaryOperatorKind.IN
-            System.err.println(OiyokanMessages.IY4119 + ": " + impl.toString());
+            log.error(OiyokanMessages.IY4119 + ": " + impl.toString());
             throw new ODataApplicationException(OiyokanMessages.IY4119, 500, Locale.ENGLISH);
         } else if (opKind == BinaryOperatorKind.MUL) {
             // [M126] NOT SUPPORTED: BinaryOperatorKind.MUL
-            System.err.println(OiyokanMessages.IY4120 + ": " + impl.toString());
+            log.error(OiyokanMessages.IY4120 + ": " + impl.toString());
             throw new ODataApplicationException(OiyokanMessages.IY4120, 500, Locale.ENGLISH);
         } else if (opKind == BinaryOperatorKind.DIV) {
             // [M127] NOT SUPPORTED: BinaryOperatorKind.DIV
-            System.err.println(OiyokanMessages.IY4121 + ": " + impl.toString());
+            log.error(OiyokanMessages.IY4121 + ": " + impl.toString());
             throw new ODataApplicationException(OiyokanMessages.IY4121, 500, Locale.ENGLISH);
         } else if (opKind == BinaryOperatorKind.MOD) {
             // [M128] NOT SUPPORTED: BinaryOperatorKind.MOD
-            System.err.println(OiyokanMessages.IY4122 + ": " + impl.toString());
+            log.error(OiyokanMessages.IY4122 + ": " + impl.toString());
             throw new ODataApplicationException(OiyokanMessages.IY4122, 500, Locale.ENGLISH);
         } else if (opKind == BinaryOperatorKind.ADD) {
             // [M129] NOT SUPPORTED: BinaryOperatorKind.ADD
-            System.err.println(OiyokanMessages.IY4123 + ": " + impl.toString());
+            log.error(OiyokanMessages.IY4123 + ": " + impl.toString());
             throw new ODataApplicationException(OiyokanMessages.IY4123, 500, Locale.ENGLISH);
         } else if (opKind == BinaryOperatorKind.SUB) {
             // [M130] NOT SUPPORTED: BinaryOperatorKind.SUB
-            System.err.println(OiyokanMessages.IY4124 + ": " + impl.toString());
+            log.error(OiyokanMessages.IY4124 + ": " + impl.toString());
             throw new ODataApplicationException(OiyokanMessages.IY4124, 500, Locale.ENGLISH);
         } else if (opKind == BinaryOperatorKind.GT) {
             // GT
@@ -182,43 +188,99 @@ public class OiyoSqlQueryListExpr {
         } else if (opKind == BinaryOperatorKind.EQ) {
             // EQ
             sqlInfo.getSqlBuilder().append("(");
-            if (impl.getRightOperand() instanceof LiteralImpl //
-                    && null == ((LiteralImpl) impl.getRightOperand()).getType()) {
-                expand(impl.getLeftOperand());
-                // 特殊処理 : 右辺が Literal かつ nullの場合は IS NULL 展開する。こうしないと h2 database は NULL検索できない.
-                // また、リテラルに null が指定されている場合に、LiteralImpl の getType() 自体が null で渡ってくる。
-                sqlInfo.getSqlBuilder().append(" IS NULL)");
-                return;
-            } else if (impl.getLeftOperand() instanceof LiteralImpl //
-                    && null == ((LiteralImpl) impl.getLeftOperand()).getType()) {
-                expand(impl.getRightOperand());
-                // 特殊処理 : 左辺が Literal かつ nullの場合は IS NULL 展開する。こうしないと h2 database は NULL検索できない.
-                // また、リテラルに null が指定されている場合に、LiteralImpl の getType() 自体が null で渡ってくる。
-                sqlInfo.getSqlBuilder().append(" IS NULL)");
-                return;
-            } else {
-                expand(impl.getLeftOperand());
+
+            // 一方が MemberImpl で他方が LiteralImpl
+            if ((impl.getLeftOperand() instanceof MemberImpl && impl.getRightOperand() instanceof LiteralImpl)
+                    || (impl.getLeftOperand() instanceof LiteralImpl && impl.getRightOperand() instanceof MemberImpl)) {
+                MemberImpl member = null;
+                LiteralImpl literal = null;
+                if (impl.getLeftOperand() instanceof MemberImpl) {
+                    member = (MemberImpl) impl.getLeftOperand();
+                    literal = (LiteralImpl) impl.getRightOperand();
+                } else {
+                    literal = (LiteralImpl) impl.getLeftOperand();
+                    member = (MemberImpl) impl.getRightOperand();
+                }
+
+                // IS NULL対応
+                if (null == literal.getType()) {
+                    // 特殊処理 : Literal が nullの場合は IS NULL 展開する。こうしないと h2 database は NULL検索できない.
+                    // また、リテラルに null が指定されている場合に、LiteralImpl の getType() 自体が null で渡ってくる。
+                    OiyoSettingsProperty property = expandMember(member);
+                    sqlInfo.getSqlBuilder().append(" IS NULL");
+
+                    if (property.getFilterTreatNullAsBlank() != null && property.getFilterTreatNullAsBlank()) {
+                        // NULLでfilterの際に '' も一致と見做す特殊コース.
+                        sqlInfo.getSqlBuilder().append(" OR ");
+                        expandMember(member);
+                        sqlInfo.getSqlBuilder().append(" = ");
+                        expandLiteral(new LiteralImpl("", EdmString.getInstance()), property);
+                    }
+                    sqlInfo.getSqlBuilder().append(")");
+                    return;
+                }
+
+                // 通常コースには復帰せず、取得できた property を利用した処理に入る。
+                OiyoSettingsProperty property = expandMember(member);
                 sqlInfo.getSqlBuilder().append(" = ");
-                expand(impl.getRightOperand());
+                expandLiteral(literal, property);
                 sqlInfo.getSqlBuilder().append(")");
                 return;
             }
+
+            // 与えられた条件をそのまま展開.
+            expand(impl.getLeftOperand());
+            sqlInfo.getSqlBuilder().append(" = ");
+            expand(impl.getRightOperand());
+            sqlInfo.getSqlBuilder().append(")");
+            return;
         } else if (opKind == BinaryOperatorKind.NE) {
             // NE
             sqlInfo.getSqlBuilder().append("(");
-            if (impl.getRightOperand() instanceof LiteralImpl //
-                    && null == ((LiteralImpl) impl.getRightOperand()).getType()) {
-                expand(impl.getLeftOperand());
-                // 特殊処理 : 右辺が Literal かつ nullの場合は IS NOT NULL 展開する。こうしないと h2 database は
-                // NULL検索できない.
-                // また、リテラルに null が指定されている場合に、LiteralImpl の getType() 自体が null で渡ってくる。
-                sqlInfo.getSqlBuilder().append(" IS NOT NULL");
-                // なお、 「null ne 項目」のように左辺に NULL を記述する IS NOT NULL は Olingoにて指定不可。
-            } else {
-                expand(impl.getLeftOperand());
+
+            // 一方が MemberImpl で他方が LiteralImpl
+            if ((impl.getLeftOperand() instanceof MemberImpl && impl.getRightOperand() instanceof LiteralImpl)
+                    || (impl.getLeftOperand() instanceof LiteralImpl && impl.getRightOperand() instanceof MemberImpl)) {
+                MemberImpl member = null;
+                LiteralImpl literal = null;
+                if (impl.getLeftOperand() instanceof MemberImpl) {
+                    member = (MemberImpl) impl.getLeftOperand();
+                    literal = (LiteralImpl) impl.getRightOperand();
+                } else {
+                    literal = (LiteralImpl) impl.getLeftOperand();
+                    member = (MemberImpl) impl.getRightOperand();
+                }
+
+                // IS NOT NULL対応
+                if (null == literal.getType()) {
+                    // 特殊処理 : Literal が nullの場合は IS NULL 展開する。こうしないと h2 database は NOT NULL検索できない.
+                    // また、リテラルに null が指定されている場合に、LiteralImpl の getType() 自体が null で渡ってくる。
+                    OiyoSettingsProperty property = expandMember(member);
+                    sqlInfo.getSqlBuilder().append(" IS NOT NULL");
+
+                    if (property.getFilterTreatNullAsBlank() != null && property.getFilterTreatNullAsBlank()) {
+                        // NULLでfilterの際に '' も一致と見做す特殊コース.
+                        sqlInfo.getSqlBuilder().append(" AND ");
+                        expandMember(member);
+                        sqlInfo.getSqlBuilder().append(" <> ");
+                        expandLiteral(new LiteralImpl("", EdmString.getInstance()), property);
+                    }
+                    sqlInfo.getSqlBuilder().append(")");
+                    return;
+                }
+
+                // 通常コースには復帰せず、取得できた property を利用した処理に入る。
+                OiyoSettingsProperty property = expandMember(member);
                 sqlInfo.getSqlBuilder().append(" <> ");
-                expand(impl.getRightOperand());
+                expandLiteral(literal, property);
+                sqlInfo.getSqlBuilder().append(")");
+                return;
             }
+
+            // 与えられた条件をそのまま展開.
+            expand(impl.getLeftOperand());
+            sqlInfo.getSqlBuilder().append(" <> ");
+            expand(impl.getRightOperand());
             sqlInfo.getSqlBuilder().append(")");
             return;
         } else if (opKind == BinaryOperatorKind.AND) {
@@ -240,7 +302,7 @@ public class OiyoSqlQueryListExpr {
         }
 
         // [M106] UNEXPECTED: Unsupported binary operator
-        System.err.println(OiyokanMessages.IY4152 + ": " + opKind + "," + impl.toString());
+        log.fatal(OiyokanMessages.IY4152 + ": " + opKind + "," + impl.toString());
         throw new ODataApplicationException(OiyokanMessages.IY4152 + ": " + opKind, 500, Locale.ENGLISH);
     }
 
@@ -250,26 +312,29 @@ public class OiyoSqlQueryListExpr {
      * @param impl リテラル
      * @throws ODataApplicationException Odataアプリ例外が発生した場合.
      */
-    private void expandLiteral(LiteralImpl impl) throws ODataApplicationException {
+    private void expandLiteral(LiteralImpl impl, OiyoSettingsProperty property) throws ODataApplicationException {
         if (null == impl.getType()) {
             // リテラルに null が指定されている場合に、LiteralImpl の getType() 自体が null で渡ってくる。
             if (IS_DEBUG_EXPAND_LITERAL)
-                System.err.println("TRACE: null: (" + impl.getText() + ")");
+                log.debug("TRACE: null: (" + impl.getText() + ")");
             sqlInfo.getSqlBuilder().append("null");
             return;
         }
 
         OiyoCommonJdbcUtil.expandLiteralOrBindParameter(sqlInfo,
-                impl.getType().getFullQualifiedName().getFullQualifiedNameAsString(), impl.getText());
+                impl.getType().getFullQualifiedName().getFullQualifiedNameAsString(), property, impl.getText());
     }
 
-    private void expandMember(MemberImpl impl) throws ODataApplicationException {
+    private OiyoSettingsProperty expandMember(MemberImpl impl) throws ODataApplicationException {
         final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, sqlInfo.getEntitySetName());
 
         // そのままSQLのメンバーとせず、項目名エスケープを除去.
         final String unescapedName = OiyoCommonJdbcUtil.unescapeKakkoFieldName(impl.toString());
-        sqlInfo.getSqlBuilder().append(OiyoCommonJdbcUtil.escapeKakkoFieldName(sqlInfo,
-                OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, entitySet.getName(), unescapedName).getDbName()));
+        final OiyoSettingsProperty property = OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, entitySet.getName(),
+                unescapedName);
+        sqlInfo.getSqlBuilder().append(OiyoCommonJdbcUtil.escapeKakkoFieldName(sqlInfo, property.getDbName()));
+
+        return property;
     }
 
     /**
@@ -300,7 +365,7 @@ public class OiyoSqlQueryListExpr {
                 expand(impl.getParameters().get(1));
                 sqlInfo.getSqlBuilder().append(") > 0)");
                 return;
-            case MSSQL2008:
+            case SQLSV2008:
                 sqlInfo.getSqlBuilder().append("(CHARINDEX(");
                 expand(impl.getParameters().get(1));
                 sqlInfo.getSqlBuilder().append(",");
@@ -328,7 +393,7 @@ public class OiyoSqlQueryListExpr {
                 expand(impl.getParameters().get(1));
                 sqlInfo.getSqlBuilder().append(") = 1)");
                 return;
-            case MSSQL2008:
+            case SQLSV2008:
                 sqlInfo.getSqlBuilder().append("(CHARINDEX(");
                 expand(impl.getParameters().get(1));
                 sqlInfo.getSqlBuilder().append(",");
@@ -351,7 +416,7 @@ public class OiyoSqlQueryListExpr {
                 expand(impl.getParameters().get(1));
                 sqlInfo.getSqlBuilder().append(")");
                 return;
-            case MSSQL2008:
+            case SQLSV2008:
                 sqlInfo.getSqlBuilder().append("(RIGHT(");
                 expand(impl.getParameters().get(0));
                 sqlInfo.getSqlBuilder().append(",LEN(");
@@ -360,7 +425,7 @@ public class OiyoSqlQueryListExpr {
                 expand(impl.getParameters().get(1));
                 sqlInfo.getSqlBuilder().append(")");
                 return;
-            case ORACLE:
+            case ORCL18:
                 sqlInfo.getSqlBuilder().append("(SUBSTR(");
                 expand(impl.getParameters().get(0));
                 sqlInfo.getSqlBuilder().append(",-LENGTH(");
@@ -381,7 +446,7 @@ public class OiyoSqlQueryListExpr {
                 expand(impl.getParameters().get(0));
                 sqlInfo.getSqlBuilder().append("))");
                 return;
-            case MSSQL2008:
+            case SQLSV2008:
                 sqlInfo.getSqlBuilder().append("(LEN(");
                 expand(impl.getParameters().get(0));
                 sqlInfo.getSqlBuilder().append("))");
@@ -409,7 +474,7 @@ public class OiyoSqlQueryListExpr {
                 expand(impl.getParameters().get(1));
                 sqlInfo.getSqlBuilder().append(") - 1)");
                 return;
-            case MSSQL2008:
+            case SQLSV2008:
                 sqlInfo.getSqlBuilder().append("(CHARINDEX(");
                 expand(impl.getParameters().get(1));
                 sqlInfo.getSqlBuilder().append(",");
@@ -433,7 +498,7 @@ public class OiyoSqlQueryListExpr {
                 }
                 sqlInfo.getSqlBuilder().append("))");
                 return;
-            case ORACLE:
+            case ORCL18:
                 sqlInfo.getSqlBuilder().append("(SUBSTR(");
                 expand(impl.getParameters().get(0));
                 sqlInfo.getSqlBuilder().append(",");
@@ -477,7 +542,7 @@ public class OiyoSqlQueryListExpr {
                 expand(impl.getParameters().get(0));
                 sqlInfo.getSqlBuilder().append(")");
                 return;
-            case MSSQL2008:
+            case SQLSV2008:
                 // SQL Server 2008 には TRIM がない
                 sqlInfo.getSqlBuilder().append("LTRIM(RTRIM(");
                 expand(impl.getParameters().get(0));
@@ -497,7 +562,7 @@ public class OiyoSqlQueryListExpr {
                 expand(impl.getParameters().get(1));
                 sqlInfo.getSqlBuilder().append(")");
                 return;
-            case MSSQL2008:
+            case SQLSV2008:
                 sqlInfo.getSqlBuilder().append("(CAST(");
                 expand(impl.getParameters().get(0));
                 sqlInfo.getSqlBuilder().append(" AS VARCHAR)");
@@ -566,56 +631,56 @@ public class OiyoSqlQueryListExpr {
         // FRACTIONALSECONDS
         if (impl.getMethod() == MethodKind.FRACTIONALSECONDS) {
             // [M108] NOT SUPPORTED: MethodKind.FRACTIONALSECONDS
-            System.err.println(OiyokanMessages.IY4105);
+            log.error(OiyokanMessages.IY4105);
             throw new ODataApplicationException(OiyokanMessages.IY4105, 500, Locale.ENGLISH);
         }
 
         // TOTALSECONDS
         if (impl.getMethod() == MethodKind.TOTALSECONDS) {
             // [M109] NOT SUPPORTED: MethodKind.TOTALSECONDS
-            System.err.println(OiyokanMessages.IY4106);
+            log.error(OiyokanMessages.IY4106);
             throw new ODataApplicationException(OiyokanMessages.IY4106, 500, Locale.ENGLISH);
         }
 
         // DATE
         if (impl.getMethod() == MethodKind.DATE) {
             // [M110] NOT SUPPORTED: MethodKind.DATE
-            System.err.println(OiyokanMessages.IY4107);
+            log.error(OiyokanMessages.IY4107);
             throw new ODataApplicationException(OiyokanMessages.IY4107, 500, Locale.ENGLISH);
         }
 
         // TIME
         if (impl.getMethod() == MethodKind.TIME) {
             // [M111] NOT SUPPORTED: MethodKind.TIME
-            System.err.println(OiyokanMessages.IY4108);
+            log.error(OiyokanMessages.IY4108);
             throw new ODataApplicationException(OiyokanMessages.IY4108, 500, Locale.ENGLISH);
         }
 
         // TOTALOFFSETMINUTES
         if (impl.getMethod() == MethodKind.TOTALOFFSETMINUTES) {
             // [M112] NOT SUPPORTED: MethodKind.TOTALOFFSETMINUTES
-            System.err.println(OiyokanMessages.IY4109);
+            log.error(OiyokanMessages.IY4109);
             throw new ODataApplicationException(OiyokanMessages.IY4109, 500, Locale.ENGLISH);
         }
 
         // MINDATETIME
         if (impl.getMethod() == MethodKind.MINDATETIME) {
             // [M113] NOT SUPPORTED: MethodKind.MINDATETIME
-            System.err.println(OiyokanMessages.IY4110);
+            log.error(OiyokanMessages.IY4110);
             throw new ODataApplicationException(OiyokanMessages.IY4110, 500, Locale.ENGLISH);
         }
 
         // MAXDATETIME
         if (impl.getMethod() == MethodKind.MAXDATETIME) {
             // [M114] NOT SUPPORTED: MethodKind.MAXDATETIME
-            System.err.println(OiyokanMessages.IY4111);
+            log.error(OiyokanMessages.IY4111);
             throw new ODataApplicationException(OiyokanMessages.IY4111, 500, Locale.ENGLISH);
         }
 
         // NOW
         if (impl.getMethod() == MethodKind.NOW) {
             // [M115] NOT SUPPORTED: MethodKind.NOW
-            System.err.println(OiyokanMessages.IY4112);
+            log.error(OiyokanMessages.IY4112);
             throw new ODataApplicationException(OiyokanMessages.IY4112, 500, Locale.ENGLISH);
         }
 
@@ -649,35 +714,35 @@ public class OiyoSqlQueryListExpr {
         // GEODISTANCE
         if (impl.getMethod() == MethodKind.GEODISTANCE) {
             // [M116] NOT SUPPORTED: MethodKind.GEODISTANCE
-            System.err.println(OiyokanMessages.IY4113);
+            log.error(OiyokanMessages.IY4113);
             throw new ODataApplicationException(OiyokanMessages.IY4113, 500, Locale.ENGLISH);
         }
 
         // GEOLENGTH
         if (impl.getMethod() == MethodKind.GEOLENGTH) {
             // [M117] NOT SUPPORTED: MethodKind.GEOLENGTH
-            System.err.println(OiyokanMessages.IY4114);
+            log.error(OiyokanMessages.IY4114);
             throw new ODataApplicationException(OiyokanMessages.IY4114, 500, Locale.ENGLISH);
         }
 
         // GEOINTERSECTS
         if (impl.getMethod() == MethodKind.GEOINTERSECTS) {
             // [M118] NOT SUPPORTED: MethodKind.GEOINTERSECTS
-            System.err.println(OiyokanMessages.IY4115);
+            log.error(OiyokanMessages.IY4115);
             throw new ODataApplicationException(OiyokanMessages.IY4115, 500, Locale.ENGLISH);
         }
 
         // CAST
         if (impl.getMethod() == MethodKind.CAST) {
             // [M119] NOT SUPPORTED: MethodKind.CAST
-            System.err.println(OiyokanMessages.IY4116);
+            log.error(OiyokanMessages.IY4116);
             throw new ODataApplicationException(OiyokanMessages.IY4116, 500, Locale.ENGLISH);
         }
 
         // ISOF
         if (impl.getMethod() == MethodKind.ISOF) {
             // [M120] NOT SUPPORTED: MethodKind.ISOF
-            System.err.println(OiyokanMessages.IY4117);
+            log.error(OiyokanMessages.IY4117);
             throw new ODataApplicationException(OiyokanMessages.IY4117, 500, Locale.ENGLISH);
         }
 
@@ -698,7 +763,7 @@ public class OiyoSqlQueryListExpr {
                 expand(impl.getParameters().get(1));
                 sqlInfo.getSqlBuilder().append(") > 0)");
                 return;
-            case MSSQL2008:
+            case SQLSV2008:
                 sqlInfo.getSqlBuilder().append("(CHARINDEX(");
                 expand(impl.getParameters().get(1));
                 sqlInfo.getSqlBuilder().append(",");
@@ -709,9 +774,9 @@ public class OiyoSqlQueryListExpr {
         }
 
         // [M121] UNEXPECTED: NOT SUPPORTED MethodKind
-        System.err.println(OiyokanMessages.IY4153 + ": " + impl.getMethod() + "," + impl.toString());
-        throw new ODataApplicationException(OiyokanMessages.IY4153 + ": " + impl.getMethod() + "," + impl.toString(), 500,
-                Locale.ENGLISH);
+        log.fatal(OiyokanMessages.IY4153 + ": " + impl.getMethod() + "," + impl.toString());
+        throw new ODataApplicationException(OiyokanMessages.IY4153 + ": " + impl.getMethod() + "," + impl.toString(),
+                500, Locale.ENGLISH);
     }
 
     private void expandUnary(UnaryImpl impl) throws ODataApplicationException {
@@ -722,12 +787,12 @@ public class OiyoSqlQueryListExpr {
             return;
         } else if (impl.getOperator() == UnaryOperatorKind.MINUS) {
             // [M131] NOT SUPPORTED: UnaryOperatorKind.MINUS
-            System.err.println(OiyokanMessages.IY4125 + ": " + impl.toString());
+            log.error(OiyokanMessages.IY4125 + ": " + impl.toString());
             throw new ODataApplicationException(OiyokanMessages.IY4125, 500, Locale.ENGLISH);
         }
 
         // [M122] UNEXPECTED: Unsupported UnaryOperatorKind
-        System.err.println(OiyokanMessages.IY4154 + ": " + impl.getOperator() + "," + impl.toString());
+        log.fatal(OiyokanMessages.IY4154 + ": " + impl.getOperator() + "," + impl.toString());
         throw new ODataApplicationException(OiyokanMessages.IY4154 + ": " + impl.getOperator() + "," + impl.toString(),
                 500, Locale.ENGLISH);
     }

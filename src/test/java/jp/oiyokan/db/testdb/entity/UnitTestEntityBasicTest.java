@@ -20,7 +20,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.apache.olingo.server.api.ODataResponse;
 import org.junit.jupiter.api.Test;
 
-import jp.oiyokan.OiyokanTestSettingConstants;
+import jp.oiyokan.OiyokanUnittestUtil;
+import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.util.OiyokanTestUtil;
 
 /**
@@ -32,8 +33,7 @@ class UnitTestEntityBasicTest {
      */
     @Test
     void test01() throws Exception {
-        if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
-            return;
+        final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
 
         final int TEST_ID = OiyokanTestUtil.getNextUniqueId();
 
@@ -44,7 +44,7 @@ class UnitTestEntityBasicTest {
                 + "  \"Description\":\"Description\"\n" + "}");
         String result = OiyokanTestUtil.stream2String(resp.getContent());
         System.err.println("TRACE: " + result);
-        assertEquals(201, resp.getStatusCode(), "SQLServer2008でエラー。(既知の問題). varbinaryとtextと混同.");
+        assertEquals(201, resp.getStatusCode(), "SQLSV2008でエラー。(既知の問題). varbinaryとtextと混同.");
 
         resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests3(" + TEST_ID + ")", null);
         assertEquals(200, resp.getStatusCode());
@@ -62,8 +62,7 @@ class UnitTestEntityBasicTest {
      */
     @Test
     void test02() throws Exception {
-        if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
-            return;
+        final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
 
         final int TEST_ID = OiyokanTestUtil.getNextUniqueId();
 
@@ -72,6 +71,7 @@ class UnitTestEntityBasicTest {
                 + "  \"ID\":" + TEST_ID + ",\n" //
                 + "  \"Name\":\"Name\",\n" //
                 + "  \"Description\":\"Description\"\n" + "}");
+        @SuppressWarnings("unused")
         String result = OiyokanTestUtil.stream2String(resp.getContent());
         // System.err.println(result);
         assertEquals(201, resp.getStatusCode());
@@ -103,8 +103,7 @@ class UnitTestEntityBasicTest {
      */
     @Test
     void test03() throws Exception {
-        if (!OiyokanTestSettingConstants.IS_TEST_ODATATEST)
-            return;
+        final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
 
         final int uniqueId = OiyokanTestUtil.getNextUniqueId();
 

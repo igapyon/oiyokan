@@ -18,12 +18,13 @@ package jp.oiyokan.basic;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.olingo.commons.api.edm.provider.CsdlEntityType;
 import org.apache.olingo.commons.api.edm.provider.CsdlProperty;
 import org.apache.olingo.commons.api.edm.provider.CsdlPropertyRef;
 import org.apache.olingo.server.api.ODataApplicationException;
 
-import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.common.OiyoCommonJdbcUtil;
 import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.common.OiyoInfoUtil;
@@ -36,6 +37,8 @@ import jp.oiyokan.dto.OiyoSettingsProperty;
  * 内部データベースをもとにした Oiyo 形式での処理であるため接続先のリソースの種類によらず Oiyokan ではこのクラスを利用.
  */
 public class OiyoBasicJdbcEntityTypeBuilder {
+    private static final Log log = LogFactory.getLog(OiyoBasicJdbcEntityTypeBuilder.class);
+
     /**
      * Oiyokan Info.
      */
@@ -63,8 +66,6 @@ public class OiyoBasicJdbcEntityTypeBuilder {
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
     public CsdlEntityType getEntityType() throws ODataApplicationException {
-        // TODO JSONベースに切り替え
-
         // CSDL要素型として情報を組み上げ.
         final CsdlEntityType entityType = new CsdlEntityType();
         entityType.setName(entitySet.getEntityType().getName());
@@ -76,7 +77,7 @@ public class OiyoBasicJdbcEntityTypeBuilder {
         OiyoSettingsEntitySet oiyoEntitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, entitySet.getName());
 
         for (OiyoSettingsProperty oiyoProp : oiyoEntitySet.getEntityType().getProperty()) {
-            propertyList.add(OiyoCommonJdbcUtil.resultSetMetaData2CsdlProperty(oiyoProp));
+            propertyList.add(OiyoCommonJdbcUtil.settingsProperty2CsdlProperty(oiyoProp));
         }
 
         // テーブルのキー情報
@@ -89,20 +90,13 @@ public class OiyoBasicJdbcEntityTypeBuilder {
 
         if (keyRefList.size() == 0) {
             // キーがないものは OData 的に不都合があるため警告する。
-            if (OiyokanConstants.IS_TRACE_ODATA_V4) {
-                System.err.println("OData v4: WARNING: No ID: " + entitySet.getName());
-                System.err.println("OData v4: WARNING: Set primary key on Oiyo table: " + entitySet.getName());
-            }
+            // TODO FIXME メッセージ抽出
+            log.error("OData v4: WARNING: No ID: " + entitySet.getName());
+            log.error("OData v4: WARNING: Set primary key on Oiyo table: " + entitySet.getName());
         }
 
         entityType.setKey(keyRefList);
 
         return entityType;
-        // } catch (SQLException ex) {
-        // // [M019] UNEXPECTED: Fail to get database meta
-        // System.err.println(OiyokanMessages.M019 + ": " + ex.toString());
-        // throw new ODataApplicationException(OiyokanMessages.M019,
-        // OiyokanMessages.M019_CODE, Locale.ENGLISH);
-        // }
     }
 }

@@ -20,12 +20,16 @@ import java.util.BitSet;
 
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.net.URLCodec;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Oiyokan 関連の URL まわりユーティリティクラス.
  */
 public class OiyoUrlUtil {
-    // TODO FIXME パッケージを util に移動.
+    @SuppressWarnings("unused")
+    private static final Log log = LogFactory.getLog(OiyoUrlUtil.class);
+
     private OiyoUrlUtil() {
     }
 

@@ -18,6 +18,8 @@ package jp.oiyokan.basic.sql;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.olingo.server.api.ODataApplicationException;
 import org.apache.olingo.server.api.uri.UriInfo;
 import org.apache.olingo.server.api.uri.UriResource;
@@ -38,6 +40,9 @@ import jp.oiyokan.dto.OiyoSettingsProperty;
  * SQL文を構築するための簡易クラス.
  */
 public class OiyoSqlQueryListBuilder {
+    @SuppressWarnings("unused")
+    private static final Log log = LogFactory.getLog(OiyoSqlQueryListBuilder.class);
+
     /**
      * Oiyokan Info.
      */
@@ -74,6 +79,8 @@ public class OiyoSqlQueryListBuilder {
     public void buildSelectCountQuery(UriInfo uriInfo) throws ODataApplicationException {
         final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, entitySetName);
 
+        // SELECTの検索項目名を追加。ここでは Property としては存在しない COUNT というダミーの名称をセット
+        sqlInfo.getSelectColumnNameList().add("COUNT");
         sqlInfo.getSqlBuilder().append("SELECT COUNT(*) FROM "
                 + OiyoCommonJdbcUtil.escapeKakkoFieldName(sqlInfo, entitySet.getEntityType().getDbName()));
         if (uriInfo.getFilterOption() != null) {
@@ -92,7 +99,8 @@ public class OiyoSqlQueryListBuilder {
     public void buildSelectQuery(UriInfo uriInfo) throws ODataApplicationException {
         sqlInfo.getSqlBuilder().append("SELECT ");
 
-        expandSelect(uriInfo);
+        // 初回呼び出しとして SELECT を展開
+        expandSelect(uriInfo, false);
 
         expandFrom(uriInfo);
 
@@ -103,11 +111,24 @@ public class OiyoSqlQueryListBuilder {
         final OiyokanConstants.DatabaseType databaseType = OiyoInfoUtil
                 .getOiyoDatabaseTypeByEntitySetName(sqlInfo.getOiyoInfo(), sqlInfo.getEntitySetName());
 
-        if (OiyokanConstants.DatabaseType.MSSQL2008 == databaseType //
-                || OiyokanConstants.DatabaseType.ORACLE == databaseType) {
+        boolean isSqlsv2008OrOrclSpecial = false;
+        if (OiyokanConstants.DatabaseType.SQLSV2008 == databaseType //
+                && uriInfo.getSkipOption() == null) {
+            // SQLSV2008 で SKIP指定なしの場合はサブクエリの挙動を抑止してTOP記述のみ.
+            // このため、WHERE 部分の展開は h2 などのDBと同じ挙動になる。
+            isSqlsv2008OrOrclSpecial = false;
+        } else if (OiyokanConstants.DatabaseType.SQLSV2008 == databaseType //
+                || OiyokanConstants.DatabaseType.ORCL18 == databaseType) {
+            isSqlsv2008OrOrclSpecial = true;
+            // SQLSV2008 / ORCL18 検索は WHERE絞り込みは既にサブクエリにて適用済み.
+        } else {
+            isSqlsv2008OrOrclSpecial = false;
+        }
+
+        if (isSqlsv2008OrOrclSpecial) {
             sqlInfo.getSqlBuilder().append(" WHERE ");
             expandRowNumberBetween(uriInfo);
-            // SQL Server検索は WHERE絞り込みは既にサブクエリにて適用済み.
+            // SQLSV2008 検索は WHERE絞り込みは既にサブクエリにて適用済み.
         } else {
             if (uriInfo.getFilterOption() != null) {
                 FilterOptionImpl filterOpt = (FilterOptionImpl) uriInfo.getFilterOption();
@@ -117,8 +138,7 @@ public class OiyoSqlQueryListBuilder {
             }
         }
 
-        if (OiyokanConstants.DatabaseType.MSSQL2008 == databaseType //
-                || OiyokanConstants.DatabaseType.ORACLE == databaseType) {
+        if (isSqlsv2008OrOrclSpecial) {
             // 必ず rownum4between 順でソート.
             sqlInfo.getSqlBuilder().append(" ORDER BY rownum4between");
         } else {
@@ -154,15 +174,24 @@ public class OiyoSqlQueryListBuilder {
         sqlInfo.getSqlBuilder().append("rownum4between BETWEEN " + start + " AND " + (start + count - 1));
     }
 
-    private void expandSelect(UriInfo uriInfo) throws ODataApplicationException {
+    private void expandSelect(UriInfo uriInfo, boolean isSecondPass) throws ODataApplicationException {
+        final OiyokanConstants.DatabaseType databaseType = OiyoInfoUtil
+                .getOiyoDatabaseTypeByEntitySetName(sqlInfo.getOiyoInfo(), sqlInfo.getEntitySetName());
+        if (OiyokanConstants.DatabaseType.SQLSV2008 == databaseType //
+                && uriInfo.getTopOption() != null && uriInfo.getSkipOption() == null) {
+            // SQL Server 2008 で SKIP指定なしの場合はサブクエリの挙動を抑止してTOP記述のみ.
+            // 一方 TOP については、SQL 2008固有文法であるこの場所への TOP 展開。
+            sqlInfo.getSqlBuilder().append("TOP " + uriInfo.getTopOption().getValue() + " ");
+        }
+
         if (uriInfo.getSelectOption() == null) {
-            expandSelectWild(uriInfo);
+            expandSelectWild(uriInfo, isSecondPass);
         } else {
-            expandSelectEach(uriInfo);
+            expandSelectEach(uriInfo, isSecondPass);
         }
     }
 
-    private void expandSelectWild(UriInfo uriInfo) throws ODataApplicationException {
+    private void expandSelectWild(UriInfo uriInfo, boolean isSecondPass) throws ODataApplicationException {
         final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, sqlInfo.getEntitySetName());
 
         // アスタリスクは利用せず、項目を指定する。
@@ -172,14 +201,17 @@ public class OiyoSqlQueryListBuilder {
                 strColumns += ",";
             }
 
-            // もし空白を含む場合はエスケープ。
-            strColumns += OiyoCommonJdbcUtil.escapeKakkoFieldName(sqlInfo,
-                    OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, entitySet.getName(), prop.getName()).getDbName());
+            if (!isSecondPass) {
+                // 初回呼び出し時にのみ、SELECTの検索項目名を追加。
+                sqlInfo.getSelectColumnNameList().add(prop.getName());
+            }
+            // 項目名について空白が含まれている場合はカッコなどでエスケープ。
+            strColumns += OiyoCommonJdbcUtil.escapeKakkoFieldName(sqlInfo, prop.getDbName());
         }
         sqlInfo.getSqlBuilder().append(strColumns);
     }
 
-    private void expandSelectEach(UriInfo uriInfo) throws ODataApplicationException {
+    private void expandSelectEach(UriInfo uriInfo, boolean isSecondPass) throws ODataApplicationException {
         final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, sqlInfo.getEntitySetName());
 
         final List<String> keyTarget = new ArrayList<>();
@@ -190,11 +222,20 @@ public class OiyoSqlQueryListBuilder {
         for (SelectItem item : uriInfo.getSelectOption().getSelectItems()) {
             for (UriResource res : item.getResourcePath().getUriResourceParts()) {
                 sqlInfo.getSqlBuilder().append(itemCount++ == 0 ? "" : ",");
+
                 final String unescapedName = OiyoCommonJdbcUtil.unescapeKakkoFieldName(res.toString());
-                sqlInfo.getSqlBuilder().append(OiyoCommonJdbcUtil.escapeKakkoFieldName(sqlInfo,
-                        OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, entitySet.getName(), unescapedName).getDbName()));
+                OiyoSettingsProperty prop = OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, entitySet.getName(),
+                        unescapedName);
+
+                if (!isSecondPass) {
+                    // 初回呼び出し時にのみ、SELECTの検索項目名を追加。
+                    sqlInfo.getSelectColumnNameList().add(prop.getName());
+                }
+                sqlInfo.getSqlBuilder().append(OiyoCommonJdbcUtil.escapeKakkoFieldName(sqlInfo, prop.getDbName()));
                 for (int index = 0; index < keyTarget.size(); index++) {
-                    if (keyTarget.get(index).equals(res.toString())) {
+                    if (keyTarget.get(index).equals(prop.getName())) {
+                        // 検索項目がキーであれば、すでに検索済みキーとしてリストから除去。
+                        // これは、キー項目は選択された検索項目であろうがなかろうが検索する必要があるための一連の処理。
                         keyTarget.remove(index);
                         break;
                     }
@@ -204,7 +245,10 @@ public class OiyoSqlQueryListBuilder {
         for (int index = 0; index < keyTarget.size(); index++) {
             // レコードを一意に表すID項目が必須。検索対象にない場合は追加.
             sqlInfo.getSqlBuilder().append(itemCount++ == 0 ? "" : ",");
-            sqlInfo.getSqlBuilder().append(OiyoCommonJdbcUtil.unescapeKakkoFieldName(keyTarget.get(index)));
+            final String unescapedName = OiyoCommonJdbcUtil.unescapeKakkoFieldName(keyTarget.get(index));
+            // SELECTの検索項目名を追加。
+            sqlInfo.getSelectColumnNameList().add(unescapedName);
+            sqlInfo.getSqlBuilder().append(unescapedName);
         }
     }
 
@@ -220,24 +264,32 @@ public class OiyoSqlQueryListBuilder {
             sqlInfo.getSqlBuilder().append(
                     " FROM " + OiyoCommonJdbcUtil.escapeKakkoFieldName(sqlInfo, entitySet.getEntityType().getDbName()));
             break;
-        case MSSQL2008:
-        case ORACLE: {
-            ///////////////////////////////////
-            // SQL Server / ORACLE 用特殊記述
-            // 現在、無条件にサブクエリ展開
-            String topfilter = "";
-            if (OiyokanConstants.DatabaseType.MSSQL2008 == databaseType) {
-                if (uriInfo.getTopOption() != null) {
-                    int total = uriInfo.getTopOption().getValue();
-                    if (uriInfo.getSkipOption() != null) {
-                        total += uriInfo.getSkipOption().getValue();
-                    }
-                    topfilter = "TOP " + (total + 1) + " ";
-                }
-
+        case SQLSV2008:
+        case ORCL18: {
+            if (OiyokanConstants.DatabaseType.SQLSV2008 == databaseType //
+                    // SQL Server 2008 で SKIP指定なしの場合はサブクエリの挙動を抑止してTOP記述のみ.
+                    // このため、WHERE 部分の展開は h2 などのDBと同じ挙動になる。
+                    && uriInfo.getSkipOption() == null) {
+                sqlInfo.getSqlBuilder().append(" FROM "
+                        + OiyoCommonJdbcUtil.escapeKakkoFieldName(sqlInfo, entitySet.getEntityType().getDbName()));
+                break;
             }
 
-            sqlInfo.getSqlBuilder().append(" FROM (SELECT " + topfilter + "ROW_NUMBER()");
+            ///////////////////////////////////
+            // SQLSV2008 / ORCL18 用特殊記述
+            // 現在、無条件にサブクエリ展開
+            String topfilterForSql2000 = "";
+            if (OiyokanConstants.DatabaseType.SQLSV2008 == databaseType) {
+                // SQL Server の場合 SKIP 指定がある場合のコースとなる。
+                int total = 1;
+                if (uriInfo.getTopOption() != null) {
+                    total += uriInfo.getTopOption().getValue();
+                }
+                total += uriInfo.getSkipOption().getValue();
+                topfilterForSql2000 = "TOP " + total + " ";
+            }
+
+            sqlInfo.getSqlBuilder().append(" FROM (SELECT " + topfilterForSql2000 + "ROW_NUMBER()");
             if (uriInfo.getOrderByOption() != null) {
                 sqlInfo.getSqlBuilder().append(" OVER (");
                 sqlInfo.getSqlBuilder().append("ORDER BY ");
@@ -250,8 +302,8 @@ public class OiyoSqlQueryListBuilder {
             }
 
             sqlInfo.getSqlBuilder().append("AS rownum4between,");
-            // 必要な分だけ項目展開.
-            expandSelect(uriInfo);
+            // 2回目の呼び出しとして SELECT を展開
+            expandSelect(uriInfo, true);
             sqlInfo.getSqlBuilder().append(
                     " FROM " + OiyoCommonJdbcUtil.escapeKakkoFieldName(sqlInfo, entitySet.getEntityType().getDbName()));
             if (uriInfo.getFilterOption() != null) {
@@ -260,11 +312,11 @@ public class OiyoSqlQueryListBuilder {
                 new OiyoSqlQueryListExpr(oiyoInfo, sqlInfo).expand(uriInfo.getFilterOption().getExpression());
             }
             sqlInfo.getSqlBuilder().append(")");
-            if (OiyokanConstants.DatabaseType.MSSQL2008 == databaseType) {
-                // 以下記述は SQL2008のみ。ORACLEではエラー。
+            if (OiyokanConstants.DatabaseType.SQLSV2008 == databaseType) {
+                // 以下記述は SQLSV2008のみ。ORCL18ではエラー。
                 sqlInfo.getSqlBuilder().append(" AS rownum4subquery");
             }
-            // SQL Server / ORACLE 用特殊記述
+            // SQLSV2008 / ORCL18 用特殊記述
             ///////////////////////////////////
         }
             break;
@@ -315,8 +367,8 @@ public class OiyoSqlQueryListBuilder {
         final OiyokanConstants.DatabaseType databaseType = OiyoInfoUtil
                 .getOiyoDatabaseTypeByEntitySetName(sqlInfo.getOiyoInfo(), sqlInfo.getEntitySetName());
 
-        if (OiyokanConstants.DatabaseType.MSSQL2008 != databaseType //
-                && OiyokanConstants.DatabaseType.ORACLE != databaseType) {
+        if (OiyokanConstants.DatabaseType.SQLSV2008 != databaseType //
+                && OiyokanConstants.DatabaseType.ORCL18 != databaseType) {
             if (uriInfo.getTopOption() != null) {
                 sqlInfo.getSqlBuilder().append(" LIMIT ");
                 sqlInfo.getSqlBuilder().append(uriInfo.getTopOption().getValue());
