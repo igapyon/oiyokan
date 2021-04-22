@@ -38,6 +38,7 @@ import jp.oiyokan.OiyokanEdmProvider;
 import jp.oiyokan.OiyokanEntityCollectionBuilderInterface;
 import jp.oiyokan.OiyokanMessages;
 import jp.oiyokan.basic.sql.OiyoSqlQueryListBuilder;
+import jp.oiyokan.basic.sql.OiyoSqlQueryListExpr;
 import jp.oiyokan.common.OiyoCommonJdbcUtil;
 import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.common.OiyoInfoUtil;
@@ -96,7 +97,7 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
         }
 
         // [IY1061] OData v4: QUERY
-        log.info(OiyokanMessages.IY1061 + ": " + edmEntitySet.getName());
+        log.debug(OiyokanMessages.IY1061 + ": " + edmEntitySet.getName());
 
         //////////////////////////////////////////////
         // Oiyokan が対応しない処理を拒絶するための記述.
@@ -236,6 +237,22 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
         final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, entitySetName);
 
         OiyoSqlQueryListBuilder basicSqlBuilder = new OiyoSqlQueryListBuilder(oiyoInfo, entitySetName);
+
+        /////////////
+        // 特殊処理
+        // EQで結ばれたPropertyを探す目的で WHERE処理を最初に実行.
+        {
+            log.trace("TRACE: Check $filter. Find property used EQ and remember.");
+            final OiyoSqlInfo sqlInfoDummy = new OiyoSqlInfo(oiyoInfo, entitySet.getName());
+            if (uriInfo.getFilterOption() != null) {
+                new OiyoSqlQueryListExpr(oiyoInfo, sqlInfoDummy).expand(uriInfo.getFilterOption().getExpression());
+            }
+            for (OiyoSettingsProperty prop : sqlInfoDummy.getBinaryOperatorEqPropertyList()) {
+                // 1パス目で見つかった property を 2パス目の OiyoSqlInfo に複写.
+                log.trace("TRACE: Copy property to main OiyoSqlInfo.: " + prop.getName());
+                basicSqlBuilder.getSqlInfo().getBinaryOperatorEqPropertyList().add(prop);
+            }
+        }
 
         // UriInfo 情報を元に SQL文を組み立て.
         basicSqlBuilder.buildSelectQuery(uriInfo);

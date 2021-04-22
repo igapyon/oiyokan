@@ -40,7 +40,6 @@ import jp.oiyokan.dto.OiyoSettingsProperty;
  * SQL文を構築するための簡易クラス.
  */
 public class OiyoSqlQueryListBuilder {
-    @SuppressWarnings("unused")
     private static final Log log = LogFactory.getLog(OiyoSqlQueryListBuilder.class);
 
     /**
@@ -224,13 +223,15 @@ public class OiyoSqlQueryListBuilder {
             boolean isAlreadyAdded = false;
             for (String keyName : keyOrEqTarget) {
                 if (keyName.equals(propName)) {
-                    // すでに登録済み
+                    // すでにKeyとして登録済み
+                    log.trace("TRACE: $filter において EQ で使用された property について、これは Key でも対象としてマーク済みでした: " + propName);
                     isAlreadyAdded = true;
                     break;
                 }
             }
             if (!isAlreadyAdded) {
-                // EQで結ばれている項目について、$select 指定がなくとも返却値に設定するため対象として記憶。
+                // $filterにおいてEQで結ばれている項目について、$select 指定がなくとも返却値に設定するため対象として記憶。
+                log.trace("TRACE: $filter において EQ で使用された property を Key 同様に $select 対象項目に追加: " + propName);
                 keyOrEqTarget.add(propName);
             }
         }
