@@ -117,14 +117,14 @@ public class OiyokanEntityProcessor implements EntityProcessor {
             }
 
             // 3. serialize
-            EdmEntityType entityType = edmEntitySet.getEntityType();
+            EdmEntityType edmEntityType = edmEntitySet.getEntityType();
 
             ContextURL contextUrl = ContextURL.with().entitySet(edmEntitySet).build();
             // expand and select currently not supported
             EntitySerializerOptions options = EntitySerializerOptions.with().contextURL(contextUrl).build();
 
             ODataSerializer serializer = odata.createSerializer(responseFormat);
-            SerializerResult serializerResult = serializer.entity(serviceMetadata, entityType, entity, options);
+            SerializerResult serializerResult = serializer.entity(serviceMetadata, edmEntityType, entity, options);
             InputStream entityStream = serializerResult.getContent();
 
             // 4. configure the response object

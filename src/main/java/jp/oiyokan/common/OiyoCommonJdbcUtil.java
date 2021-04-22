@@ -156,26 +156,26 @@ public class OiyoCommonJdbcUtil {
         // チェック実施のみなので左辺がない。
         OiyoEdmUtil.string2EdmType(oiyoProp.getEdmType());
 
-        final CsdlProperty csdlProp = new CsdlProperty();
-        csdlProp.setName(oiyoProp.getName());
-        csdlProp.setType(oiyoProp.getEdmType());
+        final CsdlProperty csdlProperty = new CsdlProperty();
+        csdlProperty.setName(oiyoProp.getName());
+        csdlProperty.setType(oiyoProp.getEdmType());
         if (oiyoProp.getMaxLength() != null) {
-            csdlProp.setMaxLength(oiyoProp.getMaxLength());
+            csdlProperty.setMaxLength(oiyoProp.getMaxLength());
         }
         if (oiyoProp.getNullable() != null) {
-            csdlProp.setNullable(oiyoProp.getNullable());
+            csdlProperty.setNullable(oiyoProp.getNullable());
         }
         if (oiyoProp.getPrecision() != null) {
-            csdlProp.setPrecision(oiyoProp.getPrecision());
+            csdlProperty.setPrecision(oiyoProp.getPrecision());
         }
         if (oiyoProp.getScale() != null) {
-            csdlProp.setScale(oiyoProp.getScale());
+            csdlProperty.setScale(oiyoProp.getScale());
         }
         if (oiyoProp.getDbDefault() != null) {
-            csdlProp.setDefaultValue(oiyoProp.getDbDefault());
+            csdlProperty.setDefaultValue(oiyoProp.getDbDefault());
         }
 
-        return csdlProp;
+        return csdlProperty;
     }
 
     /**

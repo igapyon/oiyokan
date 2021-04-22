@@ -67,36 +67,36 @@ public class OiyoBasicJdbcEntityTypeBuilder {
      */
     public CsdlEntityType getEntityType() throws ODataApplicationException {
         // CSDL要素型として情報を組み上げ.
-        final CsdlEntityType entityType = new CsdlEntityType();
-        entityType.setName(entitySet.getEntityType().getName());
+        final CsdlEntityType csdlEntityType = new CsdlEntityType();
+        csdlEntityType.setName(entitySet.getEntityType().getName());
 
         // 基本的な動作: 内部データベースである h2 データベースから該当する Oiyo による情報取得.
-        final List<CsdlProperty> propertyList = new ArrayList<>();
-        entityType.setProperties(propertyList);
+        final List<CsdlProperty> csdlPropertyList = new ArrayList<>();
+        csdlEntityType.setProperties(csdlPropertyList);
 
         OiyoSettingsEntitySet oiyoEntitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, entitySet.getName());
 
         for (OiyoSettingsProperty oiyoProp : oiyoEntitySet.getEntityType().getProperty()) {
-            propertyList.add(OiyoCommonJdbcUtil.settingsProperty2CsdlProperty(oiyoProp));
+            csdlPropertyList.add(OiyoCommonJdbcUtil.settingsProperty2CsdlProperty(oiyoProp));
         }
 
         // テーブルのキー情報
-        final List<CsdlPropertyRef> keyRefList = new ArrayList<>();
+        final List<CsdlPropertyRef> csdlKeyRefList = new ArrayList<>();
         for (String key : oiyoEntitySet.getEntityType().getKeyName()) {
-            CsdlPropertyRef propertyRef = new CsdlPropertyRef();
-            propertyRef.setName(key);
-            keyRefList.add(propertyRef);
+            CsdlPropertyRef csdlPropertyRef = new CsdlPropertyRef();
+            csdlPropertyRef.setName(key);
+            csdlKeyRefList.add(csdlPropertyRef);
         }
 
-        if (keyRefList.size() == 0) {
+        if (csdlKeyRefList.size() == 0) {
             // キーがないものは OData 的に不都合があるため警告する。
             // TODO FIXME メッセージ抽出
             log.error("OData v4: WARNING: No ID: " + entitySet.getName());
             log.error("OData v4: WARNING: Set primary key on Oiyo table: " + entitySet.getName());
         }
 
-        entityType.setKey(keyRefList);
+        csdlEntityType.setKey(csdlKeyRefList);
 
-        return entityType;
+        return csdlEntityType;
     }
 }
