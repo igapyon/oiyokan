@@ -214,10 +214,27 @@ public class OiyoSqlQueryListBuilder {
     private void expandSelectEach(UriInfo uriInfo, boolean isSecondPass) throws ODataApplicationException {
         final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, sqlInfo.getEntitySetName());
 
-        final List<String> keyTarget = new ArrayList<>();
+        final List<String> keyOrEqTarget = new ArrayList<>();
         for (String keyName : entitySet.getEntityType().getKeyName()) {
-            keyTarget.add(OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, entitySet.getName(), keyName).getName());
+            // Key項目について、$select 指定がなくとも返却値に設定するため対象として記憶。
+            keyOrEqTarget.add(OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, entitySet.getName(), keyName).getName());
         }
+        for (OiyoSettingsProperty property : sqlInfo.getBinaryOperatorEqPropertyList()) {
+            final String propName = property.getName();
+            boolean isAlreadyAdded = false;
+            for (String keyName : keyOrEqTarget) {
+                if (keyName.equals(propName)) {
+                    // すでに登録済み
+                    isAlreadyAdded = true;
+                    break;
+                }
+            }
+            if (!isAlreadyAdded) {
+                // EQで結ばれている項目について、$select 指定がなくとも返却値に設定するため対象として記憶。
+                keyOrEqTarget.add(propName);
+            }
+        }
+
         int itemCount = 0;
         for (SelectItem item : uriInfo.getSelectOption().getSelectItems()) {
             for (UriResource res : item.getResourcePath().getUriResourceParts()) {
@@ -232,20 +249,20 @@ public class OiyoSqlQueryListBuilder {
                     sqlInfo.getSelectColumnNameList().add(prop.getName());
                 }
                 sqlInfo.getSqlBuilder().append(OiyoCommonJdbcUtil.escapeKakkoFieldName(sqlInfo, prop.getDbName()));
-                for (int index = 0; index < keyTarget.size(); index++) {
-                    if (keyTarget.get(index).equals(prop.getName())) {
+                for (int index = 0; index < keyOrEqTarget.size(); index++) {
+                    if (keyOrEqTarget.get(index).equals(prop.getName())) {
                         // 検索項目がキーであれば、すでに検索済みキーとしてリストから除去。
                         // これは、キー項目は選択された検索項目であろうがなかろうが検索する必要があるための一連の処理。
-                        keyTarget.remove(index);
+                        keyOrEqTarget.remove(index);
                         break;
                     }
                 }
             }
         }
-        for (int index = 0; index < keyTarget.size(); index++) {
+        for (int index = 0; index < keyOrEqTarget.size(); index++) {
             // レコードを一意に表すID項目が必須。検索対象にない場合は追加.
             sqlInfo.getSqlBuilder().append(itemCount++ == 0 ? "" : ",");
-            final String unescapedName = OiyoCommonJdbcUtil.unescapeKakkoFieldName(keyTarget.get(index));
+            final String unescapedName = OiyoCommonJdbcUtil.unescapeKakkoFieldName(keyOrEqTarget.get(index));
             // SELECTの検索項目名を追加。
             sqlInfo.getSelectColumnNameList().add(unescapedName);
             sqlInfo.getSqlBuilder().append(unescapedName);
