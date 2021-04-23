@@ -15,7 +15,7 @@
   "entitySet": [
     {
       "name": "ODataTests1",
-      "description": "Basic UnitTest table less NOT NULL column.",
+      "description": "Description.",
       "dbSettingName": "oiyoUnitTestDb",
       "canCreate": true,
       "canRead": true,
@@ -304,7 +304,7 @@
     },
     {
       "name": "ODataTests3",
-      "description": "Test table with NOT NULL column.",
+      "description": "Description.",
       "dbSettingName": "oiyoUnitTestDb",
       "canCreate": true,
       "canRead": true,
@@ -588,8 +588,7 @@
             "edmType": "Edm.Int64",
             "jdbcType": "Types.BIGINT",
             "dbType": "BIGINT",
-            "nullable": false,
-            "dbDefault": "NEXT VALUE FOR \"PUBLIC\".\"SYSTEM_SEQUENCE_BE6812E3_62C1_4592_B5D7_9C555145B509\""
+            "nullable": false
           },
           {
             "name": "Name",
