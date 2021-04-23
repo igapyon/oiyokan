@@ -41,7 +41,7 @@ import jp.oiyokan.dto.OiyoSettingsEntitySet;
 /**
  * Generate oiyokan-unittest-settings.json
  */
-class GenOiyokanUnittestSettingsJsonTest {
+class Gen01OiyokanUnittestSettingsJsonTest {
     private static final String TARGET_UNITTEST_DATABASE = "oiyoUnitTestDb";
 
     @Test

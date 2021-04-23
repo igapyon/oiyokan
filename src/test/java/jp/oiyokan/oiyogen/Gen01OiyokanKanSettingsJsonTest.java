@@ -34,7 +34,7 @@ import jp.oiyokan.dto.OiyoSettingsProperty;
 /**
  * Generate oiyokanKan-settings.json
  */
-class GenOiyokanKanSettingsJsonTest {
+class Gen01OiyokanKanSettingsJsonTest {
     @Test
     void test01() throws Exception {
         final OiyoSettings oiyoSettings = new OiyoSettings();
