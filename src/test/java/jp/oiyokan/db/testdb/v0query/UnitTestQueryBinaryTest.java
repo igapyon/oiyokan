@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jp.oiyokan.db.testdb.query;
+package jp.oiyokan.db.testdb.v0query;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

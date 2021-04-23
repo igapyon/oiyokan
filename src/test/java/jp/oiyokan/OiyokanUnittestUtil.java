@@ -23,6 +23,9 @@ import jp.oiyokan.dto.OiyoSettings;
 import jp.oiyokan.dto.OiyoSettingsDatabase;
 import jp.oiyokan.dto.OiyoSettingsEntitySet;
 
+/**
+ * テスト実施用途のユーティリティクラス。
+ */
 public class OiyokanUnittestUtil {
     private static final Log log = LogFactory.getLog(OiyokanUnittestUtil.class);
 
