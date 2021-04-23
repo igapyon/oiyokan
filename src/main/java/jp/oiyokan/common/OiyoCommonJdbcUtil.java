@@ -94,8 +94,7 @@ public class OiyoCommonJdbcUtil {
         // Class.forName(settingsDatabase.getJdbcDriver());
 
         // TODO message
-        log.debug("TRACE: DEBUG: DB connect: " + settingsDatabase.getName() + " (" + settingsDatabase.getDescription()
-                + ")");
+        log.debug("DEBUG: DB connect: " + settingsDatabase.getName() + " (" + settingsDatabase.getDescription() + ")");
 
         try {
             if (settingsDatabase.getJdbcUser() == null || settingsDatabase.getJdbcUser().trim().length() == 0) {

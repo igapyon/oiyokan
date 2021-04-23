@@ -41,7 +41,7 @@ class UnitTestEntityBasic02Test {
                 + "  \"Name\":\"Name\",\n" //
                 + "  \"Description\":\"Description\"\n" + "}");
         String result = OiyokanTestUtil.stream2String(resp.getContent());
-        final String idString = OiyokanTestUtil.getIdFromResult(result);
+        final String idString = OiyokanTestUtil.getValueFromResultByKey(result, "ID");
 
         assertEquals(201, resp.getStatusCode());
 

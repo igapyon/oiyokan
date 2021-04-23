@@ -84,7 +84,7 @@ public class OiyoBasicJdbcEntityOneBuilder {
         final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, edmEntitySet.getName());
 
         // [IY1071] OData v4: ENTITY: READ
-        log.info(OiyokanMessages.IY1071 + ": " + edmEntitySet.getName());
+        log.debug(OiyokanMessages.IY1071 + ": " + edmEntitySet.getName());
 
         final OiyoSqlInfo sqlInfo = new OiyoSqlInfo(oiyoInfo, entitySet.getName());
         new OiyoSqlQueryOneBuilder(oiyoInfo, sqlInfo).buildSelectOneQuery(edmEntitySet.getName(), keyPredicates);
@@ -235,7 +235,7 @@ public class OiyoBasicJdbcEntityOneBuilder {
                             }
                         }
                         if (propValue == null) {
-                            log.error("TRACE: propKey:" + keyName + "に対応する入力なし.");
+                            log.trace("TRACE: propKey:" + keyName + "に対応する入力なし.");
                             if (generatedKeys.size() == 0) {
                                 // [M217] UNEXPECTED: Can't retrieve PreparedStatement#getGeneratedKeys: Fail to
                                 // map auto generated key field.

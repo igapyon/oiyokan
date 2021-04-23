@@ -158,15 +158,14 @@ public class OiyokanTestUtil {
         }
     }
 
-    public static final String getIdFromResult(final String result) {
-        final Pattern pat = Pattern.compile("[,][\"]ID[\"][:].*?[,]");
+    public static final String getValueFromResultByKey(final String result, final String key) {
+        final Pattern pat = Pattern.compile("[,][\"]" + key + "[\"][:].*?[,]");
         final Matcher mat = pat.matcher(result);
 
         for (; mat.find();) {
             final String word = mat.group();
             final String idColonNumber = word.substring(1, word.length() - 1);
-            // System.err.println(idColonNumber);
-            final String number = idColonNumber.substring(5);
+            final String number = idColonNumber.substring(3 + key.length());
             return number;
         }
         throw new IllegalArgumentException("Unexpected");
