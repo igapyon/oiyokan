@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.olingo.commons.api.http.HttpMethod;
 import org.apache.olingo.server.api.OData;
@@ -156,4 +158,17 @@ public class OiyokanTestUtil {
         }
     }
 
+    public static final String getIdFromResult(final String result) {
+        final Pattern pat = Pattern.compile("[,][\"]ID[\"][:].*?[,]");
+        final Matcher mat = pat.matcher(result);
+
+        for (; mat.find();) {
+            final String word = mat.group();
+            final String idColonNumber = word.substring(1, word.length() - 1);
+            // System.err.println(idColonNumber);
+            final String number = idColonNumber.substring(5);
+            return number;
+        }
+        throw new IllegalArgumentException("Unexpected");
+    }
 }

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jp.oiyokan.db.testdb.v0entity;
+package jp.oiyokan.db.testdb.entity;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -27,30 +27,34 @@ import jp.oiyokan.util.OiyokanTestUtil;
 /**
  * Entityの基本的なテスト.
  */
-class UnitTestEntityPatchTest {
+class UnitTestEntityBasic01Test {
+
     /**
-     * PATCH(INSERT) + DELETE
+     * CREATE + DELETE
      */
     @Test
     void test01() throws Exception {
+        @SuppressWarnings("unused")
         final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
 
-        final int TEST_ID = OiyokanTestUtil.getNextUniqueId();
+        // INSERT + DELETE
+        ODataResponse resp = OiyokanTestUtil.callRequestPost("/ODataTests3", "{\n" //
+                + "  \"Name\":\"Name\",\n" //
+                + "  \"Description\":\"Description\"\n" + "}");
+        String result = OiyokanTestUtil.stream2String(resp.getContent());
+        final String idString = OiyokanTestUtil.getIdFromResult(result);
+        System.err.println("TRACE: " + result);
+        assertEquals(201, resp.getStatusCode(), "SQLSV2008でエラー。(既知の問題). varbinaryとtextと混同.");
 
-        // UPDATE (PATCH)
-        ODataResponse resp = OiyokanTestUtil.callRequestPatch("/ODataTests3(" + TEST_ID + ")", "{\n" //
-                + "  \"Name\":\"Name2\",\n" //
-                + "  \"Description\":\"Description2\"\n" + "}", false, false);
-        assertEquals(204, resp.getStatusCode());
-
-        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests3(" + TEST_ID + ")", null);
+        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests3(" + idString + ")", null);
         assertEquals(200, resp.getStatusCode());
 
         // DELETE
-        resp = OiyokanTestUtil.callRequestDelete("/ODataTests3(" + TEST_ID + ")");
+        resp = OiyokanTestUtil.callRequestDelete("/ODataTests3(" + idString + ")");
         assertEquals(204, resp.getStatusCode());
 
-        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests3(" + TEST_ID + ")", null);
+        // NOT FOUND after DELETED
+        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests3(" + idString + ")", null);
         assertEquals(404, resp.getStatusCode());
     }
 }
