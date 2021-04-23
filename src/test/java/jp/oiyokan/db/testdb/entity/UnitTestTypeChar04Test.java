@@ -27,11 +27,12 @@ import jp.oiyokan.common.OiyoUrlUtil;
 import jp.oiyokan.util.OiyokanTestUtil;
 
 /**
- * Entityアクセスのフル桁に着眼したテスト.
+ * 後方空白がTRIMされた状態のCHARでの挙動確認。
  */
 class UnitTestTypeChar04Test {
     @Test
     void test04() throws Exception {
+        @SuppressWarnings("unused")
         final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
 
         final String decVal = "1404";
@@ -46,22 +47,22 @@ class UnitTestTypeChar04Test {
                         + "  \"StringVar255\": \"ABCXYZ\"\n" //
                         + "}");
         String result = OiyokanTestUtil.stream2String(resp.getContent());
-        System.err.println("TRACE: " + result);
+        // System.err.println("TRACE: " + result);
         assertEquals(201, resp.getStatusCode(), //
                 "CHAR項目がINSERTできることの確認. MySQL ではここが失敗する。後方に半角スペースを付与が必要 (既知の問題)");
 
         resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests2", null);
         result = OiyokanTestUtil.stream2String(resp.getContent());
-        System.err.println(result);
+        // System.err.println(result);
         assertEquals(200, resp.getStatusCode());
         assertTrue(result.indexOf("  3456  ") >= 0, "CHAR型の後方FILLがおこなわれること.");
 
-        final String uri = "Decimal1=" + decVal + ",StringChar8='  3456  ',StringVar255='ABCXYZ'";
+        final String uri = "Decimal1=" + decVal + ",StringChar8='  3456',StringVar255='ABCXYZ'";
         // System.err.println("uri: " + uri);
         resp = OiyokanTestUtil.callRequestGetResponse( //
                 "/ODataTests2(" + OiyoUrlUtil.encodeUrlQuery(uri) + ")", null);
         result = OiyokanTestUtil.stream2String(resp.getContent());
-        System.err.println(result);
+        // System.err.println(result);
         assertEquals(200, resp.getStatusCode());
 
         // DELETE

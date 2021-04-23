@@ -27,7 +27,7 @@ import jp.oiyokan.common.OiyoUrlUtil;
 import jp.oiyokan.util.OiyokanTestUtil;
 
 /**
- * Entityアクセスのフル桁に着眼したテスト.
+ * 後方空白が適切な状態での挙動確認。
  */
 class UnitTestTypeChar03Test {
     @Test
@@ -41,7 +41,7 @@ class UnitTestTypeChar03Test {
         ODataResponse resp = OiyokanTestUtil.callRequestPost("/ODataTests2", //
                 "{\n" //
                         + "  \"Decimal1\": " + decVal + ",\n" //
-                        + "  \"StringChar8\": \"  3456\",\n" //
+                        + "  \"StringChar8\": \"  3456  \",\n" //
                         + "  \"Name\": \"CHARキー確認\",\n" //
                         + "  \"Description\": \"CHARキーの挙動確認\",\n" //
                         + "  \"StringVar255\": \"ABCXYZ\"\n" //
@@ -57,7 +57,7 @@ class UnitTestTypeChar03Test {
         assertEquals(200, resp.getStatusCode());
         assertTrue(result.indexOf("  3456  ") >= 0, "CHAR型の後方FILLがおこなわれること.");
 
-        final String uri = "Decimal1=" + decVal + ",StringChar8='  3456',StringVar255='ABCXYZ'";
+        final String uri = "Decimal1=" + decVal + ",StringChar8='  3456  ',StringVar255='ABCXYZ'";
         // System.err.println("uri: " + uri);
         resp = OiyokanTestUtil.callRequestGetResponse( //
                 "/ODataTests2(" + OiyoUrlUtil.encodeUrlQuery(uri) + ")", null);

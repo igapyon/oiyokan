@@ -43,7 +43,7 @@ class UnitTestEntityBasic01Test {
                 + "  \"Description\":\"Description\"\n" + "}");
         String result = OiyokanTestUtil.stream2String(resp.getContent());
         final String idString = OiyokanTestUtil.getValueFromResultByKey(result, "ID");
-        System.err.println("TRACE: " + result);
+        // System.err.println("TRACE: " + result);
         assertEquals(201, resp.getStatusCode(), "SQLSV2008でエラー。(既知の問題). varbinaryとtextと混同.");
 
         resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests3(" + idString + ")", null);

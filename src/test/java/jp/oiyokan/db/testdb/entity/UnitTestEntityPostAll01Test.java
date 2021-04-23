@@ -65,7 +65,7 @@ class UnitTestEntityPostAll01Test {
 
         resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests3(" + idString + ")", null);
         result = OiyokanTestUtil.stream2String(resp.getContent());
-        System.err.println(result);
+        // System.err.println(result);
         assertEquals(200, resp.getStatusCode());
 
         // DELETE
