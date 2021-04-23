@@ -32,6 +32,7 @@ import jp.oiyokan.util.OiyokanTestUtil;
 class UnitTestTypeChar03Test {
     @Test
     void test03() throws Exception {
+        @SuppressWarnings("unused")
         final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
 
         final String decVal = "1404";
@@ -40,28 +41,28 @@ class UnitTestTypeChar03Test {
         ODataResponse resp = OiyokanTestUtil.callRequestPost("/ODataTests2", //
                 "{\n" //
                         + "  \"Decimal1\": " + decVal + ",\n" //
-                        + "  \"StringChar8\": \"  3456  \",\n" //
+                        + "  \"StringChar8\": \"  3456\",\n" //
                         + "  \"Name\": \"CHARキー確認\",\n" //
                         + "  \"Description\": \"CHARキーの挙動確認\",\n" //
                         + "  \"StringVar255\": \"ABCXYZ\"\n" //
                         + "}");
         String result = OiyokanTestUtil.stream2String(resp.getContent());
-        System.err.println("TRACE: " + result);
+        // System.err.println("TRACE: " + result);
         assertEquals(201, resp.getStatusCode(), //
-                "CHAR項目がINSERTできることの確認. MySQL ではここが失敗する。後方に半角スペースを付与が必要 (既知の問題)");
+                "CHAR項目がINSERTできることの確認. MySQL ではここが失敗する。後方に半角スペースを付与が必要 (既知の問題)。でもこれ対応済みだったはず。");
 
         resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests2", null);
         result = OiyokanTestUtil.stream2String(resp.getContent());
-        System.err.println(result);
+        // System.err.println(result);
         assertEquals(200, resp.getStatusCode());
         assertTrue(result.indexOf("  3456  ") >= 0, "CHAR型の後方FILLがおこなわれること.");
 
-        final String uri = "Decimal1=" + decVal + ",StringChar8='  3456  ',StringVar255='ABCXYZ'";
+        final String uri = "Decimal1=" + decVal + ",StringChar8='  3456',StringVar255='ABCXYZ'";
         // System.err.println("uri: " + uri);
         resp = OiyokanTestUtil.callRequestGetResponse( //
                 "/ODataTests2(" + OiyoUrlUtil.encodeUrlQuery(uri) + ")", null);
         result = OiyokanTestUtil.stream2String(resp.getContent());
-        System.err.println(result);
+        // System.err.println(result);
         assertEquals(200, resp.getStatusCode());
 
         // DELETE
