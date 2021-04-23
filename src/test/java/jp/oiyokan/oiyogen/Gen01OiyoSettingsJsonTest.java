@@ -43,7 +43,7 @@ import jp.oiyokan.dto.OiyoSettingsProperty;
 /**
  * 内部データベース用のCSDL用内部テーブルのDDLをコマンドライン生成.
  */
-class GenOiyoSettingsJsonTest {
+class Gen01OiyoSettingsJsonTest {
     private static final String TARGET_UNITTEST_DATABASE = "oiyoUnitTestDb";
 
     private static final boolean SHOW_JDBCINFO = true;

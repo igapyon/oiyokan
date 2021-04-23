@@ -34,7 +34,7 @@ import jp.oiyokan.dto.OiyoSettingsProperty;
 /**
  * 内部データベース用のCSDL用内部テーブルのDDLをコマンドライン生成.
  */
-class GenTargetDdlFromOiyoSettingsTest {
+class Gen02TargetDdlFromOiyoSettingsTest {
     @Test
     void test01() throws Exception {
         new File("./target/").mkdirs();

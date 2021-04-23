@@ -17,10 +17,10 @@
       "name": "Oiyokans",
       "description": "Oiyokan internal info. Do not change.",
       "dbSettingName": "oiyokanKan",
-      "canCreate": true,
+      "canCreate": false,
       "canRead": true,
-      "canUpdate": true,
-      "canDelete": true,
+      "canUpdate": false,
+      "canDelete": false,
       "omitCountAll": false,
       "jdbcStmtTimeout": 30,
       "entityType": {
@@ -37,9 +37,7 @@
             "jdbcSetMethod": "setString",
             "nullable": false,
             "maxLength": 20,
-            "lengthFixed": false,
-            "precision": null,
-            "scale": null
+            "lengthFixed": false
           },
           {
             "name": "KeyValue",
@@ -53,8 +51,8 @@
             "lengthFixed": false,
             "precision": null,
             "scale": null,
-            "dbDefault": "Value",
-            "filterTreatNullAsBlank": false
+            "dbDefault": "Default Value",
+            "filterTreatNullAsBlank": true
           }
         ]
       }

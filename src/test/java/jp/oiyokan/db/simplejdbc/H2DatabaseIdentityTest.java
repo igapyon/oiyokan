@@ -27,7 +27,7 @@ import org.junit.jupiter.api.Test;
 import jp.oiyokan.OiyokanUnittestUtil;
 
 /**
- * ごく基本的で大雑把な JDBC + h2 database 挙動の確認.
+ * h2 database そのものの挙動を確認するためのテスト.
  */
 class H2DatabaseIdentityTest {
     @Test

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jp.oiyokan.db.testdb.query;
+package jp.oiyokan.db.testdb.v0entity;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -22,24 +22,35 @@ import org.junit.jupiter.api.Test;
 
 import jp.oiyokan.OiyokanUnittestUtil;
 import jp.oiyokan.common.OiyoInfo;
-import jp.oiyokan.common.OiyoUrlUtil;
 import jp.oiyokan.util.OiyokanTestUtil;
 
 /**
- * フィルタの型に着眼したテスト.
+ * Entityの基本的なテスト.
  */
-class UnitTestQueryNotTest {
+class UnitTestEntityPatchTest {
+    /**
+     * PATCH(INSERT) + DELETE
+     */
     @Test
-    void testNotA() throws Exception {
+    void test01() throws Exception {
         final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
 
-        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1", OiyoUrlUtil
-                .encodeUrlQuery("&$filter=not contains(StringVar255,'VARCHAR255') &$count=true &$select=ID"));
-        final String result = OiyokanTestUtil.stream2String(resp.getContent());
+        final int TEST_ID = OiyokanTestUtil.getNextUniqueId();
 
-        // System.err.println("result: " + result);
-        assertEquals("{\"@odata.context\":\"$metadata#ODataTests1\",\"@odata.count\":1,\"value\":[{\"ID\":204}]}",
-                result);
+        // UPDATE (PATCH)
+        ODataResponse resp = OiyokanTestUtil.callRequestPatch("/ODataTests3(" + TEST_ID + ")", "{\n" //
+                + "  \"Name\":\"Name2\",\n" //
+                + "  \"Description\":\"Description2\"\n" + "}", false, false);
+        assertEquals(204, resp.getStatusCode());
+
+        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests3(" + TEST_ID + ")", null);
         assertEquals(200, resp.getStatusCode());
+
+        // DELETE
+        resp = OiyokanTestUtil.callRequestDelete("/ODataTests3(" + TEST_ID + ")");
+        assertEquals(204, resp.getStatusCode());
+
+        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests3(" + TEST_ID + ")", null);
+        assertEquals(404, resp.getStatusCode());
     }
 }
