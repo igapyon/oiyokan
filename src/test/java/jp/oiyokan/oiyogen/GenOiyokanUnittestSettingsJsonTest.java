@@ -44,13 +44,6 @@ import jp.oiyokan.dto.OiyoSettingsEntitySet;
 class GenOiyokanUnittestSettingsJsonTest {
     private static final String TARGET_UNITTEST_DATABASE = "oiyoUnitTestDb";
 
-    private static final boolean SHOW_JDBCINFO = true;
-
-    /**
-     * 全テーブルを取得.
-     * 
-     * Oiyoテーブルのスキーマを取得したい場合にのみ JUnit を実行する。
-     */
     @Test
     void test01() throws Exception {
         final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
@@ -64,15 +57,6 @@ class GenOiyokanUnittestSettingsJsonTest {
             ResultSet rset = connTargetDb.getMetaData().getTables(null, "%", "%", new String[] { "TABLE", "VIEW" });
             for (; rset.next();) {
                 final String tableName = rset.getString("TABLE_NAME");
-                // final String tableCat = rset.getString("TABLE_CAT");
-
-                if (SHOW_JDBCINFO) {
-                    System.err.println(
-                            "table: " + rset.getString("TABLE_NAME") + " (" + rset.getString("TABLE_TYPE") + ")");
-                    System.err.println("    TABLE_CAT   : " + rset.getString("TABLE_CAT"));
-                    // System.err.println(" TABLE_SCHEM : " + rset.getString("TABLE_SCHEM"));
-                }
-
                 tableNameList.add(tableName);
             }
 
@@ -81,31 +65,28 @@ class GenOiyokanUnittestSettingsJsonTest {
             final OiyoSettings oiyoSettings = new OiyoSettings();
             oiyoSettings.setEntitySet(new ArrayList<>());
 
-            if (true) {
-                // データベース設定も生成.
-                oiyoSettings.setNamespace("Oiyokan");
-                oiyoSettings.setContainerName("Container");
-                oiyoSettings.setDatabase(new ArrayList<>());
+            // データベース設定も生成.
+            oiyoSettings.setNamespace("Oiyokan");
+            oiyoSettings.setContainerName("Container");
+            oiyoSettings.setDatabase(new ArrayList<>());
 
-                final String[][] DATABASE_SETTINGS = new String[][] { //
-                        { "oiyoUnitTestDb", "h2", "Oiyokan internal Target Test DB. Used for build unit test.", //
-                                "org.h2.Driver", //
-                                "jdbc:h2:mem:oiyoUnitTestDb;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=FALSE;MODE=MSSQLServer", //
-                                "sa", "" }, //
-                };
+            final String[][] DATABASE_SETTINGS = new String[][] { //
+                    { "oiyoUnitTestDb", "h2", "Oiyokan internal Target Test DB. Used for build unit test.", //
+                            "org.h2.Driver", //
+                            "jdbc:h2:mem:oiyoUnitTestDb;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=FALSE;MODE=MSSQLServer", //
+                            "sa", "" }, //
+            };
 
-                for (String[] databaseSetting : DATABASE_SETTINGS) {
-                    OiyoSettingsDatabase database = new OiyoSettingsDatabase();
-                    oiyoSettings.getDatabase().add(database);
-                    database.setName(databaseSetting[0]);
-                    database.setType(databaseSetting[1]);
-                    database.setDescription(databaseSetting[2]);
-                    database.setJdbcDriver(databaseSetting[3]);
-                    database.setJdbcUrl(databaseSetting[4]);
-                    database.setJdbcUser(databaseSetting[5]);
-                    database.setJdbcPass(databaseSetting[6]);
-                }
-
+            for (String[] databaseSetting : DATABASE_SETTINGS) {
+                OiyoSettingsDatabase database = new OiyoSettingsDatabase();
+                oiyoSettings.getDatabase().add(database);
+                database.setName(databaseSetting[0]);
+                database.setType(databaseSetting[1]);
+                database.setDescription(databaseSetting[2]);
+                database.setJdbcDriver(databaseSetting[3]);
+                database.setJdbcUrl(databaseSetting[4]);
+                database.setJdbcUser(databaseSetting[5]);
+                database.setJdbcPass(databaseSetting[6]);
             }
 
             for (String tableName : tableNameList) {
@@ -153,7 +134,7 @@ class GenOiyokanUnittestSettingsJsonTest {
             final File generateFile = new File(
                     "./target/generated-oiyokan/auto-generated-oiyokan-unittest-settings.json");
             FileUtils.writeStringToFile(generateFile, writer.toString(), "UTF-8");
-            System.err.println("sample oiyokan setting file generated: " + generateFile.getCanonicalPath());
+            System.err.println("oiyokan unittest setting file auto-generated: " + generateFile.getCanonicalPath());
         }
     }
 }

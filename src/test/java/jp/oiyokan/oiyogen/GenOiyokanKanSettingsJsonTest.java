@@ -120,6 +120,6 @@ class GenOiyokanKanSettingsJsonTest {
         new File("./target/generated-oiyokan").mkdirs();
         final File generateFile = new File("./target/generated-oiyokan/auto-generated-oiyokanKan-settings.json");
         FileUtils.writeStringToFile(generateFile, writer.toString(), "UTF-8");
-        System.err.println("sample oiyokan setting file generated: " + generateFile.getCanonicalPath());
+        System.err.println("oiyokan kanri setting file auto-generated: " + generateFile.getCanonicalPath());
     }
 }
