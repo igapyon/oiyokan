@@ -24,12 +24,9 @@ import org.junit.jupiter.api.Test;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jp.oiyokan.OiyokanConstants;
-import jp.oiyokan.common.OiyoCommonJdbcUtil;
 import jp.oiyokan.dto.OiyoSettings;
 import jp.oiyokan.dto.OiyoSettingsDatabase;
 import jp.oiyokan.dto.OiyoSettingsEntitySet;
-import jp.oiyokan.dto.OiyoSettingsEntityType;
-import jp.oiyokan.dto.OiyoSettingsProperty;
 
 /**
  * Generate oiyokanKan-ddl.sql
@@ -38,6 +35,7 @@ class Gen02OiyokanKanDdlFromJsonTest {
     @Test
     void test01() throws Exception {
         new File("./target/").mkdirs();
+
         final File existJsonFile = new File("./target/generated-oiyokan/auto-generated-oiyokanKan-settings.json");
         if (!existJsonFile.exists()) {
             return;
@@ -62,79 +60,7 @@ class Gen02OiyokanKanDdlFromJsonTest {
 
             OiyokanConstants.DatabaseType databaseType = OiyokanConstants.DatabaseType.valueOf(database.getType());
 
-            final OiyoSettingsEntityType entityType = entitySet.getEntityType();
-            sql.append("CREATE TABLE");
-            sql.append(" IF NOT EXISTS");
-            sql.append("\n");
-
-            sql.append("  " + OiyoCommonJdbcUtil.escapeKakkoFieldName(databaseType, entityType.getDbName()) + " (\n");
-
-            boolean isFirst = true;
-            for (OiyoSettingsProperty prop : entityType.getProperty()) {
-                sql.append("    ");
-                if (isFirst) {
-                    isFirst = false;
-                } else {
-                    sql.append(", ");
-                }
-                sql.append(OiyoCommonJdbcUtil.escapeKakkoFieldName(databaseType, prop.getDbName()));
-                if (prop.getDbDefault() != null && prop.getDbDefault().indexOf("NEXT VALUE FOR") >= 0) {
-                    // h2 database 特殊ルール
-                    sql.append(" IDENTITY");
-                } else {
-                    sql.append(" " + prop.getDbType());
-                }
-
-                if (prop.getMaxLength() != null && prop.getMaxLength() > 0) {
-                    sql.append("(" + prop.getMaxLength() + ")");
-                }
-                if (prop.getPrecision() != null && prop.getPrecision() > 0) {
-                    sql.append("(" + prop.getPrecision());
-                    if (prop.getScale() != null) {
-                        sql.append("," + prop.getScale());
-                    }
-                    sql.append(")");
-                }
-                if (prop.getDbDefault() != null) {
-                    if (prop.getDbDefault().startsWith("NEXT VALUE FOR")) {
-                        // h2 database 特殊ルール
-                    } else {
-                        sql.append(" DEFAULT " + prop.getDbDefault());
-                    }
-                }
-                if (prop.getNullable() != null && prop.getNullable() == false) {
-                    sql.append(" NOT NULL");
-                }
-                sql.append("\n");
-            }
-
-            if (entityType.getKeyName().size() > 0) {
-                sql.append("    , PRIMARY KEY(");
-                isFirst = true;
-                for (String key : entityType.getKeyName()) {
-                    if (isFirst) {
-                        isFirst = false;
-                    } else {
-                        sql.append(",");
-                    }
-
-                    OiyoSettingsProperty prop = null;
-                    for (OiyoSettingsProperty look : entitySet.getEntityType().getProperty()) {
-                        if (look.getName().equals(key)) {
-                            prop = look;
-                        }
-                    }
-                    if (prop == null) {
-                        throw new IllegalArgumentException("EntitySetからProperty定義が発見できない. JSONファイル破損の疑い.");
-                    }
-
-                    sql.append(OiyoCommonJdbcUtil.escapeKakkoFieldName(databaseType, prop.getDbName()));
-                }
-                sql.append(")\n");
-            }
-
-            sql.append("  );\n");
-            sql.append("\n");
+            OiyokanSettingsGenUtil.generateDdl(databaseType, entitySet, sql);
         }
 
         final File generateFile = new File("./target/generated-oiyokan/auto-generated-oiyokanKan-ddl.sql");

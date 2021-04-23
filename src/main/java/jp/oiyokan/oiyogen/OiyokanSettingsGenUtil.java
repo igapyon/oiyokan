@@ -234,4 +234,89 @@ public class OiyokanSettingsGenUtil {
 
         return entitySet;
     }
+
+    /**
+     * 与えられた情報から DDL を生成.
+     * 
+     * @param databaseType db type.
+     * @param entitySet    EntitySet info.
+     * @param sql          sql buinding.
+     * @throws ODataApplicationException OData App exception occured.
+     */
+    public static final void generateDdl(OiyokanConstants.DatabaseType databaseType, OiyoSettingsEntitySet entitySet,
+            StringBuilder sql) throws ODataApplicationException {
+        final OiyoSettingsEntityType entityType = entitySet.getEntityType();
+        sql.append("CREATE TABLE");
+        sql.append(" IF NOT EXISTS");
+        sql.append("\n");
+
+        sql.append("  " + OiyoCommonJdbcUtil.escapeKakkoFieldName(databaseType, entityType.getDbName()) + " (\n");
+
+        boolean isFirst = true;
+        for (OiyoSettingsProperty prop : entityType.getProperty()) {
+            sql.append("    ");
+            if (isFirst) {
+                isFirst = false;
+            } else {
+                sql.append(", ");
+            }
+            sql.append(OiyoCommonJdbcUtil.escapeKakkoFieldName(databaseType, prop.getDbName()));
+            if (prop.getDbDefault() != null && prop.getDbDefault().indexOf("NEXT VALUE FOR") >= 0) {
+                // h2 database 特殊ルール
+                sql.append(" IDENTITY");
+            } else {
+                sql.append(" " + prop.getDbType());
+            }
+
+            if (prop.getMaxLength() != null && prop.getMaxLength() > 0) {
+                sql.append("(" + prop.getMaxLength() + ")");
+            }
+            if (prop.getPrecision() != null && prop.getPrecision() > 0) {
+                sql.append("(" + prop.getPrecision());
+                if (prop.getScale() != null) {
+                    sql.append("," + prop.getScale());
+                }
+                sql.append(")");
+            }
+            if (prop.getDbDefault() != null) {
+                if (prop.getDbDefault().startsWith("NEXT VALUE FOR")) {
+                    // h2 database 特殊ルール
+                } else {
+                    sql.append(" DEFAULT " + prop.getDbDefault());
+                }
+            }
+            if (prop.getNullable() != null && prop.getNullable() == false) {
+                sql.append(" NOT NULL");
+            }
+            sql.append("\n");
+        }
+
+        if (entityType.getKeyName().size() > 0) {
+            sql.append("    , PRIMARY KEY(");
+            isFirst = true;
+            for (String key : entityType.getKeyName()) {
+                if (isFirst) {
+                    isFirst = false;
+                } else {
+                    sql.append(",");
+                }
+
+                OiyoSettingsProperty prop = null;
+                for (OiyoSettingsProperty look : entitySet.getEntityType().getProperty()) {
+                    if (look.getName().equals(key)) {
+                        prop = look;
+                    }
+                }
+                if (prop == null) {
+                    throw new IllegalArgumentException("EntitySetからProperty定義が発見できない. JSONファイル破損の疑い.");
+                }
+
+                sql.append(OiyoCommonJdbcUtil.escapeKakkoFieldName(databaseType, prop.getDbName()));
+            }
+            sql.append(")\n");
+        }
+
+        sql.append("  );\n");
+        sql.append("\n");
+    }
 }
