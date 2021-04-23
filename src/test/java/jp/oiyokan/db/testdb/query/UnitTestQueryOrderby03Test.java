@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jp.oiyokan.db.testdb.v0query;
+package jp.oiyokan.db.testdb.query;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -22,23 +22,23 @@ import org.junit.jupiter.api.Test;
 
 import jp.oiyokan.OiyokanUnittestUtil;
 import jp.oiyokan.common.OiyoInfo;
-import jp.oiyokan.common.OiyoUrlUtil;
 import jp.oiyokan.util.OiyokanTestUtil;
 
 /**
- * フィルタの型に着眼したテスト.
+ * ごく基本的な OData の挙動を確認.
  */
-class UnitTestQueryNotTest {
+class UnitTestQueryOrderby03Test {
     @Test
-    void testNotA() throws Exception {
+    void testSimpleFilter() throws Exception {
+        @SuppressWarnings("unused")
         final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
 
-        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1", OiyoUrlUtil
-                .encodeUrlQuery("&$filter=not contains(StringVar255,'VARCHAR255') &$count=true &$select=ID"));
+        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1",
+                "$top=2&$filter=ID%20eq%205.0&$count=true&$select=ID,Name");
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
-        // System.err.println("result: " + result);
-        assertEquals("{\"@odata.context\":\"$metadata#ODataTests1\",\"@odata.count\":1,\"value\":[{\"ID\":204}]}",
+        assertEquals(
+                "{\"@odata.context\":\"$metadata#ODataTests1\",\"@odata.count\":1,\"value\":[{\"ID\":5,\"Name\":\"PopTablet1\"}]}",
                 result);
         assertEquals(200, resp.getStatusCode());
     }
