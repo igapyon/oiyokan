@@ -168,6 +168,6 @@ public class OiyokanTestUtil {
             final String number = idColonNumber.substring(3 + key.length());
             return number;
         }
-        throw new IllegalArgumentException("Unexpected");
+        throw new IllegalArgumentException("Unexpected: result:" + result + ", key:" + key);
     }
 }
