@@ -159,12 +159,14 @@ public class OiyokanTestUtil {
     }
 
     public static final String getValueFromResultByKey(final String result, final String key) {
-        final Pattern pat = Pattern.compile("[,][\"]" + key + "[\"][:].*?[,]");
+        final Pattern pat = Pattern.compile("[,][\"]" + key + "[\"][:].*?[,|}]");
         final Matcher mat = pat.matcher(result);
 
         for (; mat.find();) {
             final String word = mat.group();
+            // System.err.println("word:" + word);
             final String idColonNumber = word.substring(1, word.length() - 1);
+            // System.err.println("idColonNumber" + idColonNumber);
             final String number = idColonNumber.substring(3 + key.length());
             return number;
         }
