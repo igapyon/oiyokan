@@ -17,40 +17,32 @@ package jp.oiyokan.db.testdb.query;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.olingo.server.api.ODataResponse;
 import org.junit.jupiter.api.Test;
 
-import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanUnittestUtil;
 import jp.oiyokan.common.OiyoInfo;
+import jp.oiyokan.common.OiyoUrlUtil;
 import jp.oiyokan.util.OiyokanTestUtil;
 
 /**
- * ごく基本的な OData の挙動を確認.
+ * フィルタの型に着眼したテスト.
  */
-class UnitTestQueryOrderby04Test {
-    private static final Log log = LogFactory.getLog(UnitTestQueryOrderby04Test.class);
-
-    /////////////////////////////////
-    // Fulltext Search / 全文検索
-
+class UnitTestQueryMethod08Test {
+    // TOUPPER
     @Test
-    void testSimpleSearch() throws Exception {
+    void testToupperA() throws Exception {
         @SuppressWarnings("unused")
         final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
 
-        if (!OiyokanConstants.IS_EXPERIMENTAL_SEARCH_ENABLED) {
-            log.info("[INFO] $search はサポート外: テストスキップします.");
-            return;
-        }
-
-        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTestFulls1",
-                "$top=6&$search=macbook&$count=true&$select=ID");
+        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse( //
+                "/ODataTests1", OiyoUrlUtil.encodeUrlQuery( //
+                        "&$filter=toupper(tolower(StringVar255)) eq 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' &$count=true &$select=ID"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
-        assertEquals("{\"@odata.context\":\"$metadata#ODataTestFulls1\",\"value\":[{\"ID\":1},{\"ID\":2}]}", result);
+        // System.err.println("result: " + result);
+        assertEquals("{\"@odata.context\":\"$metadata#ODataTests1\",\"@odata.count\":1,\"value\":[{\"ID\":204}]}",
+                result);
         assertEquals(200, resp.getStatusCode());
     }
 }
