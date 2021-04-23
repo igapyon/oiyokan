@@ -15,7 +15,7 @@
   "entitySet": [
     {
       "name": "ODataTests1",
-      "description": "Description.",
+      "description": "Basic UnitTest table less NOT NULL column.",
       "dbSettingName": "oiyoUnitTestDb",
       "canCreate": true,
       "canRead": true,
@@ -40,7 +40,7 @@
             "edmType": "Edm.String",
             "jdbcType": "Types.VARCHAR",
             "dbType": "VARCHAR",
-            "nullable": false,
+            "nullable": true,
             "maxLength": 80
           },
           {
@@ -49,7 +49,7 @@
             "edmType": "Edm.String",
             "jdbcType": "Types.VARCHAR",
             "dbType": "VARCHAR",
-            "nullable": false,
+            "nullable": true,
             "maxLength": 250
           },
           {
@@ -135,7 +135,7 @@
             "edmType": "Edm.Boolean",
             "jdbcType": "Types.BOOLEAN",
             "dbType": "BOOLEAN",
-            "nullable": false
+            "nullable": true
           },
           {
             "name": "Single1",
@@ -159,7 +159,7 @@
             "edmType": "Edm.Date",
             "jdbcType": "Types.DATE",
             "dbType": "DATE",
-            "nullable": false
+            "nullable": true
           },
           {
             "name": "DateTimeOffset1",
@@ -167,7 +167,7 @@
             "edmType": "Edm.DateTimeOffset",
             "jdbcType": "Types.TIMESTAMP",
             "dbType": "TIMESTAMP",
-            "nullable": false
+            "nullable": true
           },
           {
             "name": "TimeOfDay1",
@@ -280,7 +280,7 @@
     },
     {
       "name": "ODataTests3",
-      "description": "Description.",
+      "description": "Test table with NOT NULL column.",
       "dbSettingName": "oiyoUnitTestDb",
       "canCreate": true,
       "canRead": true,
@@ -305,7 +305,7 @@
             "edmType": "Edm.String",
             "jdbcType": "Types.VARCHAR",
             "dbType": "VARCHAR",
-            "nullable": true,
+            "nullable": false,
             "maxLength": 80
           },
           {
@@ -314,7 +314,7 @@
             "edmType": "Edm.String",
             "jdbcType": "Types.VARCHAR",
             "dbType": "VARCHAR",
-            "nullable": true,
+            "nullable": false,
             "maxLength": 250
           },
           {
@@ -400,7 +400,7 @@
             "edmType": "Edm.Boolean",
             "jdbcType": "Types.BOOLEAN",
             "dbType": "BOOLEAN",
-            "nullable": true
+            "nullable": false
           },
           {
             "name": "Single1",
@@ -424,7 +424,7 @@
             "edmType": "Edm.Date",
             "jdbcType": "Types.DATE",
             "dbType": "DATE",
-            "nullable": true
+            "nullable": false
           },
           {
             "name": "DateTimeOffset1",
@@ -432,7 +432,7 @@
             "edmType": "Edm.DateTimeOffset",
             "jdbcType": "Types.TIMESTAMP",
             "dbType": "TIMESTAMP",
-            "nullable": true
+            "nullable": false
           },
           {
             "name": "TimeOfDay1",
