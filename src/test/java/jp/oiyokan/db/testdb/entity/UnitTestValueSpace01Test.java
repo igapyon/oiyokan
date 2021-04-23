@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jp.oiyokan.db.testdb.v0entity;
+package jp.oiyokan.db.testdb.entity;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -27,9 +27,10 @@ import jp.oiyokan.util.OiyokanTestUtil;
 /**
  * フィルタの型に着眼したテスト.
  */
-class UnitTestValueSpaceTest {
+class UnitTestValueSpace01Test {
     @Test
     void test01() throws Exception {
+        @SuppressWarnings("unused")
         final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
 
         final int TEST_ID = OiyokanTestUtil.getNextUniqueId();
@@ -40,14 +41,14 @@ class UnitTestValueSpaceTest {
                 + "  \"Na_me\":\"Name\"\n" //
                 + "}");
         String result = OiyokanTestUtil.stream2String(resp.getContent());
-        System.err.println(result);
+        // System.err.println(result);
         assertEquals(201, resp.getStatusCode(), "ORCL18でエラー(既知の問題)");
         assertEquals("{\"@odata.context\":\"$metadata#ODataTests4\",\"I_D\":" + TEST_ID
                 + ",\"Na_me\":\"Name\",\"Va_lue1\":\"VALUEVALUE12345\"}", result);
 
         resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests4(I_D=" + TEST_ID + ",Na_me='Name')", null);
         result = OiyokanTestUtil.stream2String(resp.getContent());
-        System.err.println(result);
+        // System.err.println(result);
         assertEquals(200, resp.getStatusCode());
 
         // UPDATE (PATCH)
@@ -55,7 +56,7 @@ class UnitTestValueSpaceTest {
                 + "  \"Na_me\":\"Name2\",\n" //
                 + "  \"Va_lue1\":\"Description2\"\n" + "}", false, false);
         result = OiyokanTestUtil.stream2String(resp.getContent());
-        System.err.println(result);
+        // System.err.println(result);
         assertEquals(204, resp.getStatusCode());
 
         resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests4(I_D=" + TEST_ID + ",Na_me='Name2')", null);
@@ -64,13 +65,13 @@ class UnitTestValueSpaceTest {
         /// 通常のfilter
         resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests4", "$filter=I_D eq " + TEST_ID);
         result = OiyokanTestUtil.stream2String(resp.getContent());
-        System.err.println(result);
+        // System.err.println(result);
         assertEquals(200, resp.getStatusCode());
 
         // Entity
         resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests4(I_D=" + TEST_ID + ",Na_me='Name2')", null);
         result = OiyokanTestUtil.stream2String(resp.getContent());
-        System.err.println(result);
+        // System.err.println(result);
         assertEquals(200, resp.getStatusCode());
 
         // DELETE

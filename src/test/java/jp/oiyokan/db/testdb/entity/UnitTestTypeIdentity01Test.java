@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jp.oiyokan.db.testdb.v0entity;
+package jp.oiyokan.db.testdb.entity;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -25,43 +25,40 @@ import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.util.OiyokanTestUtil;
 
 /**
- * フィルタの型に着眼したテスト.
+ * IDENに関する挙動確認。
  */
-class UnitTestTypeIdentityTest {
+class UnitTestTypeIdentity01Test {
     @Test
     void test01() throws Exception {
+        @SuppressWarnings("unused")
         final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
 
         ODataResponse resp = OiyokanTestUtil.callRequestPost("/ODataTests5", "{\n" //
                 + "  \"Name\":\"Name\"\n" //
                 + "}");
         String result = OiyokanTestUtil.stream2String(resp.getContent());
+        final String iden1String = OiyokanTestUtil.getValueFromResultByKey(result, "Iden1");
+
         // System.err.println(result);
         assertEquals(201, resp.getStatusCode(), //
                 "Iden1が引き当てられないとエラーになる.");
 
-        int indexOf = result.indexOf("\",\"Iden1\":");
-        String subString = result.substring(indexOf + "\",\"Iden1\":".length());
-        String[] subStrParts = subString.split(",");
-        // System.err.println(subStrParts[0]);
-        final String nowID = subStrParts[0];
-
         /// 通常のfilter
-        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests5", "$filter=Iden1 eq " + nowID);
+        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests5", "$filter=Iden1 eq " + iden1String);
         result = OiyokanTestUtil.stream2String(resp.getContent());
         // System.err.println(result);
         assertEquals(200, resp.getStatusCode());
 
-        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests5(" + nowID + ")", null);
+        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests5(" + iden1String + ")", null);
         result = OiyokanTestUtil.stream2String(resp.getContent());
         // System.err.println(result);
         assertEquals(200, resp.getStatusCode());
 
         // DELETE
-        resp = OiyokanTestUtil.callRequestDelete("/ODataTests5(" + nowID + ")");
+        resp = OiyokanTestUtil.callRequestDelete("/ODataTests5(" + iden1String + ")");
         assertEquals(204, resp.getStatusCode());
 
-        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests5(" + nowID + ")", null);
+        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests5(" + iden1String + ")", null);
         assertEquals(404, resp.getStatusCode());
     }
 }

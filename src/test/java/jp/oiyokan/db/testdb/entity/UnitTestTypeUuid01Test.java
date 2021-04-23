@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jp.oiyokan.db.testdb.v0entity;
+package jp.oiyokan.db.testdb.entity;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -28,9 +28,10 @@ import jp.oiyokan.util.OiyokanTestUtil;
 /**
  * UUID 型に着眼したテスト.
  */
-class UnitTestTypeUuidTest {
+class UnitTestTypeUuid01Test {
     @Test
     void test01() throws Exception {
+        @SuppressWarnings("unused")
         final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
 
         final int TEST_ID = OiyokanTestUtil.getNextUniqueId();
@@ -39,7 +40,6 @@ class UnitTestTypeUuidTest {
                 + "  \"ID\":" + TEST_ID + "\n" //
                 + "}");
         String result = OiyokanTestUtil.stream2String(resp.getContent());
-        // System.err.println("TRACE: " + result);
         assertTrue(
                 result.startsWith("{\"@odata.context\":\"$metadata#ODataTests7\",\"ID\":" + TEST_ID
                         + ",\"Name\":\"UUID UnitTest\",\"Description\":\"UUID UnitTest table.\",\"Uuid1\":"), //
@@ -54,12 +54,15 @@ class UnitTestTypeUuidTest {
         /// 通常のfilter
         resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests7", "$filter=ID eq " + TEST_ID);
         result = OiyokanTestUtil.stream2String(resp.getContent());
-        System.err.println("TRACE: " + result);
+        // System.err.println("TRACE: " + result);
         assertTrue(
                 result.startsWith("{\"@odata.context\":\"$metadata#ODataTests7\",\"value\":[{\"ID\":" + TEST_ID
                         + ",\"Name\":\"UUID UnitTest\",\"Description\":\"UUID UnitTest table.\",\"Uuid1\":"), //
                 "通常のFILTER検索ができることを確認.");
         assertEquals(200, resp.getStatusCode());
+        @SuppressWarnings("unused")
+        final String uuid1String = OiyokanTestUtil.getValueFromResultByKey(result, "Uuid1");
+        // System.err.println(uuid1String);
 
         // DELETE
         resp = OiyokanTestUtil.callRequestDelete("/ODataTests7(" + TEST_ID + ")");

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package jp.oiyokan.db.testdb.v0entity;
+package jp.oiyokan.db.testdb.entity;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -27,17 +27,15 @@ import jp.oiyokan.util.OiyokanTestUtil;
 /**
  * Entityアクセスのフル設定に着眼したテスト.
  */
-class UnitTestEntityPostAllTest {
+class UnitTestEntityPostAll01Test {
     @Test
     void test01() throws Exception {
+        @SuppressWarnings("unused")
         final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
-
-        final int TEST_ID = OiyokanTestUtil.getNextUniqueId();
 
         // FULL INSERT
         ODataResponse resp = OiyokanTestUtil.callRequestPost("/ODataTests3", //
                 "{\n" //
-                        + "  \"ID\": " + TEST_ID + ",\n" //
                         + "  \"Name\": \"Name\",\n" //
                         + "  \"Description\": \"Description\",\n" //
                         + "  \"Sbyte1\": 127,\n" //
@@ -61,18 +59,21 @@ class UnitTestEntityPostAllTest {
                         + "  \"Blob1\": \"SGVsbG8gd29ybGQh\"\n" //
                         + "}");
         String result = OiyokanTestUtil.stream2String(resp.getContent());
-        System.err.println("TRACE: " + result);
+        final String idString = OiyokanTestUtil.getValueFromResultByKey(result, "ID");
         assertEquals(201, resp.getStatusCode(), //
-                "Postgresにおいて、uuidのエラーで失敗する (既知の問題), MySQLでもUUIDの桁溢れエラー (既知の問題)");
+                "POSTによるINSERTが成功すること。既知の問題. Postgresにおいて、uuidのエラーで失敗する (既知の問題), MySQLでもUUIDの桁溢れエラー (既知の問題)");
 
-        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests3(" + TEST_ID + ")", null);
+        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests3(" + idString + ")", null);
+        result = OiyokanTestUtil.stream2String(resp.getContent());
+        // System.err.println(result);
         assertEquals(200, resp.getStatusCode());
 
         // DELETE
-        resp = OiyokanTestUtil.callRequestDelete("/ODataTests3(" + TEST_ID + ")");
-        assertEquals(204, resp.getStatusCode());
+        resp = OiyokanTestUtil.callRequestDelete("/ODataTests3(" + idString + ")");
+        assertEquals(204, resp.getStatusCode(), "DELETEが成功すること.");
 
-        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests3(" + TEST_ID + ")", null);
-        assertEquals(404, resp.getStatusCode());
+        // after DELETE
+        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests3(" + idString + ")", null);
+        assertEquals(404, resp.getStatusCode(), "DELETEのあとはレコードが存在しない.");
     }
 }
