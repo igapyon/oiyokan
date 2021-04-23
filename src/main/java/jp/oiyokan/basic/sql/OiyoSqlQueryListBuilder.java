@@ -296,8 +296,11 @@ public class OiyoSqlQueryListBuilder {
             ///////////////////////////////////
             // SQLSV2008 / ORCL18 用特殊記述
             // 現在、無条件にサブクエリ展開
+
+            // SQLSV2008 の場合かつ SKIP 指定なしの場合は TOP により件数抑制.
             String topfilterForSql2000 = "";
-            if (OiyokanConstants.DatabaseType.SQLSV2008 == databaseType) {
+            if (OiyokanConstants.DatabaseType.SQLSV2008 == databaseType //
+                    && uriInfo.getSkipOption() == null) {
                 // SQL Server の場合 SKIP 指定がある場合のコースとなる。
                 int total = 1;
                 if (uriInfo.getTopOption() != null) {
