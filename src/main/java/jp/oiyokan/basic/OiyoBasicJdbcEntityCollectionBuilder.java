@@ -244,6 +244,8 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
         {
             log.trace("TRACE: Check $filter. Find property used EQ and remember.");
             final OiyoSqlInfo sqlInfoDummy = new OiyoSqlInfo(oiyoInfo, entitySet.getName());
+            // 特殊。トラバースモードをセット。これは本検索ではOFF。
+            sqlInfoDummy.setTraverseBinaryOperatorEqPropertyList(true);
             if (uriInfo.getFilterOption() != null) {
                 new OiyoSqlQueryListExpr(oiyoInfo, sqlInfoDummy).expand(uriInfo.getFilterOption().getExpression());
             }

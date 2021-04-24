@@ -207,8 +207,10 @@ public class OiyoSqlQueryListExpr {
                     // 特殊処理 : Literal が nullの場合は IS NULL 展開する。こうしないと h2 database は NULL検索できない.
                     // また、リテラルに null が指定されている場合に、LiteralImpl の getType() 自体が null で渡ってくる。
                     OiyoSettingsProperty property = expandMember(member);
-                    log.trace("TRACE: $filter において EQ とともに使用された property: " + property.getName());
-                    sqlInfo.getBinaryOperatorEqPropertyList().add(property);
+                    if (sqlInfo.isTraverseBinaryOperatorEqPropertyList()) {
+                        log.trace("TRACE: $filter において EQ とともに使用された property: " + property.getName());
+                        sqlInfo.getBinaryOperatorEqPropertyList().add(property);
+                    }
                     sqlInfo.getSqlBuilder().append(" IS NULL");
 
                     if (property.getFilterTreatNullAsBlank() != null && property.getFilterTreatNullAsBlank()) {
@@ -224,8 +226,10 @@ public class OiyoSqlQueryListExpr {
 
                 // 通常コースには復帰せず、取得できた property を利用した処理に入る。
                 OiyoSettingsProperty property = expandMember(member);
-                log.trace("TRACE: $filter において EQ とともに使用された property: " + property.getName());
-                sqlInfo.getBinaryOperatorEqPropertyList().add(property);
+                if (sqlInfo.isTraverseBinaryOperatorEqPropertyList()) {
+                    log.trace("TRACE: $filter において EQ とともに使用された property: " + property.getName());
+                    sqlInfo.getBinaryOperatorEqPropertyList().add(property);
+                }
                 sqlInfo.getSqlBuilder().append(" = ");
                 expandLiteral(literal, property);
                 sqlInfo.getSqlBuilder().append(")");
