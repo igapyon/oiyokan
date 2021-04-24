@@ -297,7 +297,7 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
             for (; rset.next();) {
                 final Entity ent = new Entity();
                 for (int index = 0; index < sqlInfo.getSelectColumnNameList().size(); index++) {
-                    log.error("TRACE: Bind parameter:" + sqlInfo.getSelectColumnNameList().get(index));
+                    log.trace("TRACE: Bind parameter:" + sqlInfo.getSelectColumnNameList().get(index));
                     // 取得された検索結果を Property に組み替え.
                     OiyoSettingsProperty oiyoProp = OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, entitySetName,
                             sqlInfo.getSelectColumnNameList().get(index));
