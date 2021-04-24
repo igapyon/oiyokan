@@ -227,8 +227,8 @@ public class OiyoSqlQueryListBuilder {
                 // $filterにおいてEQで結ばれている項目について、$select 指定がなくとも返却値に設定するため対象として記憶。
                 log.info("TRACE: $filter において EQ で使用された property を Key 同様に $select 対象項目に追加: " + propName);
                 keyOrEqTarget.add(propName);
-                for(String look:keyOrEqTarget) {
-                    System.err.println("USO: "+look);
+                for (String look : keyOrEqTarget) {
+                    System.err.println("USO: " + look);
                 }
             }
         }
@@ -259,6 +259,7 @@ public class OiyoSqlQueryListBuilder {
         }
         for (int index = 0; index < keyOrEqTarget.size(); index++) {
             // レコードを一意に表すID項目が必須。検索対象にない場合は追加.
+            log.info("TRACE: KEY項目および $filter において EQ で使用された項目をバインドに追加: " + keyOrEqTarget.get(index));
             sqlInfo.getSqlBuilder().append(itemCount++ == 0 ? "" : ",");
             final String unescapedName = OiyoCommonJdbcUtil.unescapeKakkoFieldName(keyOrEqTarget.get(index));
             // SELECTの検索項目名を追加。
