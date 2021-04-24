@@ -189,47 +189,69 @@ public class OiyoSqlQueryListExpr {
             // EQ
             sqlInfo.getSqlBuilder().append("(");
 
-            // 一方が MemberImpl で他方が LiteralImpl
-            if ((impl.getLeftOperand() instanceof MemberImpl && impl.getRightOperand() instanceof LiteralImpl)
-                    || (impl.getLeftOperand() instanceof LiteralImpl && impl.getRightOperand() instanceof MemberImpl)) {
+            // 片方が MemberImpl の場合
+            if ((impl.getLeftOperand() instanceof MemberImpl || impl.getRightOperand() instanceof MemberImpl)) {
                 MemberImpl member = null;
-                LiteralImpl literal = null;
+                Expression other = null;
                 if (impl.getLeftOperand() instanceof MemberImpl) {
                     member = (MemberImpl) impl.getLeftOperand();
-                    literal = (LiteralImpl) impl.getRightOperand();
+                    other = impl.getRightOperand();
                 } else {
-                    literal = (LiteralImpl) impl.getLeftOperand();
+                    other = impl.getLeftOperand();
                     member = (MemberImpl) impl.getRightOperand();
                 }
 
-                // IS NULL対応
-                if (null == literal.getType()) {
-                    // 特殊処理 : Literal が nullの場合は IS NULL 展開する。こうしないと h2 database は NULL検索できない.
-                    // また、リテラルに null が指定されている場合に、LiteralImpl の getType() 自体が null で渡ってくる。
-                    OiyoSettingsProperty property = expandMember(member);
-                    log.trace("TRACE: $filter において EQ とともに使用された property: " + property.getName());
-                    sqlInfo.getBinaryOperatorEqPropertyList().add(property);
+                // まず Member を展開.
+                OiyoSettingsProperty propMember = expandMember(member);
+                log.trace("TRACE: $filter において EQ とともに使用された property: " + propMember.getName());
+                sqlInfo.getBinaryOperatorEqPropertyList().add(propMember);
 
-                    sqlInfo.getSqlBuilder().append(" IS NULL");
+                // 両辺とも MemberImpl の場合。
+                if (other instanceof MemberImpl) {
+                    sqlInfo.getSqlBuilder().append(" = ");
 
-                    if (property.getFilterTreatNullAsBlank() != null && property.getFilterTreatNullAsBlank()) {
-                        // NULLでfilterの際に '' も一致と見做す特殊コース.
-                        sqlInfo.getSqlBuilder().append(" OR ");
-                        expandMember(member);
-                        sqlInfo.getSqlBuilder().append(" = ");
-                        expandLiteral(new LiteralImpl("", EdmString.getInstance()), property);
-                    }
+                    MemberImpl nextMember = (MemberImpl) other;
+                    // もう片方も展開.
+                    OiyoSettingsProperty propNextMember = expandMember(nextMember);
+                    log.trace("TRACE: $filter において EQ とともに使用された property: " + propNextMember.getName());
+                    sqlInfo.getBinaryOperatorEqPropertyList().add(propNextMember);
+
                     sqlInfo.getSqlBuilder().append(")");
                     return;
                 }
 
-                // 通常コースには復帰せず、取得できた property を利用した処理に入る。
-                OiyoSettingsProperty property = expandMember(member);
-                log.trace("TRACE: $filter において EQ とともに使用された property: " + property.getName());
-                sqlInfo.getBinaryOperatorEqPropertyList().add(property);
+                // 一方が LiteralImpl の場合。
+                if (other instanceof LiteralImpl) {
+                    LiteralImpl literal = (LiteralImpl) other;
 
+                    // IS NULL対応
+                    if (null == literal.getType()) {
+                        // 特殊処理 : Literal が nullの場合は IS NULL 展開する。こうしないと h2 database は NULL検索できない.
+                        // また、リテラルに null が指定されている場合に、LiteralImpl の getType() 自体が null で渡ってくる。
+                        sqlInfo.getSqlBuilder().append(" IS NULL");
+
+                        if (propMember.getFilterTreatNullAsBlank() != null && propMember.getFilterTreatNullAsBlank()) {
+                            // NULLでfilterの際に '' も一致と見做す特殊コース.
+                            sqlInfo.getSqlBuilder().append(" OR ");
+                            expandMember(member);
+                            sqlInfo.getSqlBuilder().append(" = ");
+                            expandLiteral(new LiteralImpl("", EdmString.getInstance()), propMember);
+                        }
+                        sqlInfo.getSqlBuilder().append(")");
+                        return;
+                    } else {
+                        // 一方が Member で一方が Nullではない Literal
+                        sqlInfo.getSqlBuilder().append(" = ");
+                        expandLiteral(literal, propMember);
+                        sqlInfo.getSqlBuilder().append(")");
+                        return;
+                    }
+                    // いずれのコースも return済み.
+                }
+
+                // Member以外の辺を出力.
                 sqlInfo.getSqlBuilder().append(" = ");
-                expandLiteral(literal, property);
+                expand(other);
                 sqlInfo.getSqlBuilder().append(")");
                 return;
             }
@@ -244,51 +266,63 @@ public class OiyoSqlQueryListExpr {
             // NE
             sqlInfo.getSqlBuilder().append("(");
 
-            // 一方が MemberImpl で他方が LiteralImpl
-            if ((impl.getLeftOperand() instanceof MemberImpl && impl.getRightOperand() instanceof LiteralImpl)
-                    || (impl.getLeftOperand() instanceof LiteralImpl && impl.getRightOperand() instanceof MemberImpl)) {
+            // 片方が MemberImpl の場合
+            if ((impl.getLeftOperand() instanceof MemberImpl || impl.getRightOperand() instanceof MemberImpl)) {
                 MemberImpl member = null;
-                LiteralImpl literal = null;
+                Expression other = null;
                 if (impl.getLeftOperand() instanceof MemberImpl) {
                     member = (MemberImpl) impl.getLeftOperand();
-                    literal = (LiteralImpl) impl.getRightOperand();
+                    other = impl.getRightOperand();
                 } else {
-                    literal = (LiteralImpl) impl.getLeftOperand();
+                    other = impl.getLeftOperand();
                     member = (MemberImpl) impl.getRightOperand();
                 }
 
-                // IS NOT NULL対応
-                if (null == literal.getType()) {
-                    // 特殊処理 : Literal が nullの場合は IS NULL 展開する。こうしないと h2 database は NOT NULL検索できない.
-                    // また、リテラルに null が指定されている場合に、LiteralImpl の getType() 自体が null で渡ってくる。
-                    OiyoSettingsProperty property = expandMember(member);
-                    sqlInfo.getSqlBuilder().append(" IS NOT NULL");
+                // 一方が LiteralImpl の場合。
+                if (other instanceof LiteralImpl) {
+                    LiteralImpl literal = (LiteralImpl) other;
 
-                    if (property.getFilterTreatNullAsBlank() != null && property.getFilterTreatNullAsBlank()) {
-                        // NULLでfilterの際に '' も一致と見做す特殊コース.
-                        sqlInfo.getSqlBuilder().append(" AND ");
-                        expandMember(member);
+                    // IS NOT NULL対応
+                    if (null == literal.getType()) {
+                        // 特殊処理 : Literal が nullの場合は IS NULL 展開する。こうしないと h2 database は NOT NULL検索できない.
+                        // また、リテラルに null が指定されている場合に、LiteralImpl の getType() 自体が null で渡ってくる。
+                        OiyoSettingsProperty property = expandMember(member);
+                        sqlInfo.getSqlBuilder().append(" IS NOT NULL");
+
+                        if (property.getFilterTreatNullAsBlank() != null && property.getFilterTreatNullAsBlank()) {
+                            // NULLでfilterの際に '' も一致と見做す特殊コース.
+                            sqlInfo.getSqlBuilder().append(" AND ");
+                            expandMember(member);
+                            sqlInfo.getSqlBuilder().append(" <> ");
+                            expandLiteral(new LiteralImpl("", EdmString.getInstance()), property);
+                        }
+                        sqlInfo.getSqlBuilder().append(")");
+                        return;
+                    } else {
+                        // 通常コースには復帰せず、取得できた property を利用した処理に入る。
+                        OiyoSettingsProperty property = expandMember(member);
                         sqlInfo.getSqlBuilder().append(" <> ");
-                        expandLiteral(new LiteralImpl("", EdmString.getInstance()), property);
+                        expandLiteral(literal, property);
+                        sqlInfo.getSqlBuilder().append(")");
+                        return;
                     }
-                    sqlInfo.getSqlBuilder().append(")");
-                    return;
                 }
 
-                // 通常コースには復帰せず、取得できた property を利用した処理に入る。
+                // 通常コースには復帰せず、そのまま展開。
+                @SuppressWarnings("unused")
                 OiyoSettingsProperty property = expandMember(member);
                 sqlInfo.getSqlBuilder().append(" <> ");
-                expandLiteral(literal, property);
+                expand(other);
+                sqlInfo.getSqlBuilder().append(")");
+                return;
+            } else {
+                // 与えられた条件をそのまま展開.
+                expand(impl.getLeftOperand());
+                sqlInfo.getSqlBuilder().append(" <> ");
+                expand(impl.getRightOperand());
                 sqlInfo.getSqlBuilder().append(")");
                 return;
             }
-
-            // 与えられた条件をそのまま展開.
-            expand(impl.getLeftOperand());
-            sqlInfo.getSqlBuilder().append(" <> ");
-            expand(impl.getRightOperand());
-            sqlInfo.getSqlBuilder().append(")");
-            return;
         } else if (opKind == BinaryOperatorKind.AND) {
             // AND
             sqlInfo.getSqlBuilder().append("(");
