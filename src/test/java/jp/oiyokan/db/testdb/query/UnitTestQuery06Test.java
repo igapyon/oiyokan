@@ -40,7 +40,7 @@ class UnitTestQuery06Test {
 
         // System.err.println("result: " + result);
         assertEquals(
-                "{\"@odata.context\":\"$metadata#ODataTests1\",\"@odata.count\":204,\"value\":[{\"ID\":3},{\"ID\":4}]}",
+                "{\"@odata.context\":\"$metadata#ODataTests1\",\"@odata.count\":204,\"value\":[{\"ID\":3,\"Int64a\":2147483647},{\"ID\":4,\"Int64a\":2147483647}]}",
                 result);
         assertEquals(200, resp.getStatusCode());
     }

@@ -22,6 +22,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.olingo.commons.api.data.ContextURL;
 import org.apache.olingo.commons.api.data.EntityCollection;
+import org.apache.olingo.commons.api.data.Property;
 import org.apache.olingo.commons.api.edm.EdmEntitySet;
 import org.apache.olingo.commons.api.edm.EdmEntityType;
 import org.apache.olingo.commons.api.format.ContentType;
@@ -40,7 +41,10 @@ import org.apache.olingo.server.api.serializer.SerializerResult;
 import org.apache.olingo.server.api.uri.UriInfo;
 import org.apache.olingo.server.api.uri.UriResource;
 import org.apache.olingo.server.api.uri.UriResourceEntitySet;
+import org.apache.olingo.server.core.uri.parser.Parser;
+import org.apache.olingo.server.core.uri.parser.UriParserException;
 import org.apache.olingo.server.core.uri.queryoption.CountOptionImpl;
+import org.apache.olingo.server.core.uri.validator.UriValidationException;
 
 import jp.oiyokan.basic.OiyoBasicJdbcEntityCollectionBuilder;
 import jp.oiyokan.common.OiyoInfo;
@@ -135,7 +139,46 @@ public class OiyokanEntityCollectionProcessor implements EntityCollectionProcess
             }
             if (uriInfo.getSelectOption() != null) {
                 // $select あり.
-                builder.select(uriInfo.getSelectOption());
+                // EQはexpandする特殊モードによる実装。
+                // TODO フラグでON/OFFできるようしたい。
+                if (eCollection.getEntities().size() == 0) {
+                    builder.select(uriInfo.getSelectOption());
+                } else {
+                    String propNames = "";
+                    for (int index = 0; index < eCollection.getEntities().size(); index++) {
+                        for (Property prop : eCollection.getEntities().get(index).getProperties()) {
+                            if (propNames.length() != 0) {
+                                propNames += ",";
+                            }
+                            propNames += prop.getName();
+                        }
+                    }
+
+                    try {
+                        // uriInfo = new Parser(serviceMetadata.getEdm(), odata)
+                        // .parseUri(request.getRawODataPath(), request.getRawQueryPath(), null,
+                        // request.getRawBaseUri());
+                        // System.err.println("RawQueryPath: " + request.getRawQueryPath());
+                        // System.err.println("RawODataPath:" + request.getRawODataPath());
+                        // System.err.println("RawBaseUri:" + request.getRawBaseUri());
+                        final Parser parser = new Parser(serviceMetadata.getEdm(), odata);
+                        final UriInfo uriInfoWrk = parser.parseUri(request.getRawODataPath(), "$select=" + propNames,
+                                null, request.getRawBaseUri());
+                        builder.select(uriInfoWrk.getSelectOption());
+                    } catch (UriParserException ex) {
+                        ex.printStackTrace();
+                        // TODO message
+                        log.error(OiyokanMessages.IY9999 + ": " + ex.toString());
+                        throw new ODataApplicationException(OiyokanMessages.IY9999, //
+                                OiyokanMessages.IY9999_CODE, Locale.ENGLISH);
+                    } catch (UriValidationException ex) {
+                        ex.printStackTrace();
+                        // TODO message
+                        log.error(OiyokanMessages.IY9999 + ": " + ex.toString());
+                        throw new ODataApplicationException(OiyokanMessages.IY9999, //
+                                OiyokanMessages.IY9999_CODE, Locale.ENGLISH);
+                    }
+                }
             }
 
             SerializerResult serResult = serializer.entityCollection( //

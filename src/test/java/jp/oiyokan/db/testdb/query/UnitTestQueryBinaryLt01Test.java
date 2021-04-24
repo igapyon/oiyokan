@@ -37,7 +37,8 @@ class UnitTestQueryBinaryLt01Test {
 
         final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse( //
                 "/ODataTests1", //
-                OiyoUrlUtil.encodeUrlQuery("&$filter=Double1 lt 500 &$top=5 &$skip=2 &$count=true &$select=ID &$orderby=ID asc"));
+                OiyoUrlUtil.encodeUrlQuery(
+                        "&$filter=Double1 lt 500 &$top=5 &$skip=2 &$count=true &$select=ID &$orderby=ID asc"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         // System.err.println("result: " + result);

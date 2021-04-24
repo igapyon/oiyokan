@@ -42,7 +42,7 @@ class UnitTestQueryBinaryEq02Test {
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         assertEquals(
-                "{\"@odata.context\":\"$metadata#ODataTests1\",\"@odata.count\":204,\"value\":[{\"ID\":1},{\"ID\":2},{\"ID\":3}]}",
+                "{\"@odata.context\":\"$metadata#ODataTests1\",\"@odata.count\":204,\"value\":[{\"ID\":1,\"Int16a\":32767},{\"ID\":2,\"Int16a\":32767},{\"ID\":3,\"Int16a\":32767}]}",
                 result);
         assertEquals(200, resp.getStatusCode());
     }
