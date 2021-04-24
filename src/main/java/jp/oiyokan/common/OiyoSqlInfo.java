@@ -38,7 +38,6 @@ public class OiyoSqlInfo {
     private final StringBuilder sqlBuilder = new StringBuilder();
     private final List<String> selectColumnNameList = new ArrayList<>();
 
-    private boolean isTraverseBinaryOperatorEqPropertyList = false;
     private final List<OiyoSettingsProperty> binaryOperatorEqPropertyList = new ArrayList<>();
 
     private final List<Object> sqlParamList = new ArrayList<>();
@@ -91,13 +90,5 @@ public class OiyoSqlInfo {
 
     public List<OiyoSettingsProperty> getBinaryOperatorEqPropertyList() {
         return binaryOperatorEqPropertyList;
-    }
-
-    public boolean isTraverseBinaryOperatorEqPropertyList() {
-        return isTraverseBinaryOperatorEqPropertyList;
-    }
-
-    public void setTraverseBinaryOperatorEqPropertyList(boolean isTraverseBinaryOperatorEqPropertyList) {
-        this.isTraverseBinaryOperatorEqPropertyList = isTraverseBinaryOperatorEqPropertyList;
     }
 }
