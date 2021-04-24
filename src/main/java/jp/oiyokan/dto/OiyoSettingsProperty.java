@@ -31,8 +31,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
  * http://www.jsonschema2pojo.org/ を利用して自動生成.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({ "name", "dbName", "edmType", "jdbcType", "dbType", "jdbcSetMethod", "nullable", "maxLength",
-        "lengthFixed", "precision", "scale", "dbDefault", "filterTreatNullAsBlank" })
+@JsonPropertyOrder({ "name", "dbName", "edmType", "jdbcType", "dbType", "jdbcSetMethod", "autoGenKey", "nullable",
+        "maxLength", "lengthFixed", "precision", "scale", "dbDefault", "filterTreatNullAsBlank" })
 @Generated("jsonschema2pojo")
 public class OiyoSettingsProperty {
     @JsonProperty("name")
@@ -47,6 +47,8 @@ public class OiyoSettingsProperty {
     private String dbType;
     @JsonProperty("jdbcSetMethod")
     private String jdbcSetMethod;
+    @JsonProperty("autoGenKey")
+    private Boolean autoGenKey;
     @JsonProperty("nullable")
     private Boolean nullable;
     @JsonProperty("maxLength")
@@ -122,6 +124,16 @@ public class OiyoSettingsProperty {
     @JsonProperty("jdbcSetMethod")
     public void setJdbcSetMethod(String jdbcSetMethod) {
         this.jdbcSetMethod = jdbcSetMethod;
+    }
+
+    @JsonProperty("autoGenKey")
+    public Boolean getAutoGenKey() {
+        return autoGenKey;
+    }
+
+    @JsonProperty("autoGenKey")
+    public void setAutoGenKey(Boolean autoGenKey) {
+        this.autoGenKey = autoGenKey;
     }
 
     @JsonProperty("nullable")
