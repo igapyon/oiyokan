@@ -89,6 +89,7 @@ class Gen01OiyokanKanSettingsJsonTest {
         prop.setJdbcType("Types.VARCHAR");
         prop.setDbType("VARCHAR");
         prop.setJdbcSetMethod("setString");
+        prop.setAutoGenKey(false);
         prop.setNullable(false);
         prop.setMaxLength(20);
         prop.setLengthFixed(false);

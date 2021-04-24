@@ -35,6 +35,7 @@
             "jdbcType": "Types.VARCHAR",
             "dbType": "VARCHAR",
             "jdbcSetMethod": "setString",
+            "autoGenKey": false,
             "nullable": false,
             "maxLength": 20,
             "lengthFixed": false

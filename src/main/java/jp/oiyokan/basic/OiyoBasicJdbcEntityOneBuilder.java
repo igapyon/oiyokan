@@ -352,14 +352,29 @@ public class OiyoBasicJdbcEntityOneBuilder {
         final OiyoSettingsDatabase database = OiyoInfoUtil.getOiyoDatabaseByEntitySetName(oiyoInfo,
                 entitySet.getName());
 
+        /////////////////////////////////
+        // KEYに autoGenKey があるかどうか確認
+        boolean isAutoGenKeyIncludedInKey = false;
+        for (String keyName : entitySet.getEntityType().getKeyName()) {
+            for (OiyoSettingsProperty prop : entitySet.getEntityType().getProperty()) {
+                if (prop.getName().equals(keyName)) {
+                    if (prop.getAutoGenKey() != null && prop.getAutoGenKey()) {
+                        // KEYにautoGenKeyが含まれる。
+                        isAutoGenKeyIncludedInKey = true;
+                    }
+                }
+            }
+        }
+
         // データベースに接続.
         try (Connection connTargetDb = OiyoCommonJdbcUtil.getConnection(database)) {
             // Set auto commit OFF.
             connTargetDb.setAutoCommit(false);
             boolean isTranSuccessed = false;
 
-            if (ifMatch) {
+            if (ifMatch || isAutoGenKeyIncludedInKey) {
                 // If-Match header が '*' 指定されたら UPDATE.
+                // KEYにautoGenKeyが含まれる場合も If-Match 指定と同様と扱って UPDATE.
                 // [IY1076] OData v4: ENTITY: PATCH: UPDATE (If-Match)
                 log.info(OiyokanMessages.IY1076 + ": " + edmEntitySet.getName());
                 new OiyoSqlUpdateOneBuilder(oiyoInfo, sqlInfo).buildUpdatePatchDml(edmEntitySet.getName(),
