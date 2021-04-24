@@ -86,7 +86,7 @@ public class OiyokanKanDatabase {
 
             ///////////////////////////////////////////
             // 内部データの作成に突入.
-            log.info("OData v4: setup internal data " + " (Oiyokan: " + OiyokanConstants.VERSION + ")");
+            log.trace("TRACE: setup internal data" + " (Oiyokan: " + OiyokanConstants.VERSION + ")");
 
             ///////////////////////////////////////////
             // ODataAppInfos にバージョン情報などデータの追加

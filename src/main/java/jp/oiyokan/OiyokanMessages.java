@@ -32,7 +32,7 @@ public class OiyokanMessages {
     public static final String IY1062 = "[IY1062] INFO: COUNT";
     public static final String IY1063 = "[IY1063] INFO: COUNT = ";
     public static final String IY1064 = "[IY1064] INFO: SQL collect";
-    public static final String IY1065 = "[IY1065] INFO: SQL: elapsed";
+    public static final String IY1065 = "[IY1065] INFO: SQL collect: elapsed";
     public static final String IY1066 = "[IY1066] INFO: SQL exec";
     public static final String IY1067 = "[IY1067] INFO: SQL exec: elapsed";
 
@@ -234,6 +234,8 @@ public class OiyokanMessages {
 
     public static final String IY7171 = "[IY7171] DEBUG: DB connect";
     public static final String IY7172 = "[IY7172] INFO: setup oiyokanKan database";
+    public static final String IY7173 = "[IY7173] INFO: start to load oiyokan settings";
+    public static final String IY7174 = "[IY7174] INFO: load oiyokan settings";
 
     ////////////////////////////////////////////////////////////////////////////////
     // Authz (Server Side)

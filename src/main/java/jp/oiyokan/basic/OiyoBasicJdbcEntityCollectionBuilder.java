@@ -349,7 +349,7 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
             final long endMillisec = System.currentTimeMillis();
             final long elapsed = endMillisec - startMillisec;
             if (elapsed >= 10) {
-                // [IY1065] INFO: SQL: elapsed
+                // [IY1065] INFO: SQL collect: elapsed
                 log.info(OiyokanMessages.IY1065 + ": " + (endMillisec - startMillisec));
             }
         } catch (SQLTimeoutException ex) {
