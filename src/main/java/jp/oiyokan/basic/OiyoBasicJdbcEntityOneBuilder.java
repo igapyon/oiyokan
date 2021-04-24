@@ -98,7 +98,7 @@ public class OiyoBasicJdbcEntityOneBuilder {
         }
 
         // [IY1072] OData v4: SQL single
-        log.info(OiyokanMessages.IY1072 + "OData v4: TRACE: SQL single: " + sql);
+        log.info(OiyokanMessages.IY1072 + ": " + sql);
 
         final long startMillisec = System.currentTimeMillis();
         try (var stmt = connTargetDb.prepareStatement(sql)) {
@@ -129,10 +129,11 @@ public class OiyoBasicJdbcEntityOneBuilder {
                     }
                 }
                 if (oiyoProp == null) {
-                    // TODO FIXME message
-                    log.fatal(OiyokanMessages.IY9999 + ": " + "該当項目発見できず");
-                    throw new ODataApplicationException(OiyokanMessages.IY9999 + ": " + "該当項目発見できず", //
-                            OiyokanMessages.IY9999_CODE, Locale.ENGLISH);
+                    // [IY3161] UNEXPECTED: OiyoSettingsProperty NOT found.
+                    log.fatal(OiyokanMessages.IY3161 + ": " + sqlInfo.getSelectColumnNameList().get(index));
+                    throw new ODataApplicationException(
+                            OiyokanMessages.IY3161 + ": " + sqlInfo.getSelectColumnNameList().get(index), //
+                            OiyokanMessages.IY3161_CODE, Locale.ENGLISH);
                 }
 
                 Property prop = OiyoCommonJdbcUtil.resultSet2Property(oiyoInfo, rset, index + 1, entitySet, oiyoProp);

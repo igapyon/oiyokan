@@ -84,6 +84,11 @@ public class OiyokanMessages {
     public static final String IY2108 = "[IY2108] NOT SUPPORTED: Parameter Type";
     public static final int IY2108_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
 
+    public static final String IY2111 = "[IY2111] UNEXPECTED: UriParserException occured.";
+    public static final int IY2111_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
+    public static final String IY2112 = "[IY2112] UNEXPECTED: UriValidationException occured.";
+    public static final int IY2112_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
+
     ////////////////////////////////////////////////////////////////////////////////
     // IY25XX : EntityCollection - TIMEOUT
     public static final String IY2501 = "[IY2501] SQL timeout at count query";
@@ -121,6 +126,9 @@ public class OiyokanMessages {
     public static final String IY3114 = "[IY3114] UNEXPECTED: Can't retrieve PreparedStatement#getGeneratedKeys: Fail to map auto generated key field.";
     public static final int IY3114_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
 
+    public static final String IY3121 = "[IY3121] INFO: SQL exec";
+    public static final String IY3122 = "[IY3122] INFO: SQL exec: elapsed";
+
     public static final String IY3151 = "[IY3151] Fail to execute SQL.";
     public static final int IY3151_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
     public static final String IY3152 = "[IY3152] Fail to execute SQL.";
@@ -129,6 +137,8 @@ public class OiyokanMessages {
     public static final int IY3153_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
     public static final String IY3154 = "[IY3154] Fail to execute SQL.";
     public static final int IY3154_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
+    public static final String IY3161 = "[IY3161] UNEXPECTED: OiyoSettingsProperty NOT found.";
+    public static final int IY3161_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
 
     ////////////////////////////////////////////////////////////////////////////////
     // IY34XX : Entity - Constraint
@@ -222,6 +232,9 @@ public class OiyokanMessages {
     public static final String IY7154 = "[IY7154] NOT SUPPORTED: JDBC Type";
 
     public static final String IY7161 = "[IY7161] Error: Fail to parse DateTime string.";
+
+    public static final String IY7171 = "[IY7171] DEBUG: DB connect";
+    public static final String IY7172 = "[IY7172] INFO: setup oiyokanKan database";
 
     ////////////////////////////////////////////////////////////////////////////////
     // Authz (Server Side)

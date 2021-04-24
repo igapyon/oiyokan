@@ -166,17 +166,16 @@ public class OiyokanEntityCollectionProcessor implements EntityCollectionProcess
                                 null, request.getRawBaseUri());
                         builder.select(uriInfoWrk.getSelectOption());
                     } catch (UriParserException ex) {
-                        ex.printStackTrace();
-                        // TODO message
-                        log.error(OiyokanMessages.IY9999 + ": " + ex.toString());
-                        throw new ODataApplicationException(OiyokanMessages.IY9999, //
-                                OiyokanMessages.IY9999_CODE, Locale.ENGLISH);
+                        // [IY2111] UNEXPECTED: UriParserException occured.
+                        log.error(OiyokanMessages.IY2111 + ": " + ex.toString());
+                        throw new ODataApplicationException(OiyokanMessages.IY2111, //
+                                OiyokanMessages.IY2111_CODE, Locale.ENGLISH);
                     } catch (UriValidationException ex) {
                         ex.printStackTrace();
-                        // TODO message
-                        log.error(OiyokanMessages.IY9999 + ": " + ex.toString());
-                        throw new ODataApplicationException(OiyokanMessages.IY9999, //
-                                OiyokanMessages.IY9999_CODE, Locale.ENGLISH);
+                        // [IY2112] UNEXPECTED: UriValidationException occured..
+                        log.error(OiyokanMessages.IY2112 + ": " + ex.toString());
+                        throw new ODataApplicationException(OiyokanMessages.IY2112, //
+                                OiyokanMessages.IY2112_CODE, Locale.ENGLISH);
                     }
                 }
             }

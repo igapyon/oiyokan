@@ -93,8 +93,9 @@ public class OiyoCommonJdbcUtil {
         // OData server 起動シーケンスにてドライバ存在チェックは既に実施済み.
         // Class.forName(settingsDatabase.getJdbcDriver());
 
-        // TODO message
-        log.debug("DEBUG: DB connect: " + settingsDatabase.getName() + " (" + settingsDatabase.getDescription() + ")");
+        // [IY7171] DEBUG: DB connect
+        log.debug(OiyokanMessages.IY7171 + ": " + settingsDatabase.getName() //
+                + " (" + settingsDatabase.getDescription() + ")");
 
         try {
             if (settingsDatabase.getJdbcUser() == null || settingsDatabase.getJdbcUser().trim().length() == 0) {
@@ -711,8 +712,8 @@ public class OiyoCommonJdbcUtil {
     public static List<String> executeDml(Connection connTargetDb, OiyoSqlInfo sqlInfo, OiyoSettingsEntitySet entitySet,
             boolean returnGeneratedKeys) throws ODataApplicationException {
         final String sql = sqlInfo.getSqlBuilder().toString();
-        // TODO message
-        log.info("OData v4: TRACE: SQL exec: " + sql);
+        // [IY3121] INFO: SQL exec"
+        log.info(OiyokanMessages.IY3121 + ": " + sql);
 
         final long startMillisec = System.currentTimeMillis();
         try (var stmt = connTargetDb.prepareStatement(sql, //
@@ -727,7 +728,7 @@ public class OiyoCommonJdbcUtil {
 
             final int result = stmt.executeUpdate();
             if (result != 1) {
-                // [M201] NO record processed. No Entity effects.
+                // [IY3101] NO record processed. No Entity effects.
                 log.error(OiyokanMessages.IY3101 + ": " + sql);
                 throw new ODataApplicationException(OiyokanMessages.IY3101 + ": " + sql, //
                         OiyokanMessages.IY3101_CODE, Locale.ENGLISH);
@@ -748,8 +749,8 @@ public class OiyoCommonJdbcUtil {
             final long endMillisec = System.currentTimeMillis();
             final long elapsed = endMillisec - startMillisec;
             if (elapsed >= 10) {
-                // TODO message
-                log.info("OData v4: TRACE: SQL: elapsed: " + (endMillisec - startMillisec));
+                // [IY3122] INFO: SQL exec: elapsed
+                log.info(OiyokanMessages.IY3122 + ": " + (endMillisec - startMillisec));
             }
 
             return generatedKeys;
