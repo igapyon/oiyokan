@@ -729,7 +729,7 @@ public class OiyoCommonJdbcUtil {
             final int result = stmt.executeUpdate();
             if (result != 1) {
                 // [IY3101] NO record processed. No Entity effects.
-                log.error(OiyokanMessages.IY3101 + ": " + sql);
+                log.warn(OiyokanMessages.IY3101 + ": " + sql);
                 throw new ODataApplicationException(OiyokanMessages.IY3101 + ": " + sql, //
                         OiyokanMessages.IY3101_CODE, Locale.ENGLISH);
             }
