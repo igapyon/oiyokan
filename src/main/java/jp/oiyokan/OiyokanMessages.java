@@ -112,7 +112,7 @@ public class OiyokanMessages {
     // IY3102
     // IY3103
     // IY3104
-    public static final String IY3105 = "[IY3105] No such Entity data";
+    public static final String IY3105 = "[IY3105] WARN: No such Entity data";
     public static final int IY3105_CODE = HttpStatusCode.NOT_FOUND.getStatusCode();
     public static final String IY3106 = "[IY3106] Fail to execute SQL (readEntity)";
     public static final int IY3106_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();

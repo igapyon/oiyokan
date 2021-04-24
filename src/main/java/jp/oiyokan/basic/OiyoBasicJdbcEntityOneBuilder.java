@@ -113,8 +113,8 @@ public class OiyoBasicJdbcEntityOneBuilder {
             stmt.executeQuery();
             var rset = stmt.getResultSet();
             if (!rset.next()) {
-                // [M207] No such Entity data
-                log.error(OiyokanMessages.IY3105 + ": " + sql);
+                // [IY3105] WARN: No such Entity data
+                log.warn(OiyokanMessages.IY3105 + ": " + sql);
                 throw new ODataApplicationException(OiyokanMessages.IY3105 + ": " //
                         + sql, OiyokanMessages.IY3105_CODE, Locale.ENGLISH);
             }
