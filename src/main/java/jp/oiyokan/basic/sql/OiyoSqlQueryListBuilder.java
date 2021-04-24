@@ -222,14 +222,11 @@ public class OiyoSqlQueryListBuilder {
             final String propName = property.getName();
             if (keyOrEqTarget.contains(propName)) {
                 // すでにKeyとして登録済み
-                log.info("TRACE: $filter において EQ で使用された property について、これは Key でも対象としてマーク済みでした: " + propName);
+                log.trace("TRACE: $filter において EQ で使用された property について、これは Key でも対象としてマーク済みでした: " + propName);
             } else {
                 // $filterにおいてEQで結ばれている項目について、$select 指定がなくとも返却値に設定するため対象として記憶。
-                log.info("TRACE: $filter において EQ で使用された property を Key 同様に $select 対象項目に追加: " + propName);
+                log.trace("TRACE: $filter において EQ で使用された property を Key 同様に $select 対象項目に追加: " + propName);
                 keyOrEqTarget.add(propName);
-                for (String look : keyOrEqTarget) {
-                    System.err.println("USO: " + look);
-                }
             }
         }
 
