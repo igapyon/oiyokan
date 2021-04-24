@@ -25,6 +25,7 @@ import org.apache.olingo.commons.api.edm.provider.CsdlProperty;
 import org.apache.olingo.commons.api.edm.provider.CsdlPropertyRef;
 import org.apache.olingo.server.api.ODataApplicationException;
 
+import jp.oiyokan.OiyokanMessages;
 import jp.oiyokan.common.OiyoCommonJdbcUtil;
 import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.common.OiyoInfoUtil;
@@ -90,9 +91,8 @@ public class OiyoBasicJdbcEntityTypeBuilder {
 
         if (csdlKeyRefList.size() == 0) {
             // キーがないものは OData 的に不都合があるため警告する。
-            // TODO FIXME メッセージ抽出
-            log.error("OData v4: WARNING: No ID: " + entitySet.getName());
-            log.error("OData v4: WARNING: Set primary key on Oiyo table: " + entitySet.getName());
+            // [IY7130] WARN: No key provided EntitySet. Specify key no EntitySet.
+            log.warn(OiyokanMessages.IY7130 + ": " + entitySet.getName());
         }
 
         csdlEntityType.setKey(csdlKeyRefList);
