@@ -30,7 +30,7 @@ import jp.oiyokan.util.OiyokanTestUtil;
  */
 class UnitTestEntityPatchInsert01Test {
     /**
-     * PATCH(INSERT) + DELETE
+     * INSERT (PATCH)
      */
     @Test
     void test01() throws Exception {

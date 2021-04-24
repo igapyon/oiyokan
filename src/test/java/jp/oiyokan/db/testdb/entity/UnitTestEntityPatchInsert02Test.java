@@ -29,7 +29,7 @@ import jp.oiyokan.util.OiyokanTestUtil;
  */
 class UnitTestEntityPatchInsert02Test {
     /**
-     * PATCH(INSERT) + DELETE
+     * UPDATE対象がなく、PATCH(INSERT)しようとするけれど autoGenKeyしばりでエラー終了.
      */
     @Test
     void test01() throws Exception {
@@ -43,18 +43,6 @@ class UnitTestEntityPatchInsert02Test {
         ODataResponse resp = OiyokanTestUtil.callRequestPatch("/ODataTests3(" + NOT_EXISTS_ID + ")", "{\n" //
                 + "  \"Name\":\"Name2\",\n" //
                 + "  \"Description\":\"Description2\"\n" + "}", false, false);
-        assertEquals(204, resp.getStatusCode());
-
-        // INSERTした後なので存在する
-        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests3(" + NOT_EXISTS_ID + ")", null);
-        assertEquals(200, resp.getStatusCode());
-
-        // DELETE
-        resp = OiyokanTestUtil.callRequestDelete("/ODataTests3(" + NOT_EXISTS_ID + ")");
-        assertEquals(204, resp.getStatusCode());
-
-        // DELETE したあとなので存在しない.
-        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests3(" + NOT_EXISTS_ID + ")", null);
         assertEquals(404, resp.getStatusCode());
     }
 }
