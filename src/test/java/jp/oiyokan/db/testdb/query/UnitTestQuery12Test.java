@@ -20,9 +20,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.apache.olingo.server.api.ODataResponse;
 import org.junit.jupiter.api.Test;
 
+import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanUnittestUtil;
 import jp.oiyokan.common.OiyoInfo;
+import jp.oiyokan.common.OiyoInfoUtil;
 import jp.oiyokan.common.OiyoUrlUtil;
+import jp.oiyokan.dto.OiyoSettingsDatabase;
 import jp.oiyokan.util.OiyokanTestUtil;
 
 /**
@@ -31,8 +34,18 @@ import jp.oiyokan.util.OiyokanTestUtil;
 class UnitTestQuery12Test {
     @Test
     void testStringVar255WithAndOr() throws Exception {
-        @SuppressWarnings("unused")
         final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
+
+        OiyoSettingsDatabase database = OiyoInfoUtil.getOiyoDatabaseByEntitySetName(oiyoInfo, "ODataTests1");
+        OiyokanConstants.DatabaseType databaseType = OiyokanConstants.DatabaseType.valueOf(database.getType());
+        switch (databaseType) {
+        case SQLSV2008:
+        case ORCL18:
+            return;
+        default:
+            // テスト処理します。
+            break;
+        }
 
         final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse( //
                 "/ODataTests1", OiyoUrlUtil.encodeUrlQuery(
