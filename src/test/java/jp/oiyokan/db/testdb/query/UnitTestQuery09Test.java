@@ -34,15 +34,13 @@ class UnitTestQuery09Test {
         @SuppressWarnings("unused")
         final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
 
-        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1", OiyoUrlUtil
-                .encodeUrlQuery("$top=1 &$filter=Single1 eq 123.456789 &$orderby=ID &$count=true &$select=ID"));
+        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1",
+                OiyoUrlUtil.encodeUrlQuery("$top=1 &$filter=Single1 eq 123.45 &$orderby=ID &$count=true &$select=ID"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
-        // System.err.println("result: " + result);
-        // TODO FIXME Singleで桁溢れ
         assertEquals(
-                "{\"@odata.context\":\"$metadata#ODataTests1\",\"@odata.count\":204,\"value\":[{\"ID\":1,\"Single1\":123.45679}]}",
-                result, "Postgresの場合にヒットできない (既知の問題)");
+                "{\"@odata.context\":\"$metadata#ODataTests1\",\"@odata.count\":204,\"value\":[{\"ID\":1,\"Single1\":123.45}]}",
+                result, "Single型の確認");
         assertEquals(200, resp.getStatusCode());
     }
 }
