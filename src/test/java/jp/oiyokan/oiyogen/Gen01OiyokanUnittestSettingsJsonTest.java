@@ -91,8 +91,10 @@ class Gen01OiyokanUnittestSettingsJsonTest {
 
             for (String tableName : tableNameList) {
                 try {
-                    oiyoSettings.getEntitySet().add(OiyokanSettingsGenUtil.generateCreateOiyoJson(connTargetDb,
-                            tableName, OiyokanConstants.DatabaseType.valueOf(settingsDatabase.getType())));
+                    final OiyoSettingsEntitySet entitySet = OiyokanSettingsGenUtil.generateCreateOiyoJson(connTargetDb,
+                            tableName, OiyokanConstants.DatabaseType.valueOf(settingsDatabase.getType()));
+                    oiyoSettings.getEntitySet().add(entitySet);
+                    entitySet.setDbSettingName(TARGET_UNITTEST_DATABASE);
                 } catch (Exception ex) {
                     System.err.println("Fail to read table: " + tableName);
                 }

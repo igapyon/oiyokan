@@ -220,16 +220,10 @@ public class OiyoSqlQueryListBuilder {
         }
         for (OiyoSettingsProperty property : sqlInfo.getBinaryOperatorEqPropertyList()) {
             final String propName = property.getName();
-            boolean isAlreadyAdded = false;
-            for (String keyName : keyOrEqTarget) {
-                if (keyName.equals(propName)) {
-                    // すでにKeyとして登録済み
-                    log.trace("TRACE: $filter において EQ で使用された property について、これは Key でも対象としてマーク済みでした: " + propName);
-                    isAlreadyAdded = true;
-                    break;
-                }
-            }
-            if (!isAlreadyAdded) {
+            if (keyOrEqTarget.contains(propName)) {
+                // すでにKeyとして登録済み
+                log.trace("TRACE: $filter において EQ で使用された property について、これは Key でも対象としてマーク済みでした: " + propName);
+            } else {
                 // $filterにおいてEQで結ばれている項目について、$select 指定がなくとも返却値に設定するため対象として記憶。
                 log.trace("TRACE: $filter において EQ で使用された property を Key 同様に $select 対象項目に追加: " + propName);
                 keyOrEqTarget.add(propName);
@@ -250,22 +244,25 @@ public class OiyoSqlQueryListBuilder {
                     sqlInfo.getSelectColumnNameList().add(prop.getName());
                 }
                 sqlInfo.getSqlBuilder().append(OiyoCommonJdbcUtil.escapeKakkoFieldName(sqlInfo, prop.getDbName()));
-                for (int index = 0; index < keyOrEqTarget.size(); index++) {
+                for (int index = keyOrEqTarget.size() - 1; index >= 0; index--) {
                     if (keyOrEqTarget.get(index).equals(prop.getName())) {
                         // 検索項目がキーであれば、すでに検索済みキーとしてリストから除去。
                         // これは、キー項目は選択された検索項目であろうがなかろうが検索する必要があるための一連の処理。
                         keyOrEqTarget.remove(index);
-                        break;
+                        // あえて break せずに繰り返し。
                     }
                 }
             }
         }
         for (int index = 0; index < keyOrEqTarget.size(); index++) {
             // レコードを一意に表すID項目が必須。検索対象にない場合は追加.
+            log.trace("TRACE: KEY項目および $filter において EQ で使用された項目をバインドに追加: " + keyOrEqTarget.get(index));
             sqlInfo.getSqlBuilder().append(itemCount++ == 0 ? "" : ",");
             final String unescapedName = OiyoCommonJdbcUtil.unescapeKakkoFieldName(keyOrEqTarget.get(index));
             // SELECTの検索項目名を追加。
-            sqlInfo.getSelectColumnNameList().add(unescapedName);
+            if (!isSecondPass) {
+                sqlInfo.getSelectColumnNameList().add(unescapedName);
+            }
             sqlInfo.getSqlBuilder().append(unescapedName);
         }
     }
@@ -296,6 +293,8 @@ public class OiyoSqlQueryListBuilder {
             ///////////////////////////////////
             // SQLSV2008 / ORCL18 用特殊記述
             // 現在、無条件にサブクエリ展開
+
+            // SQLSV2008 の場合は TOP により件数抑制.
             String topfilterForSql2000 = "";
             if (OiyokanConstants.DatabaseType.SQLSV2008 == databaseType) {
                 // SQL Server の場合 SKIP 指定がある場合のコースとなる。

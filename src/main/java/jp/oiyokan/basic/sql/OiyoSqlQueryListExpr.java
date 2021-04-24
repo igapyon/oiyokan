@@ -209,6 +209,7 @@ public class OiyoSqlQueryListExpr {
                     OiyoSettingsProperty property = expandMember(member);
                     log.trace("TRACE: $filter において EQ とともに使用された property: " + property.getName());
                     sqlInfo.getBinaryOperatorEqPropertyList().add(property);
+
                     sqlInfo.getSqlBuilder().append(" IS NULL");
 
                     if (property.getFilterTreatNullAsBlank() != null && property.getFilterTreatNullAsBlank()) {
@@ -226,6 +227,7 @@ public class OiyoSqlQueryListExpr {
                 OiyoSettingsProperty property = expandMember(member);
                 log.trace("TRACE: $filter において EQ とともに使用された property: " + property.getName());
                 sqlInfo.getBinaryOperatorEqPropertyList().add(property);
+
                 sqlInfo.getSqlBuilder().append(" = ");
                 expandLiteral(literal, property);
                 sqlInfo.getSqlBuilder().append(")");

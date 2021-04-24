@@ -244,13 +244,23 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
         {
             log.trace("TRACE: Check $filter. Find property used EQ and remember.");
             final OiyoSqlInfo sqlInfoDummy = new OiyoSqlInfo(oiyoInfo, entitySet.getName());
+
             if (uriInfo.getFilterOption() != null) {
                 new OiyoSqlQueryListExpr(oiyoInfo, sqlInfoDummy).expand(uriInfo.getFilterOption().getExpression());
             }
             for (OiyoSettingsProperty prop : sqlInfoDummy.getBinaryOperatorEqPropertyList()) {
                 // 1パス目で見つかった property を 2パス目の OiyoSqlInfo に複写.
-                log.trace("TRACE: Copy property to main OiyoSqlInfo.: " + prop.getName());
-                basicSqlBuilder.getSqlInfo().getBinaryOperatorEqPropertyList().add(prop);
+                // 同名のものがあれば追加は抑止.
+                boolean isAlreadyAdded = false;
+                for (OiyoSettingsProperty look : basicSqlBuilder.getSqlInfo().getBinaryOperatorEqPropertyList()) {
+                    if (look.getName().equals(prop.getName())) {
+                        isAlreadyAdded = true;
+                    }
+                }
+                if (isAlreadyAdded == false) {
+                    log.trace("TRACE: Copy property to main OiyoSqlInfo.: " + prop.getName());
+                    basicSqlBuilder.getSqlInfo().getBinaryOperatorEqPropertyList().add(prop);
+                }
             }
         }
 
@@ -287,6 +297,7 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
             for (; rset.next();) {
                 final Entity ent = new Entity();
                 for (int index = 0; index < sqlInfo.getSelectColumnNameList().size(); index++) {
+                    log.trace("TRACE: Bind parameter:" + sqlInfo.getSelectColumnNameList().get(index));
                     // 取得された検索結果を Property に組み替え.
                     OiyoSettingsProperty oiyoProp = OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, entitySetName,
                             sqlInfo.getSelectColumnNameList().get(index));
