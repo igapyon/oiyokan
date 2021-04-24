@@ -32,6 +32,7 @@
             "edmType": "Edm.Int32",
             "jdbcType": "Types.INTEGER",
             "dbType": "INTEGER",
+            "autoGenKey" : true,
             "nullable": false
           },
           {
@@ -321,6 +322,7 @@
             "edmType": "Edm.Int32",
             "jdbcType": "Types.INTEGER",
             "dbType": "INTEGER",
+            "autoGenKey" : true,
             "nullable": false
           },
           {
@@ -588,6 +590,7 @@
             "edmType": "Edm.Int64",
             "jdbcType": "Types.BIGINT",
             "dbType": "BIGINT",
+            "autoGenKey" : true,
             "nullable": false
           },
           {
@@ -632,6 +635,7 @@
             "edmType": "Edm.Int32",
             "jdbcType": "Types.INTEGER",
             "dbType": "INTEGER",
+            "autoGenKey" : true,
             "nullable": false
           },
           {
