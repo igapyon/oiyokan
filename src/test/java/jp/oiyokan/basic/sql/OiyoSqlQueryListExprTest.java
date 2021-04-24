@@ -27,12 +27,14 @@ import org.apache.olingo.server.api.uri.UriInfo;
 import org.apache.olingo.server.core.uri.parser.Parser;
 import org.junit.jupiter.api.Test;
 
+import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanEdmProvider;
 import jp.oiyokan.OiyokanUnittestUtil;
 import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.common.OiyoInfoUtil;
 import jp.oiyokan.common.OiyoSqlInfo;
 import jp.oiyokan.common.OiyoUrlUtil;
+import jp.oiyokan.dto.OiyoSettingsDatabase;
 import jp.oiyokan.dto.OiyoSettingsEntitySet;
 
 /**
@@ -87,9 +89,29 @@ class OiyoSqlQueryListExprTest {
 
     @Test
     void test03() throws Exception {
-        assertEquals("((INSTR(Description,?) - 1) <> -1)", getExprString("/ODataTests1", //
-                OiyoUrlUtil.encodeUrlQuery(
-                        "$top=51&$filter= indexof(Description,'増殖タブレット7') ne -1 &$orderby=ID &$count=true &$select=Description,ID,Name")),
-                "Postgres/ORCL18の場合、命令の差異、大文字小文字の差異が出る");
+        final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
+        OiyoSettingsDatabase database = OiyoInfoUtil.getOiyoDatabaseByEntitySetName(oiyoInfo, "ODataTests1");
+        OiyokanConstants.DatabaseType databaseType = OiyokanConstants.DatabaseType.valueOf(database.getType());
+
+        switch (databaseType) {
+        default:
+            assertEquals("((INSTR(Description,?) - 1) <> -1)", getExprString("/ODataTests1", //
+                    OiyoUrlUtil.encodeUrlQuery(
+                            "$top=51&$filter= indexof(Description,'増殖タブレット7') ne -1 &$orderby=ID &$count=true &$select=Description,ID,Name")),
+                    "ORCL18の場合、命令の差異、大文字小文字の差異が出る");
+            break;
+        case postgres:
+            assertEquals("((STRPOS(Description,?) - 1) <> -1)", getExprString("/ODataTests1", //
+                    OiyoUrlUtil.encodeUrlQuery(
+                            "$top=51&$filter= indexof(Description,'増殖タブレット7') ne -1 &$orderby=ID &$count=true &$select=Description,ID,Name")),
+                    "postgres");
+            break;
+        case SQLSV2008:
+            assertEquals("((CHARINDEX(?,Description) - 1) <> -1)", getExprString("/ODataTests1", //
+                    OiyoUrlUtil.encodeUrlQuery(
+                            "$top=51&$filter= indexof(Description,'増殖タブレット7') ne -1 &$orderby=ID &$count=true &$select=Description,ID,Name")),
+                    "SQLSV2008");
+            break;
+        }
     }
 }

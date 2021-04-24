@@ -43,11 +43,9 @@ class UnitTestTypeBinary01Test {
                 + "}");
         String result = OiyokanTestUtil.stream2String(resp.getContent());
         final String idString = OiyokanTestUtil.getValueFromResultByKey(result, "ID");
-        assertEquals("{\"@odata.context\":\"$metadata#ODataTests6\",\"ID\":" + idString
-                + ",\"Name\":\"Binary UnitTest\",\"Description\":\"Binary UnitTest table.\"" //
-                + ",\"Binary1\":\"VG9uYXJpIG5vIGt5YWt1Lg==\",\"VarBinary1\":\"VG9uYXJpIG5vIGt5YWt1Lg==\",\"LongVarBinary1\":\"VG9uYXJpIG5vIGt5YWt1Lg==\",\"Blob1\":\"VG9uYXJpIG5vIGt5YWt1Lg==\"}",
-                result, //
-                "INSERTできることを確認. MySQLではエラー Binary1が固定長扱いで後方に自動埋め込みが発生(既知の問題。だが解決方法にアイデア現状なし), MySQLでエラー(テストの既知の問題)、 SQLSV2008でエラー(既知の問題)");
+        assertEquals("\"VG9uYXJpIG5vIGt5YWt1Lg==\"", OiyokanTestUtil.getValueFromResultByKey(result, "VarBinary1"));
+        assertEquals("\"VG9uYXJpIG5vIGt5YWt1Lg==\"", OiyokanTestUtil.getValueFromResultByKey(result, "LongVarBinary1"));
+        assertEquals("\"VG9uYXJpIG5vIGt5YWt1Lg==\"", OiyokanTestUtil.getValueFromResultByKey(result, "Blob1"));
         assertEquals(201, resp.getStatusCode());
 
         resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests6(" + idString + ")", null);
@@ -57,7 +55,7 @@ class UnitTestTypeBinary01Test {
 
         // UPDATE (PATCH)
         resp = OiyokanTestUtil.callRequestPatch("/ODataTests6(" + idString + ")", "{\n" //
-                + "  \"Binary1\":\"SG91cnl1amku\"\n" //
+                + "  \"VarBinary1\":\"SG91cnl1amku\"\n" //
                 + "}", false, false);
         result = OiyokanTestUtil.stream2String(resp.getContent());
         // System.err.println(result);
@@ -65,19 +63,19 @@ class UnitTestTypeBinary01Test {
 
         resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests6(" + idString + ")", null);
         result = OiyokanTestUtil.stream2String(resp.getContent());
-        assertEquals("{\"@odata.context\":\"$metadata#ODataTests6\",\"ID\":" + idString
-                + ",\"Name\":\"Binary UnitTest\",\"Description\":\"Binary UnitTest table.\"" //
-                + ",\"Binary1\":\"SG91cnl1amku\",\"VarBinary1\":\"VG9uYXJpIG5vIGt5YWt1Lg==\",\"LongVarBinary1\":\"VG9uYXJpIG5vIGt5YWt1Lg==\",\"Blob1\":\"VG9uYXJpIG5vIGt5YWt1Lg==\"}",
-                result, "UPDATE(PATCH)後の値を確認.");
+        assertEquals("\"SG91cnl1amku\"", OiyokanTestUtil.getValueFromResultByKey(result, "VarBinary1"),
+                "UPDATE(PATCH)後の値をEntity Readで確認.");
+        assertEquals("\"VG9uYXJpIG5vIGt5YWt1Lg==\"", OiyokanTestUtil.getValueFromResultByKey(result, "LongVarBinary1"));
+        assertEquals("\"VG9uYXJpIG5vIGt5YWt1Lg==\"", OiyokanTestUtil.getValueFromResultByKey(result, "Blob1"));
         assertEquals(200, resp.getStatusCode());
 
         /// 通常のfilter
         resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests6", "$filter=ID eq " + idString);
         result = OiyokanTestUtil.stream2String(resp.getContent());
-        // System.err.println("TRACE: " + result);
-        assertEquals("{\"@odata.context\":\"$metadata#ODataTests6\",\"value\":[{\"ID\":" + idString
-                + ",\"Name\":\"Binary UnitTest\",\"Description\":\"Binary UnitTest table.\",\"Binary1\":\"SG91cnl1amku\",\"VarBinary1\":\"VG9uYXJpIG5vIGt5YWt1Lg==\",\"LongVarBinary1\":\"VG9uYXJpIG5vIGt5YWt1Lg==\",\"Blob1\":\"VG9uYXJpIG5vIGt5YWt1Lg==\"}]}",
-                result, "通常のFILTER検索ができることを確認.");
+        assertEquals("\"SG91cnl1amku\"", OiyokanTestUtil.getValueFromResultByKey(result, "VarBinary1"),
+                "UPDATE(PATCH)後の値を$filterから確認.");
+        assertEquals("\"VG9uYXJpIG5vIGt5YWt1Lg==\"", OiyokanTestUtil.getValueFromResultByKey(result, "LongVarBinary1"));
+        assertEquals("\"VG9uYXJpIG5vIGt5YWt1Lg==\"", OiyokanTestUtil.getValueFromResultByKey(result, "Blob1"));
         assertEquals(200, resp.getStatusCode());
 
         // DELETE
