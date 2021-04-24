@@ -60,7 +60,7 @@ public class OiyokanSettingsGenUtil {
      * @throws SQLException
      * @throws ODataApplicationException
      */
-    public static OiyoSettingsEntitySet generateCreateOiyoJson(Connection connTargetDb, String tableName,
+    public static OiyoSettingsEntitySet generateSettingsEntitySet(Connection connTargetDb, String tableName,
             OiyokanConstants.DatabaseType databaseType) throws SQLException, ODataApplicationException {
         final OiyoSettingsEntitySet entitySet = new OiyoSettingsEntitySet();
         entitySet.setEntityType(new OiyoSettingsEntityType());
@@ -219,6 +219,14 @@ public class OiyokanSettingsGenUtil {
                     property.setNullable(null);
                 }
 
+                if ("IDENTITY".equalsIgnoreCase(property.getDbType()) //
+                        || "SERIAL".equalsIgnoreCase(property.getDbType()) //
+                        || "SEQUENCE".equalsIgnoreCase(property.getDbType()) //
+                        || property.getDbDefault() != null && property.getDbDefault().contains("NEXT VALUE FOR") //
+                ) {
+                    // TODO SQLSV2008の時の挙動は調査が必要.
+                    property.setAutoGenKey(true);
+                }
             }
 
             // テーブルのキー情報
