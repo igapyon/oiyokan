@@ -250,12 +250,12 @@ public class OiyoSqlQueryListBuilder {
                     sqlInfo.getSelectColumnNameList().add(prop.getName());
                 }
                 sqlInfo.getSqlBuilder().append(OiyoCommonJdbcUtil.escapeKakkoFieldName(sqlInfo, prop.getDbName()));
-                for (int index = 0; index < keyOrEqTarget.size(); index++) {
+                for (int index = keyOrEqTarget.size() - 1; index >= 0; index--) {
                     if (keyOrEqTarget.get(index).equals(prop.getName())) {
                         // 検索項目がキーであれば、すでに検索済みキーとしてリストから除去。
                         // これは、キー項目は選択された検索項目であろうがなかろうが検索する必要があるための一連の処理。
                         keyOrEqTarget.remove(index);
-                        break;
+                        // あえて break せずに繰り返し。
                     }
                 }
             }
