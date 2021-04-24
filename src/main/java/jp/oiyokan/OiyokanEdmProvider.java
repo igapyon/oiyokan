@@ -120,10 +120,10 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
 
             return csdlEntityType;
         } catch (ODataApplicationException ex) {
-            log.error("ERROR: OiyokanEdmProvider#getEntityType(" + entityTypeName + "): " + ex.toString());
+            log.warn("WARN: OiyokanEdmProvider#getEntityType(" + entityTypeName + "): " + ex.toString());
             throw ex;
         } catch (RuntimeException ex) {
-            log.fatal("FATAL: OiyokanEdmProvider#getEntityType(" + entityTypeName + "): " + ex.toString(), ex);
+            log.error("ERROR: OiyokanEdmProvider#getEntityType(" + entityTypeName + "): " + ex.toString(), ex);
             throw ex;
         }
     }
@@ -162,10 +162,10 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
             // ヒットしない場合は対象外。その場合は null返却.
             return csdlEntitySet;
         } catch (ODataApplicationException ex) {
-            log.error("ERROR: OiyokanEdmProvider#getEntitySet(" + entitySetName + "): " + ex.toString());
+            log.warn("WARN: OiyokanEdmProvider#getEntitySet(" + entitySetName + "): " + ex.toString());
             throw ex;
         } catch (RuntimeException ex) {
-            log.fatal("FATAL: OiyokanEdmProvider#getEntitySet(" + entitySetName + "): " + ex.toString(), ex);
+            log.error("ERROR: OiyokanEdmProvider#getEntitySet(" + entitySetName + "): " + ex.toString(), ex);
             throw ex;
         }
     }
@@ -234,10 +234,10 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
 
             return csdlEntityContainer;
         } catch (ODataApplicationException ex) {
-            log.error("ERROR: OiyokanEdmProvider#getEntityContainer(): " + ex.toString());
+            log.warn("WARN: OiyokanEdmProvider#getEntityContainer(): " + ex.toString());
             throw ex;
         } catch (RuntimeException ex) {
-            log.fatal("FATAL: OiyokanEdmProvider#getEntityContainer(): " + ex.toString(), ex);
+            log.error("ERROR: OiyokanEdmProvider#getEntityContainer(): " + ex.toString(), ex);
             throw ex;
         }
     }
@@ -280,10 +280,10 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
 
             return newSchemaList;
         } catch (ODataApplicationException ex) {
-            log.error("ERROR: OiyokanEdmProvider#getSchemas(): " + ex.toString());
+            log.warn("WARN: OiyokanEdmProvider#getSchemas(): " + ex.toString());
             throw ex;
         } catch (RuntimeException ex) {
-            log.fatal("FATAL: OiyokanEdmProvider#getSchemas(): " + ex.toString(), ex);
+            log.error("ERROR: OiyokanEdmProvider#getSchemas(): " + ex.toString(), ex);
             throw ex;
         }
     }
@@ -317,10 +317,10 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
 
             return null;
         } catch (ODataApplicationException ex) {
-            log.error("ERROR: OiyokanEdmProvider#getEntityContainerInfo(): " + ex.toString());
+            log.warn("WARN: OiyokanEdmProvider#getEntityContainerInfo(): " + ex.toString());
             throw ex;
         } catch (RuntimeException ex) {
-            log.fatal("FATAL: OiyokanEdmProvider#getEntityContainerInfo(): " + ex.toString(), ex);
+            log.error("ERROR: OiyokanEdmProvider#getEntityContainerInfo(): " + ex.toString(), ex);
             throw ex;
         }
     }

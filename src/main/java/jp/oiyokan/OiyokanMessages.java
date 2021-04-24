@@ -28,11 +28,13 @@ public class OiyokanMessages {
     public static final String IY1051 = "[IY1051] Check JDBC Driver";
     public static final String IY1052 = "[IY1052] OData v4: URI";
 
-    public static final String IY1061 = "[IY1061] OData v4: QUERY";
-    public static final String IY1062 = "[IY1062] OData v4: COUNT";
-    public static final String IY1063 = "[IY1063] OData v4: COUNT = ";
-    public static final String IY1064 = "[IY1064] OData v4: SQL collect";
-    public static final String IY1065 = "[IY1065] OData v4: SQL: elapsed";
+    public static final String IY1061 = "[IY1061] DEBUG: QUERY";
+    public static final String IY1062 = "[IY1062] INFO: COUNT";
+    public static final String IY1063 = "[IY1063] INFO: COUNT = ";
+    public static final String IY1064 = "[IY1064] INFO: SQL collect";
+    public static final String IY1065 = "[IY1065] INFO: SQL collect: elapsed";
+    public static final String IY1066 = "[IY1066] INFO: SQL exec";
+    public static final String IY1067 = "[IY1067] INFO: SQL exec: elapsed";
 
     public static final String IY1071 = "[IY1071] OData v4: ENTITY: READ";
     public static final String IY1072 = "[IY1072] OData v4: SQL single";
@@ -84,6 +86,11 @@ public class OiyokanMessages {
     public static final String IY2108 = "[IY2108] NOT SUPPORTED: Parameter Type";
     public static final int IY2108_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
 
+    public static final String IY2111 = "[IY2111] UNEXPECTED: UriParserException occured.";
+    public static final int IY2111_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
+    public static final String IY2112 = "[IY2112] UNEXPECTED: UriValidationException occured.";
+    public static final int IY2112_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
+
     ////////////////////////////////////////////////////////////////////////////////
     // IY25XX : EntityCollection - TIMEOUT
     public static final String IY2501 = "[IY2501] SQL timeout at count query";
@@ -105,7 +112,7 @@ public class OiyokanMessages {
     // IY3102
     // IY3103
     // IY3104
-    public static final String IY3105 = "[IY3105] No such Entity data";
+    public static final String IY3105 = "[IY3105] WARN: No such Entity data";
     public static final int IY3105_CODE = HttpStatusCode.NOT_FOUND.getStatusCode();
     public static final String IY3106 = "[IY3106] Fail to execute SQL (readEntity)";
     public static final int IY3106_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
@@ -129,6 +136,8 @@ public class OiyokanMessages {
     public static final int IY3153_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
     public static final String IY3154 = "[IY3154] Fail to execute SQL.";
     public static final int IY3154_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
+    public static final String IY3161 = "[IY3161] UNEXPECTED: OiyoSettingsProperty NOT found.";
+    public static final int IY3161_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
 
     ////////////////////////////////////////////////////////////////////////////////
     // IY34XX : Entity - Constraint
@@ -198,7 +207,7 @@ public class OiyokanMessages {
     public static final String IY7109 = "[IY7109] UNEXPECTED: missing impl";
     public static final String IY7110 = "[IY7110] UNEXPECTED: Fail to load setting SQL file";
     // IY7111
-    public static final String IY7112 = "[IY7112] UNEXPECTED: Fail to load Oiyokan settings";
+    public static final String IY7112 = "[IY7112] WARN: Fail to load Oiyokan settings";
     // IY7113
     public static final String IY7114 = "[IY7114] UNEXPECTED: Database settings NOT found";
     public static final String IY7115 = "[IY7115] UNEXPECTED: Fail to create local table: Oiyokan";
@@ -214,12 +223,19 @@ public class OiyokanMessages {
     public static final String IY7123 = "[IY7123] UNEXPECTED: Fail to find Property from DB name.";
     public static final String IY7124 = "[IY7124] NOT SUPPORTED: Database type";
 
+    public static final String IY7130 = "[IY7130] WARN: No key provided EntitySet. Specify key no EntitySet.";
+
     public static final String IY7151 = "[IY7151] NOT SUPPORTED: JDBC Type";
     public static final String IY7152 = "[IY7152] NOT SUPPORTED: Edm Type";
     public static final String IY7153 = "[IY7153] NOT SUPPORTED: JDBC Type String.";
     public static final String IY7154 = "[IY7154] NOT SUPPORTED: JDBC Type";
 
     public static final String IY7161 = "[IY7161] Error: Fail to parse DateTime string.";
+
+    public static final String IY7171 = "[IY7171] DEBUG: DB connect";
+    public static final String IY7172 = "[IY7172] INFO: setup oiyokanKan database";
+    public static final String IY7173 = "[IY7173] INFO: start to load oiyokan settings";
+    public static final String IY7174 = "[IY7174] INFO: load oiyokan settings";
 
     ////////////////////////////////////////////////////////////////////////////////
     // Authz (Server Side)

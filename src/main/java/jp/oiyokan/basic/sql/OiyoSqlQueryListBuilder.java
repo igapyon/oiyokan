@@ -103,10 +103,6 @@ public class OiyoSqlQueryListBuilder {
 
         expandFrom(uriInfo);
 
-        // uriInfo.getCountOption は明示的には記載しない.
-        // 現状の実装では指定があろうがなかろうが件数はカウントする実装となっている.
-        // TODO FIXME 現状でも常にカウントしているかどうか確認すること。
-
         final OiyokanConstants.DatabaseType databaseType = OiyoInfoUtil
                 .getOiyoDatabaseTypeByEntitySetName(sqlInfo.getOiyoInfo(), sqlInfo.getEntitySetName());
 

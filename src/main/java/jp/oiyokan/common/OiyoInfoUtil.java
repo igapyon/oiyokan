@@ -49,7 +49,8 @@ public class OiyoInfoUtil {
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
     public static OiyoSettings loadOiyokanSettings() throws ODataApplicationException {
-        log.info("OData v4: resources: load: oiyokan settings");
+        // [IY7173] INFO: start to load oiyokan settings
+        log.info(OiyokanMessages.IY7173);
 
         final OiyoSettings mergedOiyoSettings = new OiyoSettings();
         mergedOiyoSettings.setDatabase(new ArrayList<>());
@@ -61,7 +62,8 @@ public class OiyoInfoUtil {
         };
 
         for (String settings : OIYOKAN_SETTINGS) {
-            log.info("OData v4: resources: load: " + settings);
+            // [IY7174] INFO: load oiyokan settings
+            log.info(OiyokanMessages.IY7174 + ": " + settings);
             // resources から読み込み。
             final ClassPathResource cpres = new ClassPathResource(settings);
             try (InputStream inStream = cpres.getInputStream()) {
@@ -82,9 +84,9 @@ public class OiyoInfoUtil {
                     mergedOiyoSettings.getEntitySet().add(entitySet);
                 }
             } catch (IOException ex) {
-                // [M024] UNEXPECTED: Fail to load Oiyokan settings
-                log.error(OiyokanMessages.IY7112 + ": " + ex.toString());
-                // しかし例外は発生させず処理続行。
+                // [M024] WARN: Fail to load Oiyokan settings
+                log.warn(OiyokanMessages.IY7112 + ": " + ex.toString());
+                // 例外は発生させない。そのまま処理続行する。
             }
         }
 

@@ -56,7 +56,7 @@ class UnitTestOiyokanKanTest {
         final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/Oiyokans('Provider')", null);
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
-        System.err.println("result: " + result);
+        // System.err.println("result: " + result);
         assertEquals("{\"@odata.context\":\"$metadata#Oiyokans\",\"KeyName\":\"Provider\",\"KeyValue\":\"Oiyokan\"}",
                 result);
         assertEquals(200, resp.getStatusCode());

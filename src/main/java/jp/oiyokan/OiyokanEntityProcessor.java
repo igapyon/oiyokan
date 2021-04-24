@@ -133,11 +133,11 @@ public class OiyokanEntityProcessor implements EntityProcessor {
             response.setHeader(HttpHeader.CONTENT_TYPE, responseFormat.toContentTypeString());
 
         } catch (ODataApplicationException ex) {
-            log.error("ERROR: OiyokanEntityProcessor#readEntity(" + request.getRawODataPath() + ","
+            log.warn("WARN: OiyokanEntityProcessor#readEntity(" + request.getRawODataPath() + ","
                     + request.getRawQueryPath() + "): " + ex.toString());
             throw ex;
         } catch (RuntimeException ex) {
-            log.fatal("FATAL: OiyokanEntityProcessor#readEntity(" + request.getRawODataPath() + ","
+            log.error("ERROR: OiyokanEntityProcessor#readEntity(" + request.getRawODataPath() + ","
                     + request.getRawQueryPath() + "): " + ex.toString(), ex);
             throw ex;
         }
@@ -200,11 +200,11 @@ public class OiyokanEntityProcessor implements EntityProcessor {
             response.setHeader(HttpHeader.CONTENT_TYPE, responseFormat.toContentTypeString());
 
         } catch (ODataApplicationException ex) {
-            log.error("ERROR: OiyokanEntityProcessor#createEntity(" + request.getRawODataPath() + ","
+            log.warn("WARN: OiyokanEntityProcessor#createEntity(" + request.getRawODataPath() + ","
                     + request.getRawQueryPath() + "): " + ex.toString());
             throw ex;
         } catch (RuntimeException ex) {
-            log.fatal("FATAL: OiyokanEntityProcessor#createEntity(" + request.getRawODataPath() + ","
+            log.error("ERROR: OiyokanEntityProcessor#createEntity(" + request.getRawODataPath() + ","
                     + request.getRawQueryPath() + "): " + ex.toString(), ex);
             throw ex;
         }
@@ -275,11 +275,11 @@ public class OiyokanEntityProcessor implements EntityProcessor {
             response.setHeader(HttpHeader.CONTENT_TYPE, responseFormat.toContentTypeString());
 
         } catch (ODataApplicationException ex) {
-            log.error("ERROR: OiyokanEntityProcessor#updateEntity(" + request.getRawODataPath() + ","
+            log.warn("WARN: OiyokanEntityProcessor#updateEntity(" + request.getRawODataPath() + ","
                     + request.getRawQueryPath() + "): " + ex.toString());
             throw ex;
         } catch (RuntimeException ex) {
-            log.fatal("FATAL: OiyokanEntityProcessor#updateEntity(" + request.getRawODataPath() + ","
+            log.error("ERROR: OiyokanEntityProcessor#updateEntity(" + request.getRawODataPath() + ","
                     + request.getRawQueryPath() + "): " + ex.toString(), ex);
             throw ex;
         }
@@ -318,11 +318,11 @@ public class OiyokanEntityProcessor implements EntityProcessor {
             response.setStatusCode(HttpStatusCode.NO_CONTENT.getStatusCode());
 
         } catch (ODataApplicationException ex) {
-            log.error("ERROR: OiyokanEntityProcessor#deleteEntity(" + request.getRawODataPath() + ","
+            log.warn("WARN: OiyokanEntityProcessor#deleteEntity(" + request.getRawODataPath() + ","
                     + request.getRawQueryPath() + "): " + ex.toString());
             throw ex;
         } catch (RuntimeException ex) {
-            log.fatal("FATAL: OiyokanEntityProcessor#deleteEntity(" + request.getRawODataPath() + ","
+            log.error("ERROR: OiyokanEntityProcessor#deleteEntity(" + request.getRawODataPath() + ","
                     + request.getRawQueryPath() + "): " + ex.toString(), ex);
             throw ex;
         }

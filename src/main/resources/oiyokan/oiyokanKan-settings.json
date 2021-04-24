@@ -5,7 +5,7 @@
     {
       "name": "oiyokanKan",
       "type": "h2",
-      "description": "Oiyokan internal DB. Do not change.",
+      "description": "Oiyokan kanri DB.",
       "jdbcDriver": "org.h2.Driver",
       "jdbcUrl": "jdbc:h2:mem:oiyokan;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=FALSE;MODE=MSSQLServer",
       "jdbcUser": "sa",
