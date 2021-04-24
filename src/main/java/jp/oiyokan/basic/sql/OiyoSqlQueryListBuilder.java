@@ -259,7 +259,7 @@ public class OiyoSqlQueryListBuilder {
         }
         for (int index = 0; index < keyOrEqTarget.size(); index++) {
             // レコードを一意に表すID項目が必須。検索対象にない場合は追加.
-            log.info("TRACE: KEY項目および $filter において EQ で使用された項目をバインドに追加: " + keyOrEqTarget.get(index));
+            log.trace("TRACE: KEY項目および $filter において EQ で使用された項目をバインドに追加: " + keyOrEqTarget.get(index));
             sqlInfo.getSqlBuilder().append(itemCount++ == 0 ? "" : ",");
             final String unescapedName = OiyoCommonJdbcUtil.unescapeKakkoFieldName(keyOrEqTarget.get(index));
             // SELECTの検索項目名を追加。

@@ -37,9 +37,7 @@ public class OiyoSqlInfo {
 
     private final StringBuilder sqlBuilder = new StringBuilder();
     private final List<String> selectColumnNameList = new ArrayList<>();
-
     private final List<OiyoSettingsProperty> binaryOperatorEqPropertyList = new ArrayList<>();
-
     private final List<Object> sqlParamList = new ArrayList<>();
 
     /**
