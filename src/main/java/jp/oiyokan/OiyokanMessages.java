@@ -28,11 +28,13 @@ public class OiyokanMessages {
     public static final String IY1051 = "[IY1051] Check JDBC Driver";
     public static final String IY1052 = "[IY1052] OData v4: URI";
 
-    public static final String IY1061 = "[IY1061] OData v4: QUERY";
-    public static final String IY1062 = "[IY1062] OData v4: COUNT";
-    public static final String IY1063 = "[IY1063] OData v4: COUNT = ";
-    public static final String IY1064 = "[IY1064] OData v4: SQL collect";
-    public static final String IY1065 = "[IY1065] OData v4: SQL: elapsed";
+    public static final String IY1061 = "[IY1061] DEBUG: QUERY";
+    public static final String IY1062 = "[IY1062] INFO: COUNT";
+    public static final String IY1063 = "[IY1063] INFO: COUNT = ";
+    public static final String IY1064 = "[IY1064] INFO: SQL collect";
+    public static final String IY1065 = "[IY1065] INFO: SQL: elapsed";
+    public static final String IY1066 = "[IY1066] INFO: SQL exec";
+    public static final String IY1067 = "[IY1067] INFO: SQL exec: elapsed";
 
     public static final String IY1071 = "[IY1071] OData v4: ENTITY: READ";
     public static final String IY1072 = "[IY1072] OData v4: SQL single";
@@ -126,9 +128,6 @@ public class OiyokanMessages {
     public static final String IY3114 = "[IY3114] UNEXPECTED: Can't retrieve PreparedStatement#getGeneratedKeys: Fail to map auto generated key field.";
     public static final int IY3114_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
 
-    public static final String IY3121 = "[IY3121] INFO: SQL exec";
-    public static final String IY3122 = "[IY3122] INFO: SQL exec: elapsed";
-
     public static final String IY3151 = "[IY3151] Fail to execute SQL.";
     public static final int IY3151_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
     public static final String IY3152 = "[IY3152] Fail to execute SQL.";
@@ -208,7 +207,7 @@ public class OiyokanMessages {
     public static final String IY7109 = "[IY7109] UNEXPECTED: missing impl";
     public static final String IY7110 = "[IY7110] UNEXPECTED: Fail to load setting SQL file";
     // IY7111
-    public static final String IY7112 = "[IY7112] UNEXPECTED: Fail to load Oiyokan settings";
+    public static final String IY7112 = "[IY7112] WARN: Fail to load Oiyokan settings";
     // IY7113
     public static final String IY7114 = "[IY7114] UNEXPECTED: Database settings NOT found";
     public static final String IY7115 = "[IY7115] UNEXPECTED: Fail to create local table: Oiyokan";

@@ -82,9 +82,9 @@ public class OiyoInfoUtil {
                     mergedOiyoSettings.getEntitySet().add(entitySet);
                 }
             } catch (IOException ex) {
-                // [M024] UNEXPECTED: Fail to load Oiyokan settings
-                log.error(OiyokanMessages.IY7112 + ": " + ex.toString());
-                // しかし例外は発生させず処理続行。
+                // [M024] WARN: Fail to load Oiyokan settings
+                log.warn(OiyokanMessages.IY7112 + ": " + ex.toString());
+                // 例外は発生させない。そのまま処理続行する。
             }
         }
 

@@ -712,8 +712,8 @@ public class OiyoCommonJdbcUtil {
     public static List<String> executeDml(Connection connTargetDb, OiyoSqlInfo sqlInfo, OiyoSettingsEntitySet entitySet,
             boolean returnGeneratedKeys) throws ODataApplicationException {
         final String sql = sqlInfo.getSqlBuilder().toString();
-        // [IY3121] INFO: SQL exec"
-        log.info(OiyokanMessages.IY3121 + ": " + sql);
+        // [IY1066] INFO: SQL exec
+        log.info(OiyokanMessages.IY1066 + ": " + sql);
 
         final long startMillisec = System.currentTimeMillis();
         try (var stmt = connTargetDb.prepareStatement(sql, //
@@ -749,8 +749,8 @@ public class OiyoCommonJdbcUtil {
             final long endMillisec = System.currentTimeMillis();
             final long elapsed = endMillisec - startMillisec;
             if (elapsed >= 10) {
-                // [IY3122] INFO: SQL exec: elapsed
-                log.info(OiyokanMessages.IY3122 + ": " + (endMillisec - startMillisec));
+                // [IY1067] INFO: SQL exec: elapsed
+                log.info(OiyokanMessages.IY1067 + ": " + (endMillisec - startMillisec));
             }
 
             return generatedKeys;

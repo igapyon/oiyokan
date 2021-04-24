@@ -96,7 +96,7 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
             return entityCollection;
         }
 
-        // [IY1061] OData v4: QUERY
+        // [IY1061] DEBUG: QUERY
         log.debug(OiyokanMessages.IY1061 + ": " + edmEntitySet.getName());
 
         //////////////////////////////////////////////
@@ -175,7 +175,7 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
         basicSqlBuilder.buildSelectCountQuery(uriInfo);
         final String sql = basicSqlBuilder.getSqlInfo().getSqlBuilder().toString();
 
-        // [IY1062] OData v4: COUNT
+        // [IY1062] INFO: COUNT
         log.info(OiyokanMessages.IY1062 + ": " + sql);
 
         int countWithWhere = 0;
@@ -214,7 +214,7 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
 
         final long endMillisec = System.currentTimeMillis();
         final long elapsed = endMillisec - startMillisec;
-        // [IY1063] OData v4: COUNT =
+        // [IY1063] INFO: COUNT =
         log.info(OiyokanMessages.IY1063 + countWithWhere //
                 + (elapsed >= 10 ? " (elapsed: " + (endMillisec - startMillisec) + ")" : ""));
 
@@ -275,7 +275,7 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
             throw new ODataApplicationException(OiyokanMessages.IY7105, 500, Locale.ENGLISH);
         }
 
-        // [IY1064] OData v4: SQL collect
+        // [IY1064] INFO: SQL collect
         log.info(OiyokanMessages.IY1064 + ": " + sql);
 
         final long startMillisec = System.currentTimeMillis();
@@ -349,7 +349,7 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
             final long endMillisec = System.currentTimeMillis();
             final long elapsed = endMillisec - startMillisec;
             if (elapsed >= 10) {
-                // [IY1065] OData v4: SQL: elapsed
+                // [IY1065] INFO: SQL: elapsed
                 log.info(OiyokanMessages.IY1065 + ": " + (endMillisec - startMillisec));
             }
         } catch (SQLTimeoutException ex) {
