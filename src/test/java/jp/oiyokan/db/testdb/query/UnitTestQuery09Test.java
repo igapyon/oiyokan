@@ -39,7 +39,9 @@ class UnitTestQuery09Test {
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         // System.err.println("result: " + result);
-        assertEquals("{\"@odata.context\":\"$metadata#ODataTests1\",\"@odata.count\":204,\"value\":[{\"ID\":1}]}",
+        // TODO FIXME Singleで桁溢れ
+        assertEquals(
+                "{\"@odata.context\":\"$metadata#ODataTests1\",\"@odata.count\":204,\"value\":[{\"ID\":1,\"Single1\":123.45679}]}",
                 result, "Postgresの場合にヒットできない (既知の問題)");
         assertEquals(200, resp.getStatusCode());
     }

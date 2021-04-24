@@ -38,11 +38,11 @@ class UnitTestQueryBinaryEq01Test {
         final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse( //
                 "/ODataTests1", //
                 OiyoUrlUtil
-                        .encodeUrlQuery("&$filter=Int32a eq Int64a &$top=3 &$count=true &$select=ID &$orderby=ID asc"));
+                        .encodeUrlQuery("&$filter=Int32a eq Int64a &$top=2 &$count=true &$select=ID &$orderby=ID asc"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         assertEquals(
-                "{\"@odata.context\":\"$metadata#ODataTests1\",\"@odata.count\":204,\"value\":[{\"ID\":1},{\"ID\":2},{\"ID\":3}]}",
+                "{\"@odata.context\":\"$metadata#ODataTests1\",\"@odata.count\":204,\"value\":[{\"ID\":1,\"Int32a\":2147483647,\"Int64a\":2147483647},{\"ID\":2,\"Int32a\":2147483647,\"Int64a\":2147483647}]}",
                 result);
         assertEquals(200, resp.getStatusCode());
     }
