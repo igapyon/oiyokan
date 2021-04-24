@@ -227,6 +227,9 @@ public class OiyoSqlQueryListBuilder {
                 // $filterにおいてEQで結ばれている項目について、$select 指定がなくとも返却値に設定するため対象として記憶。
                 log.info("TRACE: $filter において EQ で使用された property を Key 同様に $select 対象項目に追加: " + propName);
                 keyOrEqTarget.add(propName);
+                for(String look:keyOrEqTarget) {
+                    System.err.println("USO: "+look);
+                }
             }
         }
 
