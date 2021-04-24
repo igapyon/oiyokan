@@ -20,9 +20,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.apache.olingo.server.api.ODataResponse;
 import org.junit.jupiter.api.Test;
 
+import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanUnittestUtil;
 import jp.oiyokan.common.OiyoInfo;
+import jp.oiyokan.common.OiyoInfoUtil;
 import jp.oiyokan.common.OiyoUrlUtil;
+import jp.oiyokan.dto.OiyoSettingsDatabase;
 import jp.oiyokan.util.OiyokanTestUtil;
 
 /**
@@ -33,14 +36,23 @@ class UnitTestQuery09Test {
     void testSingle1() throws Exception {
         @SuppressWarnings("unused")
         final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
+        OiyoSettingsDatabase database = OiyoInfoUtil.getOiyoDatabaseByEntitySetName(oiyoInfo, "ODataTests1");
+        OiyokanConstants.DatabaseType databaseType = OiyokanConstants.DatabaseType.valueOf(database.getType());
 
         final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1",
                 OiyoUrlUtil.encodeUrlQuery("$top=1 &$filter=Single1 eq 123.45 &$orderby=ID &$count=true &$select=ID"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
-        assertEquals(
-                "{\"@odata.context\":\"$metadata#ODataTests1\",\"@odata.count\":204,\"value\":[{\"ID\":1,\"Single1\":123.45}]}",
-                result, "Single型の確認");
-        assertEquals(200, resp.getStatusCode());
+        switch (databaseType) {
+        default:
+            assertEquals(
+                    "{\"@odata.context\":\"$metadata#ODataTests1\",\"@odata.count\":204,\"value\":[{\"ID\":1,\"Single1\":123.45}]}",
+                    result, "Single型の確認");
+            assertEquals(200, resp.getStatusCode());
+            break;
+        case postgres:
+            // Postgresでは確認しない。
+            break;
+        }
     }
 }
