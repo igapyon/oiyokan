@@ -1,3 +1,19 @@
+# Release 1.7 (2021-04-25)
+
+## EN
+
+- In Entity PATCH, suppress the behavior of INSERT when Key automatic numbering is involved.
+- When a member is used in the EQ of $ filter, the value is returned even if $ select is not specified.
+- Heroku support by temporary support.
+- Improving unit testing.
+
+## JA
+
+- Entity PATCH にて、Key自動採番を伴う場合は INSERT の挙動を抑止するようにする
+- メンバーが $filter の EQ で利用された場合に、$select 指定がなくとも値返却する
+- 分割されたプロジェクトでも Heroku にデプロイできるよう仮対応
+- ユニットテストを改善
+
 # Release 1.6 (2021-04-21)
 
 ## EN
