@@ -28,9 +28,9 @@ import jp.oiyokan.util.OiyokanTestUtil;
 /**
  * Entityの基本的なテスト.
  */
-class UnitTestEntityPatchInsert01Test {
+class UnitTestEntityPatchUpsert01Test {
     /**
-     * INSERT限定 (PATCH)
+     * INSERT (PATCH)
      */
     @Test
     void test01() throws Exception {
@@ -45,7 +45,7 @@ class UnitTestEntityPatchInsert01Test {
         final String key = "Decimal1=543.21,StringChar8='ZZYYXX12',StringVar255='Val" + TEST_ID + "'";
         ODataResponse resp = OiyokanTestUtil.callRequestPatch("/ODataTests2(" + key + ")", "{\n" //
                 + "  \"Name\":\"Name2\",\n" //
-                + "  \"Description\":\"Description2\"\n" + "}", false, true);
+                + "  \"Description\":\"Description2\"\n" + "}", false, false);
         assertEquals(204, resp.getStatusCode());
 
         resp = OiyokanTestUtil.callRequestGetResponse( //
@@ -57,14 +57,8 @@ class UnitTestEntityPatchInsert01Test {
         // INSERTした後なので存在する
         resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests2(" + key + ")", null);
         result = OiyokanTestUtil.stream2String(resp.getContent());
-        System.err.println(result);
+        // System.err.println(result);
         assertEquals(200, resp.getStatusCode());
-
-        // 2回目はエラー
-        resp = OiyokanTestUtil.callRequestPatch("/ODataTests2(" + key + ")", "{\n" //
-                + "  \"Name\":\"Name2\",\n" //
-                + "  \"Description\":\"Description2\"\n" + "}", false, true);
-        assertEquals(304, resp.getStatusCode());
 
         // DELETE
         resp = OiyokanTestUtil.callRequestDelete("/ODataTests2(" + key + ")");
