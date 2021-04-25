@@ -162,7 +162,11 @@ public class OiyoCommonJdbcUtil {
         if (oiyoProp.getMaxLength() != null) {
             csdlProperty.setMaxLength(oiyoProp.getMaxLength());
         }
-        if (oiyoProp.getNullable() != null) {
+        if (oiyoProp.getNullable() == null) {
+            // 指定なしは NULL許容.
+            csdlProperty.setNullable(true);
+        } else {
+            // 指定ありは 指定の通りに.
             csdlProperty.setNullable(oiyoProp.getNullable());
         }
         if (oiyoProp.getPrecision() != null) {
