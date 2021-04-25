@@ -42,7 +42,10 @@ class UnitTestEntityPatchInsert02Test {
         // 存在しないのでINSERTになるケース.
         ODataResponse resp = OiyokanTestUtil.callRequestPatch("/ODataTests3(" + NOT_EXISTS_ID + ")", "{\n" //
                 + "  \"Name\":\"Name2\",\n" //
-                + "  \"Description\":\"Description2\"\n" + "}", false, false);
-        assertEquals(404, resp.getStatusCode());
+                + "  \"Description\":\"Description2\"\n" + "}", false, true);
+        @SuppressWarnings("unused")
+        String result = OiyokanTestUtil.stream2String(resp.getContent());
+       // System.err.println(result);
+        assertEquals(304, resp.getStatusCode());
     }
 }

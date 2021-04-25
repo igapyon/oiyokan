@@ -118,7 +118,8 @@ public class OiyokanMessages {
     public static final int IY3106_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
     public static final String IY3107 = "[IY3107] Database exception occured (readEntity)";
     public static final int IY3107_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
-    // IY3108
+    public static final String IY3108 = "[IY3108] Not modified.";
+    public static final int IY3108_CODE = HttpStatusCode.NOT_MODIFIED.getStatusCode();
     // IY3109
     // IY3110
     public static final String IY3112 = "[IY3112] UNEXPECTED: Too many rows found (readEntity)";
@@ -134,8 +135,8 @@ public class OiyokanMessages {
     public static final int IY3152_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
     public static final String IY3153 = "[IY3153] Fail to execute SQL.";
     public static final int IY3153_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
-    public static final String IY3154 = "[IY3154] Fail to execute SQL.";
-    public static final int IY3154_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
+    public static final String IY3154 = "[IY3154] Not modified by SQL.";
+    public static final int IY3154_CODE = HttpStatusCode.NOT_MODIFIED.getStatusCode();
     public static final String IY3161 = "[IY3161] UNEXPECTED: OiyoSettingsProperty NOT found.";
     public static final int IY3161_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
 

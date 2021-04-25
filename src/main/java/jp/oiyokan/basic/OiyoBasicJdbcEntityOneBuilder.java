@@ -397,10 +397,13 @@ public class OiyoBasicJdbcEntityOneBuilder {
                     // SELECT to check exists
                     readEntityData(connTargetDb, uriInfo, edmEntitySet, keyPredicates);
 
+                    // 読み込み成功。更新に入ります。
+
                     // UPDATE
                     new OiyoSqlUpdateOneBuilder(oiyoInfo, sqlInfo).buildUpdatePatchDml(edmEntitySet.getName(),
                             keyPredicates, requestEntity);
                 } catch (ODataApplicationException ex) {
+                    // 404以外が返却は想定外でエラー。処理中断。
                     if (OiyokanMessages.IY3105_CODE != ex.getStatusCode()) {
                         // そのまま throw.
                         throw ex;
@@ -427,10 +430,13 @@ public class OiyoBasicJdbcEntityOneBuilder {
                 connTargetDb.setAutoCommit(true);
             }
         } catch (SQLException ex) {
-            // [M205] Fail to execute SQL.
+            // [IY3154] Not modified by SQL.
             log.error(OiyokanMessages.IY3154 + ": " + ex.toString());
-            throw new ODataApplicationException(OiyokanMessages.IY3154, //
-                    OiyokanMessages.IY3154_CODE, Locale.ENGLISH);
+            throw new ODataApplicationException(OiyokanMessages.IY3154, OiyokanMessages.IY3154_CODE, Locale.ENGLISH);
+        } catch (ODataApplicationException ex) {
+            // [IY3108] Not modified."
+            log.error(OiyokanMessages.IY3108 + ": " + ex.toString());
+            throw new ODataApplicationException(OiyokanMessages.IY3108, OiyokanMessages.IY3108_CODE, Locale.ENGLISH);
         }
     }
 }
