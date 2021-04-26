@@ -138,7 +138,7 @@ public class OiyoSqlInsertOneBuilder {
             if (oiyoProp.getAutoGenKey() != null && oiyoProp.getAutoGenKey()) {
                 // この項目は仮に指定されていたとしても処理してはダメ。自動生成にゆだねる。
                 // TODO message
-                log.warn(OiyokanMessages.IY9999 + ": INSERTにて自動生成項目に値をセットしようとしました。この値は無視します: value:" + prop.getValue());
+                log.warn(OiyokanMessages.IY9999 + ": INSERTにて自動生成項目に値をセットしようとしました。この値は無視します");
                 continue;
             }
 
