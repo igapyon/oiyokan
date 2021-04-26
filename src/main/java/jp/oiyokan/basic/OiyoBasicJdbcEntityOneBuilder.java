@@ -219,8 +219,29 @@ public class OiyoBasicJdbcEntityOneBuilder {
                     newParam.setText(generatedKeys.get(0));
                     keyPredicates.add(newParam);
                 } else {
-                    for (String keyName : entitySet.getEntityType().getKeyName()) {
+                    // 最初に generatedKeys の対応づけを実施.
+                    int generatedKeyIndex = 0;
+                    for (OiyoSettingsProperty property : entitySet.getEntityType().getProperty()) {
+                        if (property.getAutoGenKey() != null && property.getAutoGenKey()) {
+                            // 自動生成対象.
+                            final UriParameterImpl newParam = new UriParameterImpl();
+                            newParam.setName(property.getName());
+                            // TODO 配列超えの例外処理およびmessage
+                            newParam.setText(generatedKeys.get(generatedKeyIndex++));
+                            keyPredicates.add(newParam);
+                        }
+                    }
+
+                    // generatedKeys で対応づかなかった分はPOSTリクエストから導出
+                    KEYLOOP: for (String keyName : entitySet.getEntityType().getKeyName()) {
                         String propValue = null;
+                        for (OiyoSettingsProperty property : entitySet.getEntityType().getProperty()) {
+                            if (property.getAutoGenKey() != null && property.getAutoGenKey()) {
+                                // すでに autoGenKeyから導出済み。スキップ。
+                                continue KEYLOOP;
+                            }
+                        }
+
                         for (Property look : requestEntity.getProperties()) {
                             if (look.getName().equals(keyName)) {
                                 if (look.getValue() instanceof java.util.Calendar) {
@@ -237,15 +258,11 @@ public class OiyoBasicJdbcEntityOneBuilder {
                         }
                         if (propValue == null) {
                             log.trace("TRACE: propKey:" + keyName + "に対応する入力なし.");
-                            if (generatedKeys.size() == 0) {
-                                // [M217] UNEXPECTED: Can't retrieve PreparedStatement#getGeneratedKeys: Fail to
-                                // map auto generated key field.
-                                log.error(OiyokanMessages.IY3114 + ": " + keyName);
-                                throw new ODataApplicationException(OiyokanMessages.IY3114 + ": " + keyName, //
-                                        OiyokanMessages.IY3114_CODE, Locale.ENGLISH);
-                            }
-                            propValue = generatedKeys.get(0);
-                            generatedKeys.remove(0);
+                            // [M217] UNEXPECTED: Can't retrieve PreparedStatement#getGeneratedKeys: Fail to
+                            // map auto generated key field.
+                            log.error(OiyokanMessages.IY3114 + ": " + keyName);
+                            throw new ODataApplicationException(OiyokanMessages.IY3114 + ": " + keyName, //
+                                    OiyokanMessages.IY3114_CODE, Locale.ENGLISH);
                         }
 
                         final UriParameterImpl newParam = new UriParameterImpl();
