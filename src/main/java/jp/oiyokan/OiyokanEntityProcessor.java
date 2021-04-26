@@ -157,11 +157,11 @@ public class OiyokanEntityProcessor implements EntityProcessor {
 
             // 1. Retrieve the entity type from the URI
 
-            // 1. retrieve the Entity Type
+            log.trace("OiyokanEntityProcessor#createEntity: 1. retrieve the Entity Type");
             List<UriResource> resourcePaths = uriInfo.getUriResourceParts();
 
-            // Note: only in our example we can assume that the first segment is the
-            // EntitySet
+            log.trace(
+                    "OiyokanEntityProcessor#createEntity: Note: only in our example we can assume that the first segment is the EntitySet");
             UriResourceEntitySet uriResourceEntitySet = (UriResourceEntitySet) resourcePaths.get(0);
             EdmEntitySet edmEntitySet = uriResourceEntitySet.getEntitySet();
             EdmEntityType edmEntityType = edmEntitySet.getEntityType();
@@ -174,18 +174,22 @@ public class OiyokanEntityProcessor implements EntityProcessor {
                         OiyokanMessages.IY8101_CODE, Locale.ENGLISH);
             }
 
-            // 2. create the data in backend
-            // 2.1. retrieve the payload from the POST request for the entity to create and
-            // deserialize it
+            log.trace("OiyokanEntityProcessor#createEntity: 2. create the data in backend");
+
+            log.trace("OiyokanEntityProcessor#createEntity: 2.1. retrieve the payload from the POST request"
+                    + " for the entity to create and deserialize it");
             InputStream requestInputStream = request.getBody();
             ODataDeserializer deserializer = this.odata.createDeserializer(requestFormat);
             DeserializerResult result = deserializer.entity(requestInputStream, edmEntityType);
             Entity requestEntity = result.getEntity();
-            // 2.2 do the creation in backend, which returns the newly created entity
+
+            log.trace("OiyokanEntityProcessor#createEntity: 2.2 do the creation in backend,"
+                    + " which returns the newly created entity");
             Entity createdEntity = new OiyoBasicJdbcEntityOneBuilder(oiyoInfo).createEntityData(uriInfo, edmEntitySet,
                     requestEntity);
 
-            // 3. serialize the response (we have to return the created entity)
+            log.trace("OiyokanEntityProcessor#createEntity: 3. serialize the response"
+                    + " (we have to return the created entity)");
             ContextURL contextUrl = ContextURL.with().entitySet(edmEntitySet).build();
             // expand and select currently not supported
             EntitySerializerOptions options = EntitySerializerOptions.with().contextURL(contextUrl).build();
@@ -194,7 +198,7 @@ public class OiyokanEntityProcessor implements EntityProcessor {
             SerializerResult serializedResponse = serializer.entity(serviceMetadata, edmEntityType, createdEntity,
                     options);
 
-            // 4. configure the response object
+            log.trace("OiyokanEntityProcessor#createEntity: 4. configure the response object");
             response.setContent(serializedResponse.getContent());
             response.setStatusCode(HttpStatusCode.CREATED.getStatusCode());
             response.setHeader(HttpHeader.CONTENT_TYPE, responseFormat.toContentTypeString());
