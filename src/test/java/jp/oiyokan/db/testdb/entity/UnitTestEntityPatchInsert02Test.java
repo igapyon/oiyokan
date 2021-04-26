@@ -45,7 +45,7 @@ class UnitTestEntityPatchInsert02Test {
                 + "  \"Description\":\"Description2\"\n" + "}", false, true);
         @SuppressWarnings("unused")
         String result = OiyokanTestUtil.stream2String(resp.getContent());
-       // System.err.println(result);
+        // System.err.println(result);
         assertEquals(304, resp.getStatusCode());
     }
 }
