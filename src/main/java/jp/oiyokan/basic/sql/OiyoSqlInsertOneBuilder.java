@@ -24,6 +24,7 @@ import org.apache.olingo.commons.api.data.Property;
 import org.apache.olingo.server.api.ODataApplicationException;
 import org.apache.olingo.server.api.uri.UriParameter;
 
+import jp.oiyokan.OiyokanMessages;
 import jp.oiyokan.common.OiyoCommonJdbcUtil;
 import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.common.OiyoInfoUtil;
@@ -94,14 +95,22 @@ public class OiyoSqlInsertOneBuilder {
         }
 
         for (Property prop : requestEntity.getProperties()) {
+            OiyoSettingsProperty property = OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, entitySetName, prop.getName());
+            if (property.getAutoGenKey() != null && property.getAutoGenKey()) {
+                // この項目は仮に指定されていたとしても処理してはダメ。
+                // TODO message
+                log.warn(OiyokanMessages.IY9999 + ": INSERTにて自動生成項目に値をセットしようとしました。この値は無視します: name:"
+                        + property.getName());
+                continue;
+            }
+
             if (isFirst) {
                 isFirst = false;
             } else {
                 sqlInfo.getSqlBuilder().append(",");
             }
 
-            final String colName = OiyoCommonJdbcUtil.escapeKakkoFieldName(sqlInfo,
-                    OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, entitySetName, prop.getName()).getDbName());
+            final String colName = OiyoCommonJdbcUtil.escapeKakkoFieldName(sqlInfo, property.getDbName());
             sqlInfo.getSqlBuilder().append(colName);
         }
 
@@ -124,14 +133,21 @@ public class OiyoSqlInsertOneBuilder {
         }
 
         for (Property prop : requestEntity.getProperties()) {
+            final OiyoSettingsProperty oiyoProp = OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, entitySetName,
+                    prop.getName());
+            if (oiyoProp.getAutoGenKey() != null && oiyoProp.getAutoGenKey()) {
+                // この項目は仮に指定されていたとしても処理してはダメ。自動生成にゆだねる。
+                // TODO message
+                log.warn(OiyokanMessages.IY9999 + ": INSERTにて自動生成項目に値をセットしようとしました。この値は無視します: value:" + prop.getValue());
+                continue;
+            }
+
             if (isFirst) {
                 isFirst = false;
             } else {
                 sqlInfo.getSqlBuilder().append(",");
             }
 
-            final OiyoSettingsProperty oiyoProp = OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, entitySetName,
-                    prop.getName());
             OiyoCommonJdbcUtil.expandLiteralOrBindParameter(sqlInfo, prop.getType(), oiyoProp, prop.getValue());
         }
 
