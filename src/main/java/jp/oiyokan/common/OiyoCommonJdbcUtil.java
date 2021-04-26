@@ -456,7 +456,13 @@ public class OiyoCommonJdbcUtil {
                 sqlInfo.getSqlParamList().add(inputParam);
             } else {
                 sqlInfo.getSqlBuilder().append("?");
-                sqlInfo.getSqlParamList().add(Short.valueOf(String.valueOf(inputParam)));
+                final String value = String.valueOf(inputParam);
+                if ("null".equalsIgnoreCase(value)) {
+                    // nullが文字列で渡ってくる場合でも正しく動作させる。
+                    sqlInfo.getSqlParamList().add((Short) null);
+                } else {
+                    sqlInfo.getSqlParamList().add(Short.valueOf(value));
+                }
             }
             return;
         }
@@ -488,7 +494,13 @@ public class OiyoCommonJdbcUtil {
                 sqlInfo.getSqlParamList().add(inputParam);
             } else {
                 sqlInfo.getSqlBuilder().append("?");
-                sqlInfo.getSqlParamList().add(Long.valueOf(String.valueOf(inputParam)));
+                final String value = String.valueOf(inputParam);
+                if ("null".equalsIgnoreCase(value)) {
+                    // nullが文字列で渡ってくる場合でも正しく動作させる。
+                    sqlInfo.getSqlParamList().add((Long) null);
+                } else {
+                    sqlInfo.getSqlParamList().add(Long.valueOf(value));
+                }
             }
             return;
         }
