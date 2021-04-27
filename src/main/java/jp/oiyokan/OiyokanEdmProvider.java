@@ -121,11 +121,11 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
             return csdlEntityType;
         } catch (ODataApplicationException ex) {
             // [IY9511] WARN: EdmProvider.getEntityType: exception caught
-            log.warn(OiyokanMessages.IY9511 + ": " + entityTypeName + ", " + ex.toString());
+            log.warn(OiyokanMessages.IY9511 + ": " + entityTypeName + ": " + ex.toString());
             throw ex;
         } catch (RuntimeException ex) {
             // [IY9512] ERROR: EdmProvider.getEntityType: runtime exception caught
-            log.error(OiyokanMessages.IY9512 + ": " + entityTypeName + ", " + ex.toString(), ex);
+            log.error(OiyokanMessages.IY9512 + ": " + entityTypeName + ": " + ex.toString(), ex);
             throw ex;
         }
     }
@@ -165,11 +165,11 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
             return csdlEntitySet;
         } catch (ODataApplicationException ex) {
             // [IY9513] WARN: EdmProvider.getEntitySet: exception caught
-            log.warn(OiyokanMessages.IY9513 + ": " + entitySetName + ", " + ex.toString());
+            log.warn(OiyokanMessages.IY9513 + ": " + entitySetName + ": " + ex.toString());
             throw ex;
         } catch (RuntimeException ex) {
             // [IY9514] ERROR: EdmProvider.getEntitySet: runtime exception caught
-            log.error(OiyokanMessages.IY9514 + ": " + entitySetName + ", " + ex.toString(), ex);
+            log.error(OiyokanMessages.IY9514 + ": " + entitySetName + ": " + ex.toString(), ex);
             throw ex;
         }
     }
