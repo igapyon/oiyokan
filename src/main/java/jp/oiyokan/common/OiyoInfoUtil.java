@@ -72,16 +72,36 @@ public class OiyoInfoUtil {
                 final ObjectMapper mapper = new ObjectMapper();
                 final OiyoSettings loadedSettings = mapper.readValue(strOiyokanSettings, OiyoSettings.class);
                 if (mergedOiyoSettings.getNamespace() == null) {
+                    // TODO message
+                    log.info("INFO: namespace に値をセット: " + loadedSettings.getNamespace());
                     mergedOiyoSettings.setNamespace(loadedSettings.getNamespace());
                 }
                 if (mergedOiyoSettings.getContainerName() == null) {
+                    // TODO message
+                    log.info("INFO: containerName に値をセット: " + loadedSettings.getContainerName());
                     mergedOiyoSettings.setContainerName(loadedSettings.getContainerName());
                 }
                 for (OiyoSettingsDatabase database : loadedSettings.getDatabase()) {
+                    // TODO message
+                    log.info("INFO: database 設定をセット: " + database.getName());
                     mergedOiyoSettings.getDatabase().add(database);
                 }
                 for (OiyoSettingsEntitySet entitySet : loadedSettings.getEntitySet()) {
+                    // TODO message
+                    log.info("INFO: entitySet 設定をセット: " + entitySet.getName());
                     mergedOiyoSettings.getEntitySet().add(entitySet);
+
+                    for (OiyoSettingsProperty property : entitySet.getEntityType().getProperty()) {
+                        if (property.getAutoGenKey() != null && property.getAutoGenKey()) {
+                            if (property.getNullable() != null && property.getNullable() == false) {
+                                // AutoGenKey が true の場合は、強制的に Nullableを上書き
+                                // TODO message
+                                log.warn("WARN: property の autoGenKey が有効であるため、nullable を true に上書き: " + "EntitySet:"
+                                        + entitySet.getName() + ", Property:" + property.getName());
+                                property.setNullable(true);
+                            }
+                        }
+                    }
                 }
             } catch (IOException ex) {
                 // [M024] WARN: Fail to load Oiyokan settings
