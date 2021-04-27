@@ -29,10 +29,10 @@
           {
             "name": "ID",
             "dbName": "ID",
-            "edmType": "Edm.Int32",
-            "jdbcType": "Types.INTEGER",
-            "dbType": "INTEGER",
-            "autoGenKey" : true,
+            "edmType": "Edm.Int64",
+            "jdbcType": "Types.BIGINT",
+            "dbType": "IDENTITY",
+            "autoGenKey": true,
             "nullable": true
           },
           {
@@ -156,7 +156,7 @@
             "jdbcType": "Types.REAL",
             "dbType": "REAL",
             "nullable": true,
-            "dbDefault": "123.456789"
+            "dbDefault": "123.45"
           },
           {
             "name": "Double1",
@@ -319,10 +319,10 @@
           {
             "name": "ID",
             "dbName": "ID",
-            "edmType": "Edm.Int32",
-            "jdbcType": "Types.INTEGER",
-            "dbType": "INTEGER",
-            "autoGenKey" : true,
+            "edmType": "Edm.Int64",
+            "jdbcType": "Types.BIGINT",
+            "dbType": "IDENTITY",
+            "autoGenKey": true,
             "nullable": true
           },
           {
@@ -589,8 +589,8 @@
             "dbName": "Iden1",
             "edmType": "Edm.Int64",
             "jdbcType": "Types.BIGINT",
-            "dbType": "BIGINT",
-            "autoGenKey" : true,
+            "dbType": "IDENTITY",
+            "autoGenKey": true,
             "nullable": true
           },
           {
@@ -632,10 +632,10 @@
           {
             "name": "ID",
             "dbName": "ID",
-            "edmType": "Edm.Int32",
-            "jdbcType": "Types.INTEGER",
-            "dbType": "INTEGER",
-            "autoGenKey" : true,
+            "edmType": "Edm.Int64",
+            "jdbcType": "Types.BIGINT",
+            "dbType": "IDENTITY",
+            "autoGenKey": true,
             "nullable": true
           },
           {
@@ -754,6 +754,138 @@
       }
     },
     {
+      "name": "ODataTest8s",
+      "description": "Description.",
+      "dbSettingName": "oiyoUnitTestDb",
+      "canCreate": true,
+      "canRead": true,
+      "canUpdate": true,
+      "canDelete": true,
+      "entityType": {
+        "name": "ODataTest8",
+        "dbName": "ODataTest8",
+        "keyName": ["MainKey"],
+        "property": [
+          {
+            "name": "MainKey",
+            "dbName": "MainKey",
+            "edmType": "Edm.String",
+            "jdbcType": "Types.VARCHAR",
+            "dbType": "VARCHAR",
+            "nullable": false,
+            "maxLength": 20
+          },
+          {
+            "name": "Description",
+            "dbName": "Description",
+            "edmType": "Edm.String",
+            "jdbcType": "Types.VARCHAR",
+            "dbType": "VARCHAR",
+            "nullable": true,
+            "maxLength": 250,
+            "dbDefault": "'Main table'"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ODataTest8Subs",
+      "description": "Description.",
+      "dbSettingName": "oiyoUnitTestDb",
+      "canCreate": true,
+      "canRead": true,
+      "canUpdate": true,
+      "canDelete": true,
+      "entityType": {
+        "name": "ODataTest8Sub",
+        "dbName": "ODataTest8Sub",
+        "keyName": ["MainKey", "SubKey"],
+        "property": [
+          {
+            "name": "MainKey",
+            "dbName": "MainKey",
+            "edmType": "Edm.String",
+            "jdbcType": "Types.VARCHAR",
+            "dbType": "VARCHAR",
+            "nullable": false,
+            "maxLength": 20
+          },
+          {
+            "name": "SubKey",
+            "dbName": "SubKey",
+            "edmType": "Edm.String",
+            "jdbcType": "Types.VARCHAR",
+            "dbType": "VARCHAR",
+            "nullable": false,
+            "maxLength": 20
+          },
+          {
+            "name": "Description",
+            "dbName": "Description",
+            "edmType": "Edm.String",
+            "jdbcType": "Types.VARCHAR",
+            "dbType": "VARCHAR",
+            "nullable": true,
+            "maxLength": 250,
+            "dbDefault": "'Sub table'"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ODataTest8SubSubs",
+      "description": "Description.",
+      "dbSettingName": "oiyoUnitTestDb",
+      "canCreate": true,
+      "canRead": true,
+      "canUpdate": true,
+      "canDelete": true,
+      "entityType": {
+        "name": "ODataTest8SubSub",
+        "dbName": "ODataTest8SubSub",
+        "keyName": ["MainKey", "SubKey", "SubSubKey"],
+        "property": [
+          {
+            "name": "MainKey",
+            "dbName": "MainKey",
+            "edmType": "Edm.String",
+            "jdbcType": "Types.VARCHAR",
+            "dbType": "VARCHAR",
+            "nullable": false,
+            "maxLength": 20
+          },
+          {
+            "name": "SubKey",
+            "dbName": "SubKey",
+            "edmType": "Edm.String",
+            "jdbcType": "Types.VARCHAR",
+            "dbType": "VARCHAR",
+            "nullable": false,
+            "maxLength": 20
+          },
+          {
+            "name": "SubSubKey",
+            "dbName": "SubSubKey",
+            "edmType": "Edm.String",
+            "jdbcType": "Types.VARCHAR",
+            "dbType": "VARCHAR",
+            "nullable": false,
+            "maxLength": 20
+          },
+          {
+            "name": "Description",
+            "dbName": "Description",
+            "edmType": "Edm.String",
+            "jdbcType": "Types.VARCHAR",
+            "dbType": "VARCHAR",
+            "nullable": true,
+            "maxLength": 250,
+            "dbDefault": "'Sub sub table'"
+          }
+        ]
+      }
+    },
+    {
       "name": "ODataTestFulls1s",
       "description": "Description.",
       "dbSettingName": "oiyoUnitTestDb",
@@ -769,10 +901,11 @@
           {
             "name": "ID",
             "dbName": "ID",
-            "edmType": "Edm.Int32",
-            "jdbcType": "Types.INTEGER",
-            "dbType": "INTEGER",
-            "nullable": false
+            "edmType": "Edm.Int64",
+            "jdbcType": "Types.BIGINT",
+            "dbType": "IDENTITY",
+            "autoGenKey": true,
+            "nullable": true
           },
           {
             "name": "Name",

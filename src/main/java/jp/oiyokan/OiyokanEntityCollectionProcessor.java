@@ -189,10 +189,12 @@ public class OiyokanEntityCollectionProcessor implements EntityCollectionProcess
             response.setStatusCode(HttpStatusCode.OK.getStatusCode());
             response.setHeader(HttpHeader.CONTENT_TYPE, responseFormat.toContentTypeString());
         } catch (ODataApplicationException | ODataLibraryException ex) {
+            // TODO message
             log.warn("WARN: OiyokanEntityCollectionProcessor#readEntityCollection(" + request.getRawODataPath() + ","
                     + request.getRawQueryPath() + "): " + ex.toString());
             throw ex;
         } catch (RuntimeException ex) {
+            // TODO message
             log.error("ERROR: OiyokanEntityCollectionProcessor#readEntityCollection(" + request.getRawODataPath() + ","
                     + request.getRawQueryPath() + "): " + ex.toString(), ex);
             throw ex;

@@ -219,13 +219,26 @@ public class OiyokanSettingsGenUtil {
                     property.setNullable(null);
                 }
 
+                if (property.getDbDefault() != null && property.getDbDefault().contains("NEXT VALUE FOR")) {
+                    if (!"IDENTITY".equalsIgnoreCase(property.getDbType()) //
+                            && !"SERIAL".equalsIgnoreCase(property.getDbType()) //
+                            && !"SEQUENCE".equalsIgnoreCase(property.getDbType())) {
+                        property.setDbType("IDENTITY");
+                        property.setDbDefault(null);
+                    }
+                }
+
                 if ("IDENTITY".equalsIgnoreCase(property.getDbType()) //
                         || "SERIAL".equalsIgnoreCase(property.getDbType()) //
                         || "SEQUENCE".equalsIgnoreCase(property.getDbType()) //
-                        || property.getDbDefault() != null && property.getDbDefault().contains("NEXT VALUE FOR") //
                 ) {
                     // TODO SQLSV2008の時の挙動は調査が必要.
                     property.setAutoGenKey(true);
+
+                    // autoGenKey の場合には nullable である必要がある。
+                    if (property.getNullable() != null && property.getNullable() == false) {
+                        property.setNullable(true);
+                    }
                 }
             }
 
