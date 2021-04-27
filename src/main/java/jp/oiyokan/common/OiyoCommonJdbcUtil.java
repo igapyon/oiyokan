@@ -779,7 +779,7 @@ public class OiyoCommonJdbcUtil {
         } catch (SQLIntegrityConstraintViolationException ex) {
             // [M202] Integrity constraint violation occured (DML). 制約違反.
             log.error(OiyokanMessages.IY3401 + ": " + sql + ", " + ex.toString());
-            // 制約違反だけだと意味が不明であろうからメッセージも返却.
+            // 制約違反については例外的に ex の getMessage についても呼出元に返却.
             throw new ODataApplicationException(OiyokanMessages.IY3401 + ": " + sql + ": " + ex.getMessage(), //
                     OiyokanMessages.IY3401_CODE, Locale.ENGLISH);
         } catch (SQLTimeoutException ex) {

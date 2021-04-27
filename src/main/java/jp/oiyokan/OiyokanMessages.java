@@ -143,6 +143,7 @@ public class OiyokanMessages {
 
     ////////////////////////////////////////////////////////////////////////////////
     // IY34XX : Entity - Constraint
+    // CONFLICT は400番台であるので利用して問題ない。
     public static final String IY3401 = "[IY3401] Integrity constraint violation occured (DML). 制約違反.";
     public static final int IY3401_CODE = HttpStatusCode.CONFLICT.getStatusCode();
 
