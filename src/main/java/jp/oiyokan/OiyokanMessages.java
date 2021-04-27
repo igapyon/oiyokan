@@ -274,16 +274,16 @@ public class OiyokanMessages {
     ////////////////////////////////////////////////////////////////////////////////
     // IY95XX : Top level error
     public static final String IY9501 = "[IY9501] ERROR: Register.serv: exception caught";
-    public static final String IY9511 = "[IY9511] WARN: CsdlAbstractEdmProvider.getEntityType: exception caught";
-    public static final String IY9512 = "[IY9512] ERROR: CsdlAbstractEdmProvider.getEntityType: runtime exception caught";
-    public static final String IY9513 = "[IY9513] WARN: CsdlAbstractEdmProvider.getEntitySet: exception caught";
-    public static final String IY9514 = "[IY9514] ERROR: CsdlAbstractEdmProvider.getEntitySet: runtime exception caught";
-    public static final String IY9515 = "[IY9515] WARN: CsdlAbstractEdmProvider.getEntityContainer: exception caught";
-    public static final String IY9516 = "[IY9516] ERROR: CsdlAbstractEdmProvider.getEntityContainer: runtime exception caught";
-    public static final String IY9517 = "[IY9517] WARN: CsdlAbstractEdmProvider.getSchemas: exception caught";
-    public static final String IY9518 = "[IY9518] ERROR: CsdlAbstractEdmProvider.getSchemas: runtime exception caught";
-    public static final String IY9519 = "[IY9519] WARN: CsdlAbstractEdmProvider.getEntityContainerInfo: exception caught";
-    public static final String IY9520 = "[IY9520] ERROR: CsdlAbstractEdmProvider.getEntityContainerInfo: runtime exception caught";
+    public static final String IY9511 = "[IY9511] WARN: EdmProvider.getEntityType: exception caught";
+    public static final String IY9512 = "[IY9512] ERROR: EdmProvider.getEntityType: runtime exception caught";
+    public static final String IY9513 = "[IY9513] WARN: EdmProvider.getEntitySet: exception caught";
+    public static final String IY9514 = "[IY9514] ERROR: EdmProvider.getEntitySet: runtime exception caught";
+    public static final String IY9515 = "[IY9515] WARN: EdmProvider.getEntityContainer: exception caught";
+    public static final String IY9516 = "[IY9516] ERROR: EdmProvider.getEntityContainer: runtime exception caught";
+    public static final String IY9517 = "[IY9517] WARN: EdmProvider.getSchemas: exception caught";
+    public static final String IY9518 = "[IY9518] ERROR: EdmProvider.getSchemas: runtime exception caught";
+    public static final String IY9519 = "[IY9519] WARN: EdmProvider.getEntityContainerInfo: exception caught";
+    public static final String IY9520 = "[IY9520] ERROR: EdmProvider.getEntityContainerInfo: runtime exception caught";
     public static final String IY9521 = "[IY9521] WARN: EntityCollectionProcessor.readEntityCollection: exception caught";
     public static final String IY9522 = "[IY9522] ERROR: EntityCollectionProcessor.readEntityCollection: runtime exception caught";
     public static final String IY9531 = "[IY9531] WARN: EntityProcessor.readEntity: exception caught";
