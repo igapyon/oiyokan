@@ -86,8 +86,8 @@ public class OiyokanOdata4RegisterImpl {
                 }
             }, resp);
         } catch (RuntimeException ex) {
-            // TODO message
-            log.error("OData v4: OiyokanOdata4Register#serv(): Unexpected Server Error: " + ex.toString(), ex);
+            // [IY9501] ERROR: Register.serv: exception caught
+            log.error(OiyokanMessages.IY9501 + ": " + ex.toString(), ex);
             throw new ServletException(ex);
         }
     }

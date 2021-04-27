@@ -72,32 +72,32 @@ public class OiyoInfoUtil {
                 final ObjectMapper mapper = new ObjectMapper();
                 final OiyoSettings loadedSettings = mapper.readValue(strOiyokanSettings, OiyoSettings.class);
                 if (mergedOiyoSettings.getNamespace() == null) {
-                    // TODO message
-                    log.info("INFO: load namespace: " + loadedSettings.getNamespace());
+                    // [IY6101] INFO: load namespace
+                    log.info(OiyokanMessages.IY6101 + ": " + loadedSettings.getNamespace());
                     mergedOiyoSettings.setNamespace(loadedSettings.getNamespace());
                 }
                 if (mergedOiyoSettings.getContainerName() == null) {
-                    // TODO message
-                    log.info("INFO: load containerName: " + loadedSettings.getContainerName());
+                    // [IY6102] INFO: load containerName
+                    log.info(OiyokanMessages.IY6102 + ": " + loadedSettings.getContainerName());
                     mergedOiyoSettings.setContainerName(loadedSettings.getContainerName());
                 }
                 for (OiyoSettingsDatabase database : loadedSettings.getDatabase()) {
-                    // TODO message
-                    log.info("INFO: load database: " + database.getName());
+                    // [IY6103] INFO: load database
+                    log.info(OiyokanMessages.IY6103 + ": " + database.getName());
                     mergedOiyoSettings.getDatabase().add(database);
                 }
                 for (OiyoSettingsEntitySet entitySet : loadedSettings.getEntitySet()) {
-                    // TODO message
-                    log.info("INFO: load entitySet: " + entitySet.getName());
+                    // [IY6104] INFO: load entitySet
+                    log.info(OiyokanMessages.IY6104 + ": " + entitySet.getName());
                     mergedOiyoSettings.getEntitySet().add(entitySet);
 
                     for (OiyoSettingsProperty property : entitySet.getEntityType().getProperty()) {
                         if (property.getAutoGenKey() != null && property.getAutoGenKey()) {
                             if (property.getNullable() != null && property.getNullable() == false) {
-                                // AutoGenKey が true の場合は、強制的に Nullableを上書き
-                                // TODO message
-                                log.warn("WARN: property の autoGenKey が有効であるため、nullable を true に上書き: " + "EntitySet:"
-                                        + entitySet.getName() + ", Property:" + property.getName());
+                                // [IY6151] WARN: Overwrite nullable with true because autoGenKey for property
+                                // is true.
+                                log.warn(OiyokanMessages.IY6151 + ": " + "EntitySet:" + entitySet.getName()
+                                        + ", Property:" + property.getName());
                                 property.setNullable(true);
                             }
                         }

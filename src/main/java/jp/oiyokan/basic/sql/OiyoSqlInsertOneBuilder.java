@@ -98,9 +98,9 @@ public class OiyoSqlInsertOneBuilder {
             OiyoSettingsProperty property = OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, entitySetName, prop.getName());
             if (property.getAutoGenKey() != null && property.getAutoGenKey()) {
                 // この項目は仮に指定されていたとしても処理してはダメ。
-                // TODO message
-                log.warn(OiyokanMessages.IY9999 + ": INSERTにて自動生成項目に値をセットしようとしました。この値は無視します: name:"
-                        + property.getName());
+                // [IY3121] WARN: Ignore given value during INSERT because property that was set
+                // as autoGenKey.
+                log.warn(OiyokanMessages.IY3121 + ": name:" + property.getName());
                 continue;
             }
 
@@ -137,8 +137,7 @@ public class OiyoSqlInsertOneBuilder {
                     prop.getName());
             if (oiyoProp.getAutoGenKey() != null && oiyoProp.getAutoGenKey()) {
                 // この項目は仮に指定されていたとしても処理してはダメ。自動生成にゆだねる。
-                // TODO message
-                log.warn(OiyokanMessages.IY9999 + ": INSERTにて自動生成項目に値をセットしようとしました。この値は無視します");
+                // log message は項目名の側にてすでにログ出力済み。
                 continue;
             }
 

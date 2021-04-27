@@ -189,14 +189,16 @@ public class OiyokanEntityCollectionProcessor implements EntityCollectionProcess
             response.setStatusCode(HttpStatusCode.OK.getStatusCode());
             response.setHeader(HttpHeader.CONTENT_TYPE, responseFormat.toContentTypeString());
         } catch (ODataApplicationException | ODataLibraryException ex) {
-            // TODO message
-            log.warn("WARN: OiyokanEntityCollectionProcessor#readEntityCollection(" + request.getRawODataPath() + ","
-                    + request.getRawQueryPath() + "): " + ex.toString());
+            // [IY9521] WARN: EntityCollectionProcessor.readEntityCollection: exception
+            // caught
+            log.warn(OiyokanMessages.IY9521 + ": " + request.getRawODataPath() + "," + request.getRawQueryPath() + ": "
+                    + ex.toString());
             throw ex;
         } catch (RuntimeException ex) {
-            // TODO message
-            log.error("ERROR: OiyokanEntityCollectionProcessor#readEntityCollection(" + request.getRawODataPath() + ","
-                    + request.getRawQueryPath() + "): " + ex.toString(), ex);
+            // [IY9522] ERROR: EntityCollectionProcessor.readEntityCollection: runtime
+            // exception caught
+            log.error(OiyokanMessages.IY9522 + ": " + request.getRawODataPath() + "," + request.getRawQueryPath() + ": "
+                    + ex.toString(), ex);
             throw ex;
         }
     }

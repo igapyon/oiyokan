@@ -120,12 +120,13 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
 
             return csdlEntityType;
         } catch (ODataApplicationException ex) {
-            // TODO message
-            log.warn("WARN: OiyokanEdmProvider#getEntityType(" + entityTypeName + "): " + ex.toString());
+            // [IY9511] WARN: CsdlAbstractEdmProvider.getEntityType: exception caught
+            log.warn(OiyokanMessages.IY9511 + ": " + entityTypeName + ", " + ex.toString());
             throw ex;
         } catch (RuntimeException ex) {
-            // TODO message
-            log.error("ERROR: OiyokanEdmProvider#getEntityType(" + entityTypeName + "): " + ex.toString(), ex);
+            // [IY9512] ERROR: CsdlAbstractEdmProvider.getEntityType: runtime exception
+            // caught
+            log.error(OiyokanMessages.IY9512 + ": " + entityTypeName + ", " + ex.toString(), ex);
             throw ex;
         }
     }
@@ -164,12 +165,13 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
             // ヒットしない場合は対象外。その場合は null返却.
             return csdlEntitySet;
         } catch (ODataApplicationException ex) {
-            // TODO message
-            log.warn("WARN: OiyokanEdmProvider#getEntitySet(" + entitySetName + "): " + ex.toString());
+            // [IY9513] WARN: CsdlAbstractEdmProvider.getEntitySet: exception caught
+            log.warn(OiyokanMessages.IY9513 + ": " + entitySetName + ", " + ex.toString());
             throw ex;
         } catch (RuntimeException ex) {
-            // TODO message
-            log.error("ERROR: OiyokanEdmProvider#getEntitySet(" + entitySetName + "): " + ex.toString(), ex);
+            // [IY9514] ERROR: CsdlAbstractEdmProvider.getEntitySet: runtime exception
+            // caught
+            log.error(OiyokanMessages.IY9514 + ": " + entitySetName + ", " + ex.toString(), ex);
             throw ex;
         }
     }
@@ -238,12 +240,14 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
 
             return csdlEntityContainer;
         } catch (ODataApplicationException ex) {
-            // TODO message
-            log.warn("WARN: OiyokanEdmProvider#getEntityContainer(): " + ex.toString());
+            // [IY9515] WARN: CsdlAbstractEdmProvider.getEntityContainer: exception caught
+            log.warn(OiyokanMessages.IY9515 + ": " + ex.toString());
+
             throw ex;
         } catch (RuntimeException ex) {
-            // TODO message
-            log.error("ERROR: OiyokanEdmProvider#getEntityContainer(): " + ex.toString(), ex);
+            // [IY9516] ERROR: CsdlAbstractEdmProvider.getEntityContainer: runtime exception
+            // caught
+            log.error(OiyokanMessages.IY9516 + ": " + ex.toString(), ex);
             throw ex;
         }
     }
@@ -286,12 +290,12 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
 
             return newSchemaList;
         } catch (ODataApplicationException ex) {
-            // TODO message
-            log.warn("WARN: OiyokanEdmProvider#getSchemas(): " + ex.toString());
+            // [IY9517] WARN: CsdlAbstractEdmProvider.getSchemas: exception caught
+            log.warn(OiyokanMessages.IY9517 + ": " + ex.toString());
             throw ex;
         } catch (RuntimeException ex) {
-            // TODO message
-            log.error("ERROR: OiyokanEdmProvider#getSchemas(): " + ex.toString(), ex);
+            // [IY9518] ERROR: CsdlAbstractEdmProvider.getSchemas: runtime exception caught
+            log.error(OiyokanMessages.IY9518 + ": " + ex.toString(), ex);
             throw ex;
         }
     }
@@ -325,12 +329,14 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
 
             return null;
         } catch (ODataApplicationException ex) {
-            // TODO message
-            log.warn("WARN: OiyokanEdmProvider#getEntityContainerInfo(): " + ex.toString());
+            // [IY9519] WARN: CsdlAbstractEdmProvider.getEntityContainerInfo: exception
+            // caught
+            log.warn(OiyokanMessages.IY9519 + ": " + ex.toString());
             throw ex;
         } catch (RuntimeException ex) {
-            // TODO message
-            log.error("ERROR: OiyokanEdmProvider#getEntityContainerInfo(): " + ex.toString(), ex);
+            // [IY9520] ERROR: CsdlAbstractEdmProvider.getEntityContainerInfo: runtime
+            // exception caught
+            log.error(OiyokanMessages.IY9520 + ": " + ex.toString(), ex);
             throw ex;
         }
     }

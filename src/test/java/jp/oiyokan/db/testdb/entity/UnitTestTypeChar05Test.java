@@ -53,8 +53,7 @@ class UnitTestTypeChar05Test {
         resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1",
                 "$select=ID,StringChar8&$filter=ID eq " + idString + " and StringChar8 eq null");
         result = OiyokanTestUtil.stream2String(resp.getContent());
-        assertEquals("{\"@odata.context\":\"$metadata#ODataTests1\",\"value\":[{\"ID\":205,\"StringChar8\":null}]}",
-                result);
+        assertEquals("null", OiyokanTestUtil.getValueFromResultByKey(result, "StringChar8"), result);
         // log.debug("TRACE: " + result);
         assertEquals(200, resp.getStatusCode());
 

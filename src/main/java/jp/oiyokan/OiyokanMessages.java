@@ -28,6 +28,7 @@ public class OiyokanMessages {
     public static final String IY1051 = "[IY1051] Check JDBC Driver";
     public static final String IY1052 = "[IY1052] OData v4: URI";
 
+    // EntityCollection
     public static final String IY1061 = "[IY1061] DEBUG: QUERY";
     public static final String IY1062 = "[IY1062] INFO: COUNT";
     public static final String IY1063 = "[IY1063] INFO: COUNT = ";
@@ -36,15 +37,15 @@ public class OiyokanMessages {
     public static final String IY1066 = "[IY1066] INFO: SQL exec";
     public static final String IY1067 = "[IY1067] INFO: SQL exec: elapsed";
 
-    // TODO この箇所について IY1061同様に OData v4ではなく、INFO: DEBUG: の形式にメッセージを変更したい。
-    public static final String IY1071 = "[IY1071] OData v4: ENTITY: READ";
-    public static final String IY1072 = "[IY1072] OData v4: SQL single";
-    public static final String IY1073 = "[IY1073] OData v4: SQL: elapsed";
-    public static final String IY1074 = "[IY1074] OData v4: ENTITY: CREATE";
-    public static final String IY1075 = "[IY1075] OData v4: ENTITY: DELETE";
-    public static final String IY1076 = "[IY1076] OData v4: ENTITY: PATCH: UPDATE (If-Match)";
-    public static final String IY1077 = "[IY1077] OData v4: ENTITY: PATCH: INSERT (If-None-Match)";
-    public static final String IY1078 = "[IY1078] OData v4: ENTITY: PATCH: UPSERT";
+    // Entity
+    public static final String IY1071 = "[IY1071] INFO: ENTITY: READ";
+    public static final String IY1072 = "[IY1072] INFO: ENTITY: CREATE";
+    public static final String IY1073 = "[IY1073] INFO: ENTITY: DELETE";
+    public static final String IY1074 = "[IY1074] INFO: ENTITY: PATCH: UPDATE (If-Match)";
+    public static final String IY1075 = "[IY1075] INFO: ENTITY: PATCH: INSERT (If-None-Match)";
+    public static final String IY1076 = "[IY1076] INFO: ENTITY: PATCH: UPSERT";
+    public static final String IY1081 = "[IY1081] INFO: SQL single";
+    public static final String IY1082 = "[IY1082] INFO: SQL: elapsed";
 
     ////////////////////////////////////////////////////////////////////////////////
     // Query
@@ -130,6 +131,8 @@ public class OiyokanMessages {
     public static final String IY3114 = "[IY3114] UNEXPECTED: Can't retrieve PreparedStatement#getGeneratedKeys: Fail to map auto generated key field.";
     public static final int IY3114_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
 
+    public static final String IY3121 = "[IY3121] WARN: Ignore given value during INSERT because property that was set as autoGenKey.";
+
     public static final String IY3151 = "[IY3151] Fail to execute SQL.";
     public static final int IY3151_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
     public static final String IY3152 = "[IY3152] Fail to execute SQL.";
@@ -193,6 +196,14 @@ public class OiyokanMessages {
     public static final String IY4152 = "[IY4152] UNEXPECTED: Unsupported binary operator";
     public static final String IY4153 = "[IY4153] UNEXPECTED: NOT SUPPORTED MethodKind";
     public static final String IY4154 = "[IY4154] UNEXPECTED: Unsupported UnaryOperatorKind";
+
+    ////////////////////////////////////////////////////////////////////////////////
+    // IY61XX : oiyokan-settings
+    public static final String IY6101 = "[IY6101] INFO: load namespace";
+    public static final String IY6102 = "[IY6102] INFO: load containerName";
+    public static final String IY6103 = "[IY6103] INFO: load database";
+    public static final String IY6104 = "[IY6104] INFO: load entitySet";
+    public static final String IY6151 = "[IY6151] WARN: Overwrite nullable with true because autoGenKey for property is true.";
 
     ////////////////////////////////////////////////////////////////////////////////
     // Generic
@@ -259,6 +270,30 @@ public class OiyokanMessages {
 
     ////////////////////////////////////////////////////////////////////////////////
     // IY91XX : System error
+
+    ////////////////////////////////////////////////////////////////////////////////
+    // IY95XX : Top level error
+    public static final String IY9501 = "[IY9501] ERROR: Register.serv: exception caught";
+    public static final String IY9511 = "[IY9511] WARN: CsdlAbstractEdmProvider.getEntityType: exception caught";
+    public static final String IY9512 = "[IY9512] ERROR: CsdlAbstractEdmProvider.getEntityType: runtime exception caught";
+    public static final String IY9513 = "[IY9513] WARN: CsdlAbstractEdmProvider.getEntitySet: exception caught";
+    public static final String IY9514 = "[IY9514] ERROR: CsdlAbstractEdmProvider.getEntitySet: runtime exception caught";
+    public static final String IY9515 = "[IY9515] WARN: CsdlAbstractEdmProvider.getEntityContainer: exception caught";
+    public static final String IY9516 = "[IY9516] ERROR: CsdlAbstractEdmProvider.getEntityContainer: runtime exception caught";
+    public static final String IY9517 = "[IY9517] WARN: CsdlAbstractEdmProvider.getSchemas: exception caught";
+    public static final String IY9518 = "[IY9518] ERROR: CsdlAbstractEdmProvider.getSchemas: runtime exception caught";
+    public static final String IY9519 = "[IY9519] WARN: CsdlAbstractEdmProvider.getEntityContainerInfo: exception caught";
+    public static final String IY9520 = "[IY9520] ERROR: CsdlAbstractEdmProvider.getEntityContainerInfo: runtime exception caught";
+    public static final String IY9521 = "[IY9521] WARN: EntityCollectionProcessor.readEntityCollection: exception caught";
+    public static final String IY9522 = "[IY9522] ERROR: EntityCollectionProcessor.readEntityCollection: runtime exception caught";
+    public static final String IY9531 = "[IY9531] WARN: EntityProcessor.readEntity: exception caught";
+    public static final String IY9532 = "[IY9532] ERROR: EntityProcessor.readEntity: runtime exception caught";
+    public static final String IY9533 = "[IY9533] WARN: EntityProcessor.createEntity: exception caught";
+    public static final String IY9534 = "[IY9534] ERROR: EntityProcessor.createEntity: runtime exception caught";
+    public static final String IY9535 = "[IY9535] WARN: EntityProcessor.updateEntity: exception caught";
+    public static final String IY9536 = "[IY9536] ERROR: EntityProcessor.updateEntity: runtime exception caught";
+    public static final String IY9537 = "[IY9537] WARN: EntityProcessor.deleteEntity: exception caught";
+    public static final String IY9538 = "[IY9538] ERROR: EntityProcessor.deleteEntity: runtime exception caught";
 
     ////////////////////////////////////////////////////////////////////////////////
     // IY9999 : Other error

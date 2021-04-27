@@ -83,7 +83,7 @@ public class OiyoBasicJdbcEntityOneBuilder {
             List<UriParameter> keyPredicates) throws ODataApplicationException {
         final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, edmEntitySet.getName());
 
-        // [IY1071] OData v4: ENTITY: READ
+        // [IY1071] INFO: ENTITY: READ
         log.debug(OiyokanMessages.IY1071 + ": " + edmEntitySet.getName());
 
         final OiyoSqlInfo sqlInfo = new OiyoSqlInfo(oiyoInfo, entitySet.getName());
@@ -97,8 +97,8 @@ public class OiyoBasicJdbcEntityOneBuilder {
             throw new ODataApplicationException(OiyokanMessages.IY7106, 500, Locale.ENGLISH);
         }
 
-        // [IY1072] OData v4: SQL single
-        log.info(OiyokanMessages.IY1072 + ": " + sql);
+        // [IY1081] INFO: SQL single
+        log.info(OiyokanMessages.IY1081 + ": " + sql);
 
         final long startMillisec = System.currentTimeMillis();
         try (var stmt = connTargetDb.prepareStatement(sql)) {
@@ -150,8 +150,8 @@ public class OiyoBasicJdbcEntityOneBuilder {
             final long endMillisec = System.currentTimeMillis();
             final long elapsed = endMillisec - startMillisec;
             if (elapsed >= 10) {
-                // [IY1073] OData v4: SQL: elapsed
-                log.info(OiyokanMessages.IY1073 + ": " + (endMillisec - startMillisec));
+                // [IY1082] INFO: SQL: elapsed
+                log.info(OiyokanMessages.IY1082 + ": " + (endMillisec - startMillisec));
             }
 
             return ent;
@@ -191,8 +191,8 @@ public class OiyoBasicJdbcEntityOneBuilder {
             throws ODataApplicationException {
         final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, edmEntitySet.getName());
 
-        // [IY1074] OData v4: ENTITY: CREATE
-        log.info(OiyokanMessages.IY1074 + ": " + edmEntitySet.getName());
+        // [IY1072] INFO: ENTITY: CREATE
+        log.info(OiyokanMessages.IY1072 + ": " + edmEntitySet.getName());
 
         final OiyoSqlInfo sqlInfo = new OiyoSqlInfo(oiyoInfo, entitySet.getName());
         new OiyoSqlInsertOneBuilder(oiyoInfo, sqlInfo).buildInsertIntoDml(edmEntitySet.getName(), null, requestEntity);
@@ -310,8 +310,8 @@ public class OiyoBasicJdbcEntityOneBuilder {
             throws ODataApplicationException {
         final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, edmEntitySet.getName());
 
-        // [IY1075] OData v4: ENTITY: DELETE
-        log.info(OiyokanMessages.IY1075 + ": " + edmEntitySet.getName());
+        // [IY1073] INFO: ENTITY: DELETE
+        log.info(OiyokanMessages.IY1073 + ": " + edmEntitySet.getName());
 
         final OiyoSqlInfo sqlInfo = new OiyoSqlInfo(oiyoInfo, entitySet.getName());
         new OiyoSqlDeleteOneBuilder(oiyoInfo, sqlInfo).buildDeleteDml(edmEntitySet.getName(), keyPredicates);
@@ -393,22 +393,22 @@ public class OiyoBasicJdbcEntityOneBuilder {
             if (ifMatch || isAutoGenKeyIncludedInKey) {
                 // If-Match header が '*' 指定されたら UPDATE.
                 // KEYにautoGenKeyが含まれる場合も If-Match 指定と同様と扱って UPDATE.
-                // [IY1076] OData v4: ENTITY: PATCH: UPDATE (If-Match)
-                log.info(OiyokanMessages.IY1076 + ": " + edmEntitySet.getName());
+                // [IY1074] INFO: ENTITY: PATCH: UPDATE (If-Match)
+                log.info(OiyokanMessages.IY1074 + ": " + edmEntitySet.getName());
                 new OiyoSqlUpdateOneBuilder(oiyoInfo, sqlInfo).buildUpdatePatchDml(edmEntitySet.getName(),
                         keyPredicates, requestEntity);
 
             } else if (ifNoneMatch) {
                 // If-None-Match header が '*' 指定されたら INSERT.
-                // [IY1077] OData v4: ENTITY: PATCH: INSERT (If-None-Match)
-                log.info(OiyokanMessages.IY1077 + ": " + edmEntitySet.getName());
+                // [IY1075] INFO: ENTITY: PATCH: INSERT (If-None-Match)
+                log.info(OiyokanMessages.IY1075 + ": " + edmEntitySet.getName());
                 new OiyoSqlInsertOneBuilder(oiyoInfo, sqlInfo).buildInsertIntoDml(edmEntitySet.getName(), keyPredicates,
                         requestEntity);
 
             } else {
                 // If-Match header も If-None-Match header も指定がない場合は UPSERT.
-                // [IY1078] OData v4: ENTITY: PATCH: UPSERT
-                log.info(OiyokanMessages.IY1078 + ": " + edmEntitySet.getName());
+                // [IY1076] INFO: ENTITY: PATCH: UPSERT
+                log.info(OiyokanMessages.IY1076 + ": " + edmEntitySet.getName());
 
                 try {
                     // SELECT to check exists
