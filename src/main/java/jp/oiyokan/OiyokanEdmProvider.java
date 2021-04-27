@@ -124,8 +124,7 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
             log.warn(OiyokanMessages.IY9511 + ": " + entityTypeName + ", " + ex.toString());
             throw ex;
         } catch (RuntimeException ex) {
-            // [IY9512] ERROR: EdmProvider.getEntityType: runtime exception
-            // caught
+            // [IY9512] ERROR: EdmProvider.getEntityType: runtime exception caught
             log.error(OiyokanMessages.IY9512 + ": " + entityTypeName + ", " + ex.toString(), ex);
             throw ex;
         }
