@@ -29,10 +29,10 @@
           {
             "name": "ID",
             "dbName": "ID",
-            "edmType": "Edm.Int32",
-            "jdbcType": "Types.INTEGER",
-            "dbType": "INTEGER",
-            "autoGenKey" : true,
+            "edmType": "Edm.Int64",
+            "jdbcType": "Types.BIGINT",
+            "dbType": "IDENTITY",
+            "autoGenKey": true,
             "nullable": true
           },
           {
@@ -156,7 +156,7 @@
             "jdbcType": "Types.REAL",
             "dbType": "REAL",
             "nullable": true,
-            "dbDefault": "123.456789"
+            "dbDefault": "123.45"
           },
           {
             "name": "Double1",
@@ -319,10 +319,10 @@
           {
             "name": "ID",
             "dbName": "ID",
-            "edmType": "Edm.Int32",
-            "jdbcType": "Types.INTEGER",
-            "dbType": "INTEGER",
-            "autoGenKey" : true,
+            "edmType": "Edm.Int64",
+            "jdbcType": "Types.BIGINT",
+            "dbType": "IDENTITY",
+            "autoGenKey": true,
             "nullable": true
           },
           {
@@ -589,8 +589,8 @@
             "dbName": "Iden1",
             "edmType": "Edm.Int64",
             "jdbcType": "Types.BIGINT",
-            "dbType": "BIGINT",
-            "autoGenKey" : true,
+            "dbType": "IDENTITY",
+            "autoGenKey": true,
             "nullable": true
           },
           {
@@ -632,10 +632,10 @@
           {
             "name": "ID",
             "dbName": "ID",
-            "edmType": "Edm.Int32",
-            "jdbcType": "Types.INTEGER",
-            "dbType": "INTEGER",
-            "autoGenKey" : true,
+            "edmType": "Edm.Int64",
+            "jdbcType": "Types.BIGINT",
+            "dbType": "IDENTITY",
+            "autoGenKey": true,
             "nullable": true
           },
           {
@@ -769,10 +769,11 @@
           {
             "name": "ID",
             "dbName": "ID",
-            "edmType": "Edm.Int32",
-            "jdbcType": "Types.INTEGER",
-            "dbType": "INTEGER",
-            "nullable": false
+            "edmType": "Edm.Int64",
+            "jdbcType": "Types.BIGINT",
+            "dbType": "IDENTITY",
+            "autoGenKey": true,
+            "nullable": true
           },
           {
             "name": "Name",

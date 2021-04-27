@@ -45,7 +45,7 @@ class Gen01OiyokanKanSettingsJsonTest {
         oiyoSettings.setDatabase(new ArrayList<>());
 
         final String[][] DATABASE_SETTINGS = new String[][] { //
-                { "oiyokanKan", "h2", "Oiyokan internal DB. Do not change.", //
+                { "oiyokanKan", "h2", "Oiyokan kanri DB.", //
                         "org.h2.Driver", //
                         "jdbc:h2:mem:oiyokan;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=FALSE;MODE=MSSQLServer", //
                         "sa", "" }, //
