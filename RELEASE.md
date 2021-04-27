@@ -1,3 +1,25 @@
+# Release 1.8 (2021-04-28)
+
+## EN
+
+- Adjusted the behavior when the primary key is autoGenKey. Relatedly, autoGenKey mapped nullable as Edm.
+- Start project which test demosite from client (https://github.com/igapyon/oiyokan-demosite-test)
+- Improved to log ODataLibraryException into the server log.
+- Added a unit test table called ODataTests8.
+- Added NULL test case of CHAR search.
+- If nullable is not specified, treat as nullable.
+- Bug fix.
+
+## JA
+
+- primary key が autoGenKey の際の挙動を調整。関連して autoGenKey は Edm として null許容とする。
+- クライアントからの demosite テストプロジェクトを開始 (https://github.com/igapyon/oiyokan-demosite-test)
+- ODataLibraryException がサーバログに記録されるよう改善
+- ODataTests8 という単体テスト用テーブルを追加
+- CHAR検索のNULLテストケースの追加 
+- nullable指定なしは、null許容とする。
+- Bug fix
+
 # Release 1.7 (2021-04-25)
 
 ## EN

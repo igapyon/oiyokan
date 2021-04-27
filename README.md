@@ -61,6 +61,7 @@ src/main/resources/oiyokan/oiyokan-settings.json
 
 - [Oiyokan 本体ライブラリ - github](https://github.com/igapyon/oiyokan)
 - [Oiyokan デモサイト - github](https://github.com/igapyon/oiyokan-demosite)
+- [Oiyokan デモサイトのテスト - github](https://github.com/igapyon/oiyokan-demosite-test)
 
 ## OData v4 server のサンプル(simple-odata4) を祖先
 

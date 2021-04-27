@@ -27,7 +27,7 @@ public class OiyokanConstants {
     /**
      * Oiyokan のバージョン番号
      */
-    public static final String VERSION = "1.7.20210427e";
+    public static final String VERSION = "1.8.20210428a";
 
     /**
      * 実験的な $search 機能(全文検索)が有効化されているかどうか。
