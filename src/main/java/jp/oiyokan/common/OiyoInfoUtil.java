@@ -73,22 +73,22 @@ public class OiyoInfoUtil {
                 final OiyoSettings loadedSettings = mapper.readValue(strOiyokanSettings, OiyoSettings.class);
                 if (mergedOiyoSettings.getNamespace() == null) {
                     // TODO message
-                    log.info("INFO: namespace に値をセット: " + loadedSettings.getNamespace());
+                    log.info("INFO: load namespace: " + loadedSettings.getNamespace());
                     mergedOiyoSettings.setNamespace(loadedSettings.getNamespace());
                 }
                 if (mergedOiyoSettings.getContainerName() == null) {
                     // TODO message
-                    log.info("INFO: containerName に値をセット: " + loadedSettings.getContainerName());
+                    log.info("INFO: load containerName: " + loadedSettings.getContainerName());
                     mergedOiyoSettings.setContainerName(loadedSettings.getContainerName());
                 }
                 for (OiyoSettingsDatabase database : loadedSettings.getDatabase()) {
                     // TODO message
-                    log.info("INFO: database 設定をセット: " + database.getName());
+                    log.info("INFO: load database: " + database.getName());
                     mergedOiyoSettings.getDatabase().add(database);
                 }
                 for (OiyoSettingsEntitySet entitySet : loadedSettings.getEntitySet()) {
                     // TODO message
-                    log.info("INFO: entitySet 設定をセット: " + entitySet.getName());
+                    log.info("INFO: load entitySet: " + entitySet.getName());
                     mergedOiyoSettings.getEntitySet().add(entitySet);
 
                     for (OiyoSettingsProperty property : entitySet.getEntityType().getProperty()) {
