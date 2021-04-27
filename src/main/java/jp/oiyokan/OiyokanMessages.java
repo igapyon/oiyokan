@@ -36,7 +36,7 @@ public class OiyokanMessages {
     public static final String IY1066 = "[IY1066] INFO: SQL exec";
     public static final String IY1067 = "[IY1067] INFO: SQL exec: elapsed";
 
-    // TODO  この箇所について IY1061同様に OData v4ではなく、INFO: DEBUG: の形式にメッセージを変更したい。
+    // TODO この箇所について IY1061同様に OData v4ではなく、INFO: DEBUG: の形式にメッセージを変更したい。
     public static final String IY1071 = "[IY1071] OData v4: ENTITY: READ";
     public static final String IY1072 = "[IY1072] OData v4: SQL single";
     public static final String IY1073 = "[IY1073] OData v4: SQL: elapsed";

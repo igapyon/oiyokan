@@ -120,9 +120,11 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
 
             return csdlEntityType;
         } catch (ODataApplicationException ex) {
+            // TODO message
             log.warn("WARN: OiyokanEdmProvider#getEntityType(" + entityTypeName + "): " + ex.toString());
             throw ex;
         } catch (RuntimeException ex) {
+            // TODO message
             log.error("ERROR: OiyokanEdmProvider#getEntityType(" + entityTypeName + "): " + ex.toString(), ex);
             throw ex;
         }
@@ -162,9 +164,11 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
             // ヒットしない場合は対象外。その場合は null返却.
             return csdlEntitySet;
         } catch (ODataApplicationException ex) {
+            // TODO message
             log.warn("WARN: OiyokanEdmProvider#getEntitySet(" + entitySetName + "): " + ex.toString());
             throw ex;
         } catch (RuntimeException ex) {
+            // TODO message
             log.error("ERROR: OiyokanEdmProvider#getEntitySet(" + entitySetName + "): " + ex.toString(), ex);
             throw ex;
         }
@@ -234,9 +238,11 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
 
             return csdlEntityContainer;
         } catch (ODataApplicationException ex) {
+            // TODO message
             log.warn("WARN: OiyokanEdmProvider#getEntityContainer(): " + ex.toString());
             throw ex;
         } catch (RuntimeException ex) {
+            // TODO message
             log.error("ERROR: OiyokanEdmProvider#getEntityContainer(): " + ex.toString(), ex);
             throw ex;
         }
@@ -280,9 +286,11 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
 
             return newSchemaList;
         } catch (ODataApplicationException ex) {
+            // TODO message
             log.warn("WARN: OiyokanEdmProvider#getSchemas(): " + ex.toString());
             throw ex;
         } catch (RuntimeException ex) {
+            // TODO message
             log.error("ERROR: OiyokanEdmProvider#getSchemas(): " + ex.toString(), ex);
             throw ex;
         }
@@ -317,9 +325,11 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
 
             return null;
         } catch (ODataApplicationException ex) {
+            // TODO message
             log.warn("WARN: OiyokanEdmProvider#getEntityContainerInfo(): " + ex.toString());
             throw ex;
         } catch (RuntimeException ex) {
+            // TODO message
             log.error("ERROR: OiyokanEdmProvider#getEntityContainerInfo(): " + ex.toString(), ex);
             throw ex;
         }

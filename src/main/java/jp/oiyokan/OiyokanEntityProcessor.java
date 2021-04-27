@@ -133,10 +133,12 @@ public class OiyokanEntityProcessor implements EntityProcessor {
             response.setHeader(HttpHeader.CONTENT_TYPE, responseFormat.toContentTypeString());
 
         } catch (ODataApplicationException | ODataLibraryException ex) {
+            // TODO message
             log.warn("WARN: OiyokanEntityProcessor#readEntity(" + request.getRawODataPath() + ","
                     + request.getRawQueryPath() + "): " + ex.toString());
             throw ex;
         } catch (RuntimeException ex) {
+            // TODO message
             log.error("ERROR: OiyokanEntityProcessor#readEntity(" + request.getRawODataPath() + ","
                     + request.getRawQueryPath() + "): " + ex.toString(), ex);
             throw ex;
@@ -205,10 +207,12 @@ public class OiyokanEntityProcessor implements EntityProcessor {
             response.setHeader(HttpHeader.CONTENT_TYPE, responseFormat.toContentTypeString());
 
         } catch (ODataApplicationException | ODataLibraryException ex) {
+            // TODO message
             log.warn("WARN: OiyokanEntityProcessor#createEntity(" + request.getRawODataPath() + ","
                     + request.getRawQueryPath() + "): " + ex.toString());
             throw ex;
         } catch (RuntimeException ex) {
+            // TODO message
             log.error("ERROR: OiyokanEntityProcessor#createEntity(" + request.getRawODataPath() + ","
                     + request.getRawQueryPath() + "): " + ex.toString(), ex);
             throw ex;
@@ -287,10 +291,12 @@ public class OiyokanEntityProcessor implements EntityProcessor {
             response.setHeader(HttpHeader.CONTENT_TYPE, responseFormat.toContentTypeString());
 
         } catch (ODataApplicationException | ODataLibraryException ex) {
+            // TODO message
             log.warn("WARN: OiyokanEntityProcessor#updateEntity(" + request.getRawODataPath() + ","
                     + request.getRawQueryPath() + "): " + ex.toString());
             throw ex;
         } catch (RuntimeException ex) {
+            // TODO message
             log.error("ERROR: OiyokanEntityProcessor#updateEntity(" + request.getRawODataPath() + ","
                     + request.getRawQueryPath() + "): " + ex.toString(), ex);
             throw ex;
@@ -332,10 +338,12 @@ public class OiyokanEntityProcessor implements EntityProcessor {
             response.setStatusCode(HttpStatusCode.NO_CONTENT.getStatusCode());
 
         } catch (ODataApplicationException /* | ODataLibraryException */ ex) {
+            // TODO message
             log.warn("WARN: OiyokanEntityProcessor#deleteEntity(" + request.getRawODataPath() + ","
                     + request.getRawQueryPath() + "): " + ex.toString());
             throw ex;
         } catch (RuntimeException ex) {
+            // TODO message
             log.error("ERROR: OiyokanEntityProcessor#deleteEntity(" + request.getRawODataPath() + ","
                     + request.getRawQueryPath() + "): " + ex.toString(), ex);
             throw ex;
