@@ -171,7 +171,7 @@ public class OiyoInfoUtil {
             }
         }
 
-        // [IY7121] UNEXPECTED: EntitySet settings NOT found.
+        // [IY7121] ERROR: Specified EntitySet settings NOT found.
         log.error(OiyokanMessages.IY7121 + ": " + entitySetName);
         throw new ODataApplicationException(OiyokanMessages.IY7121 + ": " + entitySetName, //
                 OiyokanMessages.IY7121_CODE, Locale.ENGLISH);
