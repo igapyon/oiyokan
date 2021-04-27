@@ -30,6 +30,7 @@ import jp.oiyokan.util.OiyokanTestUtil;
  * EntityのHEAD, BODYのテスト.
  */
 class UnitTestEntityHeadBody01Test {
+    @SuppressWarnings("unused")
     private static final Log log = LogFactory.getLog(UnitTestEntityHeadBody01Test.class);
 
     /**
