@@ -696,7 +696,7 @@ public class OiyoCommonJdbcUtil {
             }
             return "[" + fieldName + "]";
 
-        case postgres:
+        case PostgreSQL:
         case ORCL18:
             if (fieldName.indexOf(" ") <= 0 && fieldName.indexOf(".") <= 0) {
                 // 空白のない場合はエスケープしない.

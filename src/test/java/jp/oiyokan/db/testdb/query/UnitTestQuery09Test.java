@@ -50,7 +50,7 @@ class UnitTestQuery09Test {
                     result, "Single型の確認");
             assertEquals(200, resp.getStatusCode());
             break;
-        case postgres:
+        case PostgreSQL:
             // Postgresでは確認しない。
             break;
         }

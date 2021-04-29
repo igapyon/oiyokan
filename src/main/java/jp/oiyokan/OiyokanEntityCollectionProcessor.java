@@ -212,7 +212,7 @@ public class OiyokanEntityCollectionProcessor implements EntityCollectionProcess
 
         switch (databaseType) {
         case h2:
-        case postgres:
+        case PostgreSQL:
         case MySQL:
         case SQLSV2008:
         case ORCL18:

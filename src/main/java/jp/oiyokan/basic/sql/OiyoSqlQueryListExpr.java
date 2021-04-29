@@ -398,7 +398,7 @@ public class OiyoSqlQueryListExpr {
                 expand(impl.getParameters().get(1));
                 sqlInfo.getSqlBuilder().append(") > 0)");
                 return;
-            case postgres:
+            case PostgreSQL:
                 sqlInfo.getSqlBuilder().append("(STRPOS(");
                 expand(impl.getParameters().get(0));
                 sqlInfo.getSqlBuilder().append(",");
@@ -426,7 +426,7 @@ public class OiyoSqlQueryListExpr {
                 expand(impl.getParameters().get(1));
                 sqlInfo.getSqlBuilder().append(") = 1)");
                 return;
-            case postgres:
+            case PostgreSQL:
                 sqlInfo.getSqlBuilder().append("(STRPOS(");
                 expand(impl.getParameters().get(0));
                 sqlInfo.getSqlBuilder().append(",");
@@ -446,7 +446,7 @@ public class OiyoSqlQueryListExpr {
         // ENDSWITH
         if (impl.getMethod() == MethodKind.ENDSWITH) {
             switch (databaseType) {
-            case postgres:
+            case PostgreSQL:
             default:
                 sqlInfo.getSqlBuilder().append("(RIGHT(");
                 expand(impl.getParameters().get(0));
@@ -480,7 +480,7 @@ public class OiyoSqlQueryListExpr {
         // LENGTH
         if (impl.getMethod() == MethodKind.LENGTH) {
             switch (databaseType) {
-            case postgres:
+            case PostgreSQL:
             default:
                 sqlInfo.getSqlBuilder().append("(LENGTH(");
                 expand(impl.getParameters().get(0));
@@ -507,7 +507,7 @@ public class OiyoSqlQueryListExpr {
                 expand(impl.getParameters().get(1));
                 sqlInfo.getSqlBuilder().append(") - 1)");
                 return;
-            case postgres:
+            case PostgreSQL:
                 sqlInfo.getSqlBuilder().append("(STRPOS(");
                 expand(impl.getParameters().get(0));
                 sqlInfo.getSqlBuilder().append(",");
@@ -576,7 +576,7 @@ public class OiyoSqlQueryListExpr {
         // TRIM
         if (impl.getMethod() == MethodKind.TRIM) {
             switch (databaseType) {
-            case postgres:
+            case PostgreSQL:
             default:
                 sqlInfo.getSqlBuilder().append("TRIM(");
                 expand(impl.getParameters().get(0));
@@ -594,7 +594,7 @@ public class OiyoSqlQueryListExpr {
         // CONCAT
         if (impl.getMethod() == MethodKind.CONCAT) {
             switch (databaseType) {
-            case postgres:
+            case PostgreSQL:
             default:
                 sqlInfo.getSqlBuilder().append("CONCAT(");
                 expand(impl.getParameters().get(0));
@@ -796,7 +796,7 @@ public class OiyoSqlQueryListExpr {
                 expand(impl.getParameters().get(1));
                 sqlInfo.getSqlBuilder().append(") > 0)");
                 return;
-            case postgres:
+            case PostgreSQL:
                 sqlInfo.getSqlBuilder().append("(STRPOS(");
                 expand(impl.getParameters().get(0));
                 sqlInfo.getSqlBuilder().append(",");
