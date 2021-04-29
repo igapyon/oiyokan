@@ -390,6 +390,14 @@ public class OiyoBasicJdbcEntityOneBuilder {
             connTargetDb.setAutoCommit(false);
             boolean isTranSuccessed = false;
 
+            if (ifNoneMatch && isAutoGenKeyIncludedInKey) {
+                // [IY3122] ERROR: If-None-Match NOT allowed because there is property that was
+                // set as autoGenKey.
+                log.warn(OiyokanMessages.IY3122);
+                throw new ODataApplicationException(OiyokanMessages.IY3122, OiyokanMessages.IY3122_CODE,
+                        Locale.ENGLISH);
+            }
+
             if (ifMatch || isAutoGenKeyIncludedInKey) {
                 // If-Match header が '*' 指定されたら UPDATE.
                 // KEYにautoGenKeyが含まれる場合も If-Match 指定と同様と扱って UPDATE.
@@ -447,13 +455,13 @@ public class OiyoBasicJdbcEntityOneBuilder {
                 connTargetDb.setAutoCommit(true);
             }
         } catch (SQLException ex) {
-            // [IY3154] Not modified by SQL.
+            // [IY3154] Fail to update entity with SQL error.
             log.error(OiyokanMessages.IY3154 + ": " + ex.toString());
             throw new ODataApplicationException(OiyokanMessages.IY3154, OiyokanMessages.IY3154_CODE, Locale.ENGLISH);
         } catch (ODataApplicationException ex) {
-            // [IY3108] Not modified."
+            // [IY3108] Fail to update entity.
             log.error(OiyokanMessages.IY3108 + ": " + ex.toString());
-            throw new ODataApplicationException(OiyokanMessages.IY3108, OiyokanMessages.IY3108_CODE, Locale.ENGLISH);
+            throw ex;
         }
     }
 }

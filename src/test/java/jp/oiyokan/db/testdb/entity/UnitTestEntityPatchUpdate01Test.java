@@ -47,7 +47,7 @@ class UnitTestEntityPatchUpdate01Test {
         ODataResponse resp = OiyokanTestUtil.callPatch("/ODataTest2(" + key + ")", "{\n" //
                 + "  \"Name\":\"Name2\",\n" //
                 + "  \"Description\":\"Description2\"\n" + "}", true, false);
-        assertEquals(304, resp.getStatusCode(), "最初は存在しない.");
+        assertEquals(404, resp.getStatusCode(), "最初は存在しない.");
 
         resp = OiyokanTestUtil.callPatch("/ODataTest2(" + key + ")", "{\n" //
                 + "  \"Name\":\"Name2\",\n" //

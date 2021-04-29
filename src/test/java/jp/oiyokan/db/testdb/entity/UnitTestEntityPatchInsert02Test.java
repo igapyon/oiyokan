@@ -36,7 +36,7 @@ class UnitTestEntityPatchInsert02Test {
         @SuppressWarnings("unused")
         final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
 
-        final int NOT_EXISTS_ID = OiyokanTestUtil.getNextUniqueId();
+        final int NOT_EXISTS_ID = OiyokanTestUtil.getNextUniqueId() + 999;
 
         // INSERT (PATCH)
         // 存在しないのでINSERTになるケース.
@@ -45,7 +45,7 @@ class UnitTestEntityPatchInsert02Test {
                 + "  \"Description\":\"Description2\"\n" + "}", false, true);
         @SuppressWarnings("unused")
         String result = OiyokanTestUtil.stream2String(resp.getContent());
-        // System.err.println(result);
-        assertEquals(304, resp.getStatusCode());
+        System.err.println(result);
+        assertEquals(400, resp.getStatusCode(), "autoGenKey付き Property で INSERTを強制するとエラー.");
     }
 }
