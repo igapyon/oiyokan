@@ -318,20 +318,23 @@ public class OiyoCommonJdbcUtil {
         if (param == null) {
             if (IS_SHOW_DEBUG)
                 System.err.println("TRACE: PreparedStatement#setNull: null");
-            // TODO message
-            log.warn("NULLの値をBINDしようとしてるが、型情報が全くないため Types.NULLをセット");
+            // [IY7162] WARN: bind NULL value to an SQL statement, set Types.NULL because
+            // there is no type information.
+            log.warn(OiyokanMessages.IY7162);
             stmt.setNull(column, Types.NULL);
         } else if (null == param.getValue()) {
             if (IS_SHOW_DEBUG)
                 System.err.println("TRACE: PreparedStatement#setNull: null with Type");
             if (null == param.getProperty()) {
-                // TODO message
-                log.warn("NULLの値をBINDしようとしてるが、property 情報がないため Types.NULLをセット");
+                // [IY7163] WARN: bind NULL value to an SQL statement, set Types.NULL because
+                // there is no property object information.
+                log.warn(OiyokanMessages.IY7163);
                 stmt.setNull(column, Types.NULL);
             } else {
                 if (null == param.getProperty().getDbType()) {
-                    // TODO message
-                    log.warn("NULLの値をBINDしようとしてるが、property 情報はあったものの DBの Types 指定がないため Types.NULLをセット");
+                    // [IY7164] WARN: bind NULL value to an SQL statement, set Types.NULL because
+                    // there is no JDBC Type info in property information.
+                    log.warn(OiyokanMessages.IY7164);
                     stmt.setNull(column, Types.NULL);
                 } else {
                     final int jdbcType = OiyoJdbcUtil.string2Types(param.getProperty().getJdbcType());

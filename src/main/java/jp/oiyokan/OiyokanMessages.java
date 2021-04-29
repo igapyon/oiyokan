@@ -245,6 +245,9 @@ public class OiyokanMessages {
     public static final String IY7154 = "[IY7154] NOT SUPPORTED: JDBC Type";
 
     public static final String IY7161 = "[IY7161] Error: Fail to parse DateTime string.";
+    public static final String IY7162 = "[IY7162] WARN: bind NULL value to an SQL statement, set Types.NULL because there is no type information.";
+    public static final String IY7163 = "[IY7163] WARN: bind NULL value to an SQL statement, set Types.NULL because there is no property object information.";
+    public static final String IY7164 = "[IY7164] WARN: bind NULL value to an SQL statement, set Types.NULL because there is no JDBC Type info in property information.";
 
     public static final String IY7171 = "[IY7171] DEBUG: DB connect";
     public static final String IY7172 = "[IY7172] INFO: setup oiyokanKan database";
