@@ -47,7 +47,7 @@ class UnitTestQuery12Test {
             break;
         }
 
-        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse( //
+        final ODataResponse resp = OiyokanTestUtil.callGet( //
                 "/ODataTest1", OiyoUrlUtil.encodeUrlQuery(
                         "&$filter=StringVar255 eq 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' or StringVar255 eq 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' and StringLongVar1 eq 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' or Clob1 eq 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' &$count=true &$select=ID"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());

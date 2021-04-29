@@ -39,7 +39,7 @@ class UnitTestQuery09Test {
         OiyoSettingsDatabase database = OiyoInfoUtil.getOiyoDatabaseByEntitySetName(oiyoInfo, "ODataTest1");
         OiyokanConstants.DatabaseType databaseType = OiyokanConstants.DatabaseType.valueOf(database.getType());
 
-        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTest1",
+        final ODataResponse resp = OiyokanTestUtil.callGet("/ODataTest1",
                 OiyoUrlUtil.encodeUrlQuery("$top=1 &$filter=Single1 eq 123.45 &$orderby=ID &$count=true &$select=ID"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 

@@ -35,7 +35,7 @@ class UnitTestQueryMethod05Test {
         @SuppressWarnings("unused")
         final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
 
-        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTest1",
+        final ODataResponse resp = OiyokanTestUtil.callGet("/ODataTest1",
                 OiyoUrlUtil.encodeUrlQuery("&$filter=length(StringVar255) eq 26 &$count=true &$select=ID"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 

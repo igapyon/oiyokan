@@ -35,7 +35,7 @@ class UnitTestQueryBinaryGe01Test {
         @SuppressWarnings("unused")
         final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
 
-        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse( //
+        final ODataResponse resp = OiyokanTestUtil.callGet( //
                 "/ODataTest1", //
                 OiyoUrlUtil.encodeUrlQuery(
                         "&$filter=Int16a ge 30 &$top=5 &$skip=2 &$count=true &$select=ID &$orderby=ID asc"));

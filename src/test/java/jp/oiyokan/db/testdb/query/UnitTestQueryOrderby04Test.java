@@ -46,7 +46,7 @@ class UnitTestQueryOrderby04Test {
             return;
         }
 
-        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTestFulls1",
+        final ODataResponse resp = OiyokanTestUtil.callGet("/ODataTestFulls1",
                 "$top=6&$search=macbook&$count=true&$select=ID");
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 

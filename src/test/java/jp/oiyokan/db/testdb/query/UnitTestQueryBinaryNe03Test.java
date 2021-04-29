@@ -35,7 +35,7 @@ class UnitTestQueryBinaryNe03Test {
         @SuppressWarnings("unused")
         final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
 
-        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse( //
+        final ODataResponse resp = OiyokanTestUtil.callGet( //
                 "/ODataTest1", //
                 OiyoUrlUtil.encodeUrlQuery(
                         "&$filter=StringVar255 ne null &$top=3 &$count=true &$select=ID &$orderby=ID asc"));

@@ -29,7 +29,7 @@ import jp.oiyokan.util.OiyokanTestUtil;
 class UnitTestOiyokanKanTest {
     @Test
     void testSimpleVersion() throws Exception {
-        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/Oiyokan", "$top=1&$skip=1");
+        final ODataResponse resp = OiyokanTestUtil.callGet("/Oiyokan", "$top=1&$skip=1");
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         // System.err.println("result: " + result);
@@ -40,8 +40,7 @@ class UnitTestOiyokanKanTest {
 
     @Test
     void testFilter() throws Exception {
-        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/Oiyokan",
-                "$filter=KeyName%20eq%20%27Provider%27");
+        final ODataResponse resp = OiyokanTestUtil.callGet("/Oiyokan", "$filter=KeyName%20eq%20%27Provider%27");
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         // System.err.println("result: " + result);
@@ -53,7 +52,7 @@ class UnitTestOiyokanKanTest {
 
     @Test
     void testEntity() throws Exception {
-        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/Oiyokan('Provider')", null);
+        final ODataResponse resp = OiyokanTestUtil.callGet("/Oiyokan('Provider')", null);
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         // System.err.println("result: " + result);

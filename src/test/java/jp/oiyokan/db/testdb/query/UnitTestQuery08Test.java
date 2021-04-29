@@ -33,7 +33,7 @@ class UnitTestQuery08Test {
         @SuppressWarnings("unused")
         final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
 
-        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTest1",
+        final ODataResponse resp = OiyokanTestUtil.callGet("/ODataTest1",
                 "$top=1 &$filter=Sbyte1 eq 127 &$orderby=ID &$count=true &$select=ID");
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 

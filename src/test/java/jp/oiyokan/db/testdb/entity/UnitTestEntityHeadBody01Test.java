@@ -41,7 +41,7 @@ class UnitTestEntityHeadBody01Test {
         @SuppressWarnings("unused")
         final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
 
-        ODataResponse resp = OiyokanTestUtil.callRequestPost("/ODataTest8", "{\n" //
+        ODataResponse resp = OiyokanTestUtil.callPost("/ODataTest8", "{\n" //
                 + "  \"MainKey\":\"KEY001\"\n" //
                 + "}");
         // TODO 戻りに KEY指定がない..
@@ -52,7 +52,7 @@ class UnitTestEntityHeadBody01Test {
         // log.debug("TRACE: " + result);
         assertEquals(201, resp.getStatusCode(), "");
 
-        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTest8('KEY001')", null);
+        resp = OiyokanTestUtil.callGet("/ODataTest8('KEY001')", null);
         result = OiyokanTestUtil.stream2String(resp.getContent());
         assertEquals(
                 "{\"@odata.context\":\"$metadata#ODataTest8\",\"MainKey\":\"KEY001\",\"Description\":\"Main table\"}",
@@ -61,7 +61,7 @@ class UnitTestEntityHeadBody01Test {
         assertEquals(200, resp.getStatusCode());
 
         /// 通常のfilter
-        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTest8", "$filter=MainKey eq 'KEY001'");
+        resp = OiyokanTestUtil.callGet("/ODataTest8", "$filter=MainKey eq 'KEY001'");
         result = OiyokanTestUtil.stream2String(resp.getContent());
         assertEquals(
                 "{\"@odata.context\":\"$metadata#ODataTest8\",\"value\":[{\"MainKey\":\"KEY001\",\"Description\":\"Main table\"}]}",
@@ -72,7 +72,7 @@ class UnitTestEntityHeadBody01Test {
         ////////
         // SUB
 
-        resp = OiyokanTestUtil.callRequestPost("/ODataTest8Sub", "{\n" //
+        resp = OiyokanTestUtil.callPost("/ODataTest8Sub", "{\n" //
                 + "  \"MainKey\":\"KEY001\"\n" //
                 + "  , \"SubKey\":\"SUB001\"\n" //
                 + "}");
@@ -86,7 +86,7 @@ class UnitTestEntityHeadBody01Test {
         ////////
         // SUBSUB
 
-        resp = OiyokanTestUtil.callRequestPost("/ODataTest8SubSub", "{\n" //
+        resp = OiyokanTestUtil.callPost("/ODataTest8SubSub", "{\n" //
                 + "  \"MainKey\":\"KEY001\"\n" //
                 + "  , \"SubKey\":\"SUB001\"\n" //
                 + "  , \"SubSubKey\":\"SUBSUB001\"\n" //
@@ -102,20 +102,19 @@ class UnitTestEntityHeadBody01Test {
         // DELETE
 
         // DELETE
-        resp = OiyokanTestUtil
-                .callRequestDelete("/ODataTest8SubSub(MainKey='KEY001',SubKey='SUB001',SubSubKey='SUBSUB001')");
+        resp = OiyokanTestUtil.callDelete("/ODataTest8SubSub(MainKey='KEY001',SubKey='SUB001',SubSubKey='SUBSUB001')");
         assertEquals(204, resp.getStatusCode());
 
         // DELETE
-        resp = OiyokanTestUtil.callRequestDelete("/ODataTest8Sub(MainKey='KEY001',SubKey='SUB001')");
+        resp = OiyokanTestUtil.callDelete("/ODataTest8Sub(MainKey='KEY001',SubKey='SUB001')");
         assertEquals(204, resp.getStatusCode());
 
         // DELETE
-        resp = OiyokanTestUtil.callRequestDelete("/ODataTest8('KEY001')");
+        resp = OiyokanTestUtil.callDelete("/ODataTest8('KEY001')");
         assertEquals(204, resp.getStatusCode());
 
         // NOT FOUND after DELETED
-        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTest8('KEY001')", null);
+        resp = OiyokanTestUtil.callGet("/ODataTest8('KEY001')", null);
         assertEquals(404, resp.getStatusCode());
     }
 }

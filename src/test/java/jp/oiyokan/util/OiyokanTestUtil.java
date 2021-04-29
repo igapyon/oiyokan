@@ -39,7 +39,7 @@ import jp.oiyokan.OiyokanEntityProcessor;
  * Utility class for OData test
  */
 public class OiyokanTestUtil {
-    public static ODataResponse callRequestGetResponse(String rawODataPath, String rawQueryPath) throws Exception {
+    public static ODataResponse callGet(String rawODataPath, String rawQueryPath) throws Exception {
         final ODataHttpHandler handler = OiyokanTestUtil.getHandler();
         final ODataRequest req = new ODataRequest();
         req.setMethod(HttpMethod.GET);
@@ -96,7 +96,7 @@ public class OiyokanTestUtil {
     /////////////////
     // INSERT
 
-    public static ODataResponse callRequestPost(String rawODataPath, String bodyJson) throws Exception {
+    public static ODataResponse callPost(String rawODataPath, String bodyJson) throws Exception {
         final ODataHttpHandler handler = OiyokanTestUtil.getHandler();
         final ODataRequest req = new ODataRequest();
         req.setMethod(HttpMethod.POST);
@@ -113,7 +113,7 @@ public class OiyokanTestUtil {
     /////////////////
     // DELETE
 
-    public static ODataResponse callRequestDelete(String rawODataPath) throws Exception {
+    public static ODataResponse callDelete(String rawODataPath) throws Exception {
         final ODataHttpHandler handler = OiyokanTestUtil.getHandler();
         final ODataRequest req = new ODataRequest();
         req.setMethod(HttpMethod.DELETE);
@@ -128,7 +128,7 @@ public class OiyokanTestUtil {
     /////////////////
     // UPDATE
 
-    public static ODataResponse callRequestPatch(String rawODataPath, String bodyJson, final boolean ifMatch,
+    public static ODataResponse callPatch(String rawODataPath, String bodyJson, final boolean ifMatch,
             final boolean ifNoneMatch) throws Exception {
         final ODataHttpHandler handler = OiyokanTestUtil.getHandler();
         final ODataRequest req = new ODataRequest();

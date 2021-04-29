@@ -35,7 +35,7 @@ class UnitTestQueryBinaryEq03Test {
         @SuppressWarnings("unused")
         final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
 
-        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse( //
+        final ODataResponse resp = OiyokanTestUtil.callGet( //
                 "/ODataTest1", //
                 OiyoUrlUtil.encodeUrlQuery(
                         "&$filter=null eq StringVar255 &$top=3 &$count=true &$select=ID &$orderby=ID asc"));
