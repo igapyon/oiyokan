@@ -106,7 +106,7 @@ public class OiyoBasicJdbcEntityOneBuilder {
             stmt.setQueryTimeout(jdbcStmtTimeout);
 
             int idxColumn = 1;
-            for (Object look : sqlInfo.getSqlParamList()) {
+            for (OiyoSqlInfo.SqlParam look : sqlInfo.getSqlParamList()) {
                 OiyoCommonJdbcUtil.bindPreparedParameter(stmt, idxColumn++, look);
             }
 

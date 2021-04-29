@@ -185,7 +185,7 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
             stmt.setQueryTimeout(jdbcStmtTimeout);
 
             int column = 1;
-            for (Object look : basicSqlBuilder.getSqlInfo().getSqlParamList()) {
+            for (OiyoSqlInfo.SqlParam look : basicSqlBuilder.getSqlInfo().getSqlParamList()) {
                 OiyoCommonJdbcUtil.bindPreparedParameter(stmt, column++, look);
             }
 
@@ -285,7 +285,7 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
 
             // 組み立て後のバインド変数を PreparedStatement にセット.
             int idxColumn = 1;
-            for (Object look : sqlInfo.getSqlParamList()) {
+            for (OiyoSqlInfo.SqlParam look : sqlInfo.getSqlParamList()) {
                 OiyoCommonJdbcUtil.bindPreparedParameter(stmt, idxColumn++, look);
             }
 

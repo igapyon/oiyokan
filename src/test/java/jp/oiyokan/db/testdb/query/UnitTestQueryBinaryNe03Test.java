@@ -37,12 +37,10 @@ class UnitTestQueryBinaryNe03Test {
 
         final ODataResponse resp = OiyokanTestUtil.callGet( //
                 "/ODataTest1", //
-                OiyoUrlUtil.encodeUrlQuery(
-                        "&$filter=StringVar255 ne null &$top=3 &$count=true &$select=ID &$orderby=ID asc"));
+                OiyoUrlUtil.encodeUrlQuery("&$filter=StringVar255 ne null &$top=3 &$select=ID &$orderby=ID asc"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
-        assertEquals(
-                "{\"@odata.context\":\"$metadata#ODataTest1\",\"@odata.count\":204,\"value\":[{\"ID\":1},{\"ID\":2},{\"ID\":3}]}",
+        assertEquals("{\"@odata.context\":\"$metadata#ODataTest1\",\"value\":[{\"ID\":1},{\"ID\":2},{\"ID\":3}]}",
                 result);
         assertEquals(200, resp.getStatusCode());
     }

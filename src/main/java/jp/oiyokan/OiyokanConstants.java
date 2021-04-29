@@ -43,7 +43,7 @@ public class OiyokanConstants {
         /** h2 database */
         h2,
         /** Postgres */
-        postgres,
+        PostgreSQL,
         /** MySQL */
         MySQL,
         /** MSSQLSV 2008 */
