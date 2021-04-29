@@ -1,3 +1,15 @@
+# Release 1.9 (2021-04-29)
+
+## EN
+
+- Improved typing for null values of SQL input parameter.
+- Make the name of EntitySet and EntityType of unit test data the same.
+
+## JA
+
+- SQL入力 parameter の NULL値の場合の型決定を改善
+- 単体テストデータの EntitySet と EntityType の名称を同じにする
+
 # Release 1.8 (2021-04-28)
 
 ## EN
