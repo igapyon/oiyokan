@@ -318,7 +318,8 @@ public class OiyoCommonJdbcUtil {
         if (value == null) {
             if (IS_SHOW_DEBUG)
                 System.err.println("TRACE: PreparedStatement#setNull: null");
-            stmt.setNull(column, Types.NULL);
+            // setNullの型は文字列とする。Types.NULLだとSQL Server の REAL型にてエラーとなるため。
+            stmt.setNull(column, Types.VARCHAR);
         } else if (value instanceof Byte) {
             if (IS_SHOW_DEBUG)
                 System.err.println("TRACE: PreparedStatement#setByte: " + value);
