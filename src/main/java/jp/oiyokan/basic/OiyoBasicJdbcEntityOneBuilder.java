@@ -83,8 +83,8 @@ public class OiyoBasicJdbcEntityOneBuilder {
             List<UriParameter> keyPredicates) throws ODataApplicationException {
         final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, edmEntitySet.getName());
 
-        // [IY1071] OData v4: ENTITY: READ
-        log.info(OiyokanMessages.IY1071 + ": " + edmEntitySet.getName());
+        // [IY1071] INFO: ENTITY: READ
+        log.debug(OiyokanMessages.IY1071 + ": " + edmEntitySet.getName());
 
         final OiyoSqlInfo sqlInfo = new OiyoSqlInfo(oiyoInfo, entitySet.getName());
         new OiyoSqlQueryOneBuilder(oiyoInfo, sqlInfo).buildSelectOneQuery(edmEntitySet.getName(), keyPredicates);
@@ -97,8 +97,8 @@ public class OiyoBasicJdbcEntityOneBuilder {
             throw new ODataApplicationException(OiyokanMessages.IY7106, 500, Locale.ENGLISH);
         }
 
-        // [IY1072] OData v4: SQL single
-        log.info(OiyokanMessages.IY1072 + "OData v4: TRACE: SQL single: " + sql);
+        // [IY1081] INFO: SQL single
+        log.info(OiyokanMessages.IY1081 + ": " + sql);
 
         final long startMillisec = System.currentTimeMillis();
         try (var stmt = connTargetDb.prepareStatement(sql)) {
@@ -106,15 +106,15 @@ public class OiyoBasicJdbcEntityOneBuilder {
             stmt.setQueryTimeout(jdbcStmtTimeout);
 
             int idxColumn = 1;
-            for (Object look : sqlInfo.getSqlParamList()) {
+            for (OiyoSqlInfo.SqlParam look : sqlInfo.getSqlParamList()) {
                 OiyoCommonJdbcUtil.bindPreparedParameter(stmt, idxColumn++, look);
             }
 
             stmt.executeQuery();
             var rset = stmt.getResultSet();
             if (!rset.next()) {
-                // [M207] No such Entity data
-                log.error(OiyokanMessages.IY3105 + ": " + sql);
+                // [IY3105] WARN: No such Entity data
+                log.warn(OiyokanMessages.IY3105 + ": " + sql);
                 throw new ODataApplicationException(OiyokanMessages.IY3105 + ": " //
                         + sql, OiyokanMessages.IY3105_CODE, Locale.ENGLISH);
             }
@@ -129,10 +129,11 @@ public class OiyoBasicJdbcEntityOneBuilder {
                     }
                 }
                 if (oiyoProp == null) {
-                    // TODO FIXME message
-                    log.fatal(OiyokanMessages.IY9999 + ": " + "該当項目発見できず");
-                    throw new ODataApplicationException(OiyokanMessages.IY9999 + ": " + "該当項目発見できず", //
-                            OiyokanMessages.IY9999_CODE, Locale.ENGLISH);
+                    // [IY3161] UNEXPECTED: OiyoSettingsProperty NOT found.
+                    log.fatal(OiyokanMessages.IY3161 + ": " + sqlInfo.getSelectColumnNameList().get(index));
+                    throw new ODataApplicationException(
+                            OiyokanMessages.IY3161 + ": " + sqlInfo.getSelectColumnNameList().get(index), //
+                            OiyokanMessages.IY3161_CODE, Locale.ENGLISH);
                 }
 
                 Property prop = OiyoCommonJdbcUtil.resultSet2Property(oiyoInfo, rset, index + 1, entitySet, oiyoProp);
@@ -149,8 +150,8 @@ public class OiyoBasicJdbcEntityOneBuilder {
             final long endMillisec = System.currentTimeMillis();
             final long elapsed = endMillisec - startMillisec;
             if (elapsed >= 10) {
-                // [IY1073] OData v4: SQL: elapsed
-                log.info(OiyokanMessages.IY1073 + ": " + (endMillisec - startMillisec));
+                // [IY1082] INFO: SQL: elapsed
+                log.info(OiyokanMessages.IY1082 + ": " + (endMillisec - startMillisec));
             }
 
             return ent;
@@ -190,8 +191,8 @@ public class OiyoBasicJdbcEntityOneBuilder {
             throws ODataApplicationException {
         final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, edmEntitySet.getName());
 
-        // [IY1074] OData v4: ENTITY: CREATE
-        log.info(OiyokanMessages.IY1074 + ": " + edmEntitySet.getName());
+        // [IY1072] INFO: ENTITY: CREATE
+        log.info(OiyokanMessages.IY1072 + ": " + edmEntitySet.getName());
 
         final OiyoSqlInfo sqlInfo = new OiyoSqlInfo(oiyoInfo, entitySet.getName());
         new OiyoSqlInsertOneBuilder(oiyoInfo, sqlInfo).buildInsertIntoDml(edmEntitySet.getName(), null, requestEntity);
@@ -218,8 +219,29 @@ public class OiyoBasicJdbcEntityOneBuilder {
                     newParam.setText(generatedKeys.get(0));
                     keyPredicates.add(newParam);
                 } else {
-                    for (String keyName : entitySet.getEntityType().getKeyName()) {
+                    // 最初に generatedKeys の対応づけを実施.
+                    int generatedKeyIndex = 0;
+                    for (OiyoSettingsProperty property : entitySet.getEntityType().getProperty()) {
+                        if (property.getAutoGenKey() != null && property.getAutoGenKey()) {
+                            // 自動生成対象.
+                            final UriParameterImpl newParam = new UriParameterImpl();
+                            newParam.setName(property.getName());
+                            // TODO 配列超えの例外処理およびmessage
+                            newParam.setText(generatedKeys.get(generatedKeyIndex++));
+                            keyPredicates.add(newParam);
+                        }
+                    }
+
+                    // generatedKeys で対応づかなかった分はPOSTリクエストから導出
+                    KEYLOOP: for (String keyName : entitySet.getEntityType().getKeyName()) {
                         String propValue = null;
+                        for (OiyoSettingsProperty property : entitySet.getEntityType().getProperty()) {
+                            if (property.getAutoGenKey() != null && property.getAutoGenKey()) {
+                                // すでに autoGenKeyから導出済み。スキップ。
+                                continue KEYLOOP;
+                            }
+                        }
+
                         for (Property look : requestEntity.getProperties()) {
                             if (look.getName().equals(keyName)) {
                                 if (look.getValue() instanceof java.util.Calendar) {
@@ -235,16 +257,12 @@ public class OiyoBasicJdbcEntityOneBuilder {
                             }
                         }
                         if (propValue == null) {
-                            log.error("TRACE: propKey:" + keyName + "に対応する入力なし.");
-                            if (generatedKeys.size() == 0) {
-                                // [M217] UNEXPECTED: Can't retrieve PreparedStatement#getGeneratedKeys: Fail to
-                                // map auto generated key field.
-                                log.error(OiyokanMessages.IY3114 + ": " + keyName);
-                                throw new ODataApplicationException(OiyokanMessages.IY3114 + ": " + keyName, //
-                                        OiyokanMessages.IY3114_CODE, Locale.ENGLISH);
-                            }
-                            propValue = generatedKeys.get(0);
-                            generatedKeys.remove(0);
+                            log.trace("TRACE: propKey:" + keyName + "に対応する入力なし.");
+                            // [M217] UNEXPECTED: Can't retrieve PreparedStatement#getGeneratedKeys: Fail to
+                            // map auto generated key field.
+                            log.error(OiyokanMessages.IY3114 + ": " + keyName);
+                            throw new ODataApplicationException(OiyokanMessages.IY3114 + ": " + keyName, //
+                                    OiyokanMessages.IY3114_CODE, Locale.ENGLISH);
                         }
 
                         final UriParameterImpl newParam = new UriParameterImpl();
@@ -292,8 +310,8 @@ public class OiyoBasicJdbcEntityOneBuilder {
             throws ODataApplicationException {
         final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, edmEntitySet.getName());
 
-        // [IY1075] OData v4: ENTITY: DELETE
-        log.info(OiyokanMessages.IY1075 + ": " + edmEntitySet.getName());
+        // [IY1073] INFO: ENTITY: DELETE
+        log.info(OiyokanMessages.IY1073 + ": " + edmEntitySet.getName());
 
         final OiyoSqlInfo sqlInfo = new OiyoSqlInfo(oiyoInfo, entitySet.getName());
         new OiyoSqlDeleteOneBuilder(oiyoInfo, sqlInfo).buildDeleteDml(edmEntitySet.getName(), keyPredicates);
@@ -352,39 +370,57 @@ public class OiyoBasicJdbcEntityOneBuilder {
         final OiyoSettingsDatabase database = OiyoInfoUtil.getOiyoDatabaseByEntitySetName(oiyoInfo,
                 entitySet.getName());
 
+        /////////////////////////////////
+        // KEYに autoGenKey があるかどうか確認
+        boolean isAutoGenKeyIncludedInKey = false;
+        for (String keyName : entitySet.getEntityType().getKeyName()) {
+            for (OiyoSettingsProperty prop : entitySet.getEntityType().getProperty()) {
+                if (prop.getName().equals(keyName)) {
+                    if (prop.getAutoGenKey() != null && prop.getAutoGenKey()) {
+                        // KEYにautoGenKeyが含まれる。
+                        isAutoGenKeyIncludedInKey = true;
+                    }
+                }
+            }
+        }
+
         // データベースに接続.
         try (Connection connTargetDb = OiyoCommonJdbcUtil.getConnection(database)) {
             // Set auto commit OFF.
             connTargetDb.setAutoCommit(false);
             boolean isTranSuccessed = false;
 
-            if (ifMatch) {
+            if (ifMatch || isAutoGenKeyIncludedInKey) {
                 // If-Match header が '*' 指定されたら UPDATE.
-                // [IY1076] OData v4: ENTITY: PATCH: UPDATE (If-Match)
-                log.info(OiyokanMessages.IY1076 + ": " + edmEntitySet.getName());
+                // KEYにautoGenKeyが含まれる場合も If-Match 指定と同様と扱って UPDATE.
+                // [IY1074] INFO: ENTITY: PATCH: UPDATE (If-Match)
+                log.info(OiyokanMessages.IY1074 + ": " + edmEntitySet.getName());
                 new OiyoSqlUpdateOneBuilder(oiyoInfo, sqlInfo).buildUpdatePatchDml(edmEntitySet.getName(),
                         keyPredicates, requestEntity);
 
             } else if (ifNoneMatch) {
                 // If-None-Match header が '*' 指定されたら INSERT.
-                // [IY1077] OData v4: ENTITY: PATCH: INSERT (If-None-Match)
-                log.info(OiyokanMessages.IY1077 + ": " + edmEntitySet.getName());
+                // [IY1075] INFO: ENTITY: PATCH: INSERT (If-None-Match)
+                log.info(OiyokanMessages.IY1075 + ": " + edmEntitySet.getName());
                 new OiyoSqlInsertOneBuilder(oiyoInfo, sqlInfo).buildInsertIntoDml(edmEntitySet.getName(), keyPredicates,
                         requestEntity);
 
             } else {
                 // If-Match header も If-None-Match header も指定がない場合は UPSERT.
-                // [IY1078] OData v4: ENTITY: PATCH: UPSERT
-                log.info(OiyokanMessages.IY1078 + ": " + edmEntitySet.getName());
+                // [IY1076] INFO: ENTITY: PATCH: UPSERT
+                log.info(OiyokanMessages.IY1076 + ": " + edmEntitySet.getName());
 
                 try {
                     // SELECT to check exists
                     readEntityData(connTargetDb, uriInfo, edmEntitySet, keyPredicates);
 
+                    // 読み込み成功。更新に入ります。
+
                     // UPDATE
                     new OiyoSqlUpdateOneBuilder(oiyoInfo, sqlInfo).buildUpdatePatchDml(edmEntitySet.getName(),
                             keyPredicates, requestEntity);
                 } catch (ODataApplicationException ex) {
+                    // 404以外が返却は想定外でエラー。処理中断。
                     if (OiyokanMessages.IY3105_CODE != ex.getStatusCode()) {
                         // そのまま throw.
                         throw ex;
@@ -411,10 +447,13 @@ public class OiyoBasicJdbcEntityOneBuilder {
                 connTargetDb.setAutoCommit(true);
             }
         } catch (SQLException ex) {
-            // [M205] Fail to execute SQL.
+            // [IY3154] Not modified by SQL.
             log.error(OiyokanMessages.IY3154 + ": " + ex.toString());
-            throw new ODataApplicationException(OiyokanMessages.IY3154, //
-                    OiyokanMessages.IY3154_CODE, Locale.ENGLISH);
+            throw new ODataApplicationException(OiyokanMessages.IY3154, OiyokanMessages.IY3154_CODE, Locale.ENGLISH);
+        } catch (ODataApplicationException ex) {
+            // [IY3108] Not modified."
+            log.error(OiyokanMessages.IY3108 + ": " + ex.toString());
+            throw new ODataApplicationException(OiyokanMessages.IY3108, OiyokanMessages.IY3108_CODE, Locale.ENGLISH);
         }
     }
 }

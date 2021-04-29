@@ -34,6 +34,8 @@ import org.apache.olingo.server.api.ServiceMetadata;
  * Oiyokan (OData v4 server) を Spring Boot の Servlet として登録.
  * 
  * 特定のパス '/odata4.svc/' に対するリクエストを OData 処理に連携.
+ * 
+ * Note: このクラスは oiyokan プロジェクトからのカバレッジは通過させないようしている。
  */
 public class OiyokanOdata4RegisterImpl {
     private static final Log log = LogFactory.getLog(OiyokanOdata4RegisterImpl.class);
@@ -84,7 +86,8 @@ public class OiyokanOdata4RegisterImpl {
                 }
             }, resp);
         } catch (RuntimeException ex) {
-            log.error("OData v4: OiyokanOdata4Register#serv(): Unexpected Server Error: " + ex.toString(), ex);
+            // [IY9501] ERROR: Register.serv: exception caught
+            log.error(OiyokanMessages.IY9501 + ": " + ex.toString(), ex);
             throw new ServletException(ex);
         }
     }

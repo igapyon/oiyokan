@@ -38,6 +38,7 @@ import jp.oiyokan.OiyokanEdmProvider;
 import jp.oiyokan.OiyokanEntityCollectionBuilderInterface;
 import jp.oiyokan.OiyokanMessages;
 import jp.oiyokan.basic.sql.OiyoSqlQueryListBuilder;
+import jp.oiyokan.basic.sql.OiyoSqlQueryListExpr;
 import jp.oiyokan.common.OiyoCommonJdbcUtil;
 import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.common.OiyoInfoUtil;
@@ -95,8 +96,8 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
             return entityCollection;
         }
 
-        // [IY1061] OData v4: QUERY
-        log.info(OiyokanMessages.IY1061 + ": " + edmEntitySet.getName());
+        // [IY1061] DEBUG: QUERY
+        log.debug(OiyokanMessages.IY1061 + ": " + edmEntitySet.getName());
 
         //////////////////////////////////////////////
         // Oiyokan が対応しない処理を拒絶するための記述.
@@ -174,7 +175,7 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
         basicSqlBuilder.buildSelectCountQuery(uriInfo);
         final String sql = basicSqlBuilder.getSqlInfo().getSqlBuilder().toString();
 
-        // [IY1062] OData v4: COUNT
+        // [IY1062] INFO: COUNT
         log.info(OiyokanMessages.IY1062 + ": " + sql);
 
         int countWithWhere = 0;
@@ -184,7 +185,7 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
             stmt.setQueryTimeout(jdbcStmtTimeout);
 
             int column = 1;
-            for (Object look : basicSqlBuilder.getSqlInfo().getSqlParamList()) {
+            for (OiyoSqlInfo.SqlParam look : basicSqlBuilder.getSqlInfo().getSqlParamList()) {
                 OiyoCommonJdbcUtil.bindPreparedParameter(stmt, column++, look);
             }
 
@@ -213,7 +214,7 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
 
         final long endMillisec = System.currentTimeMillis();
         final long elapsed = endMillisec - startMillisec;
-        // [IY1063] OData v4: COUNT =
+        // [IY1063] INFO: COUNT =
         log.info(OiyokanMessages.IY1063 + countWithWhere //
                 + (elapsed >= 10 ? " (elapsed: " + (endMillisec - startMillisec) + ")" : ""));
 
@@ -237,6 +238,32 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
 
         OiyoSqlQueryListBuilder basicSqlBuilder = new OiyoSqlQueryListBuilder(oiyoInfo, entitySetName);
 
+        /////////////
+        // 特殊処理
+        // EQで結ばれたPropertyを探す目的で WHERE処理を最初に実行.
+        {
+            log.trace("TRACE: Check $filter. Find property used EQ and remember.");
+            final OiyoSqlInfo sqlInfoDummy = new OiyoSqlInfo(oiyoInfo, entitySet.getName());
+
+            if (uriInfo.getFilterOption() != null) {
+                new OiyoSqlQueryListExpr(oiyoInfo, sqlInfoDummy).expand(uriInfo.getFilterOption().getExpression());
+            }
+            for (OiyoSettingsProperty prop : sqlInfoDummy.getBinaryOperatorEqPropertyList()) {
+                // 1パス目で見つかった property を 2パス目の OiyoSqlInfo に複写.
+                // 同名のものがあれば追加は抑止.
+                boolean isAlreadyAdded = false;
+                for (OiyoSettingsProperty look : basicSqlBuilder.getSqlInfo().getBinaryOperatorEqPropertyList()) {
+                    if (look.getName().equals(prop.getName())) {
+                        isAlreadyAdded = true;
+                    }
+                }
+                if (isAlreadyAdded == false) {
+                    log.trace("TRACE: Copy property to main OiyoSqlInfo.: " + prop.getName());
+                    basicSqlBuilder.getSqlInfo().getBinaryOperatorEqPropertyList().add(prop);
+                }
+            }
+        }
+
         // UriInfo 情報を元に SQL文を組み立て.
         basicSqlBuilder.buildSelectQuery(uriInfo);
         final String sql = basicSqlBuilder.getSqlInfo().getSqlBuilder().toString();
@@ -248,7 +275,7 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
             throw new ODataApplicationException(OiyokanMessages.IY7105, 500, Locale.ENGLISH);
         }
 
-        // [IY1064] OData v4: SQL collect
+        // [IY1064] INFO: SQL collect
         log.info(OiyokanMessages.IY1064 + ": " + sql);
 
         final long startMillisec = System.currentTimeMillis();
@@ -258,7 +285,7 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
 
             // 組み立て後のバインド変数を PreparedStatement にセット.
             int idxColumn = 1;
-            for (Object look : sqlInfo.getSqlParamList()) {
+            for (OiyoSqlInfo.SqlParam look : sqlInfo.getSqlParamList()) {
                 OiyoCommonJdbcUtil.bindPreparedParameter(stmt, idxColumn++, look);
             }
 
@@ -270,6 +297,7 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
             for (; rset.next();) {
                 final Entity ent = new Entity();
                 for (int index = 0; index < sqlInfo.getSelectColumnNameList().size(); index++) {
+                    log.trace("TRACE: Bind parameter:" + sqlInfo.getSelectColumnNameList().get(index));
                     // 取得された検索結果を Property に組み替え.
                     OiyoSettingsProperty oiyoProp = OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, entitySetName,
                             sqlInfo.getSelectColumnNameList().get(index));
@@ -321,7 +349,7 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
             final long endMillisec = System.currentTimeMillis();
             final long elapsed = endMillisec - startMillisec;
             if (elapsed >= 10) {
-                // [IY1065] OData v4: SQL: elapsed
+                // [IY1065] INFO: SQL collect: elapsed
                 log.info(OiyokanMessages.IY1065 + ": " + (endMillisec - startMillisec));
             }
         } catch (SQLTimeoutException ex) {

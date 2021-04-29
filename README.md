@@ -55,13 +55,21 @@ You can find the running OData v4 sample server at Heroku.
 src/main/resources/oiyokan/oiyokan-settings.json
 ```
 
-# OData v4 server のサンプル(simple-odata4) を祖先
+# Oiyokan 関連情報
+
+## Oiyokan 関連リポジトリ 
+
+- [Oiyokan 本体ライブラリ - github](https://github.com/igapyon/oiyokan)
+- [Oiyokan デモサイト - github](https://github.com/igapyon/oiyokan-demosite)
+- [Oiyokan デモサイトのテスト - github](https://github.com/igapyon/oiyokan-demosite-test)
+
+## OData v4 server のサンプル(simple-odata4) を祖先
 
 oiyokan プロジェクトは、OData v4 server のシンプルなサンプル(https://github.com/igapyon/simple-odata4) を祖先に作成されたものです。
 
-# Oiyokanに関連するその他情報
+## Oiyokanに関連するその他情報
 
-## Olingo による OData v4 server チュートリアル
+### Olingo による OData v4 server チュートリアル
 
 OData v4 / Apache Olingo そのものの学習には Apache Olingo サイトの参照が有益です。
 

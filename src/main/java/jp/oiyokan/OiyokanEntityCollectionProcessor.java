@@ -22,6 +22,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.olingo.commons.api.data.ContextURL;
 import org.apache.olingo.commons.api.data.EntityCollection;
+import org.apache.olingo.commons.api.data.Property;
 import org.apache.olingo.commons.api.edm.EdmEntitySet;
 import org.apache.olingo.commons.api.edm.EdmEntityType;
 import org.apache.olingo.commons.api.format.ContentType;
@@ -29,6 +30,7 @@ import org.apache.olingo.commons.api.http.HttpHeader;
 import org.apache.olingo.commons.api.http.HttpStatusCode;
 import org.apache.olingo.server.api.OData;
 import org.apache.olingo.server.api.ODataApplicationException;
+import org.apache.olingo.server.api.ODataLibraryException;
 import org.apache.olingo.server.api.ODataRequest;
 import org.apache.olingo.server.api.ODataResponse;
 import org.apache.olingo.server.api.ServiceMetadata;
@@ -40,7 +42,10 @@ import org.apache.olingo.server.api.serializer.SerializerResult;
 import org.apache.olingo.server.api.uri.UriInfo;
 import org.apache.olingo.server.api.uri.UriResource;
 import org.apache.olingo.server.api.uri.UriResourceEntitySet;
+import org.apache.olingo.server.core.uri.parser.Parser;
+import org.apache.olingo.server.core.uri.parser.UriParserException;
 import org.apache.olingo.server.core.uri.queryoption.CountOptionImpl;
+import org.apache.olingo.server.core.uri.validator.UriValidationException;
 
 import jp.oiyokan.basic.OiyoBasicJdbcEntityCollectionBuilder;
 import jp.oiyokan.common.OiyoInfo;
@@ -135,7 +140,45 @@ public class OiyokanEntityCollectionProcessor implements EntityCollectionProcess
             }
             if (uriInfo.getSelectOption() != null) {
                 // $select あり.
-                builder.select(uriInfo.getSelectOption());
+                // EQはexpandする特殊モードによる実装。
+                // TODO フラグでON/OFFできるようしたい。
+                if (eCollection.getEntities().size() == 0) {
+                    builder.select(uriInfo.getSelectOption());
+                } else {
+                    String propNames = "";
+                    for (int index = 0; index < eCollection.getEntities().size(); index++) {
+                        for (Property prop : eCollection.getEntities().get(index).getProperties()) {
+                            if (propNames.length() != 0) {
+                                propNames += ",";
+                            }
+                            propNames += prop.getName();
+                        }
+                    }
+
+                    try {
+                        // uriInfo = new Parser(serviceMetadata.getEdm(), odata)
+                        // .parseUri(request.getRawODataPath(), request.getRawQueryPath(), null,
+                        // request.getRawBaseUri());
+                        // System.err.println("RawQueryPath: " + request.getRawQueryPath());
+                        // System.err.println("RawODataPath:" + request.getRawODataPath());
+                        // System.err.println("RawBaseUri:" + request.getRawBaseUri());
+                        final Parser parser = new Parser(serviceMetadata.getEdm(), odata);
+                        final UriInfo uriInfoWrk = parser.parseUri(request.getRawODataPath(), "$select=" + propNames,
+                                null, request.getRawBaseUri());
+                        builder.select(uriInfoWrk.getSelectOption());
+                    } catch (UriParserException ex) {
+                        // [IY2111] UNEXPECTED: UriParserException occured.
+                        log.error(OiyokanMessages.IY2111 + ": " + ex.toString());
+                        throw new ODataApplicationException(OiyokanMessages.IY2111, //
+                                OiyokanMessages.IY2111_CODE, Locale.ENGLISH);
+                    } catch (UriValidationException ex) {
+                        ex.printStackTrace();
+                        // [IY2112] UNEXPECTED: UriValidationException occured..
+                        log.error(OiyokanMessages.IY2112 + ": " + ex.toString());
+                        throw new ODataApplicationException(OiyokanMessages.IY2112, //
+                                OiyokanMessages.IY2112_CODE, Locale.ENGLISH);
+                    }
+                }
             }
 
             SerializerResult serResult = serializer.entityCollection( //
@@ -145,13 +188,17 @@ public class OiyokanEntityCollectionProcessor implements EntityCollectionProcess
             response.setContent(serResult.getContent());
             response.setStatusCode(HttpStatusCode.OK.getStatusCode());
             response.setHeader(HttpHeader.CONTENT_TYPE, responseFormat.toContentTypeString());
-        } catch (ODataApplicationException ex) {
-            log.error("ERROR: OiyokanEntityCollectionProcessor#readEntityCollection(" + request.getRawODataPath() + ","
-                    + request.getRawQueryPath() + "): " + ex.toString());
+        } catch (ODataApplicationException | ODataLibraryException ex) {
+            // [IY9521] WARN: EntityCollectionProcessor.readEntityCollection: exception
+            // caught
+            log.warn(OiyokanMessages.IY9521 + ": " + request.getRawODataPath() + "," + request.getRawQueryPath() + ": "
+                    + ex.toString());
             throw ex;
         } catch (RuntimeException ex) {
-            log.fatal("FATAL: OiyokanEntityCollectionProcessor#readEntityCollection(" + request.getRawODataPath() + ","
-                    + request.getRawQueryPath() + "): " + ex.toString(), ex);
+            // [IY9522] ERROR: EntityCollectionProcessor.readEntityCollection: runtime
+            // exception caught
+            log.error(OiyokanMessages.IY9522 + ": " + request.getRawODataPath() + "," + request.getRawQueryPath() + ": "
+                    + ex.toString(), ex);
             throw ex;
         }
     }
@@ -165,7 +212,7 @@ public class OiyokanEntityCollectionProcessor implements EntityCollectionProcess
 
         switch (databaseType) {
         case h2:
-        case postgres:
+        case PostgreSQL:
         case MySQL:
         case SQLSV2008:
         case ORCL18:

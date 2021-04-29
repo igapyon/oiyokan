@@ -93,9 +93,9 @@ public class OiyoCommonJdbcUtil {
         // OData server 起動シーケンスにてドライバ存在チェックは既に実施済み.
         // Class.forName(settingsDatabase.getJdbcDriver());
 
-        // TODO message
-        log.debug("TRACE: DEBUG: DB connect: " + settingsDatabase.getName() + " (" + settingsDatabase.getDescription()
-                + ")");
+        // [IY7171] DEBUG: DB connect
+        log.debug(OiyokanMessages.IY7171 + ": " + settingsDatabase.getName() //
+                + " (" + settingsDatabase.getDescription() + ")");
 
         try {
             if (settingsDatabase.getJdbcUser() == null || settingsDatabase.getJdbcUser().trim().length() == 0) {
@@ -156,26 +156,30 @@ public class OiyoCommonJdbcUtil {
         // チェック実施のみなので左辺がない。
         OiyoEdmUtil.string2EdmType(oiyoProp.getEdmType());
 
-        final CsdlProperty csdlProp = new CsdlProperty();
-        csdlProp.setName(oiyoProp.getName());
-        csdlProp.setType(oiyoProp.getEdmType());
+        final CsdlProperty csdlProperty = new CsdlProperty();
+        csdlProperty.setName(oiyoProp.getName());
+        csdlProperty.setType(oiyoProp.getEdmType());
         if (oiyoProp.getMaxLength() != null) {
-            csdlProp.setMaxLength(oiyoProp.getMaxLength());
+            csdlProperty.setMaxLength(oiyoProp.getMaxLength());
         }
-        if (oiyoProp.getNullable() != null) {
-            csdlProp.setNullable(oiyoProp.getNullable());
+        if (oiyoProp.getNullable() == null) {
+            // 指定なしは NULL許容.
+            csdlProperty.setNullable(true);
+        } else {
+            // 指定ありは 指定の通りに.
+            csdlProperty.setNullable(oiyoProp.getNullable());
         }
         if (oiyoProp.getPrecision() != null) {
-            csdlProp.setPrecision(oiyoProp.getPrecision());
+            csdlProperty.setPrecision(oiyoProp.getPrecision());
         }
         if (oiyoProp.getScale() != null) {
-            csdlProp.setScale(oiyoProp.getScale());
+            csdlProperty.setScale(oiyoProp.getScale());
         }
         if (oiyoProp.getDbDefault() != null) {
-            csdlProp.setDefaultValue(oiyoProp.getDbDefault());
+            csdlProperty.setDefaultValue(oiyoProp.getDbDefault());
         }
 
-        return csdlProp;
+        return csdlProperty;
     }
 
     /**
@@ -303,98 +307,102 @@ public class OiyoCommonJdbcUtil {
      * 
      * @param stmt   PreparedStatement のインスタンス.
      * @param column 項目番号. 1オリジン.
-     * @param value  セットしたい値.
+     * @param param  セットしたい値.
      * @throws SQLException              SQL例外が発生した場合.
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
-    public static void bindPreparedParameter(PreparedStatement stmt, int column, Object value)
+    public static void bindPreparedParameter(PreparedStatement stmt, int column, OiyoSqlInfo.SqlParam param)
             throws ODataApplicationException, SQLException {
-        final boolean IS_SHOW_DEBUG = false;
-
-        if (value == null) {
-            if (IS_SHOW_DEBUG)
-                System.err.println("TRACE: PreparedStatement#setNull: null");
+        if (param == null) {
+            log.trace("TRACE: PreparedStatement#setNull: null");
+            // [IY7162] WARN: bind NULL value to an SQL statement, set Types.NULL because
+            // there is no type information.
+            log.warn(OiyokanMessages.IY7162);
             stmt.setNull(column, Types.NULL);
-        } else if (value instanceof Byte) {
-            if (IS_SHOW_DEBUG)
-                System.err.println("TRACE: PreparedStatement#setByte: " + value);
-            stmt.setByte(column, (Byte) value);
-        } else if (value instanceof Short) {
-            if (IS_SHOW_DEBUG)
-                System.err.println("TRACE: PreparedStatement#setShort: " + value);
-            stmt.setShort(column, (Short) value);
-        } else if (value instanceof Integer) {
-            if (IS_SHOW_DEBUG)
-                System.err.println("TRACE: PreparedStatement#setInt: " + value);
-            stmt.setInt(column, (Integer) value);
-        } else if (value instanceof Long) {
-            if (IS_SHOW_DEBUG)
-                System.err.println("TRACE: PreparedStatement#setLong: " + value);
-            stmt.setLong(column, (Long) value);
-        } else if (value instanceof BigDecimal) {
-            if (IS_SHOW_DEBUG)
-                System.err.println("TRACE: PreparedStatement#setBigDecimal: " + value);
+        } else if (null == param.getValue()) {
+            log.trace("TRACE: PreparedStatement#setNull: null with Type");
+            if (null == param.getProperty()) {
+                // [IY7163] WARN: bind NULL value to an SQL statement, set Types.NULL because
+                // there is no property object information.
+                log.warn(OiyokanMessages.IY7163);
+                stmt.setNull(column, Types.NULL);
+            } else {
+                if (null == param.getProperty().getDbType()) {
+                    // [IY7164] WARN: bind NULL value to an SQL statement, set Types.NULL because
+                    // there is no JDBC Type info in property information.
+                    log.warn(OiyokanMessages.IY7164);
+                    stmt.setNull(column, Types.NULL);
+                } else {
+                    final int jdbcType = OiyoJdbcUtil.string2Types(param.getProperty().getJdbcType());
+                    // setNullの型は文字列とする。Types.NULLだとSQL Server の REAL型にてエラーとなるため。
+                    stmt.setNull(column, jdbcType);
+                }
+            }
+        } else if (param.getValue() instanceof Byte) {
+            log.trace("TRACE: PreparedStatement#setByte: " + param);
+            stmt.setByte(column, (Byte) param.getValue());
+        } else if (param.getValue() instanceof Short) {
+            log.trace("TRACE: PreparedStatement#setShort: " + param);
+            stmt.setShort(column, (Short) param.getValue());
+        } else if (param.getValue() instanceof Integer) {
+            log.trace("TRACE: PreparedStatement#setInt: " + param);
+            stmt.setInt(column, (Integer) param.getValue());
+        } else if (param.getValue() instanceof Long) {
+            log.trace("TRACE: PreparedStatement#setLong: " + param);
+            stmt.setLong(column, (Long) param.getValue());
+        } else if (param.getValue() instanceof BigDecimal) {
+            log.trace("TRACE: PreparedStatement#setBigDecimal: " + param);
             // Oiyokan では 小数点は基本的にリテラルのまま残すため、このコードは通過しない.
-            stmt.setBigDecimal(column, (BigDecimal) value);
-        } else if (value instanceof Boolean) {
-            if (IS_SHOW_DEBUG)
-                System.err.println("TRACE: PreparedStatement#setBoolean: " + value);
-            stmt.setBoolean(column, (Boolean) value);
-        } else if (value instanceof Float) {
-            if (IS_SHOW_DEBUG)
-                System.err.println("TRACE: PreparedStatement#setFloat: " + value);
+            stmt.setBigDecimal(column, (BigDecimal) param.getValue());
+        } else if (param.getValue() instanceof Boolean) {
+            log.trace("TRACE: PreparedStatement#setBoolean: " + param);
+            stmt.setBoolean(column, (Boolean) param.getValue());
+        } else if (param.getValue() instanceof Float) {
+            log.trace("TRACE: PreparedStatement#setFloat: " + param);
             // Oiyokan では 小数点は基本的にリテラルのまま残すため、このコードは通過しない.
-            stmt.setFloat(column, (Float) value);
-        } else if (value instanceof Double) {
-            if (IS_SHOW_DEBUG)
-                System.err.println("TRACE: PreparedStatement#setDouble: " + value);
+            stmt.setFloat(column, (Float) param.getValue());
+        } else if (param.getValue() instanceof Double) {
+            log.trace("TRACE: PreparedStatement#setDouble: " + param);
             // Oiyokan では 小数点は基本的にリテラルのまま残すため、このコードは通過しない.
-            stmt.setDouble(column, (Double) value);
-        } else if (value instanceof java.sql.Time) {
-            if (IS_SHOW_DEBUG)
-                System.err.println("TRACE: PreparedStatement#setTime: " + value);
+            stmt.setDouble(column, (Double) param.getValue());
+        } else if (param.getValue() instanceof java.sql.Time) {
+            log.trace("TRACE: PreparedStatement#setTime: " + param);
             // java.util.Dateより先に記載が必要
-            java.sql.Time look = (java.sql.Time) value;
+            java.sql.Time look = (java.sql.Time) param.getValue();
             stmt.setTime(column, look);
-        } else if (value instanceof java.sql.Date) {
-            if (IS_SHOW_DEBUG)
-                System.err.println("TRACE: PreparedStatement#setDate(1): " + value);
+        } else if (param.getValue() instanceof java.sql.Date) {
+            log.trace("TRACE: PreparedStatement#setDate(1): " + param);
             // java.util.Dateより先に記載が必要
-            java.sql.Date look = (java.sql.Date) value;
+            java.sql.Date look = (java.sql.Date) param.getValue();
             stmt.setDate(column, look);
-        } else if (value instanceof java.util.Date) {
-            if (IS_SHOW_DEBUG)
-                System.err.println("TRACE: PreparedStatement#setDate(2): " + value);
+        } else if (param.getValue() instanceof java.util.Date) {
+            log.trace("TRACE: PreparedStatement#setDate(2): " + param);
             // java.sql.Timestampはここを通過.
-            java.util.Date udate = (java.util.Date) value;
+            java.util.Date udate = (java.util.Date) param.getValue();
             java.sql.Date sdate = new java.sql.Date(udate.getTime());
             stmt.setDate(column, sdate);
-        } else if (value instanceof java.util.Calendar) {
-            if (IS_SHOW_DEBUG)
-                System.err.println("TRACE: PreparedStatement#setDate(3): " + value);
-            java.util.Calendar cal = (java.util.Calendar) value;
+        } else if (param.getValue() instanceof java.util.Calendar) {
+            log.trace("TRACE: PreparedStatement#setDate(3): " + param);
+            java.util.Calendar cal = (java.util.Calendar) param.getValue();
             java.sql.Date sdate = new java.sql.Date(cal.getTime().getTime());
             stmt.setDate(column, sdate);
-        } else if (value instanceof ZonedDateTime) {
-            if (IS_SHOW_DEBUG)
-                System.err.println("TRACE: PreparedStatement#setDate(4): " + value);
-            ZonedDateTime zdt = (ZonedDateTime) value;
+        } else if (param.getValue() instanceof ZonedDateTime) {
+            log.trace("TRACE: PreparedStatement#setDate(4): " + param);
+            ZonedDateTime zdt = (ZonedDateTime) param.getValue();
             java.util.Date look = OiyoDateTimeUtil.zonedDateTime2Date(zdt);
             java.sql.Date sdate = new java.sql.Date(look.getTime());
             stmt.setDate(column, sdate);
-        } else if (value instanceof String) {
-            if (IS_SHOW_DEBUG)
-                System.err.println("TRACE: PreparedStatement#setString: " + value);
-            stmt.setString(column, (String) value);
-        } else if (value instanceof byte[]) {
-            if (IS_SHOW_DEBUG)
-                System.err.println("TRACE: PreparedStatement#setBytes: " + value);
-            byte[] look = (byte[]) value;
+        } else if (param.getValue() instanceof String) {
+            log.trace("TRACE: PreparedStatement#setString: " + param);
+            stmt.setString(column, (String) param.getValue());
+        } else if (param.getValue() instanceof byte[]) {
+            log.trace("TRACE: PreparedStatement#setBytes: " + param);
+            byte[] look = (byte[]) param.getValue();
             stmt.setBytes(column, look);
         } else {
             // [IY1101] NOT SUPPORTED: Parameter Type
-            log.fatal(OiyokanMessages.IY1101 + ": " + value.getClass().getCanonicalName());
-            throw new ODataApplicationException(OiyokanMessages.IY1101 + ": " + value.getClass().getCanonicalName(), //
+            log.fatal(OiyokanMessages.IY1101 + ": " + param.getClass().getCanonicalName());
+            throw new ODataApplicationException(OiyokanMessages.IY1101 + ": " + param.getClass().getCanonicalName(), //
                     OiyokanMessages.IY1101_CODE, Locale.ENGLISH);
         }
     }
@@ -412,7 +420,7 @@ public class OiyoCommonJdbcUtil {
         if (inputParam == null) {
             log.trace("TRACE: expandLiteralOrBindParameter: null");
             sqlInfo.getSqlBuilder().append("?");
-            sqlInfo.getSqlParamList().add(inputParam);
+            sqlInfo.getSqlParamList().add(new OiyoSqlInfo.SqlParam(property, inputParam));
             return;
         }
         final EdmPrimitiveType edmType = OiyoEdmUtil.string2EdmType(edmTypeName);
@@ -422,7 +430,7 @@ public class OiyoCommonJdbcUtil {
                     || inputParam instanceof Short//
                     || inputParam instanceof Integer) {
                 sqlInfo.getSqlBuilder().append("?");
-                sqlInfo.getSqlParamList().add(inputParam);
+                sqlInfo.getSqlParamList().add(new OiyoSqlInfo.SqlParam(property, inputParam));
             } else {
                 // そのままSQL本文
                 sqlInfo.getSqlBuilder().append(String.valueOf(inputParam));
@@ -436,7 +444,7 @@ public class OiyoCommonJdbcUtil {
                     || inputParam instanceof Short//
                     || inputParam instanceof Integer) {
                 sqlInfo.getSqlBuilder().append("?");
-                sqlInfo.getSqlParamList().add(inputParam);
+                sqlInfo.getSqlParamList().add(new OiyoSqlInfo.SqlParam(property, inputParam));
             } else {
                 // そのままSQL本文
                 sqlInfo.getSqlBuilder().append(String.valueOf(inputParam));
@@ -449,10 +457,16 @@ public class OiyoCommonJdbcUtil {
                     || inputParam instanceof Short//
                     || inputParam instanceof Integer) {
                 sqlInfo.getSqlBuilder().append("?");
-                sqlInfo.getSqlParamList().add(inputParam);
+                sqlInfo.getSqlParamList().add(new OiyoSqlInfo.SqlParam(property, inputParam));
             } else {
                 sqlInfo.getSqlBuilder().append("?");
-                sqlInfo.getSqlParamList().add(Short.valueOf(String.valueOf(inputParam)));
+                final String value = String.valueOf(inputParam);
+                if ("null".equalsIgnoreCase(value)) {
+                    // nullが文字列で渡ってくる場合でも正しく動作させる。
+                    sqlInfo.getSqlParamList().add(new OiyoSqlInfo.SqlParam(property, (Short) null));
+                } else {
+                    sqlInfo.getSqlParamList().add(new OiyoSqlInfo.SqlParam(property, Short.valueOf(value)));
+                }
             }
             return;
         }
@@ -462,10 +476,16 @@ public class OiyoCommonJdbcUtil {
                     || inputParam instanceof Short//
                     || inputParam instanceof Integer) {
                 sqlInfo.getSqlBuilder().append("?");
-                sqlInfo.getSqlParamList().add(inputParam);
+                sqlInfo.getSqlParamList().add(new OiyoSqlInfo.SqlParam(property, inputParam));
             } else {
                 sqlInfo.getSqlBuilder().append("?");
-                sqlInfo.getSqlParamList().add(Integer.valueOf(String.valueOf(inputParam)));
+                final String value = String.valueOf(inputParam);
+                if ("null".equalsIgnoreCase(value)) {
+                    // nullが文字列で渡ってくる場合でも正しく動作させる。
+                    sqlInfo.getSqlParamList().add(new OiyoSqlInfo.SqlParam(property, (Integer) null));
+                } else {
+                    sqlInfo.getSqlParamList().add(new OiyoSqlInfo.SqlParam(property, Integer.valueOf(value)));
+                }
             }
             return;
         }
@@ -475,10 +495,16 @@ public class OiyoCommonJdbcUtil {
                     || inputParam instanceof Short//
                     || inputParam instanceof Integer) {
                 sqlInfo.getSqlBuilder().append("?");
-                sqlInfo.getSqlParamList().add(inputParam);
+                sqlInfo.getSqlParamList().add(new OiyoSqlInfo.SqlParam(property, inputParam));
             } else {
                 sqlInfo.getSqlBuilder().append("?");
-                sqlInfo.getSqlParamList().add(Long.valueOf(String.valueOf(inputParam)));
+                final String value = String.valueOf(inputParam);
+                if ("null".equalsIgnoreCase(value)) {
+                    // nullが文字列で渡ってくる場合でも正しく動作させる。
+                    sqlInfo.getSqlParamList().add(new OiyoSqlInfo.SqlParam(property, (Long) null));
+                } else {
+                    sqlInfo.getSqlParamList().add(new OiyoSqlInfo.SqlParam(property, Long.valueOf(value)));
+                }
             }
             return;
         }
@@ -486,7 +512,7 @@ public class OiyoCommonJdbcUtil {
             log.trace("TRACE: expandLiteralOrBindParameter: EdmDecimal: " + inputParam);
             if (inputParam instanceof BigDecimal) {
                 sqlInfo.getSqlBuilder().append("?");
-                sqlInfo.getSqlParamList().add(inputParam);
+                sqlInfo.getSqlParamList().add(new OiyoSqlInfo.SqlParam(property, inputParam));
             } else {
                 // 小数点付きの数値はパラメータとしては処理せずにそのまま文字列として連結.
                 sqlInfo.getSqlBuilder().append(String.valueOf(inputParam));
@@ -497,10 +523,11 @@ public class OiyoCommonJdbcUtil {
             log.trace("TRACE: expandLiteralOrBindParameter: EdmBoolean: " + inputParam);
             if (inputParam instanceof Boolean) {
                 sqlInfo.getSqlBuilder().append("?");
-                sqlInfo.getSqlParamList().add((Boolean) inputParam);
+                sqlInfo.getSqlParamList().add(new OiyoSqlInfo.SqlParam(property, (Boolean) inputParam));
             } else {
                 sqlInfo.getSqlBuilder().append("?");
-                sqlInfo.getSqlParamList().add(Boolean.valueOf("true".equalsIgnoreCase(String.valueOf(inputParam))));
+                sqlInfo.getSqlParamList().add(new OiyoSqlInfo.SqlParam(property,
+                        Boolean.valueOf("true".equalsIgnoreCase(String.valueOf(inputParam)))));
             }
             return;
         }
@@ -510,7 +537,7 @@ public class OiyoCommonJdbcUtil {
                     || inputParam instanceof Short//
                     || inputParam instanceof Integer) {
                 sqlInfo.getSqlBuilder().append("?");
-                sqlInfo.getSqlParamList().add(inputParam);
+                sqlInfo.getSqlParamList().add(new OiyoSqlInfo.SqlParam(property, inputParam));
             } else {
                 // 小数点付きの数値はパラメータとしては処理せずにそのまま文字列として連結.
                 sqlInfo.getSqlBuilder().append(inputParam);
@@ -523,7 +550,7 @@ public class OiyoCommonJdbcUtil {
                     || inputParam instanceof Short//
                     || inputParam instanceof Integer) {
                 sqlInfo.getSqlBuilder().append("?");
-                sqlInfo.getSqlParamList().add(inputParam);
+                sqlInfo.getSqlParamList().add(new OiyoSqlInfo.SqlParam(property, inputParam));
             } else {
                 // 小数点付きの数値はパラメータとしては処理せずにそのまま文字列として連結.
                 sqlInfo.getSqlBuilder().append(inputParam);
@@ -536,11 +563,11 @@ public class OiyoCommonJdbcUtil {
                     || inputParam instanceof java.util.Date//
                     || inputParam instanceof java.util.Calendar) {
                 sqlInfo.getSqlBuilder().append("?");
-                sqlInfo.getSqlParamList().add(inputParam);
+                sqlInfo.getSqlParamList().add(new OiyoSqlInfo.SqlParam(property, inputParam));
             } else {
                 ZonedDateTime zdt = OiyoDateTimeUtil.parseStringDateTime(String.valueOf(inputParam));
                 sqlInfo.getSqlBuilder().append("?");
-                sqlInfo.getSqlParamList().add(zdt);
+                sqlInfo.getSqlParamList().add(new OiyoSqlInfo.SqlParam(property, zdt));
             }
             return;
         }
@@ -550,14 +577,14 @@ public class OiyoCommonJdbcUtil {
                     || inputParam instanceof java.util.Date//
                     || inputParam instanceof java.util.Calendar) {
                 sqlInfo.getSqlBuilder().append("?");
-                sqlInfo.getSqlParamList().add(inputParam);
+                sqlInfo.getSqlParamList().add(new OiyoSqlInfo.SqlParam(property, inputParam));
             } else if (inputParam instanceof TemporalAccessor) {
                 sqlInfo.getSqlBuilder().append("?");
-                sqlInfo.getSqlParamList().add(inputParam);
+                sqlInfo.getSqlParamList().add(new OiyoSqlInfo.SqlParam(property, inputParam));
             } else {
                 ZonedDateTime zdt = OiyoDateTimeUtil.parseStringDateTime(String.valueOf(inputParam));
                 sqlInfo.getSqlBuilder().append("?");
-                sqlInfo.getSqlParamList().add(zdt);
+                sqlInfo.getSqlParamList().add(new OiyoSqlInfo.SqlParam(property, zdt));
             }
             return;
         }
@@ -565,7 +592,7 @@ public class OiyoCommonJdbcUtil {
             log.trace("TRACE: expandLiteralOrBindParameter: EdmTimeOfDay: " + inputParam);
             if (inputParam instanceof java.sql.Time) {
                 sqlInfo.getSqlBuilder().append("?");
-                sqlInfo.getSqlParamList().add(inputParam);
+                sqlInfo.getSqlParamList().add(new OiyoSqlInfo.SqlParam(property, inputParam));
             } else if (inputParam instanceof java.util.Calendar) {
                 java.util.Calendar cal = (java.util.Calendar) inputParam;
                 // TODO FIXME 以下の箇所をいつか内容確認。
@@ -573,11 +600,11 @@ public class OiyoCommonJdbcUtil {
                 java.sql.Time look = new java.sql.Time(cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE),
                         cal.get(Calendar.SECOND));
                 sqlInfo.getSqlBuilder().append("?");
-                sqlInfo.getSqlParamList().add(look);
+                sqlInfo.getSqlParamList().add(new OiyoSqlInfo.SqlParam(property, look));
             } else {
                 ZonedDateTime zdt = OiyoDateTimeUtil.parseStringDateTime(String.valueOf(inputParam));
                 sqlInfo.getSqlBuilder().append("?");
-                sqlInfo.getSqlParamList().add(zdt);
+                sqlInfo.getSqlParamList().add(new OiyoSqlInfo.SqlParam(property, zdt));
             }
             return;
         }
@@ -596,7 +623,7 @@ public class OiyoCommonJdbcUtil {
 
             // 文字列リテラルとしてパラメータ化クエリで扱う.
             sqlInfo.getSqlBuilder().append("?");
-            sqlInfo.getSqlParamList().add(value);
+            sqlInfo.getSqlParamList().add(new OiyoSqlInfo.SqlParam(property, value));
             return;
         }
         if (EdmBinary.getInstance() == edmType) {
@@ -604,11 +631,11 @@ public class OiyoCommonJdbcUtil {
             if (inputParam instanceof byte[] //
                     || inputParam instanceof ByteArrayInputStream) {
                 sqlInfo.getSqlBuilder().append("?");
-                sqlInfo.getSqlParamList().add(inputParam);
+                sqlInfo.getSqlParamList().add(new OiyoSqlInfo.SqlParam(property, inputParam));
             } else {
                 final byte[] look = new Base64().decode(String.valueOf(inputParam));
                 sqlInfo.getSqlBuilder().append("?");
-                sqlInfo.getSqlParamList().add(look);
+                sqlInfo.getSqlParamList().add(new OiyoSqlInfo.SqlParam(property, look));
             }
             return;
         }
@@ -617,11 +644,11 @@ public class OiyoCommonJdbcUtil {
             if (inputParam instanceof byte[] //
                     || inputParam instanceof ByteArrayInputStream) {
                 sqlInfo.getSqlBuilder().append("?");
-                sqlInfo.getSqlParamList().add(inputParam);
+                sqlInfo.getSqlParamList().add(new OiyoSqlInfo.SqlParam(property, inputParam));
             } else {
                 final String look = String.valueOf(inputParam);
                 sqlInfo.getSqlBuilder().append("?");
-                sqlInfo.getSqlParamList().add(look);
+                sqlInfo.getSqlParamList().add(new OiyoSqlInfo.SqlParam(property, look));
             }
             return;
         }
@@ -674,7 +701,7 @@ public class OiyoCommonJdbcUtil {
             }
             return "[" + fieldName + "]";
 
-        case postgres:
+        case PostgreSQL:
         case ORCL18:
             if (fieldName.indexOf(" ") <= 0 && fieldName.indexOf(".") <= 0) {
                 // 空白のない場合はエスケープしない.
@@ -712,8 +739,8 @@ public class OiyoCommonJdbcUtil {
     public static List<String> executeDml(Connection connTargetDb, OiyoSqlInfo sqlInfo, OiyoSettingsEntitySet entitySet,
             boolean returnGeneratedKeys) throws ODataApplicationException {
         final String sql = sqlInfo.getSqlBuilder().toString();
-        // TODO message
-        log.info("OData v4: TRACE: SQL exec: " + sql);
+        // [IY1066] INFO: SQL exec
+        log.info(OiyokanMessages.IY1066 + ": " + sql);
 
         final long startMillisec = System.currentTimeMillis();
         try (var stmt = connTargetDb.prepareStatement(sql, //
@@ -722,14 +749,14 @@ public class OiyoCommonJdbcUtil {
             stmt.setQueryTimeout(jdbcStmtTimeout);
 
             int idxColumn = 1;
-            for (Object look : sqlInfo.getSqlParamList()) {
+            for (OiyoSqlInfo.SqlParam look : sqlInfo.getSqlParamList()) {
                 OiyoCommonJdbcUtil.bindPreparedParameter(stmt, idxColumn++, look);
             }
 
             final int result = stmt.executeUpdate();
             if (result != 1) {
-                // [M201] NO record processed. No Entity effects.
-                log.error(OiyokanMessages.IY3101 + ": " + sql);
+                // [IY3101] NO record processed. No Entity effects.
+                log.warn(OiyokanMessages.IY3101 + ": " + sql);
                 throw new ODataApplicationException(OiyokanMessages.IY3101 + ": " + sql, //
                         OiyokanMessages.IY3101_CODE, Locale.ENGLISH);
             }
@@ -749,15 +776,15 @@ public class OiyoCommonJdbcUtil {
             final long endMillisec = System.currentTimeMillis();
             final long elapsed = endMillisec - startMillisec;
             if (elapsed >= 10) {
-                // TODO message
-                log.info("OData v4: TRACE: SQL: elapsed: " + (endMillisec - startMillisec));
+                // [IY1067] INFO: SQL exec: elapsed
+                log.info(OiyokanMessages.IY1067 + ": " + (endMillisec - startMillisec));
             }
 
             return generatedKeys;
         } catch (SQLIntegrityConstraintViolationException ex) {
             // [M202] Integrity constraint violation occured (DML). 制約違反.
             log.error(OiyokanMessages.IY3401 + ": " + sql + ", " + ex.toString());
-            // 制約違反だけだと意味が不明であろうからメッセージも返却.
+            // 制約違反については例外的に ex の getMessage についても呼出元に返却.
             throw new ODataApplicationException(OiyokanMessages.IY3401 + ": " + sql + ": " + ex.getMessage(), //
                     OiyokanMessages.IY3401_CODE, Locale.ENGLISH);
         } catch (SQLTimeoutException ex) {

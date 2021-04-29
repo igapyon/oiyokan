@@ -46,8 +46,8 @@ public class OiyokanKanDatabase {
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
     public static synchronized boolean setupKanDatabase(OiyoInfo oiyoInfo) throws ODataApplicationException {
-        // TODO message そとだし
-        log.info("OData v4: setup oiyokanKan database (Oiyokan: " + OiyokanConstants.VERSION + ")");
+        // [IY7172] INFO: setup oiyokanKan database
+        log.info(OiyokanMessages.IY7172 + " (Oiyokan: " + OiyokanConstants.VERSION + ")");
 
         OiyoSettingsDatabase settingsInterDatabase = OiyoInfoUtil.getOiyoDatabaseByName(oiyoInfo,
                 OiyokanConstants.OIYOKAN_KAN_DB);
@@ -86,7 +86,7 @@ public class OiyokanKanDatabase {
 
             ///////////////////////////////////////////
             // 内部データの作成に突入.
-            log.info("OData v4: setup internal data " + " (Oiyokan: " + OiyokanConstants.VERSION + ")");
+            log.trace("TRACE: setup internal data" + " (Oiyokan: " + OiyokanConstants.VERSION + ")");
 
             ///////////////////////////////////////////
             // ODataAppInfos にバージョン情報などデータの追加

@@ -27,7 +27,7 @@ public class OiyokanConstants {
     /**
      * Oiyokan のバージョン番号
      */
-    public static final String VERSION = "1.6.20210421e";
+    public static final String VERSION = "1.9.20210429b";
 
     /**
      * 実験的な $search 機能(全文検索)が有効化されているかどうか。
@@ -43,7 +43,7 @@ public class OiyokanConstants {
         /** h2 database */
         h2,
         /** Postgres */
-        postgres,
+        PostgreSQL,
         /** MySQL */
         MySQL,
         /** MSSQLSV 2008 */

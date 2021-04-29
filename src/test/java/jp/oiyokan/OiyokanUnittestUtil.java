@@ -23,6 +23,9 @@ import jp.oiyokan.dto.OiyoSettings;
 import jp.oiyokan.dto.OiyoSettingsDatabase;
 import jp.oiyokan.dto.OiyoSettingsEntitySet;
 
+/**
+ * テスト実施用途のユーティリティクラス。
+ */
 public class OiyokanUnittestUtil {
     private static final Log log = LogFactory.getLog(OiyokanUnittestUtil.class);
 
@@ -45,7 +48,7 @@ public class OiyokanUnittestUtil {
 
         if (true) {
             String settings = "oiyokan/oiyokan-unittest-settings.json";
-            log.info("OData v4: resources: load: " + settings);
+            log.trace("OData v4: resources: load: " + settings);
             // resources から読み込み。
             final ClassPathResource cpres = new ClassPathResource(settings);
             try (InputStream inStream = cpres.getInputStream()) {
@@ -54,11 +57,11 @@ public class OiyokanUnittestUtil {
                 final ObjectMapper mapper = new ObjectMapper();
                 final OiyoSettings loadedSettings = mapper.readValue(strOiyokanSettings, OiyoSettings.class);
                 for (OiyoSettingsDatabase database : loadedSettings.getDatabase()) {
-                    log.info("load: database: " + database.getName());
+                    log.trace("load: database: " + database.getName());
                     oiyoInfo.getSettings().getDatabase().add(database);
                 }
                 for (OiyoSettingsEntitySet entitySet : loadedSettings.getEntitySet()) {
-                    log.info("load: entitySet: " + entitySet.getName());
+                    log.trace("load: entitySet: " + entitySet.getName());
                     oiyoInfo.getSettings().getEntitySet().add(entitySet);
                 }
             } catch (IOException ex) {
@@ -70,7 +73,7 @@ public class OiyokanUnittestUtil {
 
         try {
             for (String[] sqlFileDef : OIYOKAN_FILE_SQLS) {
-                log.info("OData: load: internal db:" + sqlFileDef[0] + ", sql: " + sqlFileDef[1]);
+                log.trace("OData: load: internal db:" + sqlFileDef[0] + ", sql: " + sqlFileDef[1]);
 
                 OiyoSettingsDatabase lookDatabase = OiyoInfoUtil.getOiyoDatabaseByName(oiyoInfo, sqlFileDef[0]);
 
@@ -87,7 +90,7 @@ public class OiyokanUnittestUtil {
                         }
                     }
 
-                    log.info("OData: load: internal db: end: " + sqlFileDef[0] + ", sql: " + sqlFileDef[1]);
+                    log.trace("OData: load: internal db: end: " + sqlFileDef[0] + ", sql: " + sqlFileDef[1]);
                 } catch (SQLException ex) {
                     log.error("UNEXPECTED: Fail to execute Dabaase: " + ex.toString());
                     throw new ODataApplicationException("UNEXPECTED: Fail to execute Dabaase", 500, Locale.ENGLISH);

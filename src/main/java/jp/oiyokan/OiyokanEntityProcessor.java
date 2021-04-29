@@ -82,15 +82,15 @@ public class OiyokanEntityProcessor implements EntityProcessor {
             // シングルトンな OiyoInfo を利用。
             final OiyoInfo oiyoInfo = OiyokanEdmProvider.getOiyoInfoInstance();
 
-            // 1. retrieve the Entity Type
+            log.trace("OiyokanEntityProcessor#readEntity: 1. retrieve the Entity Type");
             List<UriResource> resourcePaths = uriInfo.getUriResourceParts();
 
-            // Note: only in our example we can assume that the first segment is the
-            // EntitySet
+            log.trace("OiyokanEntityProcessor#readEntity: "
+                    + "Note: only in our example we can assume that the first segment is the EntitySet");
             UriResourceEntitySet uriResourceEntitySet = (UriResourceEntitySet) resourcePaths.get(0);
             EdmEntitySet edmEntitySet = uriResourceEntitySet.getEntitySet();
 
-            // 2. retrieve the data from backend
+            log.trace("OiyokanEntityProcessor#readEntity: 2. retrieve the data from backend");
             List<UriParameter> keyPredicates = uriResourceEntitySet.getKeyPredicates();
 
             // データベースに接続.
@@ -116,29 +116,31 @@ public class OiyokanEntityProcessor implements EntityProcessor {
                         OiyokanMessages.IY3107_CODE, Locale.ENGLISH);
             }
 
-            // 3. serialize
-            EdmEntityType entityType = edmEntitySet.getEntityType();
+            log.trace("OiyokanEntityProcessor#readEntity: 3. serialize");
+            EdmEntityType edmEntityType = edmEntitySet.getEntityType();
 
             ContextURL contextUrl = ContextURL.with().entitySet(edmEntitySet).build();
             // expand and select currently not supported
             EntitySerializerOptions options = EntitySerializerOptions.with().contextURL(contextUrl).build();
 
             ODataSerializer serializer = odata.createSerializer(responseFormat);
-            SerializerResult serializerResult = serializer.entity(serviceMetadata, entityType, entity, options);
+            SerializerResult serializerResult = serializer.entity(serviceMetadata, edmEntityType, entity, options);
             InputStream entityStream = serializerResult.getContent();
 
-            // 4. configure the response object
+            log.trace("OiyokanEntityProcessor#readEntity: 4. configure the response object");
             response.setContent(entityStream);
             response.setStatusCode(HttpStatusCode.OK.getStatusCode());
             response.setHeader(HttpHeader.CONTENT_TYPE, responseFormat.toContentTypeString());
 
-        } catch (ODataApplicationException ex) {
-            log.error("ERROR: OiyokanEntityProcessor#readEntity(" + request.getRawODataPath() + ","
-                    + request.getRawQueryPath() + "): " + ex.toString());
+        } catch (ODataApplicationException | ODataLibraryException ex) {
+            // [IY9531] WARN: EntityProcessor.readEntity: exception caught
+            log.warn(OiyokanMessages.IY9531 + ": " + request.getRawODataPath() + "," + request.getRawQueryPath() + ": "
+                    + ex.toString());
             throw ex;
         } catch (RuntimeException ex) {
-            log.fatal("FATAL: OiyokanEntityProcessor#readEntity(" + request.getRawODataPath() + ","
-                    + request.getRawQueryPath() + "): " + ex.toString(), ex);
+            // [IY9532] ERROR: EntityProcessor.readEntity: runtime exception caught
+            log.error(OiyokanMessages.IY9532 + ": " + request.getRawODataPath() + "," + request.getRawQueryPath() + ": "
+                    + ex.toString(), ex);
             throw ex;
         }
     }
@@ -155,13 +157,11 @@ public class OiyokanEntityProcessor implements EntityProcessor {
 
             // https://olingo.apache.org/doc/odata4/tutorials/write/tutorial_write.html
 
-            // 1. Retrieve the entity type from the URI
-
-            // 1. retrieve the Entity Type
+            log.trace("OiyokanEntityProcessor#createEntity: 1. retrieve the Entity Type from the URI");
             List<UriResource> resourcePaths = uriInfo.getUriResourceParts();
 
-            // Note: only in our example we can assume that the first segment is the
-            // EntitySet
+            log.trace("OiyokanEntityProcessor#createEntity: "
+                    + "Note: only in our example we can assume that the first segment is the EntitySet");
             UriResourceEntitySet uriResourceEntitySet = (UriResourceEntitySet) resourcePaths.get(0);
             EdmEntitySet edmEntitySet = uriResourceEntitySet.getEntitySet();
             EdmEntityType edmEntityType = edmEntitySet.getEntityType();
@@ -174,18 +174,25 @@ public class OiyokanEntityProcessor implements EntityProcessor {
                         OiyokanMessages.IY8101_CODE, Locale.ENGLISH);
             }
 
-            // 2. create the data in backend
-            // 2.1. retrieve the payload from the POST request for the entity to create and
-            // deserialize it
+            log.trace("OiyokanEntityProcessor#createEntity: 2. create the data in backend");
+
+            log.trace("OiyokanEntityProcessor#createEntity: "
+                    + "2.1. retrieve the payload from the POST request for the entity to create and deserialize it");
             InputStream requestInputStream = request.getBody();
+            log.trace("OiyokanEntityProcessor#createEntity: 2.1.1. createDeserializer");
             ODataDeserializer deserializer = this.odata.createDeserializer(requestFormat);
+            log.trace("OiyokanEntityProcessor#createEntity: 2.1.2. deserializer.entity");
             DeserializerResult result = deserializer.entity(requestInputStream, edmEntityType);
+            log.trace("OiyokanEntityProcessor#createEntity: 2.1.3. result.getEntity");
             Entity requestEntity = result.getEntity();
-            // 2.2 do the creation in backend, which returns the newly created entity
+
+            log.trace("OiyokanEntityProcessor#createEntity: "
+                    + "2.2 do the creation in backend, which returns the newly created entity");
             Entity createdEntity = new OiyoBasicJdbcEntityOneBuilder(oiyoInfo).createEntityData(uriInfo, edmEntitySet,
                     requestEntity);
 
-            // 3. serialize the response (we have to return the created entity)
+            log.trace("OiyokanEntityProcessor#createEntity: "
+                    + "3. serialize the response (we have to return the created entity)");
             ContextURL contextUrl = ContextURL.with().entitySet(edmEntitySet).build();
             // expand and select currently not supported
             EntitySerializerOptions options = EntitySerializerOptions.with().contextURL(contextUrl).build();
@@ -194,18 +201,20 @@ public class OiyokanEntityProcessor implements EntityProcessor {
             SerializerResult serializedResponse = serializer.entity(serviceMetadata, edmEntityType, createdEntity,
                     options);
 
-            // 4. configure the response object
+            log.trace("OiyokanEntityProcessor#createEntity: 4. configure the response object");
             response.setContent(serializedResponse.getContent());
             response.setStatusCode(HttpStatusCode.CREATED.getStatusCode());
             response.setHeader(HttpHeader.CONTENT_TYPE, responseFormat.toContentTypeString());
 
-        } catch (ODataApplicationException ex) {
-            log.error("ERROR: OiyokanEntityProcessor#createEntity(" + request.getRawODataPath() + ","
-                    + request.getRawQueryPath() + "): " + ex.toString());
+        } catch (ODataApplicationException | ODataLibraryException ex) {
+            // [IY9533] WARN: EntityProcessor.createEntity: exception caught
+            log.warn(OiyokanMessages.IY9533 + ": " + request.getRawODataPath() + "," + request.getRawQueryPath() + ": "
+                    + ex.toString());
             throw ex;
         } catch (RuntimeException ex) {
-            log.fatal("FATAL: OiyokanEntityProcessor#createEntity(" + request.getRawODataPath() + ","
-                    + request.getRawQueryPath() + "): " + ex.toString(), ex);
+            // [IY9534] ERROR: EntityProcessor.createEntity: runtime exception caught
+            log.error(OiyokanMessages.IY9534 + ": " + request.getRawODataPath() + "," + request.getRawQueryPath() + ": "
+                    + ex.toString(), ex);
             throw ex;
         }
     }
@@ -222,8 +231,8 @@ public class OiyokanEntityProcessor implements EntityProcessor {
 
             List<UriResource> resourcePaths = uriInfo.getUriResourceParts();
 
-            // Note: only in our example we can assume that the first segment is the
-            // EntitySet
+            log.trace("OiyokanEntityProcessor#updateEntity: "
+                    + "Note: only in our example we can assume that the first segment is the EntitySet");
             UriResourceEntitySet uriResourceEntitySet = (UriResourceEntitySet) resourcePaths.get(0);
             EdmEntitySet edmEntitySet = uriResourceEntitySet.getEntitySet();
 
@@ -235,7 +244,7 @@ public class OiyokanEntityProcessor implements EntityProcessor {
                         OiyokanMessages.IY8103_CODE, Locale.ENGLISH);
             }
 
-            // 2. retrieve the data from backend
+            log.trace("OiyokanEntityProcessor#updateEntity: 2. retrieve the data from backend");
             List<UriParameter> keyPredicates = uriResourceEntitySet.getKeyPredicates();
             // Olingサンプルには記載あったものの、Oiyokanでは該当レコードの存在チェックは実施しない。
 
@@ -247,6 +256,13 @@ public class OiyokanEntityProcessor implements EntityProcessor {
             if (request.getMethod().equals(HttpMethod.PATCH)) {
                 final boolean ifMatch = ("*".equals(request.getHeader("If-Match")));
                 final boolean ifNoneMatch = ("*".equals(request.getHeader("If-None-Match")));
+
+                if (ifMatch) {
+                    log.trace("OiyokanEntityProcessor#updateEntity: If-Match");
+                }
+                if (ifNoneMatch) {
+                    log.trace("OiyokanEntityProcessor#updateEntity: If-None-Match");
+                }
 
                 // 指定項目のみ設定
                 // in case of PATCH, the existing property is not touched
@@ -274,13 +290,15 @@ public class OiyokanEntityProcessor implements EntityProcessor {
             response.setStatusCode(HttpStatusCode.NO_CONTENT.getStatusCode());
             response.setHeader(HttpHeader.CONTENT_TYPE, responseFormat.toContentTypeString());
 
-        } catch (ODataApplicationException ex) {
-            log.error("ERROR: OiyokanEntityProcessor#updateEntity(" + request.getRawODataPath() + ","
-                    + request.getRawQueryPath() + "): " + ex.toString());
+        } catch (ODataApplicationException | ODataLibraryException ex) {
+            // [IY9535] WARN: EntityProcessor.updateEntity: exception caught
+            log.warn(OiyokanMessages.IY9535 + ": " + request.getRawODataPath() + "," + request.getRawQueryPath() + ": "
+                    + ex.toString());
             throw ex;
         } catch (RuntimeException ex) {
-            log.fatal("FATAL: OiyokanEntityProcessor#updateEntity(" + request.getRawODataPath() + ","
-                    + request.getRawQueryPath() + "): " + ex.toString(), ex);
+            // [IY9536] ERROR: EntityProcessor.updateEntity: runtime exception caught
+            log.error(OiyokanMessages.IY9536 + ": " + request.getRawODataPath() + "," + request.getRawQueryPath() + ": "
+                    + ex.toString(), ex);
             throw ex;
         }
     }
@@ -295,10 +313,12 @@ public class OiyokanEntityProcessor implements EntityProcessor {
             // シングルトンな OiyoInfo を利用。
             final OiyoInfo oiyoInfo = OiyokanEdmProvider.getOiyoInfoInstance();
 
-            // 1. Retrieve the entity set which belongs to the requested entity
+            log.trace("OiyokanEntityProcessor#deleteEntity: "
+                    + "1. Retrieve the entity set which belongs to the requested entity");
             List<UriResource> resourcePaths = uriInfo.getUriResourceParts();
-            // Note: only in our example we can assume that the first segment is the
-            // EntitySet
+
+            log.trace("OiyokanEntityProcessor#deleteEntity: "
+                    + "Note: only in our example we can assume that the first segment is the EntitySet");
             UriResourceEntitySet uriResourceEntitySet = (UriResourceEntitySet) resourcePaths.get(0);
             EdmEntitySet edmEntitySet = uriResourceEntitySet.getEntitySet();
 
@@ -310,20 +330,22 @@ public class OiyokanEntityProcessor implements EntityProcessor {
                         OiyokanMessages.IY8104_CODE, Locale.ENGLISH);
             }
 
-            // 2. delete the data in backend
+            log.trace("OiyokanEntityProcessor#deleteEntity: " + "2. delete the data in backend");
             List<UriParameter> keyPredicates = uriResourceEntitySet.getKeyPredicates();
             new OiyoBasicJdbcEntityOneBuilder(oiyoInfo).deleteEntityData(uriInfo, edmEntitySet, keyPredicates);
 
-            // 3. configure the response object
+            log.trace("OiyokanEntityProcessor#deleteEntity: " + "3. configure the response object");
             response.setStatusCode(HttpStatusCode.NO_CONTENT.getStatusCode());
 
-        } catch (ODataApplicationException ex) {
-            log.error("ERROR: OiyokanEntityProcessor#deleteEntity(" + request.getRawODataPath() + ","
-                    + request.getRawQueryPath() + "): " + ex.toString());
+        } catch (ODataApplicationException /* | ODataLibraryException */ ex) {
+            // [IY9537] WARN: EntityProcessor.deleteEntity: exception caught
+            log.warn(OiyokanMessages.IY9537 + ": " + request.getRawODataPath() + "," + request.getRawQueryPath() + ": "
+                    + ex.toString());
             throw ex;
         } catch (RuntimeException ex) {
-            log.fatal("FATAL: OiyokanEntityProcessor#deleteEntity(" + request.getRawODataPath() + ","
-                    + request.getRawQueryPath() + "): " + ex.toString(), ex);
+            // [IY9538] ERROR: EntityProcessor.deleteEntity: runtime exception caught
+            log.error(OiyokanMessages.IY9538 + ": " + request.getRawODataPath() + "," + request.getRawQueryPath() + ": "
+                    + ex.toString(), ex);
             throw ex;
         }
     }

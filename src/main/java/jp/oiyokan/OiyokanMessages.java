@@ -28,20 +28,24 @@ public class OiyokanMessages {
     public static final String IY1051 = "[IY1051] Check JDBC Driver";
     public static final String IY1052 = "[IY1052] OData v4: URI";
 
-    public static final String IY1061 = "[IY1061] OData v4: QUERY";
-    public static final String IY1062 = "[IY1062] OData v4: COUNT";
-    public static final String IY1063 = "[IY1063] OData v4: COUNT = ";
-    public static final String IY1064 = "[IY1064] OData v4: SQL collect";
-    public static final String IY1065 = "[IY1065] OData v4: SQL: elapsed";
+    // EntityCollection
+    public static final String IY1061 = "[IY1061] DEBUG: QUERY";
+    public static final String IY1062 = "[IY1062] INFO: COUNT";
+    public static final String IY1063 = "[IY1063] INFO: COUNT = ";
+    public static final String IY1064 = "[IY1064] INFO: SQL collect";
+    public static final String IY1065 = "[IY1065] INFO: SQL collect: elapsed";
+    public static final String IY1066 = "[IY1066] INFO: SQL exec";
+    public static final String IY1067 = "[IY1067] INFO: SQL exec: elapsed";
 
-    public static final String IY1071 = "[IY1071] OData v4: ENTITY: READ";
-    public static final String IY1072 = "[IY1072] OData v4: SQL single";
-    public static final String IY1073 = "[IY1073] OData v4: SQL: elapsed";
-    public static final String IY1074 = "[IY1074] OData v4: ENTITY: CREATE";
-    public static final String IY1075 = "[IY1075] OData v4: ENTITY: DELETE";
-    public static final String IY1076 = "[IY1076] OData v4: ENTITY: PATCH: UPDATE (If-Match)";
-    public static final String IY1077 = "[IY1077] OData v4: ENTITY: PATCH: INSERT (If-None-Match)";
-    public static final String IY1078 = "[IY1078] OData v4: ENTITY: PATCH: UPSERT";
+    // Entity
+    public static final String IY1071 = "[IY1071] INFO: ENTITY: READ";
+    public static final String IY1072 = "[IY1072] INFO: ENTITY: CREATE";
+    public static final String IY1073 = "[IY1073] INFO: ENTITY: DELETE";
+    public static final String IY1074 = "[IY1074] INFO: ENTITY: PATCH: UPDATE (If-Match)";
+    public static final String IY1075 = "[IY1075] INFO: ENTITY: PATCH: INSERT (If-None-Match)";
+    public static final String IY1076 = "[IY1076] INFO: ENTITY: PATCH: UPSERT";
+    public static final String IY1081 = "[IY1081] INFO: SQL single";
+    public static final String IY1082 = "[IY1082] INFO: SQL: elapsed";
 
     ////////////////////////////////////////////////////////////////////////////////
     // Query
@@ -84,6 +88,11 @@ public class OiyokanMessages {
     public static final String IY2108 = "[IY2108] NOT SUPPORTED: Parameter Type";
     public static final int IY2108_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
 
+    public static final String IY2111 = "[IY2111] UNEXPECTED: UriParserException occured.";
+    public static final int IY2111_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
+    public static final String IY2112 = "[IY2112] UNEXPECTED: UriValidationException occured.";
+    public static final int IY2112_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
+
     ////////////////////////////////////////////////////////////////////////////////
     // IY25XX : EntityCollection - TIMEOUT
     public static final String IY2501 = "[IY2501] SQL timeout at count query";
@@ -105,13 +114,14 @@ public class OiyokanMessages {
     // IY3102
     // IY3103
     // IY3104
-    public static final String IY3105 = "[IY3105] No such Entity data";
+    public static final String IY3105 = "[IY3105] WARN: No such Entity data";
     public static final int IY3105_CODE = HttpStatusCode.NOT_FOUND.getStatusCode();
     public static final String IY3106 = "[IY3106] Fail to execute SQL (readEntity)";
     public static final int IY3106_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
     public static final String IY3107 = "[IY3107] Database exception occured (readEntity)";
     public static final int IY3107_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
-    // IY3108
+    public static final String IY3108 = "[IY3108] Not modified.";
+    public static final int IY3108_CODE = HttpStatusCode.NOT_MODIFIED.getStatusCode();
     // IY3109
     // IY3110
     public static final String IY3112 = "[IY3112] UNEXPECTED: Too many rows found (readEntity)";
@@ -121,17 +131,22 @@ public class OiyokanMessages {
     public static final String IY3114 = "[IY3114] UNEXPECTED: Can't retrieve PreparedStatement#getGeneratedKeys: Fail to map auto generated key field.";
     public static final int IY3114_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
 
+    public static final String IY3121 = "[IY3121] WARN: Ignore given value during INSERT because property that was set as autoGenKey.";
+
     public static final String IY3151 = "[IY3151] Fail to execute SQL.";
     public static final int IY3151_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
     public static final String IY3152 = "[IY3152] Fail to execute SQL.";
     public static final int IY3152_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
     public static final String IY3153 = "[IY3153] Fail to execute SQL.";
     public static final int IY3153_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
-    public static final String IY3154 = "[IY3154] Fail to execute SQL.";
-    public static final int IY3154_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
+    public static final String IY3154 = "[IY3154] Not modified by SQL.";
+    public static final int IY3154_CODE = HttpStatusCode.NOT_MODIFIED.getStatusCode();
+    public static final String IY3161 = "[IY3161] UNEXPECTED: OiyoSettingsProperty NOT found.";
+    public static final int IY3161_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
 
     ////////////////////////////////////////////////////////////////////////////////
     // IY34XX : Entity - Constraint
+    // CONFLICT は400番台であるので利用して問題ない。
     public static final String IY3401 = "[IY3401] Integrity constraint violation occured (DML). 制約違反.";
     public static final int IY3401_CODE = HttpStatusCode.CONFLICT.getStatusCode();
 
@@ -183,6 +198,14 @@ public class OiyokanMessages {
     public static final String IY4154 = "[IY4154] UNEXPECTED: Unsupported UnaryOperatorKind";
 
     ////////////////////////////////////////////////////////////////////////////////
+    // IY61XX : oiyokan-settings
+    public static final String IY6101 = "[IY6101] INFO: load namespace";
+    public static final String IY6102 = "[IY6102] INFO: load containerName";
+    public static final String IY6103 = "[IY6103] INFO: load database";
+    public static final String IY6104 = "[IY6104] INFO: load entitySet";
+    public static final String IY6151 = "[IY6151] WARN: Overwrite nullable with true because autoGenKey for property is true.";
+
+    ////////////////////////////////////////////////////////////////////////////////
     // Generic
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -198,7 +221,7 @@ public class OiyokanMessages {
     public static final String IY7109 = "[IY7109] UNEXPECTED: missing impl";
     public static final String IY7110 = "[IY7110] UNEXPECTED: Fail to load setting SQL file";
     // IY7111
-    public static final String IY7112 = "[IY7112] UNEXPECTED: Fail to load Oiyokan settings";
+    public static final String IY7112 = "[IY7112] WARN: Fail to load Oiyokan settings";
     // IY7113
     public static final String IY7114 = "[IY7114] UNEXPECTED: Database settings NOT found";
     public static final String IY7115 = "[IY7115] UNEXPECTED: Fail to create local table: Oiyokan";
@@ -208,11 +231,13 @@ public class OiyokanMessages {
     public static final String IY7119 = "[IY7119] UNEXPECTED: EntitySet settings NOT found.";
     public static final int IY7119_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
     public static final String IY7120 = "[IY7120] UNEXPECTED: null parameter given as EntitySet.";
-    public static final String IY7121 = "[IY7121] UNEXPECTED: EntitySet settings NOT found.";
+    public static final String IY7121 = "[IY7121] ERROR: Specified EntitySet settings NOT found.";
     public static final int IY7121_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
     public static final String IY7122 = "[IY7122] UNEXPECTED: EntitySet Property settings NOT found.";
     public static final String IY7123 = "[IY7123] UNEXPECTED: Fail to find Property from DB name.";
     public static final String IY7124 = "[IY7124] NOT SUPPORTED: Database type";
+
+    public static final String IY7130 = "[IY7130] WARN: No key provided EntitySet. Specify key no EntitySet.";
 
     public static final String IY7151 = "[IY7151] NOT SUPPORTED: JDBC Type";
     public static final String IY7152 = "[IY7152] NOT SUPPORTED: Edm Type";
@@ -220,6 +245,14 @@ public class OiyokanMessages {
     public static final String IY7154 = "[IY7154] NOT SUPPORTED: JDBC Type";
 
     public static final String IY7161 = "[IY7161] Error: Fail to parse DateTime string.";
+    public static final String IY7162 = "[IY7162] WARN: bind NULL value to an SQL statement, set Types.NULL because there is no type information.";
+    public static final String IY7163 = "[IY7163] WARN: bind NULL value to an SQL statement, set Types.NULL because there is no property object information.";
+    public static final String IY7164 = "[IY7164] WARN: bind NULL value to an SQL statement, set Types.NULL because there is no JDBC Type info in property information.";
+
+    public static final String IY7171 = "[IY7171] DEBUG: DB connect";
+    public static final String IY7172 = "[IY7172] INFO: setup oiyokanKan database";
+    public static final String IY7173 = "[IY7173] INFO: start to load oiyokan settings";
+    public static final String IY7174 = "[IY7174] INFO: load oiyokan settings";
 
     ////////////////////////////////////////////////////////////////////////////////
     // Authz (Server Side)
@@ -240,6 +273,30 @@ public class OiyokanMessages {
 
     ////////////////////////////////////////////////////////////////////////////////
     // IY91XX : System error
+
+    ////////////////////////////////////////////////////////////////////////////////
+    // IY95XX : Top level error
+    public static final String IY9501 = "[IY9501] ERROR: Register.serv: exception caught";
+    public static final String IY9511 = "[IY9511] WARN: EdmProvider.getEntityType: exception caught";
+    public static final String IY9512 = "[IY9512] ERROR: EdmProvider.getEntityType: runtime exception caught";
+    public static final String IY9513 = "[IY9513] WARN: EdmProvider.getEntitySet: exception caught";
+    public static final String IY9514 = "[IY9514] ERROR: EdmProvider.getEntitySet: runtime exception caught";
+    public static final String IY9515 = "[IY9515] WARN: EdmProvider.getEntityContainer: exception caught";
+    public static final String IY9516 = "[IY9516] ERROR: EdmProvider.getEntityContainer: runtime exception caught";
+    public static final String IY9517 = "[IY9517] WARN: EdmProvider.getSchemas: exception caught";
+    public static final String IY9518 = "[IY9518] ERROR: EdmProvider.getSchemas: runtime exception caught";
+    public static final String IY9519 = "[IY9519] WARN: EdmProvider.getEntityContainerInfo: exception caught";
+    public static final String IY9520 = "[IY9520] ERROR: EdmProvider.getEntityContainerInfo: runtime exception caught";
+    public static final String IY9521 = "[IY9521] WARN: EntityCollectionProcessor.readEntityCollection: exception caught";
+    public static final String IY9522 = "[IY9522] ERROR: EntityCollectionProcessor.readEntityCollection: runtime exception caught";
+    public static final String IY9531 = "[IY9531] WARN: EntityProcessor.readEntity: exception caught";
+    public static final String IY9532 = "[IY9532] ERROR: EntityProcessor.readEntity: runtime exception caught";
+    public static final String IY9533 = "[IY9533] WARN: EntityProcessor.createEntity: exception caught";
+    public static final String IY9534 = "[IY9534] ERROR: EntityProcessor.createEntity: runtime exception caught";
+    public static final String IY9535 = "[IY9535] WARN: EntityProcessor.updateEntity: exception caught";
+    public static final String IY9536 = "[IY9536] ERROR: EntityProcessor.updateEntity: runtime exception caught";
+    public static final String IY9537 = "[IY9537] WARN: EntityProcessor.deleteEntity: exception caught";
+    public static final String IY9538 = "[IY9538] ERROR: EntityProcessor.deleteEntity: runtime exception caught";
 
     ////////////////////////////////////////////////////////////////////////////////
     // IY9999 : Other error

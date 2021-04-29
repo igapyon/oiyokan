@@ -5,7 +5,7 @@
     {
       "name": "oiyokanKan",
       "type": "h2",
-      "description": "Oiyokan internal DB. Do not change.",
+      "description": "Oiyokan kanri DB.",
       "jdbcDriver": "org.h2.Driver",
       "jdbcUrl": "jdbc:h2:mem:oiyokan;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=FALSE;MODE=MSSQLServer",
       "jdbcUser": "sa",
@@ -14,13 +14,13 @@
   ],
   "entitySet": [
     {
-      "name": "Oiyokans",
+      "name": "Oiyokan",
       "description": "Oiyokan internal info. Do not change.",
       "dbSettingName": "oiyokanKan",
-      "canCreate": true,
+      "canCreate": false,
       "canRead": true,
-      "canUpdate": true,
-      "canDelete": true,
+      "canUpdate": false,
+      "canDelete": false,
       "omitCountAll": false,
       "jdbcStmtTimeout": 30,
       "entityType": {
@@ -35,11 +35,10 @@
             "jdbcType": "Types.VARCHAR",
             "dbType": "VARCHAR",
             "jdbcSetMethod": "setString",
+            "autoGenKey": false,
             "nullable": false,
             "maxLength": 20,
-            "lengthFixed": false,
-            "precision": null,
-            "scale": null
+            "lengthFixed": false
           },
           {
             "name": "KeyValue",
@@ -53,8 +52,8 @@
             "lengthFixed": false,
             "precision": null,
             "scale": null,
-            "dbDefault": "Value",
-            "filterTreatNullAsBlank": false
+            "dbDefault": "Default Value",
+            "filterTreatNullAsBlank": true
           }
         ]
       }

@@ -18,6 +18,8 @@ package jp.oiyokan.common;
 import java.util.ArrayList;
 import java.util.List;
 
+import jp.oiyokan.dto.OiyoSettingsProperty;
+
 /**
  * SQL文を構築するための簡易クラスの、SQL構築のデータ構造.
  * 
@@ -35,7 +37,8 @@ public class OiyoSqlInfo {
 
     private final StringBuilder sqlBuilder = new StringBuilder();
     private final List<String> selectColumnNameList = new ArrayList<>();
-    private final List<Object> sqlParamList = new ArrayList<>();
+    private final List<OiyoSettingsProperty> binaryOperatorEqPropertyList = new ArrayList<>();
+    private final List<SqlParam> sqlParamList = new ArrayList<>();
 
     /**
      * BasicSqlInfo Constructor.
@@ -79,7 +82,29 @@ public class OiyoSqlInfo {
      * 
      * @return SQLパラメータのリスト.
      */
-    public List<Object> getSqlParamList() {
+    public List<SqlParam> getSqlParamList() {
         return sqlParamList;
+    }
+
+    public List<OiyoSettingsProperty> getBinaryOperatorEqPropertyList() {
+        return binaryOperatorEqPropertyList;
+    }
+
+    public static class SqlParam {
+        private OiyoSettingsProperty property = null;
+        private Object value = null;
+
+        public SqlParam(OiyoSettingsProperty property, Object value) {
+            this.property = property;
+            this.value = value;
+        }
+
+        public OiyoSettingsProperty getProperty() {
+            return property;
+        }
+
+        public Object getValue() {
+            return value;
+        }
     }
 }
