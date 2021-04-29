@@ -45,7 +45,7 @@ class UnitTestTypeChar05Test {
                         + "  \"StringChar8\": null\n" //
                         + "}");
         String result = OiyokanTestUtil.stream2String(resp.getContent());
-        // log.debug(result);
+        log.debug(result);
         final String idString = OiyokanTestUtil.getValueFromResultByKey(result, "ID");
         assertEquals(201, resp.getStatusCode(), "");
 
