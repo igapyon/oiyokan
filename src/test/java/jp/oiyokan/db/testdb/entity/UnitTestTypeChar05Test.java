@@ -40,7 +40,7 @@ class UnitTestTypeChar05Test {
 
         // 全項目をデフォルト値でセット。
         // StringChar8 だけは null にセット.
-        ODataResponse resp = OiyokanTestUtil.callRequestPost("/ODataTests1", //
+        ODataResponse resp = OiyokanTestUtil.callPost("/ODataTest1", //
                 "{\n" //
                         + "  \"StringChar8\": null\n" //
                         + "}");
@@ -50,7 +50,7 @@ class UnitTestTypeChar05Test {
         assertEquals(201, resp.getStatusCode(), "");
 
         /// 通常のfilter
-        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1",
+        resp = OiyokanTestUtil.callGet("/ODataTest1",
                 "$select=ID,StringChar8&$filter=ID eq " + idString + " and StringChar8 eq null");
         result = OiyokanTestUtil.stream2String(resp.getContent());
         assertEquals("null", OiyokanTestUtil.getValueFromResultByKey(result, "StringChar8"), result);
@@ -58,7 +58,7 @@ class UnitTestTypeChar05Test {
         assertEquals(200, resp.getStatusCode());
 
         // DELETE
-        resp = OiyokanTestUtil.callRequestDelete("/ODataTests1(" + idString + ")");
+        resp = OiyokanTestUtil.callDelete("/ODataTest1(" + idString + ")");
         result = OiyokanTestUtil.stream2String(resp.getContent());
         // System.err.println(result);
         assertEquals(204, resp.getStatusCode());

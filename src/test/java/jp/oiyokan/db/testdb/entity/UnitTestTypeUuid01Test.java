@@ -36,27 +36,27 @@ class UnitTestTypeUuid01Test {
 
         final int TEST_ID = OiyokanTestUtil.getNextUniqueId();
 
-        ODataResponse resp = OiyokanTestUtil.callRequestPost("/ODataTests7", "{\n" //
+        ODataResponse resp = OiyokanTestUtil.callPost("/ODataTest7", "{\n" //
                 + "  \"ID\":" + TEST_ID + "\n" //
                 + "}");
         String result = OiyokanTestUtil.stream2String(resp.getContent());
         assertTrue(
-                result.startsWith("{\"@odata.context\":\"$metadata#ODataTests7\",\"ID\":" + TEST_ID
+                result.startsWith("{\"@odata.context\":\"$metadata#ODataTest7\",\"ID\":" + TEST_ID
                         + ",\"Name\":\"UUID UnitTest\",\"Description\":\"UUID UnitTest table.\",\"Uuid1\":"), //
                 "INSERTできることを確認. MySQLではエラー Binary1が固定長扱いで後方に自動埋め込みが発生(既知の問題。だが解決方法にアイデア現状なし), SQLSV2008でエラー(既知の問題), ORCL18でエラー(既知の問題)");
         assertEquals(201, resp.getStatusCode());
 
-        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests7(" + TEST_ID + ")", null);
+        resp = OiyokanTestUtil.callGet("/ODataTest7(" + TEST_ID + ")", null);
         result = OiyokanTestUtil.stream2String(resp.getContent());
         // System.err.println(result);
         assertEquals(200, resp.getStatusCode(), "INSERTしたレコードが格納されていることを確認.");
 
         /// 通常のfilter
-        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests7", "$filter=ID eq " + TEST_ID);
+        resp = OiyokanTestUtil.callGet("/ODataTest7", "$filter=ID eq " + TEST_ID);
         result = OiyokanTestUtil.stream2String(resp.getContent());
         // System.err.println("TRACE: " + result);
         assertTrue(
-                result.startsWith("{\"@odata.context\":\"$metadata#ODataTests7\",\"value\":[{\"ID\":" + TEST_ID
+                result.startsWith("{\"@odata.context\":\"$metadata#ODataTest7\",\"value\":[{\"ID\":" + TEST_ID
                         + ",\"Name\":\"UUID UnitTest\",\"Description\":\"UUID UnitTest table.\",\"Uuid1\":"), //
                 "通常のFILTER検索ができることを確認.");
         assertEquals(200, resp.getStatusCode());
@@ -65,10 +65,10 @@ class UnitTestTypeUuid01Test {
         // System.err.println(uuid1String);
 
         // DELETE
-        resp = OiyokanTestUtil.callRequestDelete("/ODataTests7(" + TEST_ID + ")");
+        resp = OiyokanTestUtil.callDelete("/ODataTest7(" + TEST_ID + ")");
         assertEquals(204, resp.getStatusCode(), "DELETEできることを確認.");
 
-        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests7(" + TEST_ID + ")", null);
+        resp = OiyokanTestUtil.callGet("/ODataTest7(" + TEST_ID + ")", null);
         assertEquals(404, resp.getStatusCode(), "DELETEされたことを確認.");
     }
 }

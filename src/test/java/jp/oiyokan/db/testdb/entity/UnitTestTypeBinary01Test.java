@@ -35,7 +35,7 @@ class UnitTestTypeBinary01Test {
         @SuppressWarnings("unused")
         final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
 
-        ODataResponse resp = OiyokanTestUtil.callRequestPost("/ODataTests6", "{\n" //
+        ODataResponse resp = OiyokanTestUtil.callPost("/ODataTest6", "{\n" //
                 + "  \"Binary1\":\"VG9uYXJpIG5vIGt5YWt1Lg==\"\n" //
                 + "  , \"VarBinary1\":\"VG9uYXJpIG5vIGt5YWt1Lg==\"\n" //
                 + "  , \"LongVarBinary1\":\"VG9uYXJpIG5vIGt5YWt1Lg==\"\n" //
@@ -48,20 +48,20 @@ class UnitTestTypeBinary01Test {
         assertEquals("\"VG9uYXJpIG5vIGt5YWt1Lg==\"", OiyokanTestUtil.getValueFromResultByKey(result, "Blob1"));
         assertEquals(201, resp.getStatusCode());
 
-        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests6(" + idString + ")", null);
+        resp = OiyokanTestUtil.callGet("/ODataTest6(" + idString + ")", null);
         result = OiyokanTestUtil.stream2String(resp.getContent());
         // System.err.println(result);
         assertEquals(200, resp.getStatusCode(), "INSERTしたレコードが格納されていることを確認.");
 
         // UPDATE (PATCH)
-        resp = OiyokanTestUtil.callRequestPatch("/ODataTests6(" + idString + ")", "{\n" //
+        resp = OiyokanTestUtil.callPatch("/ODataTest6(" + idString + ")", "{\n" //
                 + "  \"VarBinary1\":\"SG91cnl1amku\"\n" //
                 + "}", false, false);
         result = OiyokanTestUtil.stream2String(resp.getContent());
         // System.err.println(result);
         assertEquals(204, resp.getStatusCode(), "UPDATE(PATCH)できることを確認.");
 
-        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests6(" + idString + ")", null);
+        resp = OiyokanTestUtil.callGet("/ODataTest6(" + idString + ")", null);
         result = OiyokanTestUtil.stream2String(resp.getContent());
         assertEquals("\"SG91cnl1amku\"", OiyokanTestUtil.getValueFromResultByKey(result, "VarBinary1"),
                 "UPDATE(PATCH)後の値をEntity Readで確認.");
@@ -70,7 +70,7 @@ class UnitTestTypeBinary01Test {
         assertEquals(200, resp.getStatusCode());
 
         /// 通常のfilter
-        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests6", "$filter=ID eq " + idString);
+        resp = OiyokanTestUtil.callGet("/ODataTest6", "$filter=ID eq " + idString);
         result = OiyokanTestUtil.stream2String(resp.getContent());
         assertEquals("\"SG91cnl1amku\"", OiyokanTestUtil.getValueFromResultByKey(result, "VarBinary1"),
                 "UPDATE(PATCH)後の値を$filterから確認.");
@@ -79,10 +79,10 @@ class UnitTestTypeBinary01Test {
         assertEquals(200, resp.getStatusCode());
 
         // DELETE
-        resp = OiyokanTestUtil.callRequestDelete("/ODataTests6(" + idString + ")");
+        resp = OiyokanTestUtil.callDelete("/ODataTest6(" + idString + ")");
         assertEquals(204, resp.getStatusCode(), "DELETEできることを確認.");
 
-        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests6(" + idString + ")", null);
+        resp = OiyokanTestUtil.callGet("/ODataTest6(" + idString + ")", null);
         assertEquals(404, resp.getStatusCode(), "DELETEされたことを確認.");
     }
 }

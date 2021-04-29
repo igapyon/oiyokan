@@ -44,45 +44,45 @@ class UnitTestEntityPatchUpdate01Test {
 
         // UPDATE (PATCH)
         // Decimal1,StringChar8,StringVar255
-        ODataResponse resp = OiyokanTestUtil.callRequestPatch("/ODataTests2(" + key + ")", "{\n" //
+        ODataResponse resp = OiyokanTestUtil.callPatch("/ODataTest2(" + key + ")", "{\n" //
                 + "  \"Name\":\"Name2\",\n" //
                 + "  \"Description\":\"Description2\"\n" + "}", true, false);
         assertEquals(304, resp.getStatusCode(), "最初は存在しない.");
 
-        resp = OiyokanTestUtil.callRequestPatch("/ODataTests2(" + key + ")", "{\n" //
+        resp = OiyokanTestUtil.callPatch("/ODataTest2(" + key + ")", "{\n" //
                 + "  \"Name\":\"Name2\",\n" //
                 + "  \"Description\":\"Description2\"\n" + "}", false, false);
         // 戻り値は気にしない.
 
         // UPDATE (PATCH)
         // Decimal1,StringChar8,StringVar255
-        resp = OiyokanTestUtil.callRequestPatch("/ODataTests2(" + key + ")", "{\n" //
+        resp = OiyokanTestUtil.callPatch("/ODataTest2(" + key + ")", "{\n" //
                 + "  \"Name\":\"Name2\",\n" //
                 + "  \"Description\":\"Description2\"\n" + "}", true, false);
         assertEquals(204, resp.getStatusCode(), "存在するので更新は成功.");
 
-        resp = OiyokanTestUtil.callRequestGetResponse( //
-                "/ODataTests2", OiyoUrlUtil.encodeUrlQuery("$select=Decimal1,StringChar8,StringVar255"));
+        resp = OiyokanTestUtil.callGet( //
+                "/ODataTest2", OiyoUrlUtil.encodeUrlQuery("$select=Decimal1,StringChar8,StringVar255"));
         @SuppressWarnings("unused")
         String result = OiyokanTestUtil.stream2String(resp.getContent());
         // System.err.println(result);
 
         // INSERTした後なので存在する
-        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests2(" + key + ")", null);
+        resp = OiyokanTestUtil.callGet("/ODataTest2(" + key + ")", null);
         result = OiyokanTestUtil.stream2String(resp.getContent());
         // System.err.println(result);
         assertEquals(200, resp.getStatusCode(), "存在チェック");
 
         // DELETE
-        resp = OiyokanTestUtil.callRequestDelete("/ODataTests2(" + key + ")");
+        resp = OiyokanTestUtil.callDelete("/ODataTest2(" + key + ")");
         assertEquals(204, resp.getStatusCode(), "削除できたら204");
 
         // DELETEできない
-        resp = OiyokanTestUtil.callRequestDelete("/ODataTests2(" + key + ")");
+        resp = OiyokanTestUtil.callDelete("/ODataTest2(" + key + ")");
         assertEquals(404, resp.getStatusCode(), "削除できなかったら404");
 
         // DELETE したあとなので存在しない.
-        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests2(" + key + ")", null);
+        resp = OiyokanTestUtil.callGet("/ODataTest2(" + key + ")", null);
         assertEquals(404, resp.getStatusCode());
     }
 }

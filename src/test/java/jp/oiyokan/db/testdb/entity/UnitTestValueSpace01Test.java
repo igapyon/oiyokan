@@ -36,49 +36,49 @@ class UnitTestValueSpace01Test {
         final int TEST_ID = OiyokanTestUtil.getNextUniqueId();
 
         // INSERT + DELETE
-        ODataResponse resp = OiyokanTestUtil.callRequestPost("/ODataTests4", "{\n" //
+        ODataResponse resp = OiyokanTestUtil.callPost("/ODataTest4", "{\n" //
                 + "  \"I_D\":" + TEST_ID + ",\n" //
                 + "  \"Na_me\":\"Name\"\n" //
                 + "}");
         String result = OiyokanTestUtil.stream2String(resp.getContent());
         // System.err.println(result);
         assertEquals(201, resp.getStatusCode(), "ORCL18でエラー(既知の問題)");
-        assertEquals("{\"@odata.context\":\"$metadata#ODataTests4\",\"I_D\":" + TEST_ID
+        assertEquals("{\"@odata.context\":\"$metadata#ODataTest4\",\"I_D\":" + TEST_ID
                 + ",\"Na_me\":\"Name\",\"Va_lue1\":\"VALUEVALUE12345\"}", result);
 
-        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests4(I_D=" + TEST_ID + ",Na_me='Name')", null);
+        resp = OiyokanTestUtil.callGet("/ODataTest4(I_D=" + TEST_ID + ",Na_me='Name')", null);
         result = OiyokanTestUtil.stream2String(resp.getContent());
         // System.err.println(result);
         assertEquals(200, resp.getStatusCode());
 
         // UPDATE (PATCH)
-        resp = OiyokanTestUtil.callRequestPatch("/ODataTests4(I_D=" + TEST_ID + ",Na_me='Name')", "{\n" //
+        resp = OiyokanTestUtil.callPatch("/ODataTest4(I_D=" + TEST_ID + ",Na_me='Name')", "{\n" //
                 + "  \"Na_me\":\"Name2\",\n" //
                 + "  \"Va_lue1\":\"Description2\"\n" + "}", false, false);
         result = OiyokanTestUtil.stream2String(resp.getContent());
         // System.err.println(result);
         assertEquals(204, resp.getStatusCode());
 
-        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests4(I_D=" + TEST_ID + ",Na_me='Name2')", null);
+        resp = OiyokanTestUtil.callGet("/ODataTest4(I_D=" + TEST_ID + ",Na_me='Name2')", null);
         assertEquals(200, resp.getStatusCode());
 
         /// 通常のfilter
-        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests4", "$filter=I_D eq " + TEST_ID);
+        resp = OiyokanTestUtil.callGet("/ODataTest4", "$filter=I_D eq " + TEST_ID);
         result = OiyokanTestUtil.stream2String(resp.getContent());
         // System.err.println(result);
         assertEquals(200, resp.getStatusCode());
 
         // Entity
-        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests4(I_D=" + TEST_ID + ",Na_me='Name2')", null);
+        resp = OiyokanTestUtil.callGet("/ODataTest4(I_D=" + TEST_ID + ",Na_me='Name2')", null);
         result = OiyokanTestUtil.stream2String(resp.getContent());
         // System.err.println(result);
         assertEquals(200, resp.getStatusCode());
 
         // DELETE
-        resp = OiyokanTestUtil.callRequestDelete("/ODataTests4(I_D=" + TEST_ID + ",Na_me='Name2')");
+        resp = OiyokanTestUtil.callDelete("/ODataTest4(I_D=" + TEST_ID + ",Na_me='Name2')");
         assertEquals(204, resp.getStatusCode());
 
-        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests4(I_D=" + TEST_ID + ",Na_me='Name2')", null);
+        resp = OiyokanTestUtil.callGet("/ODataTest4(I_D=" + TEST_ID + ",Na_me='Name2')", null);
         assertEquals(404, resp.getStatusCode());
     }
 }

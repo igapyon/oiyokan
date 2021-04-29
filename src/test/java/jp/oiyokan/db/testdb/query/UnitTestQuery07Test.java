@@ -33,13 +33,13 @@ class UnitTestQuery07Test {
         @SuppressWarnings("unused")
         final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
 
-        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1",
+        final ODataResponse resp = OiyokanTestUtil.callGet("/ODataTest1",
                 "$top=2 &$skip=2 &$filter=Decimal1 eq 1234.56 &$orderby=ID &$count=true &$select=ID");
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         // System.err.println("result: " + result);
         assertEquals(
-                "{\"@odata.context\":\"$metadata#ODataTests1\",\"@odata.count\":204,\"value\":[{\"ID\":3,\"Decimal1\":1234.56},{\"ID\":4,\"Decimal1\":1234.56}]}",
+                "{\"@odata.context\":\"$metadata#ODataTest1\",\"@odata.count\":204,\"value\":[{\"ID\":3,\"Decimal1\":1234.56},{\"ID\":4,\"Decimal1\":1234.56}]}",
                 result);
         assertEquals(200, resp.getStatusCode());
     }

@@ -35,14 +35,14 @@ class UnitTestQueryBinaryEq02Test {
         @SuppressWarnings("unused")
         final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
 
-        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse( //
-                "/ODataTests1", //
+        final ODataResponse resp = OiyokanTestUtil.callGet( //
+                "/ODataTest1", //
                 OiyoUrlUtil
                         .encodeUrlQuery("&$filter=32767 eq Int16a &$top=3 &$count=true &$select=ID &$orderby=ID asc"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         assertEquals(
-                "{\"@odata.context\":\"$metadata#ODataTests1\",\"@odata.count\":204,\"value\":[{\"ID\":1,\"Int16a\":32767},{\"ID\":2,\"Int16a\":32767},{\"ID\":3,\"Int16a\":32767}]}",
+                "{\"@odata.context\":\"$metadata#ODataTest1\",\"@odata.count\":204,\"value\":[{\"ID\":1,\"Int16a\":32767},{\"ID\":2,\"Int16a\":32767},{\"ID\":3,\"Int16a\":32767}]}",
                 result);
         assertEquals(200, resp.getStatusCode());
     }

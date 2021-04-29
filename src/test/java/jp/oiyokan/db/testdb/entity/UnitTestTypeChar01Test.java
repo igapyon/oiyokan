@@ -34,7 +34,7 @@ class UnitTestTypeChar01Test {
         final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
 
         // 左右の文字が正しいことを確認
-        ODataResponse resp = OiyokanTestUtil.callRequestPost("/ODataTests3", //
+        ODataResponse resp = OiyokanTestUtil.callPost("/ODataTest3", //
                 "{\n" //
                         + "  \"Name\": \"左右確認\",\n" //
                         + "  \"Description\": \"CHARの左右の挙動確認\",\n" //
@@ -45,24 +45,23 @@ class UnitTestTypeChar01Test {
         // System.err.println("TRACE: " + result);
         assertEquals(201, resp.getStatusCode());
 
-        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests3(" + idString + ")", null);
+        resp = OiyokanTestUtil.callGet("/ODataTest3(" + idString + ")", null);
         assertEquals(200, resp.getStatusCode());
         result = OiyokanTestUtil.stream2String(resp.getContent());
         // System.err.println(result);
 
         /// 通常のfilter
-        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests3",
-                "$filter=ID eq " + idString + "&$select=StringChar8");
+        resp = OiyokanTestUtil.callGet("/ODataTest3", "$filter=ID eq " + idString + "&$select=StringChar8");
         result = OiyokanTestUtil.stream2String(resp.getContent());
-        assertEquals("{\"@odata.context\":\"$metadata#ODataTests3\",\"value\":[{\"ID\":" + idString
+        assertEquals("{\"@odata.context\":\"$metadata#ODataTest3\",\"value\":[{\"ID\":" + idString
                 + ",\"StringChar8\":\"  C456  \"}]}", result, "前後空白付きでFILTER検索できることを確認.");
         assertEquals(200, resp.getStatusCode());
 
         // DELETE
-        resp = OiyokanTestUtil.callRequestDelete("/ODataTests3(" + idString + ")");
+        resp = OiyokanTestUtil.callDelete("/ODataTest3(" + idString + ")");
         assertEquals(204, resp.getStatusCode());
 
-        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests3(" + idString + ")", null);
+        resp = OiyokanTestUtil.callGet("/ODataTest3(" + idString + ")", null);
         assertEquals(404, resp.getStatusCode());
     }
 }

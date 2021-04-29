@@ -36,7 +36,7 @@ class UnitTestQuery12Test {
     void testStringVar255WithAndOr() throws Exception {
         final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
 
-        OiyoSettingsDatabase database = OiyoInfoUtil.getOiyoDatabaseByEntitySetName(oiyoInfo, "ODataTests1");
+        OiyoSettingsDatabase database = OiyoInfoUtil.getOiyoDatabaseByEntitySetName(oiyoInfo, "ODataTest1");
         OiyokanConstants.DatabaseType databaseType = OiyokanConstants.DatabaseType.valueOf(database.getType());
         switch (databaseType) {
         case SQLSV2008:
@@ -47,14 +47,14 @@ class UnitTestQuery12Test {
             break;
         }
 
-        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse( //
-                "/ODataTests1", OiyoUrlUtil.encodeUrlQuery(
+        final ODataResponse resp = OiyokanTestUtil.callGet( //
+                "/ODataTest1", OiyoUrlUtil.encodeUrlQuery(
                         "&$filter=StringVar255 eq 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' or StringVar255 eq 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' and StringLongVar1 eq 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' or Clob1 eq 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' &$count=true &$select=ID"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         // System.err.println("result: " + result);
         assertEquals(
-                "{\"@odata.context\":\"$metadata#ODataTests1\",\"@odata.count\":1,\"value\":[{\"ID\":204,\"StringVar255\":\"ABCDEFGHIJKLMNOPQRSTUVWXYZ\",\"StringLongVar1\":\"ABCDEFGHIJKLMNOPQRSTUVWXYZ\",\"Clob1\":\"ABCDEFGHIJKLMNOPQRSTUVWXYZ\"}]}",
+                "{\"@odata.context\":\"$metadata#ODataTest1\",\"@odata.count\":1,\"value\":[{\"ID\":204,\"StringVar255\":\"ABCDEFGHIJKLMNOPQRSTUVWXYZ\",\"StringLongVar1\":\"ABCDEFGHIJKLMNOPQRSTUVWXYZ\",\"Clob1\":\"ABCDEFGHIJKLMNOPQRSTUVWXYZ\"}]}",
                 result, "SQLSV2008でエラー(既知の問題), ORCL18でエラー(既知の問題)");
         assertEquals(200, resp.getStatusCode());
     }

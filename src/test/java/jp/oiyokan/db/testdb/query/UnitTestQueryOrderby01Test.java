@@ -33,12 +33,12 @@ class UnitTestQueryOrderby01Test {
         @SuppressWarnings("unused")
         final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
 
-        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1",
+        final ODataResponse resp = OiyokanTestUtil.callGet("/ODataTest1",
                 "$orderby=ID&$top=1&$select=ID,Name,Description");
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         assertEquals(
-                "{\"@odata.context\":\"$metadata#ODataTests1\",\"value\":[{\"ID\":1,\"Name\":\"MacBookPro16,2\",\"Description\":\"MacBook Pro (13-inch, 2020, Thunderbolt 3ポートx 4)\"}]}",
+                "{\"@odata.context\":\"$metadata#ODataTest1\",\"value\":[{\"ID\":1,\"Name\":\"MacBookPro16,2\",\"Description\":\"MacBook Pro (13-inch, 2020, Thunderbolt 3ポートx 4)\"}]}",
                 result);
         assertEquals(200, resp.getStatusCode());
     }

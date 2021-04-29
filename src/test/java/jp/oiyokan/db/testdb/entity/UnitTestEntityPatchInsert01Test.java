@@ -43,35 +43,35 @@ class UnitTestEntityPatchInsert01Test {
         // 存在しないのでINSERTになるケース.
         // Decimal1,StringChar8,StringVar255
         final String key = "Decimal1=543.21,StringChar8='ZZYYXX12',StringVar255='Val" + TEST_ID + "'";
-        ODataResponse resp = OiyokanTestUtil.callRequestPatch("/ODataTests2(" + key + ")", "{\n" //
+        ODataResponse resp = OiyokanTestUtil.callPatch("/ODataTest2(" + key + ")", "{\n" //
                 + "  \"Name\":\"Name2\",\n" //
                 + "  \"Description\":\"Description2\"\n" + "}", false, true);
         assertEquals(204, resp.getStatusCode());
 
-        resp = OiyokanTestUtil.callRequestGetResponse( //
-                "/ODataTests2", OiyoUrlUtil.encodeUrlQuery("$select=Decimal1,StringChar8,StringVar255"));
+        resp = OiyokanTestUtil.callGet( //
+                "/ODataTest2", OiyoUrlUtil.encodeUrlQuery("$select=Decimal1,StringChar8,StringVar255"));
         @SuppressWarnings("unused")
         String result = OiyokanTestUtil.stream2String(resp.getContent());
         // System.err.println(result);
 
         // INSERTした後なので存在する
-        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests2(" + key + ")", null);
+        resp = OiyokanTestUtil.callGet("/ODataTest2(" + key + ")", null);
         result = OiyokanTestUtil.stream2String(resp.getContent());
         System.err.println(result);
         assertEquals(200, resp.getStatusCode());
 
         // 2回目はエラー
-        resp = OiyokanTestUtil.callRequestPatch("/ODataTests2(" + key + ")", "{\n" //
+        resp = OiyokanTestUtil.callPatch("/ODataTest2(" + key + ")", "{\n" //
                 + "  \"Name\":\"Name2\",\n" //
                 + "  \"Description\":\"Description2\"\n" + "}", false, true);
         assertEquals(304, resp.getStatusCode());
 
         // DELETE
-        resp = OiyokanTestUtil.callRequestDelete("/ODataTests2(" + key + ")");
+        resp = OiyokanTestUtil.callDelete("/ODataTest2(" + key + ")");
         assertEquals(204, resp.getStatusCode());
 
         // DELETE したあとなので存在しない.
-        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests2(" + key + ")", null);
+        resp = OiyokanTestUtil.callGet("/ODataTest2(" + key + ")", null);
         assertEquals(404, resp.getStatusCode());
     }
 }

@@ -37,7 +37,7 @@ class UnitTestTypeChar02Test {
         final String decVal = "1304";
 
         // キーの文字列
-        ODataResponse resp = OiyokanTestUtil.callRequestPost("/ODataTests2", //
+        ODataResponse resp = OiyokanTestUtil.callPost("/ODataTest2", //
                 "{\n" //
                         + "  \"Decimal1\": " + decVal + ",\n" //
                         + "  \"StringChar8\": \"12345678\",\n" //
@@ -50,27 +50,27 @@ class UnitTestTypeChar02Test {
         // System.err.println("TRACE: " + result);
         assertEquals(201, resp.getStatusCode());
 
-        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests2", null);
+        resp = OiyokanTestUtil.callGet("/ODataTest2", null);
         result = OiyokanTestUtil.stream2String(resp.getContent());
         // System.err.println(result);
         assertEquals(200, resp.getStatusCode());
 
         String uri = "Decimal1=" + decVal + ",StringChar8='12345678',StringVar255='ABCXYZ'";
         // System.err.println("uri: " + uri);
-        resp = OiyokanTestUtil.callRequestGetResponse( //
-                "/ODataTests2(" + OiyoUrlUtil.encodeUrlQuery(uri) + ")", null);
+        resp = OiyokanTestUtil.callGet( //
+                "/ODataTest2(" + OiyoUrlUtil.encodeUrlQuery(uri) + ")", null);
         result = OiyokanTestUtil.stream2String(resp.getContent());
         // System.err.println(result);
         assertEquals(200, resp.getStatusCode());
 
         // DELETE
-        resp = OiyokanTestUtil.callRequestDelete("/ODataTests2(" + OiyoUrlUtil.encodeUrlQuery(uri) + ")");
+        resp = OiyokanTestUtil.callDelete("/ODataTest2(" + OiyoUrlUtil.encodeUrlQuery(uri) + ")");
         result = OiyokanTestUtil.stream2String(resp.getContent());
         // System.err.println(result);
         assertEquals(204, resp.getStatusCode());
 
-        resp = OiyokanTestUtil.callRequestGetResponse( //
-                "/ODataTests2(" + OiyoUrlUtil.encodeUrlQuery(uri) + ")", null);
+        resp = OiyokanTestUtil.callGet( //
+                "/ODataTest2(" + OiyoUrlUtil.encodeUrlQuery(uri) + ")", null);
         assertEquals(404, resp.getStatusCode());
     }
 }

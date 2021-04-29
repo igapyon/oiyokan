@@ -34,7 +34,7 @@ class UnitTestEntityPostAll01Test {
         final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
 
         // FULL INSERT
-        ODataResponse resp = OiyokanTestUtil.callRequestPost("/ODataTests3", //
+        ODataResponse resp = OiyokanTestUtil.callPost("/ODataTest3", //
                 "{\n" //
                         + "  \"Name\": \"Name\",\n" //
                         + "  \"Description\": \"Description\",\n" //
@@ -63,17 +63,17 @@ class UnitTestEntityPostAll01Test {
         assertEquals(201, resp.getStatusCode(), //
                 "POSTによるINSERTが成功すること。既知の問題. Postgresにおいて、uuidのエラーで失敗する (既知の問題), MySQLでもUUIDの桁溢れエラー (既知の問題)");
 
-        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests3(" + idString + ")", null);
+        resp = OiyokanTestUtil.callGet("/ODataTest3(" + idString + ")", null);
         result = OiyokanTestUtil.stream2String(resp.getContent());
         // System.err.println(result);
         assertEquals(200, resp.getStatusCode());
 
         // DELETE
-        resp = OiyokanTestUtil.callRequestDelete("/ODataTests3(" + idString + ")");
+        resp = OiyokanTestUtil.callDelete("/ODataTest3(" + idString + ")");
         assertEquals(204, resp.getStatusCode(), "DELETEが成功すること.");
 
         // after DELETE
-        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests3(" + idString + ")", null);
+        resp = OiyokanTestUtil.callGet("/ODataTest3(" + idString + ")", null);
         assertEquals(404, resp.getStatusCode(), "DELETEのあとはレコードが存在しない.");
     }
 }

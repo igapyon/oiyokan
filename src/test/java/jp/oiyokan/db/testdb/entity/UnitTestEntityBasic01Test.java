@@ -38,7 +38,7 @@ class UnitTestEntityBasic01Test {
         final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
 
         // INSERT + DELETE
-        ODataResponse resp = OiyokanTestUtil.callRequestPost("/ODataTests3", "{\n" //
+        ODataResponse resp = OiyokanTestUtil.callPost("/ODataTest3", "{\n" //
                 + "  \"Name\":\"Name\",\n" //
                 + "  \"Description\":\"Description\"\n" + "}");
         String result = OiyokanTestUtil.stream2String(resp.getContent());
@@ -46,15 +46,15 @@ class UnitTestEntityBasic01Test {
         final String idString = OiyokanTestUtil.getValueFromResultByKey(result, "ID");
         assertEquals(201, resp.getStatusCode(), "SQLSV2008でエラー。(既知の問題). varbinaryとtextと混同.");
 
-        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests3(" + idString + ")", null);
+        resp = OiyokanTestUtil.callGet("/ODataTest3(" + idString + ")", null);
         assertEquals(200, resp.getStatusCode());
 
         // DELETE
-        resp = OiyokanTestUtil.callRequestDelete("/ODataTests3(" + idString + ")");
+        resp = OiyokanTestUtil.callDelete("/ODataTest3(" + idString + ")");
         assertEquals(204, resp.getStatusCode());
 
         // NOT FOUND after DELETED
-        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests3(" + idString + ")", null);
+        resp = OiyokanTestUtil.callGet("/ODataTest3(" + idString + ")", null);
         assertEquals(404, resp.getStatusCode());
     }
 }

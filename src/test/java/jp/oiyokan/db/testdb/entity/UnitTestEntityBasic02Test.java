@@ -37,7 +37,7 @@ class UnitTestEntityBasic02Test {
         final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
 
         // INSERT
-        ODataResponse resp = OiyokanTestUtil.callRequestPost("/ODataTests3", "{\n" //
+        ODataResponse resp = OiyokanTestUtil.callPost("/ODataTest3", "{\n" //
                 + "  \"Name\":\"Name\",\n" //
                 + "  \"Description\":\"Description\"\n" + "}");
         String result = OiyokanTestUtil.stream2String(resp.getContent());
@@ -46,25 +46,25 @@ class UnitTestEntityBasic02Test {
         assertEquals(201, resp.getStatusCode());
 
         // SELECT
-        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests3(" + idString + ")", null);
+        resp = OiyokanTestUtil.callGet("/ODataTest3(" + idString + ")", null);
         result = OiyokanTestUtil.stream2String(resp.getContent());
         // System.err.println(result);
         assertEquals(200, resp.getStatusCode());
 
         // UPDATE (PATCH)
-        resp = OiyokanTestUtil.callRequestPatch("/ODataTests3(" + idString + ")", "{\n" //
+        resp = OiyokanTestUtil.callPatch("/ODataTest3(" + idString + ")", "{\n" //
                 + "  \"Name\":\"Name2\",\n" //
                 + "  \"Description\":\"Description2\"\n" + "}", false, false);
         assertEquals(204, resp.getStatusCode());
 
-        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests3(" + idString + ")", null);
+        resp = OiyokanTestUtil.callGet("/ODataTest3(" + idString + ")", null);
         assertEquals(200, resp.getStatusCode());
 
         // DELETE
-        resp = OiyokanTestUtil.callRequestDelete("/ODataTests3(" + idString + ")");
+        resp = OiyokanTestUtil.callDelete("/ODataTest3(" + idString + ")");
         assertEquals(204, resp.getStatusCode());
 
-        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests3(" + idString + ")", null);
+        resp = OiyokanTestUtil.callGet("/ODataTest3(" + idString + ")", null);
         assertEquals(404, resp.getStatusCode());
     }
 }

@@ -34,16 +34,16 @@ class UnitTestQuery03Test {
     @Test
     void testBoolean() throws Exception {
         final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
-        OiyoSettingsDatabase database = OiyoInfoUtil.getOiyoDatabaseByEntitySetName(oiyoInfo, "ODataTests1");
+        OiyoSettingsDatabase database = OiyoInfoUtil.getOiyoDatabaseByEntitySetName(oiyoInfo, "ODataTest1");
         OiyokanConstants.DatabaseType databaseType = OiyokanConstants.DatabaseType.valueOf(database.getType());
 
-        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests1",
+        final ODataResponse resp = OiyokanTestUtil.callGet("/ODataTest1",
                 "$filter=Boolean1 eq false&$orderby=ID&$select=ID&$top=1");
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         switch (databaseType) {
         default:
-            assertEquals("{\"@odata.context\":\"$metadata#ODataTests1\",\"value\":[{\"ID\":1,\"Boolean1\":false}]}",
+            assertEquals("{\"@odata.context\":\"$metadata#ODataTest1\",\"value\":[{\"ID\":1,\"Boolean1\":false}]}",
                     result);
             assertEquals(200, resp.getStatusCode());
             break;

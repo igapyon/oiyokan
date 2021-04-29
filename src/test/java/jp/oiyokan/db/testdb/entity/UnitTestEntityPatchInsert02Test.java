@@ -40,7 +40,7 @@ class UnitTestEntityPatchInsert02Test {
 
         // INSERT (PATCH)
         // 存在しないのでINSERTになるケース.
-        ODataResponse resp = OiyokanTestUtil.callRequestPatch("/ODataTests3(" + NOT_EXISTS_ID + ")", "{\n" //
+        ODataResponse resp = OiyokanTestUtil.callPatch("/ODataTest3(" + NOT_EXISTS_ID + ")", "{\n" //
                 + "  \"Name\":\"Name2\",\n" //
                 + "  \"Description\":\"Description2\"\n" + "}", false, true);
         @SuppressWarnings("unused")

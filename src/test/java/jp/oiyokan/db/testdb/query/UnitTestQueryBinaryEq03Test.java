@@ -35,13 +35,13 @@ class UnitTestQueryBinaryEq03Test {
         @SuppressWarnings("unused")
         final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
 
-        final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse( //
-                "/ODataTests1", //
+        final ODataResponse resp = OiyokanTestUtil.callGet( //
+                "/ODataTest1", //
                 OiyoUrlUtil.encodeUrlQuery(
                         "&$filter=null eq StringVar255 &$top=3 &$count=true &$select=ID &$orderby=ID asc"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
-        assertEquals("{\"@odata.context\":\"$metadata#ODataTests1\",\"@odata.count\":0,\"value\":[]}", result);
+        assertEquals("{\"@odata.context\":\"$metadata#ODataTest1\",\"@odata.count\":0,\"value\":[]}", result);
         assertEquals(200, resp.getStatusCode());
     }
 }
