@@ -313,18 +313,14 @@ public class OiyoCommonJdbcUtil {
      */
     public static void bindPreparedParameter(PreparedStatement stmt, int column, OiyoSqlInfo.SqlParam param)
             throws ODataApplicationException, SQLException {
-        final boolean IS_SHOW_DEBUG = false;
-
         if (param == null) {
-            if (IS_SHOW_DEBUG)
-                System.err.println("TRACE: PreparedStatement#setNull: null");
+            log.trace("TRACE: PreparedStatement#setNull: null");
             // [IY7162] WARN: bind NULL value to an SQL statement, set Types.NULL because
             // there is no type information.
             log.warn(OiyokanMessages.IY7162);
             stmt.setNull(column, Types.NULL);
         } else if (null == param.getValue()) {
-            if (IS_SHOW_DEBUG)
-                System.err.println("TRACE: PreparedStatement#setNull: null with Type");
+            log.trace("TRACE: PreparedStatement#setNull: null with Type");
             if (null == param.getProperty()) {
                 // [IY7163] WARN: bind NULL value to an SQL statement, set Types.NULL because
                 // there is no property object information.
@@ -343,79 +339,64 @@ public class OiyoCommonJdbcUtil {
                 }
             }
         } else if (param.getValue() instanceof Byte) {
-            if (IS_SHOW_DEBUG)
-                System.err.println("TRACE: PreparedStatement#setByte: " + param);
+            log.trace("TRACE: PreparedStatement#setByte: " + param);
             stmt.setByte(column, (Byte) param.getValue());
         } else if (param.getValue() instanceof Short) {
-            if (IS_SHOW_DEBUG)
-                System.err.println("TRACE: PreparedStatement#setShort: " + param);
+            log.trace("TRACE: PreparedStatement#setShort: " + param);
             stmt.setShort(column, (Short) param.getValue());
         } else if (param.getValue() instanceof Integer) {
-            if (IS_SHOW_DEBUG)
-                System.err.println("TRACE: PreparedStatement#setInt: " + param);
+            log.trace("TRACE: PreparedStatement#setInt: " + param);
             stmt.setInt(column, (Integer) param.getValue());
         } else if (param.getValue() instanceof Long) {
-            if (IS_SHOW_DEBUG)
-                System.err.println("TRACE: PreparedStatement#setLong: " + param);
+            log.trace("TRACE: PreparedStatement#setLong: " + param);
             stmt.setLong(column, (Long) param.getValue());
         } else if (param.getValue() instanceof BigDecimal) {
-            if (IS_SHOW_DEBUG)
-                System.err.println("TRACE: PreparedStatement#setBigDecimal: " + param);
+            log.trace("TRACE: PreparedStatement#setBigDecimal: " + param);
             // Oiyokan では 小数点は基本的にリテラルのまま残すため、このコードは通過しない.
             stmt.setBigDecimal(column, (BigDecimal) param.getValue());
         } else if (param.getValue() instanceof Boolean) {
-            if (IS_SHOW_DEBUG)
-                System.err.println("TRACE: PreparedStatement#setBoolean: " + param);
+            log.trace("TRACE: PreparedStatement#setBoolean: " + param);
             stmt.setBoolean(column, (Boolean) param.getValue());
         } else if (param.getValue() instanceof Float) {
-            if (IS_SHOW_DEBUG)
-                System.err.println("TRACE: PreparedStatement#setFloat: " + param);
+            log.trace("TRACE: PreparedStatement#setFloat: " + param);
             // Oiyokan では 小数点は基本的にリテラルのまま残すため、このコードは通過しない.
             stmt.setFloat(column, (Float) param.getValue());
         } else if (param.getValue() instanceof Double) {
-            if (IS_SHOW_DEBUG)
-                System.err.println("TRACE: PreparedStatement#setDouble: " + param);
+            log.trace("TRACE: PreparedStatement#setDouble: " + param);
             // Oiyokan では 小数点は基本的にリテラルのまま残すため、このコードは通過しない.
             stmt.setDouble(column, (Double) param.getValue());
         } else if (param.getValue() instanceof java.sql.Time) {
-            if (IS_SHOW_DEBUG)
-                System.err.println("TRACE: PreparedStatement#setTime: " + param);
+            log.trace("TRACE: PreparedStatement#setTime: " + param);
             // java.util.Dateより先に記載が必要
             java.sql.Time look = (java.sql.Time) param.getValue();
             stmt.setTime(column, look);
         } else if (param.getValue() instanceof java.sql.Date) {
-            if (IS_SHOW_DEBUG)
-                System.err.println("TRACE: PreparedStatement#setDate(1): " + param);
+            log.trace("TRACE: PreparedStatement#setDate(1): " + param);
             // java.util.Dateより先に記載が必要
             java.sql.Date look = (java.sql.Date) param.getValue();
             stmt.setDate(column, look);
         } else if (param.getValue() instanceof java.util.Date) {
-            if (IS_SHOW_DEBUG)
-                System.err.println("TRACE: PreparedStatement#setDate(2): " + param);
+            log.trace("TRACE: PreparedStatement#setDate(2): " + param);
             // java.sql.Timestampはここを通過.
             java.util.Date udate = (java.util.Date) param.getValue();
             java.sql.Date sdate = new java.sql.Date(udate.getTime());
             stmt.setDate(column, sdate);
         } else if (param.getValue() instanceof java.util.Calendar) {
-            if (IS_SHOW_DEBUG)
-                System.err.println("TRACE: PreparedStatement#setDate(3): " + param);
+            log.trace("TRACE: PreparedStatement#setDate(3): " + param);
             java.util.Calendar cal = (java.util.Calendar) param.getValue();
             java.sql.Date sdate = new java.sql.Date(cal.getTime().getTime());
             stmt.setDate(column, sdate);
         } else if (param.getValue() instanceof ZonedDateTime) {
-            if (IS_SHOW_DEBUG)
-                System.err.println("TRACE: PreparedStatement#setDate(4): " + param);
+            log.trace("TRACE: PreparedStatement#setDate(4): " + param);
             ZonedDateTime zdt = (ZonedDateTime) param.getValue();
             java.util.Date look = OiyoDateTimeUtil.zonedDateTime2Date(zdt);
             java.sql.Date sdate = new java.sql.Date(look.getTime());
             stmt.setDate(column, sdate);
         } else if (param.getValue() instanceof String) {
-            if (IS_SHOW_DEBUG)
-                System.err.println("TRACE: PreparedStatement#setString: " + param);
+            log.trace("TRACE: PreparedStatement#setString: " + param);
             stmt.setString(column, (String) param.getValue());
         } else if (param.getValue() instanceof byte[]) {
-            if (IS_SHOW_DEBUG)
-                System.err.println("TRACE: PreparedStatement#setBytes: " + param);
+            log.trace("TRACE: PreparedStatement#setBytes: " + param);
             byte[] look = (byte[]) param.getValue();
             stmt.setBytes(column, look);
         } else {
