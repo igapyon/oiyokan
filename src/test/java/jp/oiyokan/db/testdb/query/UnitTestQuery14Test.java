@@ -36,7 +36,7 @@ class UnitTestQuery14Test {
     void testClob1a() throws Exception {
         final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
 
-        OiyoSettingsDatabase database = OiyoInfoUtil.getOiyoDatabaseByEntitySetName(oiyoInfo, "ODataTests1");
+        OiyoSettingsDatabase database = OiyoInfoUtil.getOiyoDatabaseByEntitySetName(oiyoInfo, "ODataTest1");
         OiyokanConstants.DatabaseType databaseType = OiyokanConstants.DatabaseType.valueOf(database.getType());
         switch (databaseType) {
         case SQLSV2008:
@@ -48,13 +48,13 @@ class UnitTestQuery14Test {
         }
 
         final ODataResponse resp = OiyokanTestUtil.callRequestGetResponse( //
-                "/ODataTests1",
+                "/ODataTest1",
                 OiyoUrlUtil.encodeUrlQuery("&$filter=Clob1 eq 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' &$count=true &$select=ID"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         // System.err.println("result: " + result);
         assertEquals(
-                "{\"@odata.context\":\"$metadata#ODataTests1\",\"@odata.count\":1,\"value\":[{\"ID\":204,\"Clob1\":\"ABCDEFGHIJKLMNOPQRSTUVWXYZ\"}]}",
+                "{\"@odata.context\":\"$metadata#ODataTest1\",\"@odata.count\":1,\"value\":[{\"ID\":204,\"Clob1\":\"ABCDEFGHIJKLMNOPQRSTUVWXYZ\"}]}",
                 result, "SQLSV2008でエラー(既知の問題), ORCL18でエラー(既知の問題)");
         assertEquals(200, resp.getStatusCode());
     }

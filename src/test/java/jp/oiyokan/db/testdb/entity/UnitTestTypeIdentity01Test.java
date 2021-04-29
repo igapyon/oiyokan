@@ -33,7 +33,7 @@ class UnitTestTypeIdentity01Test {
         @SuppressWarnings("unused")
         final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
 
-        ODataResponse resp = OiyokanTestUtil.callRequestPost("/ODataTests5", "{\n" //
+        ODataResponse resp = OiyokanTestUtil.callRequestPost("/ODataTest5", "{\n" //
                 + "  \"Name\":\"Name\"\n" //
                 + "}");
         String result = OiyokanTestUtil.stream2String(resp.getContent());
@@ -44,21 +44,21 @@ class UnitTestTypeIdentity01Test {
                 "Iden1が引き当てられないとエラーになる.");
 
         /// 通常のfilter
-        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests5", "$filter=Iden1 eq " + iden1String);
+        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTest5", "$filter=Iden1 eq " + iden1String);
         result = OiyokanTestUtil.stream2String(resp.getContent());
         // System.err.println(result);
         assertEquals(200, resp.getStatusCode());
 
-        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests5(" + iden1String + ")", null);
+        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTest5(" + iden1String + ")", null);
         result = OiyokanTestUtil.stream2String(resp.getContent());
         // System.err.println(result);
         assertEquals(200, resp.getStatusCode());
 
         // DELETE
-        resp = OiyokanTestUtil.callRequestDelete("/ODataTests5(" + iden1String + ")");
+        resp = OiyokanTestUtil.callRequestDelete("/ODataTest5(" + iden1String + ")");
         assertEquals(204, resp.getStatusCode());
 
-        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTests5(" + iden1String + ")", null);
+        resp = OiyokanTestUtil.callRequestGetResponse("/ODataTest5(" + iden1String + ")", null);
         assertEquals(404, resp.getStatusCode());
     }
 }

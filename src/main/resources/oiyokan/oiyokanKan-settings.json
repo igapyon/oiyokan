@@ -14,7 +14,7 @@
   ],
   "entitySet": [
     {
-      "name": "Oiyokans",
+      "name": "Oiyokan",
       "description": "Oiyokan internal info. Do not change.",
       "dbSettingName": "oiyokanKan",
       "canCreate": false,
