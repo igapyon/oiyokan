@@ -40,9 +40,15 @@ class UnitTestEntityNull01Test {
         // INSERT + DELETE
         // 自動項目の ID もNULLで引き渡す。
         ODataResponse resp = OiyokanTestUtil.callPost("/ODataTest1", "{\n" //
-                + "  \"ID\":null,\n" //
-                + "  \"Name\":\"Name\",\n" //
-                + "  \"Description\":\"Description\"\n" + "}");
+                + "  \"ID\":null\n" //
+                + "  , \"Name\":\"Name\"\n" //
+                + "  , \"Description\":\"Null test\"\n" //
+                + "  , \"Sbyte1\":null\n" //
+                + "  , \"Int16a\":null\n" //
+                + "  , \"Single1\":null\n" //
+                + "  , \"Double1\":null\n" //
+                + "  , \"Decimal1\":null\n" //
+                + "}");
         String result = OiyokanTestUtil.stream2String(resp.getContent());
         System.err.println("TRACE: " + result);
         final String idString = OiyokanTestUtil.getValueFromResultByKey(result, "ID");
