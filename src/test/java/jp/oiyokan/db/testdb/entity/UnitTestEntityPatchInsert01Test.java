@@ -64,7 +64,9 @@ class UnitTestEntityPatchInsert01Test {
         resp = OiyokanTestUtil.callPatch("/ODataTest2(" + key + ")", "{\n" //
                 + "  \"Name\":\"Name2\",\n" //
                 + "  \"Description\":\"Description2\"\n" + "}", false, true);
-        assertEquals(304, resp.getStatusCode());
+        result = OiyokanTestUtil.stream2String(resp.getContent());
+        System.err.println(result);
+        assertEquals(409, resp.getStatusCode());
 
         // DELETE
         resp = OiyokanTestUtil.callDelete("/ODataTest2(" + key + ")");

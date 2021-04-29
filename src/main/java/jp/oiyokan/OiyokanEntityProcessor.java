@@ -16,8 +16,6 @@
 package jp.oiyokan;
 
 import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Locale;
 
@@ -49,10 +47,8 @@ import org.apache.olingo.server.api.uri.UriResource;
 import org.apache.olingo.server.api.uri.UriResourceEntitySet;
 
 import jp.oiyokan.basic.OiyoBasicJdbcEntityOneBuilder;
-import jp.oiyokan.common.OiyoCommonJdbcUtil;
 import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.common.OiyoInfoUtil;
-import jp.oiyokan.dto.OiyoSettingsDatabase;
 import jp.oiyokan.dto.OiyoSettingsEntitySet;
 
 /**
@@ -93,10 +89,6 @@ public class OiyokanEntityProcessor implements EntityProcessor {
             log.trace("OiyokanEntityProcessor#readEntity: 2. retrieve the data from backend");
             List<UriParameter> keyPredicates = uriResourceEntitySet.getKeyPredicates();
 
-            // データベースに接続.
-            final OiyoSettingsDatabase database = OiyoInfoUtil.getOiyoDatabaseByEntitySetName(oiyoInfo,
-                    edmEntitySet.getName());
-
             final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, edmEntitySet.getName());
             if (entitySet.getCanRead() != null && entitySet.getCanRead() == false) {
                 // [IY8102] ERROR: No Read access by canRead==false.
@@ -106,15 +98,7 @@ public class OiyokanEntityProcessor implements EntityProcessor {
             }
 
             Entity entity = null;
-            try (Connection connTargetDb = OiyoCommonJdbcUtil.getConnection(database)) {
-                entity = new OiyoBasicJdbcEntityOneBuilder(oiyoInfo).readEntityData(connTargetDb, uriInfo, edmEntitySet,
-                        keyPredicates);
-            } catch (SQLException ex) {
-                // [IY3107] Database exception occured (readEntity)
-                log.error(OiyokanMessages.IY3107 + ": " + ex.toString());
-                throw new ODataApplicationException(OiyokanMessages.IY3107, //
-                        OiyokanMessages.IY3107_CODE, Locale.ENGLISH);
-            }
+            entity = new OiyoBasicJdbcEntityOneBuilder(oiyoInfo).readEntityData(uriInfo, edmEntitySet, keyPredicates);
 
             log.trace("OiyokanEntityProcessor#readEntity: 3. serialize");
             EdmEntityType edmEntityType = edmEntitySet.getEntityType();

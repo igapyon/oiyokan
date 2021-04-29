@@ -120,8 +120,7 @@ public class OiyokanMessages {
     public static final int IY3106_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
     public static final String IY3107 = "[IY3107] Database exception occured (readEntity)";
     public static final int IY3107_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
-    public static final String IY3108 = "[IY3108] Not modified.";
-    public static final int IY3108_CODE = HttpStatusCode.NOT_MODIFIED.getStatusCode();
+    public static final String IY3108 = "[IY3108] Fail to update entity.";
     // IY3109
     // IY3110
     public static final String IY3112 = "[IY3112] UNEXPECTED: Too many rows found (readEntity)";
@@ -132,6 +131,8 @@ public class OiyokanMessages {
     public static final int IY3114_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
 
     public static final String IY3121 = "[IY3121] WARN: Ignore given value during INSERT because property that was set as autoGenKey.";
+    public static final String IY3122 = "[IY3122] ERROR: If-None-Match NOT allowed because there is property that was set as autoGenKey.";
+    public static final int IY3122_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
 
     public static final String IY3151 = "[IY3151] Fail to execute SQL.";
     public static final int IY3151_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
@@ -139,8 +140,8 @@ public class OiyokanMessages {
     public static final int IY3152_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
     public static final String IY3153 = "[IY3153] Fail to execute SQL.";
     public static final int IY3153_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
-    public static final String IY3154 = "[IY3154] Not modified by SQL.";
-    public static final int IY3154_CODE = HttpStatusCode.NOT_MODIFIED.getStatusCode();
+    public static final String IY3154 = "[IY3154] Fail to update entity with SQL error.";
+    public static final int IY3154_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
     public static final String IY3161 = "[IY3161] UNEXPECTED: OiyoSettingsProperty NOT found.";
     public static final int IY3161_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
 
