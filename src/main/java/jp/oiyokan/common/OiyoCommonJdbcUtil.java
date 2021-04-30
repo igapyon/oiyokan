@@ -782,7 +782,7 @@ public class OiyoCommonJdbcUtil {
 
             return generatedKeys;
         } catch (SQLIntegrityConstraintViolationException ex) {
-            // [M202] Integrity constraint violation occured (DML). 制約違反.
+            // [IY3401] Integrity constraint violation occured (DML). 制約違反.
             log.error(OiyokanMessages.IY3401 + ": " + sql + ", " + ex.toString());
             // 制約違反については例外的に ex の getMessage についても呼出元に返却.
             throw new ODataApplicationException(OiyokanMessages.IY3401 + ": " + sql + ": " + ex.getMessage(), //
@@ -793,7 +793,14 @@ public class OiyoCommonJdbcUtil {
             throw new ODataApplicationException(OiyokanMessages.IY3511 + ": " + sql, //
                     OiyokanMessages.IY3511_CODE, Locale.ENGLISH);
         } catch (SQLException ex) {
-            if (ex.toString().indexOf("timed out") >= 0 /* SQL Server 2008 */) {
+            if (ex.toString().contains("unique constraint")/* PostgreSQL */) {
+                // TODO message
+                // [IY3401] Integrity constraint violation occured (DML). 制約違反.
+                log.error(OiyokanMessages.IY3401 + ": " + sql + ", " + ex.toString());
+                // 制約違反については例外的に ex の getMessage についても呼出元に返却.
+                throw new ODataApplicationException(OiyokanMessages.IY3401 + ": " + sql + ": " + ex.getMessage(), //
+                        OiyokanMessages.IY3401_CODE, Locale.ENGLISH);
+            } else if (ex.toString().contains("timed out") /* SQL Server 2008 */ ) {
                 // [IY3512] SQL timeout at exec insert/update/delete.
                 log.error(OiyokanMessages.IY3512 + ": " + sql + ", " + ex.toString());
                 throw new ODataApplicationException(OiyokanMessages.IY3512 + ": " + sql, //
