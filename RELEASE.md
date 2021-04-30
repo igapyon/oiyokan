@@ -1,3 +1,17 @@
+# Release 1.10 (2021-04-30)
+
+## EN
+
+- Previously, 204 and 304 were returned when PATCH was executed, but this has been changed to return as 200 or 201 with body data.
+- Changed the log format during Unit test to a shorter one.
+- An error occurs when a value other than * (ie: ETag) is specified for If-Match and If-None-Match.
+
+## JA
+
+- PATCH実行時に、いままでは 204 や 304 を返却していたが、これをデータ付きの 200 や 201 で戻すように変更。
+- Unit test 時の ログ format を短いものに変更。
+- If-Match, If-None-Match に * 以外(ETag) が指定された場合にエラーにする。
+
 # Release 1.9 (2021-04-29)
 
 ## EN
