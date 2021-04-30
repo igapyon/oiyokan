@@ -264,9 +264,25 @@ public class OiyokanEntityProcessor implements EntityProcessor {
             }
 
             if (request.getMethod().equals(HttpMethod.PATCH)) {
-                // TODO * 以外を拒絶する
-                final boolean ifMatch = ("*".equals(request.getHeader("If-Match")));
-                final boolean ifNoneMatch = ("*".equals(request.getHeader("If-None-Match")));
+                String ifMatchString = request.getHeader("If-Match");
+                ifMatchString = (ifMatchString == null ? null : ifMatchString.trim());
+                if (ifMatchString != null && ifMatchString.length() > 0 && !"*".equals(ifMatchString)) {
+                    // [IY3109] If-Match: ETag is NOT supported. Only * supported.
+                    log.error(OiyokanMessages.IY3109 + ": " + ifMatchString);
+                    throw new ODataApplicationException(OiyokanMessages.IY3109 + ": " + ifMatchString,
+                            OiyokanMessages.IY3109_CODE, Locale.ENGLISH);
+                }
+                final boolean ifMatch = ("*".equals(ifMatchString));
+
+                String ifNoneMatchString = request.getHeader("If-None-Match");
+                ifNoneMatchString = (ifNoneMatchString == null ? null : ifNoneMatchString.trim());
+                if (ifNoneMatchString != null && ifNoneMatchString.length() > 0 && !"*".equals(ifNoneMatchString)) {
+                    // [IY3110] If-None-Match: ETag is NOT supported. Only * supported.
+                    log.error(OiyokanMessages.IY3110 + ": " + ifNoneMatchString);
+                    throw new ODataApplicationException(OiyokanMessages.IY3110 + ": " + ifNoneMatchString,
+                            OiyokanMessages.IY3110_CODE, Locale.ENGLISH);
+                }
+                final boolean ifNoneMatch = ("*".equals(ifNoneMatchString));
 
                 if (ifMatch) {
                     log.trace("OiyokanEntityProcessor#updateEntity: If-Match");

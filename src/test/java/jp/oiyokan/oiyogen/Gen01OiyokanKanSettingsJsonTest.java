@@ -65,7 +65,7 @@ class Gen01OiyokanKanSettingsJsonTest {
 
         OiyoSettingsEntitySet entitySet = new OiyoSettingsEntitySet();
         oiyoSettings.getEntitySet().add(entitySet);
-        entitySet.setName("Oiyokans");
+        entitySet.setName("Oiyokan");
         entitySet.setDescription("Oiyokan internal info. Do not change.");
         entitySet.setDbSettingName("oiyokanKan");
         entitySet.setCanCreate(false);

@@ -43,7 +43,7 @@ class UnitTestTypeUuid01Test {
         assertTrue(
                 result.startsWith("{\"@odata.context\":\"$metadata#ODataTest7\",\"ID\":" + TEST_ID
                         + ",\"Name\":\"UUID UnitTest\",\"Description\":\"UUID UnitTest table.\",\"Uuid1\":"), //
-                "INSERTできることを確認. MySQLではエラー Binary1が固定長扱いで後方に自動埋め込みが発生(既知の問題。だが解決方法にアイデア現状なし), SQLSV2008でエラー(既知の問題), ORCL18でエラー(既知の問題)");
+                "INSERTできることを確認.");
         assertEquals(201, resp.getStatusCode());
 
         resp = OiyokanTestUtil.callGet("/ODataTest7(" + TEST_ID + ")", null);
