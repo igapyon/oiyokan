@@ -52,11 +52,18 @@ class UnitTestValueSpace02Test {
         assertEquals(200, resp.getStatusCode());
 
         // UPDATE (PATCH)
-        // キーと更新値とを同時に指定された場合、更新値は無視してキーの値を用いて設定
+        // キーと更新値とを同時に指定された場合、キー値とEntityの値は一致していることを期待しながらデータ処理
         resp = OiyokanTestUtil.callPatch("/ODataTest4(I_D=" + TEST_ID + ",Na_me='Name')", "{\n" //
-                + "  \"Na_me\":\"Name2\",\n" //
+                + "  \"Na_me\":\"Name\",\n" //
                 + "  \"Va_lue1\":\"Description2\"\n" + "}", false, false);
         result = OiyokanTestUtil.stream2String(resp.getContent());
-        assertEquals(201, resp.getStatusCode());
+        assertEquals(200, resp.getStatusCode());
+
+        // DELETE
+        resp = OiyokanTestUtil.callDelete("/ODataTest4(I_D=" + TEST_ID + ",Na_me='Name')");
+        assertEquals(204, resp.getStatusCode());
+
+        resp = OiyokanTestUtil.callGet("/ODataTest4(I_D=" + TEST_ID + ",Na_me='Name')", null);
+        assertEquals(404, resp.getStatusCode());
     }
 }
