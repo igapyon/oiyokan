@@ -370,26 +370,33 @@ public class OiyoCommonJdbcUtil {
             // java.util.Dateより先に記載が必要
             java.sql.Time look = (java.sql.Time) param.getValue();
             stmt.setTime(column, look);
+        } else if (param.getValue() instanceof java.sql.Timestamp) {
+            log.trace("TRACE: PreparedStatement#setDate(java.sql.Timestamp): " + param);
+            // java.util.Dateより先に記載が必要
+            java.sql.Timestamp look = (java.sql.Timestamp) param.getValue();
+            stmt.setTimestamp(column, look);
         } else if (param.getValue() instanceof java.sql.Date) {
-            log.trace("TRACE: PreparedStatement#setDate(1): " + param);
+            log.trace("TRACE: PreparedStatement#setDate(java.sql.Date): " + param);
             // java.util.Dateより先に記載が必要
             java.sql.Date look = (java.sql.Date) param.getValue();
             stmt.setDate(column, look);
         } else if (param.getValue() instanceof java.util.Date) {
-            log.trace("TRACE: PreparedStatement#setDate(2): " + param);
-            // java.sql.Timestampはここを通過.
+            log.trace("TRACE: PreparedStatement#setDate(java.util.Date): " + param);
             java.util.Date udate = (java.util.Date) param.getValue();
+            // TODO FIXME これは java.sql.Timestampのほうがいいんちゃうかしら
             java.sql.Date sdate = new java.sql.Date(udate.getTime());
             stmt.setDate(column, sdate);
         } else if (param.getValue() instanceof java.util.Calendar) {
-            log.trace("TRACE: PreparedStatement#setDate(3): " + param);
+            log.trace("TRACE: PreparedStatement#setDate(java.util.Calendar): " + param);
             java.util.Calendar cal = (java.util.Calendar) param.getValue();
+            // TODO FIXME これは java.sql.Timestampのほうがいいんちゃうかしら
             java.sql.Date sdate = new java.sql.Date(cal.getTime().getTime());
             stmt.setDate(column, sdate);
         } else if (param.getValue() instanceof ZonedDateTime) {
-            log.trace("TRACE: PreparedStatement#setDate(4): " + param);
+            log.trace("TRACE: PreparedStatement#setDate(ZonedDateTime): " + param);
             ZonedDateTime zdt = (ZonedDateTime) param.getValue();
             java.util.Date look = OiyoDateTimeUtil.zonedDateTime2Date(zdt);
+            // TODO FIXME これは java.sql.Timestampのほうがいいんちゃうかしら
             java.sql.Date sdate = new java.sql.Date(look.getTime());
             stmt.setDate(column, sdate);
         } else if (param.getValue() instanceof String) {
@@ -559,9 +566,11 @@ public class OiyoCommonJdbcUtil {
         }
         if (EdmDate.getInstance() == edmType) {
             log.trace("TRACE: expandLiteralOrBindParameter: EdmDate: " + inputParam);
-            if (inputParam instanceof java.sql.Date //
+            if (inputParam instanceof java.sql.Timestamp //
+                    || inputParam instanceof java.sql.Date //
                     || inputParam instanceof java.util.Date//
-                    || inputParam instanceof java.util.Calendar) {
+                    || inputParam instanceof java.util.Calendar //
+                    || inputParam instanceof TemporalAccessor) {
                 sqlInfo.getSqlBuilder().append("?");
                 sqlInfo.getSqlParamList().add(new OiyoSqlInfo.SqlParam(property, inputParam));
             } else {
@@ -573,12 +582,11 @@ public class OiyoCommonJdbcUtil {
         }
         if (EdmDateTimeOffset.getInstance() == edmType) {
             log.trace("TRACE: expandLiteralOrBindParameter: EdmDateTimeOffset: " + inputParam);
-            if (inputParam instanceof java.sql.Date //
+            if (inputParam instanceof java.sql.Timestamp //
+                    || inputParam instanceof java.sql.Date //
                     || inputParam instanceof java.util.Date//
-                    || inputParam instanceof java.util.Calendar) {
-                sqlInfo.getSqlBuilder().append("?");
-                sqlInfo.getSqlParamList().add(new OiyoSqlInfo.SqlParam(property, inputParam));
-            } else if (inputParam instanceof TemporalAccessor) {
+                    || inputParam instanceof java.util.Calendar //
+                    || inputParam instanceof TemporalAccessor) {
                 sqlInfo.getSqlBuilder().append("?");
                 sqlInfo.getSqlParamList().add(new OiyoSqlInfo.SqlParam(property, inputParam));
             } else {
