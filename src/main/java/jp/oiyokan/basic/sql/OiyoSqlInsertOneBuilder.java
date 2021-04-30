@@ -15,7 +15,9 @@
  */
 package jp.oiyokan.basic.sql;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -80,6 +82,8 @@ public class OiyoSqlInsertOneBuilder {
         sqlInfo.getSqlBuilder().append(" (");
         boolean isFirst = true;
 
+        final Map<String, Object> alreadyUsedMap = new HashMap<>();
+
         // PATCH(INSERT)
         if (keyPredicates != null) {
             for (UriParameter param : keyPredicates) {
@@ -90,6 +94,7 @@ public class OiyoSqlInsertOneBuilder {
                 }
                 sqlInfo.getSqlBuilder().append(OiyoCommonJdbcUtil.escapeKakkoFieldName(sqlInfo,
                         OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, entitySetName, param.getName()).getDbName()));
+                alreadyUsedMap.put(param.getName(), param);
             }
         }
 
@@ -100,6 +105,11 @@ public class OiyoSqlInsertOneBuilder {
                 // [IY3121] WARN: Ignore given value during INSERT because property that was set
                 // as autoGenKey.
                 log.warn(OiyokanMessages.IY3121 + ": name:" + property.getName());
+                continue;
+            }
+
+            if (alreadyUsedMap.get(prop.getName()) != null) {
+                // すでにキーで指定済みの値
                 continue;
             }
 
@@ -137,6 +147,11 @@ public class OiyoSqlInsertOneBuilder {
             if (oiyoProp.getAutoGenKey() != null && oiyoProp.getAutoGenKey()) {
                 // この項目は仮に指定されていたとしても処理してはダメ。自動生成にゆだねる。
                 // log message は項目名の側にてすでにログ出力済み。
+                continue;
+            }
+
+            if (alreadyUsedMap.get(prop.getName()) != null) {
+                // すでにキーで指定済みの値
                 continue;
             }
 

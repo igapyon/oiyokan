@@ -246,18 +246,14 @@ public class OiyokanEntityProcessor implements EntityProcessor {
                 for (UriParameter param : keyPredicates) {
                     if (mapKeyOrPropertyName.get(param.getName()) != null) {
                         // [IY3102] Duplicate name given as keyPredicates.
-                        log.warn(OiyokanMessages.IY3102);
-                        throw new ODataApplicationException(OiyokanMessages.IY3102, OiyokanMessages.IY3102_CODE,
-                                Locale.ENGLISH);
+                        log.warn(OiyokanMessages.IY3102 + ": " + param.getName());
                     }
                     mapKeyOrPropertyName.put(param.getName(), param);
                 }
                 for (Property prop : requestEntity.getProperties()) {
                     if (mapKeyOrPropertyName.get(prop.getName()) != null) {
                         // [IY3103] Duplicate name given as Entity Property.";
-                        log.warn(OiyokanMessages.IY3103);
-                        throw new ODataApplicationException(OiyokanMessages.IY3103, OiyokanMessages.IY3103_CODE,
-                                Locale.ENGLISH);
+                        log.warn(OiyokanMessages.IY3103 + ": " + prop.getName());
                     }
                     mapKeyOrPropertyName.put(prop.getName(), prop);
                 }

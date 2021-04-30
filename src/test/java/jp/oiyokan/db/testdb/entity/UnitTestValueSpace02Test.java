@@ -56,12 +56,12 @@ class UnitTestValueSpace02Test {
         assertEquals(200, resp.getStatusCode());
 
         // UPDATE (PATCH)
-        // キーと更新値とを同時に指定されるとエラー
+        // キーと更新値とを同時に指定された場合、更新値は無視してキーの値を用いて設定
         resp = OiyokanTestUtil.callPatch("/ODataTest4(I_D=" + TEST_ID + ",Na_me='Name')", "{\n" //
                 + "  \"Na_me\":\"Name2\",\n" //
                 + "  \"Va_lue1\":\"Description2\"\n" + "}", false, false);
         result = OiyokanTestUtil.stream2String(resp.getContent());
         // System.err.println(result);
-        assertEquals(400, resp.getStatusCode());
+        assertEquals(201, resp.getStatusCode());
     }
 }
