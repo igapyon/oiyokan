@@ -33,7 +33,7 @@ class UnitTestValueSpace02Test {
         @SuppressWarnings("unused")
         final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
 
-        final int TEST_ID = OiyokanTestUtil.getNextUniqueId();
+        final int TEST_ID = 50200 + OiyokanTestUtil.getNextUniqueId();
 
         // INSERT + DELETE
         ODataResponse resp = OiyokanTestUtil.callPost("/ODataTest4", "{\n" //
@@ -42,13 +42,9 @@ class UnitTestValueSpace02Test {
                 + "}");
         String result = OiyokanTestUtil.stream2String(resp.getContent());
         // System.err.println(result);
-        if (409 == resp.getStatusCode()) {
-            // パス
-        } else {
-            assertEquals(201, resp.getStatusCode(), "項目名変形におけるINSERTの確認.");
-            assertEquals("{\"@odata.context\":\"$metadata#ODataTest4\",\"I_D\":" + TEST_ID
-                    + ",\"Na_me\":\"Name\",\"Va_lue1\":\"VALUEVALUE12345\"}", result);
-        }
+        assertEquals(201, resp.getStatusCode(), "項目名変形におけるINSERTの確認.");
+        assertEquals("{\"@odata.context\":\"$metadata#ODataTest4\",\"I_D\":" + TEST_ID
+                + ",\"Na_me\":\"Name\",\"Va_lue1\":\"VALUEVALUE12345\"}", result);
 
         resp = OiyokanTestUtil.callGet("/ODataTest4(I_D=" + TEST_ID + ",Na_me='Name')", null);
         result = OiyokanTestUtil.stream2String(resp.getContent());
@@ -56,12 +52,18 @@ class UnitTestValueSpace02Test {
         assertEquals(200, resp.getStatusCode());
 
         // UPDATE (PATCH)
-        // キーと更新値とを同時に指定された場合、更新値は無視してキーの値を用いて設定
+        // キーと更新値とを同時に指定された場合、キー値とEntityの値は一致していることを期待しながらデータ処理
         resp = OiyokanTestUtil.callPatch("/ODataTest4(I_D=" + TEST_ID + ",Na_me='Name')", "{\n" //
-                + "  \"Na_me\":\"Name2\",\n" //
+                + "  \"Na_me\":\"Name\",\n" //
                 + "  \"Va_lue1\":\"Description2\"\n" + "}", false, false);
         result = OiyokanTestUtil.stream2String(resp.getContent());
-        // System.err.println(result);
-        assertEquals(201, resp.getStatusCode());
+        assertEquals(200, resp.getStatusCode());
+
+        // DELETE
+        resp = OiyokanTestUtil.callDelete("/ODataTest4(I_D=" + TEST_ID + ",Na_me='Name')");
+        assertEquals(204, resp.getStatusCode());
+
+        resp = OiyokanTestUtil.callGet("/ODataTest4(I_D=" + TEST_ID + ",Na_me='Name')", null);
+        assertEquals(404, resp.getStatusCode());
     }
 }

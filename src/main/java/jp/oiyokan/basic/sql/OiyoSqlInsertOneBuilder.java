@@ -137,6 +137,12 @@ public class OiyoSqlInsertOneBuilder {
 
                 final OiyoSettingsProperty prop = OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, entitySetName,
                         param.getName());
+                /*
+                 * log.
+                 * error("[DO NOT ENABLE IN PRODUCTION] OiyoSqlInsertOneBuilder#buildInsertIntoDml: Key:"
+                 * // + prop.getName() + ", Edm:" + prop.getEdmType() + ", " + param.getText() +
+                 * "(" // + param.getClass().getName() + ")"); //
+                 */
                 OiyoCommonJdbcUtil.expandLiteralOrBindParameter(sqlInfo, prop.getEdmType(), prop, param.getText());
             }
         }
@@ -160,7 +166,13 @@ public class OiyoSqlInsertOneBuilder {
             } else {
                 sqlInfo.getSqlBuilder().append(",");
             }
-
+            /*
+             * log.
+             * error("[DO NOT ENABLE IN PRODUCTION] OiyoSqlInsertOneBuilder#buildInsertIntoDml: Entity:"
+             * // + prop.getName() + ", Edm:" + prop.getType() + ", " + prop.getValue() +
+             * "(" // + (prop.getValue() == null ? "" :
+             * prop.getValue().getClass().getName()) + ")"); //
+             */
             OiyoCommonJdbcUtil.expandLiteralOrBindParameter(sqlInfo, prop.getType(), oiyoProp, prop.getValue());
         }
 

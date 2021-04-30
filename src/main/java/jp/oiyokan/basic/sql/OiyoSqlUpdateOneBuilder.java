@@ -92,6 +92,12 @@ public class OiyoSqlUpdateOneBuilder {
 
             final OiyoSettingsProperty oiyoProp = OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, entitySetName,
                     prop.getName());
+            /*
+             * log.
+             * error("[DO NOT ENABLE IN PRODUCTION] OiyoSqlUpdateOneBuilder#buildUpdatePatchDml: Key:"
+             * // + prop.getName() + ", Edm:" + oiyoProp.getEdmType() + ", " +
+             * prop.getValue() + "(" // + prop.getType() + ")"); //
+             */
             OiyoCommonJdbcUtil.expandLiteralOrBindParameter(sqlInfo, prop.getType(), oiyoProp, prop.getValue());
         }
 
