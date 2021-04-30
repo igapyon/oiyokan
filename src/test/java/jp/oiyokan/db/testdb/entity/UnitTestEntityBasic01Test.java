@@ -44,7 +44,7 @@ class UnitTestEntityBasic01Test {
         String result = OiyokanTestUtil.stream2String(resp.getContent());
         // System.err.println("TRACE: " + result);
         final String idString = OiyokanTestUtil.getValueFromResultByKey(result, "ID");
-        assertEquals(201, resp.getStatusCode(), "SQLSV2008でエラー。(既知の問題). varbinaryとtextと混同.");
+        assertEquals(201, resp.getStatusCode(), "autoGenKey で INSERT が動作すること.");
 
         resp = OiyokanTestUtil.callGet("/ODataTest3(" + idString + ")", null);
         assertEquals(200, resp.getStatusCode());

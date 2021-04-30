@@ -42,7 +42,7 @@ class UnitTestValueSpace02Test {
                 + "}");
         String result = OiyokanTestUtil.stream2String(resp.getContent());
         // System.err.println(result);
-        assertEquals(201, resp.getStatusCode(), "ORCL18でエラー(既知の問題)");
+        assertEquals(201, resp.getStatusCode(), "項目名変形におけるINSERTの確認.");
         assertEquals("{\"@odata.context\":\"$metadata#ODataTest4\",\"I_D\":" + TEST_ID
                 + ",\"Na_me\":\"Name\",\"Va_lue1\":\"VALUEVALUE12345\"}", result);
 

@@ -55,7 +55,7 @@ class UnitTestQuery12Test {
         // System.err.println("result: " + result);
         assertEquals(
                 "{\"@odata.context\":\"$metadata#ODataTest1\",\"@odata.count\":1,\"value\":[{\"ID\":204,\"StringVar255\":\"ABCDEFGHIJKLMNOPQRSTUVWXYZ\",\"StringLongVar1\":\"ABCDEFGHIJKLMNOPQRSTUVWXYZ\",\"Clob1\":\"ABCDEFGHIJKLMNOPQRSTUVWXYZ\"}]}",
-                result, "SQLSV2008でエラー(既知の問題), ORCL18でエラー(既知の問題)");
+                result, "検索できることの確認.");
         assertEquals(200, resp.getStatusCode());
     }
 }

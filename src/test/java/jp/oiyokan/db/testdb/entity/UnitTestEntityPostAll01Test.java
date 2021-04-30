@@ -60,8 +60,7 @@ class UnitTestEntityPostAll01Test {
                         + "}");
         String result = OiyokanTestUtil.stream2String(resp.getContent());
         final String idString = OiyokanTestUtil.getValueFromResultByKey(result, "ID");
-        assertEquals(201, resp.getStatusCode(), //
-                "POSTによるINSERTが成功すること。既知の問題. Postgresにおいて、uuidのエラーで失敗する (既知の問題), MySQLでもUUIDの桁溢れエラー (既知の問題)");
+        assertEquals(201, resp.getStatusCode(), "POSTによるINSERTが成功すること。UUID絡みで問題があったのでUUIDについては対象から外している.");
 
         resp = OiyokanTestUtil.callGet("/ODataTest3(" + idString + ")", null);
         result = OiyokanTestUtil.stream2String(resp.getContent());
