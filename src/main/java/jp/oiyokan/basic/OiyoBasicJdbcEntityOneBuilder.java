@@ -453,7 +453,7 @@ public class OiyoBasicJdbcEntityOneBuilder {
                 for (Property look : requestEntity.getProperties()) {
                     if (look.getName().equals(keyName)) {
                         if (look.getValue() instanceof java.util.Calendar) {
-                            // TODO この箇所がどのようなケースで動作するのか調査。
+                            log.trace("TRACE: OiyoBasicJdbcEntityOneBuilder#createInternal: java.util.Calendar");
                             java.util.Calendar cal = (java.util.Calendar) look.getValue();
                             Instant instant = cal.toInstant();
                             ZonedDateTime zdt = ZonedDateTime.ofInstant(instant, ZoneId.systemDefault());
