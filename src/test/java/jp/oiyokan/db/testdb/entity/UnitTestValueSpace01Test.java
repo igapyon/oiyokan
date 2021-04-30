@@ -53,13 +53,12 @@ class UnitTestValueSpace01Test {
 
         // UPDATE (PATCH)
         resp = OiyokanTestUtil.callPatch("/ODataTest4(I_D=" + TEST_ID + ",Na_me='Name')", "{\n" //
-                + "  \"Na_me\":\"Name2\",\n" //
                 + "  \"Va_lue1\":\"Description2\"\n" + "}", false, false);
         result = OiyokanTestUtil.stream2String(resp.getContent());
         // System.err.println(result);
-        assertEquals(204, resp.getStatusCode());
+        assertEquals(200, resp.getStatusCode());
 
-        resp = OiyokanTestUtil.callGet("/ODataTest4(I_D=" + TEST_ID + ",Na_me='Name2')", null);
+        resp = OiyokanTestUtil.callGet("/ODataTest4(I_D=" + TEST_ID + ",Na_me='Name')", null);
         assertEquals(200, resp.getStatusCode());
 
         /// 通常のfilter
@@ -69,16 +68,16 @@ class UnitTestValueSpace01Test {
         assertEquals(200, resp.getStatusCode());
 
         // Entity
-        resp = OiyokanTestUtil.callGet("/ODataTest4(I_D=" + TEST_ID + ",Na_me='Name2')", null);
+        resp = OiyokanTestUtil.callGet("/ODataTest4(I_D=" + TEST_ID + ",Na_me='Name')", null);
         result = OiyokanTestUtil.stream2String(resp.getContent());
         // System.err.println(result);
         assertEquals(200, resp.getStatusCode());
 
         // DELETE
-        resp = OiyokanTestUtil.callDelete("/ODataTest4(I_D=" + TEST_ID + ",Na_me='Name2')");
+        resp = OiyokanTestUtil.callDelete("/ODataTest4(I_D=" + TEST_ID + ",Na_me='Name')");
         assertEquals(204, resp.getStatusCode());
 
-        resp = OiyokanTestUtil.callGet("/ODataTest4(I_D=" + TEST_ID + ",Na_me='Name2')", null);
+        resp = OiyokanTestUtil.callGet("/ODataTest4(I_D=" + TEST_ID + ",Na_me='Name')", null);
         assertEquals(404, resp.getStatusCode());
     }
 }

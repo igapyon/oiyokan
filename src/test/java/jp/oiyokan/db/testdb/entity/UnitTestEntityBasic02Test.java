@@ -55,7 +55,7 @@ class UnitTestEntityBasic02Test {
         resp = OiyokanTestUtil.callPatch("/ODataTest3(" + idString + ")", "{\n" //
                 + "  \"Name\":\"Name2\",\n" //
                 + "  \"Description\":\"Description2\"\n" + "}", false, false);
-        assertEquals(204, resp.getStatusCode());
+        assertEquals(200, resp.getStatusCode());
 
         resp = OiyokanTestUtil.callGet("/ODataTest3(" + idString + ")", null);
         assertEquals(200, resp.getStatusCode());
