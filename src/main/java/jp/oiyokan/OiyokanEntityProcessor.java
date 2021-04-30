@@ -16,13 +16,16 @@
 package jp.oiyokan;
 
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.olingo.commons.api.data.ContextURL;
 import org.apache.olingo.commons.api.data.Entity;
+import org.apache.olingo.commons.api.data.Property;
 import org.apache.olingo.commons.api.edm.EdmEntitySet;
 import org.apache.olingo.commons.api.edm.EdmEntityType;
 import org.apache.olingo.commons.api.format.ContentType;
@@ -97,8 +100,8 @@ public class OiyokanEntityProcessor implements EntityProcessor {
                         OiyokanMessages.IY8102_CODE, Locale.ENGLISH);
             }
 
-            Entity entity = null;
-            entity = new OiyoBasicJdbcEntityOneBuilder(oiyoInfo).readEntityData(uriInfo, edmEntitySet, keyPredicates);
+            final Entity entity = new OiyoBasicJdbcEntityOneBuilder(oiyoInfo).readEntityData(uriInfo, entitySet,
+                    keyPredicates);
 
             log.trace("OiyokanEntityProcessor#readEntity: 3. serialize");
             EdmEntityType edmEntityType = edmEntitySet.getEntityType();
@@ -172,7 +175,7 @@ public class OiyokanEntityProcessor implements EntityProcessor {
 
             log.trace("OiyokanEntityProcessor#createEntity: "
                     + "2.2 do the creation in backend, which returns the newly created entity");
-            Entity createdEntity = new OiyoBasicJdbcEntityOneBuilder(oiyoInfo).createEntityData(uriInfo, edmEntitySet,
+            Entity createdEntity = new OiyoBasicJdbcEntityOneBuilder(oiyoInfo).createEntityData(uriInfo, entitySet,
                     requestEntity);
 
             log.trace("OiyokanEntityProcessor#createEntity: "
@@ -237,7 +240,31 @@ public class OiyokanEntityProcessor implements EntityProcessor {
             DeserializerResult result = deserializer.entity(requestInputStream, edmEntitySet.getEntityType());
             final Entity requestEntity = result.getEntity();
 
+            {
+                // keyPredicates と Entity で項目重複チェック
+                final Map<String, Object> mapKeyOrPropertyName = new HashMap<>();
+                for (UriParameter param : keyPredicates) {
+                    if (mapKeyOrPropertyName.get(param.getName()) != null) {
+                        // [IY3102] Duplicate name given as keyPredicates.
+                        log.warn(OiyokanMessages.IY3102);
+                        throw new ODataApplicationException(OiyokanMessages.IY3102, OiyokanMessages.IY3102_CODE,
+                                Locale.ENGLISH);
+                    }
+                    mapKeyOrPropertyName.put(param.getName(), param);
+                }
+                for (Property prop : requestEntity.getProperties()) {
+                    if (mapKeyOrPropertyName.get(prop.getName()) != null) {
+                        // [IY3103] Duplicate name given as Entity Property.";
+                        log.warn(OiyokanMessages.IY3103);
+                        throw new ODataApplicationException(OiyokanMessages.IY3103, OiyokanMessages.IY3103_CODE,
+                                Locale.ENGLISH);
+                    }
+                    mapKeyOrPropertyName.put(prop.getName(), prop);
+                }
+            }
+
             if (request.getMethod().equals(HttpMethod.PATCH)) {
+                // TODO * 以外を拒絶する
                 final boolean ifMatch = ("*".equals(request.getHeader("If-Match")));
                 final boolean ifNoneMatch = ("*".equals(request.getHeader("If-None-Match")));
 
@@ -250,8 +277,32 @@ public class OiyokanEntityProcessor implements EntityProcessor {
 
                 // 指定項目のみ設定
                 // in case of PATCH, the existing property is not touched
-                new OiyoBasicJdbcEntityOneBuilder(oiyoInfo).updateEntityDataPatch(uriInfo, edmEntitySet, keyPredicates,
-                        requestEntity, ifMatch, ifNoneMatch);
+                final OiyoBasicJdbcEntityOneBuilder builder = new OiyoBasicJdbcEntityOneBuilder(oiyoInfo);
+                final Entity entity = builder.updateEntityDataPatch(uriInfo, entitySet, keyPredicates, requestEntity,
+                        ifMatch, ifNoneMatch);
+
+                // TODO FIXME 下記仕様が未実装。
+                // Upon successful completion the service responds with either 200 OK and a
+                // representation of the updated entity, or 204 No Content. The client may
+                // request that the response SHOULD include a body by specifying a Prefer header
+                // with a value of return=representation, or by specifying the system query
+                // options $select or $expand.
+
+                if (entity != null) {
+                    final EdmEntityType edmEntityType = edmEntitySet.getEntityType();
+                    ContextURL contextUrl = ContextURL.with().entitySet(edmEntitySet).build();
+                    // expand and select currently not supported
+                    EntitySerializerOptions options = EntitySerializerOptions.with().contextURL(contextUrl).build();
+                    ODataSerializer serializer = odata.createSerializer(responseFormat);
+                    SerializerResult serializerResult = serializer.entity(serviceMetadata, edmEntityType, entity,
+                            options);
+                    InputStream entityStream = serializerResult.getContent();
+                    response.setContent(entityStream);
+                }
+
+                response.setStatusCode(builder.getLastPatchStatusCode());
+                response.setHeader(HttpHeader.CONTENT_TYPE, responseFormat.toContentTypeString());
+
             } else if (request.getMethod().equals(HttpMethod.PUT)) {
                 // [IY1106] NOT SUPPORTED: PUT: use PATCH to update Entity.
                 log.error(OiyokanMessages.IY1106);
@@ -263,17 +314,6 @@ public class OiyokanEntityProcessor implements EntityProcessor {
                 throw new ODataApplicationException(OiyokanMessages.IY3113, OiyokanMessages.IY3113_CODE,
                         Locale.ENGLISH);
             }
-
-            // TODO FIXME 下記仕様が未実装。
-            // Upon successful completion the service responds with either 200 OK and a
-            // representation of the updated entity, or 204 No Content. The client may
-            // request that the response SHOULD include a body by specifying a Prefer header
-            // with a value of return=representation, or by specifying the system query
-            // options $select or $expand.
-
-            response.setStatusCode(HttpStatusCode.NO_CONTENT.getStatusCode());
-            response.setHeader(HttpHeader.CONTENT_TYPE, responseFormat.toContentTypeString());
-
         } catch (ODataApplicationException | ODataLibraryException ex) {
             // [IY9535] WARN: EntityProcessor.updateEntity: exception caught
             log.warn(OiyokanMessages.IY9535 + ": " + request.getRawODataPath() + "," + request.getRawQueryPath() + ": "
@@ -316,7 +356,7 @@ public class OiyokanEntityProcessor implements EntityProcessor {
 
             log.trace("OiyokanEntityProcessor#deleteEntity: " + "2. delete the data in backend");
             List<UriParameter> keyPredicates = uriResourceEntitySet.getKeyPredicates();
-            new OiyoBasicJdbcEntityOneBuilder(oiyoInfo).deleteEntityData(uriInfo, edmEntitySet, keyPredicates);
+            new OiyoBasicJdbcEntityOneBuilder(oiyoInfo).deleteEntityData(uriInfo, entitySet, keyPredicates);
 
             log.trace("OiyokanEntityProcessor#deleteEntity: " + "3. configure the response object");
             response.setStatusCode(HttpStatusCode.NO_CONTENT.getStatusCode());

@@ -46,7 +46,7 @@ class UnitTestEntityPatchInsert01Test {
         ODataResponse resp = OiyokanTestUtil.callPatch("/ODataTest2(" + key + ")", "{\n" //
                 + "  \"Name\":\"Name2\",\n" //
                 + "  \"Description\":\"Description2\"\n" + "}", false, true);
-        assertEquals(204, resp.getStatusCode());
+        assertEquals(201, resp.getStatusCode());
 
         resp = OiyokanTestUtil.callGet( //
                 "/ODataTest2", OiyoUrlUtil.encodeUrlQuery("$select=Decimal1,StringChar8,StringVar255"));

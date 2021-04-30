@@ -59,7 +59,7 @@ class UnitTestEntityPatchUpdate01Test {
         resp = OiyokanTestUtil.callPatch("/ODataTest2(" + key + ")", "{\n" //
                 + "  \"Name\":\"Name2\",\n" //
                 + "  \"Description\":\"Description2\"\n" + "}", true, false);
-        assertEquals(204, resp.getStatusCode(), "存在するので更新は成功.");
+        assertEquals(200, resp.getStatusCode(), "存在するので更新は成功.");
 
         resp = OiyokanTestUtil.callGet( //
                 "/ODataTest2", OiyoUrlUtil.encodeUrlQuery("$select=Decimal1,StringChar8,StringVar255"));

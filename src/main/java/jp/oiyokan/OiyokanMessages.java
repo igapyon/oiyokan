@@ -111,8 +111,10 @@ public class OiyokanMessages {
     // IY31XX : Entity
     public static final String IY3101 = "[IY3101] NO record processed. No Entity effects.";
     public static final int IY3101_CODE = HttpStatusCode.NOT_FOUND.getStatusCode();
-    // IY3102
-    // IY3103
+    public static final String IY3102 = "[IY3102] Duplicate name given as keyPredicates.";
+    public static final int IY3102_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
+    public static final String IY3103 = "[IY3103] Duplicate name given as Entity Property.";
+    public static final int IY3103_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
     // IY3104
     public static final String IY3105 = "[IY3105] WARN: No such Entity data";
     public static final int IY3105_CODE = HttpStatusCode.NOT_FOUND.getStatusCode();
