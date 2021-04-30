@@ -33,7 +33,8 @@ class UnitTestValueSpace01Test {
         @SuppressWarnings("unused")
         final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
 
-        final int TEST_ID = OiyokanTestUtil.getNextUniqueId();
+        // final int TEST_ID = OiyokanTestUtil.getNextUniqueId();
+        final int TEST_ID = 50100 + OiyokanTestUtil.getNextUniqueId();
 
         // INSERT + DELETE
         ODataResponse resp = OiyokanTestUtil.callPost("/ODataTest4", "{\n" //
