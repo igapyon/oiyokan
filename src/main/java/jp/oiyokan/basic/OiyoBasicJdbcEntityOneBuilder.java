@@ -30,7 +30,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.olingo.commons.api.data.Entity;
 import org.apache.olingo.commons.api.data.Property;
-import org.apache.olingo.commons.api.edm.EdmEntitySet;
 import org.apache.olingo.server.api.ODataApplicationException;
 import org.apache.olingo.server.api.uri.UriInfo;
 import org.apache.olingo.server.api.uri.UriParameter;
@@ -62,8 +61,14 @@ public class OiyoBasicJdbcEntityOneBuilder {
      */
     private OiyoInfo oiyoInfo;
 
+    private int lastPatchStatusCode = 500;
+
     public OiyoBasicJdbcEntityOneBuilder(OiyoInfo oiyoInfo) {
         this.oiyoInfo = oiyoInfo;
+    }
+
+    public int getLastPatchStatusCode() {
+        return lastPatchStatusCode;
     }
 
     /////////////////////////
@@ -72,22 +77,240 @@ public class OiyoBasicJdbcEntityOneBuilder {
     /**
      * Read Entity data.
      * 
-     * @param connTargetDb  コネクション.
      * @param uriInfo       URI info.
      * @param edmEntitySet  EdmEntitySet.
      * @param keyPredicates List of UriParameter.
      * @return Entity.
      * @throws ODataApplicationException OData App exception occured.
      */
-    public Entity readEntityData(Connection connTargetDb, UriInfo uriInfo, EdmEntitySet edmEntitySet,
-            List<UriParameter> keyPredicates) throws ODataApplicationException {
-        final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, edmEntitySet.getName());
+    public Entity readEntityData(UriInfo uriInfo, OiyoSettingsEntitySet entitySet, List<UriParameter> keyPredicates)
+            throws ODataApplicationException {
+        final OiyoSettingsDatabase database = OiyoInfoUtil.getOiyoDatabaseByEntitySetName(oiyoInfo,
+                entitySet.getName());
 
         // [IY1071] INFO: ENTITY: READ
-        log.debug(OiyokanMessages.IY1071 + ": " + edmEntitySet.getName());
+        log.debug(OiyokanMessages.IY1071 + ": " + entitySet.getName());
+
+        // データベースに接続.
+        try (Connection connTargetDb = OiyoCommonJdbcUtil.getConnection(database)) {
+            log.trace("[database transaction] WITHOUT database transaction.");
+            return readInternal(connTargetDb, uriInfo, entitySet, keyPredicates);
+        } catch (SQLException ex) {
+            // [IY3107] Database exception occured (readEntity)
+            log.error(OiyokanMessages.IY3107 + ": " + ex.toString());
+            throw new ODataApplicationException(OiyokanMessages.IY3107, //
+                    OiyokanMessages.IY3107_CODE, Locale.ENGLISH);
+        }
+    }
+
+    /////////////////////////
+    // INSERT
+
+    /**
+     * Create Entity data.
+     * 
+     * @param uriInfo       URI info.
+     * @param edmEntitySet  EdmEntitySet.
+     * @param requestEntity Entity to create.
+     * @return Entity created.
+     * @throws ODataApplicationException OData App exception occured.
+     */
+    public Entity createEntityData(UriInfo uriInfo, OiyoSettingsEntitySet entitySet, Entity requestEntity)
+            throws ODataApplicationException {
+        final OiyoSettingsDatabase database = OiyoInfoUtil.getOiyoDatabaseByEntitySetName(oiyoInfo,
+                entitySet.getName());
+
+        // [IY1072] INFO: ENTITY: CREATE
+        log.info(OiyokanMessages.IY1072 + ": " + entitySet.getName());
+
+        // データベースに接続.
+        try (Connection connTargetDb = OiyoCommonJdbcUtil.getConnection(database)) {
+            log.trace("[database transaction] WITHOUT database transaction.");
+            return createInternal(connTargetDb, uriInfo, entitySet, null/* キーの与えられないパターン */, requestEntity);
+        } catch (SQLException ex) {
+            // TODO message 別のIDを新規採番
+            // [M205] Fail to execute SQL.
+            log.error(OiyokanMessages.IY3152 + ": " + ex.toString(), ex);
+            throw new ODataApplicationException(OiyokanMessages.IY3152, //
+                    OiyokanMessages.IY3152_CODE, Locale.ENGLISH);
+        }
+    }
+
+    ////////////////////////
+    // DELETE
+
+    /**
+     * Delete Entity data.
+     * 
+     * @param uriInfo       URI info.
+     * @param edmEntitySet  EdmEntitySet.
+     * @param keyPredicates Keys to delete.
+     * @throws ODataApplicationException OData App exception occured.
+     */
+    public void deleteEntityData(UriInfo uriInfo, OiyoSettingsEntitySet entitySet, List<UriParameter> keyPredicates)
+            throws ODataApplicationException {
+        final OiyoSettingsDatabase database = OiyoInfoUtil.getOiyoDatabaseByEntitySetName(oiyoInfo,
+                entitySet.getName());
+
+        // [IY1073] INFO: ENTITY: DELETE
+        log.info(OiyokanMessages.IY1073 + ": " + entitySet.getName());
+
+        // データベースに接続.
+        try (Connection connTargetDb = OiyoCommonJdbcUtil.getConnection(database)) {
+            log.trace("[database transaction] WITHOUT database transaction.");
+            deleteInternal(connTargetDb, uriInfo, entitySet, keyPredicates);
+        } catch (SQLException ex) {
+            // [M205] Fail to execute SQL.
+            log.error(OiyokanMessages.IY3153 + ": " + ex.toString());
+            throw new ODataApplicationException(OiyokanMessages.IY3153, //
+                    OiyokanMessages.IY3153_CODE, Locale.ENGLISH);
+        }
+    }
+
+    ////////////////////////
+    // UPDATE (PATCH)
+    // OiyokanはPUTをサポートしない
+
+    /**
+     * Update Entity data (PATCH).
+     * 
+     * @param uriInfo       URI info.
+     * @param edmEntitySet  EdmEntitySet.
+     * @param keyPredicates Keys to update.
+     * @param requestEntity Entity date for update.
+     * @param ifMatch       Header If-Match.
+     * @param ifNoneMatch   Header If-None-Match.
+     * @throws ODataApplicationException OData App exception occured.
+     */
+    public Entity updateEntityDataPatch(UriInfo uriInfo, OiyoSettingsEntitySet entitySet,
+            List<UriParameter> keyPredicates, Entity requestEntity, final boolean ifMatch, final boolean ifNoneMatch)
+            throws ODataApplicationException {
+        final OiyoSettingsDatabase database = OiyoInfoUtil.getOiyoDatabaseByEntitySetName(oiyoInfo,
+                entitySet.getName());
+
+        /////////////////////////////////
+        // KEYに autoGenKey があるかどうか確認
+        boolean isAutoGenKeyIncludedInKey = false;
+        for (String keyName : entitySet.getEntityType().getKeyName()) {
+            for (OiyoSettingsProperty prop : entitySet.getEntityType().getProperty()) {
+                if (prop.getName().equals(keyName)) {
+                    if (prop.getAutoGenKey() != null && prop.getAutoGenKey()) {
+                        // KEYにautoGenKeyが含まれる。
+                        isAutoGenKeyIncludedInKey = true;
+                    }
+                }
+            }
+        }
+
+        if (ifNoneMatch && isAutoGenKeyIncludedInKey) {
+            // [IY3122] ERROR: If-None-Match NOT allowed because there is property that was
+            // set as autoGenKey.
+            log.warn(OiyokanMessages.IY3122);
+            throw new ODataApplicationException(OiyokanMessages.IY3122, OiyokanMessages.IY3122_CODE, Locale.ENGLISH);
+        }
+
+        // データベースに接続.
+        try (Connection connTargetDb = OiyoCommonJdbcUtil.getConnection(database)) {
+            log.trace("[database transaction] BEGIN database transaction.");
+            connTargetDb.setAutoCommit(false);
+            boolean isTranSuccessed = false;
+
+            try {
+                if (ifMatch || isAutoGenKeyIncludedInKey) {
+                    // If-Match header が '*' 指定されたら UPDATE.
+                    // KEYにautoGenKeyが含まれる場合も If-Match 指定と同様と扱って UPDATE.
+                    // [IY1074] INFO: ENTITY: PATCH: UPDATE (If-Match)
+                    log.info(OiyokanMessages.IY1074 + ": " + entitySet.getName());
+                    updateInternal(connTargetDb, uriInfo, entitySet, keyPredicates, requestEntity);
+
+                    // 更新後の Entity を読み込み.
+                    final Entity entity = readInternal(connTargetDb, uriInfo, entitySet, keyPredicates);
+                    lastPatchStatusCode = 200; /* READ */
+
+                    // トランザクションを成功としてマーク.
+                    isTranSuccessed = true;
+                    return entity;
+                } else if (ifNoneMatch) {
+                    // If-None-Match header が '*' 指定されたら INSERT.
+                    // [IY1075] INFO: ENTITY: PATCH: INSERT (If-None-Match)
+                    log.info(OiyokanMessages.IY1075 + ": " + entitySet.getName());
+                    final Entity entity = createInternal(connTargetDb, uriInfo, entitySet,
+                            keyPredicates/* キーの与えられるパターン */, requestEntity);
+                    lastPatchStatusCode = 201; /* CREATED */
+
+                    // トランザクションを成功としてマーク.
+                    isTranSuccessed = true;
+                    return entity;
+                } else {
+                    // If-Match header も If-None-Match header も指定がない場合は UPSERT.
+                    // [IY1076] INFO: ENTITY: PATCH: UPSERT
+                    log.info(OiyokanMessages.IY1076 + ": " + entitySet.getName());
+
+                    try {
+                        // SELECT to check exists
+                        readInternal(connTargetDb, uriInfo, entitySet, keyPredicates);
+
+                        // 読み込み成功。対象のレコードの更新に着手
+                        // UPDATE
+                        updateInternal(connTargetDb, uriInfo, entitySet, keyPredicates, requestEntity);
+
+                        // 更新後の Entity を読み込み.
+                        final Entity entity = readInternal(connTargetDb, uriInfo, entitySet, keyPredicates);
+                        lastPatchStatusCode = 200; /* READ */
+
+                        // トランザクションを成功としてマーク.
+                        isTranSuccessed = true;
+                        return entity;
+                    } catch (ODataApplicationException ex) {
+                        // 404以外が返却は想定外でエラー。処理中断。
+                        if (OiyokanMessages.IY3105_CODE != ex.getStatusCode()) {
+                            // そのまま throw.
+                            throw ex;
+                        }
+
+                        // 404 (該当レコードなし) であったので、新規にレコード作成.
+
+                        // INSERT
+                        final Entity entity = createInternal(connTargetDb, uriInfo, entitySet,
+                                keyPredicates/* キーの与えられるパターン */, requestEntity);
+                        lastPatchStatusCode = 201; /* CREATED */
+
+                        // トランザクションを成功としてマーク.
+                        isTranSuccessed = true;
+                        return entity;
+                    }
+                }
+            } finally {
+                if (isTranSuccessed) {
+                    log.trace("[database transaction] COMMIT database transaction.");
+                    connTargetDb.commit();
+                } else {
+                    log.trace("[database transaction] ROLLBACK database transaction.");
+                    connTargetDb.rollback();
+                }
+
+                log.trace("[database transaction] END database transaction.");
+                connTargetDb.setAutoCommit(true);
+            }
+        } catch (SQLException ex) {
+            // [IY3154] Fail to update entity with SQL error.
+            log.error(OiyokanMessages.IY3154 + ": " + ex.toString());
+            throw new ODataApplicationException(OiyokanMessages.IY3154, OiyokanMessages.IY3154_CODE, Locale.ENGLISH);
+        } catch (ODataApplicationException ex) {
+            // [IY3108] Fail to update entity.
+            log.error(OiyokanMessages.IY3108 + ": " + ex.toString());
+            throw ex;
+        }
+    }
+
+    /////////////////////////////////////////////////////////////////
+    // Internal methods.
+
+    Entity readInternal(Connection connTargetDb, UriInfo uriInfo, OiyoSettingsEntitySet entitySet,
+            List<UriParameter> keyPredicates) throws ODataApplicationException {
 
         final OiyoSqlInfo sqlInfo = new OiyoSqlInfo(oiyoInfo, entitySet.getName());
-        new OiyoSqlQueryOneBuilder(oiyoInfo, sqlInfo).buildSelectOneQuery(edmEntitySet.getName(), keyPredicates);
+        new OiyoSqlQueryOneBuilder(oiyoInfo, sqlInfo).buildSelectOneQuery(entitySet.getName(), keyPredicates);
 
         final String sql = sqlInfo.getSqlBuilder().toString();
 
@@ -175,285 +398,115 @@ public class OiyoBasicJdbcEntityOneBuilder {
         }
     }
 
-    /////////////////////////
-    // INSERT
-
-    /**
-     * Create Entity data.
-     * 
-     * @param uriInfo       URI info.
-     * @param edmEntitySet  EdmEntitySet.
-     * @param requestEntity Entity to create.
-     * @return Entity created.
-     * @throws ODataApplicationException OData App exception occured.
-     */
-    public Entity createEntityData(UriInfo uriInfo, EdmEntitySet edmEntitySet, Entity requestEntity)
-            throws ODataApplicationException {
-        final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, edmEntitySet.getName());
-
-        // [IY1072] INFO: ENTITY: CREATE
-        log.info(OiyokanMessages.IY1072 + ": " + edmEntitySet.getName());
+    Entity createInternal(Connection connTargetDb, UriInfo uriInfo, OiyoSettingsEntitySet entitySet,
+            List<UriParameter> keyPredicatesInput, Entity requestEntity) throws ODataApplicationException {
 
         final OiyoSqlInfo sqlInfo = new OiyoSqlInfo(oiyoInfo, entitySet.getName());
-        new OiyoSqlInsertOneBuilder(oiyoInfo, sqlInfo).buildInsertIntoDml(edmEntitySet.getName(), null, requestEntity);
+        new OiyoSqlInsertOneBuilder(oiyoInfo, sqlInfo).buildInsertIntoDml(entitySet.getName(), keyPredicatesInput,
+                requestEntity);
 
-        final OiyoSettingsDatabase database = OiyoInfoUtil.getOiyoDatabaseByEntitySetName(oiyoInfo,
-                entitySet.getName());
         final OiyokanConstants.DatabaseType databaseType = OiyoInfoUtil.getOiyoDatabaseTypeByEntitySetName(oiyoInfo,
                 entitySet.getName());
 
-        // データベースに接続.
-        boolean isTranSuccessed = false;
-        try (Connection connTargetDb = OiyoCommonJdbcUtil.getConnection(database)) {
-            // Set auto commit OFF.
-            connTargetDb.setAutoCommit(false);
-            try {
-                final List<String> generatedKeys = OiyoCommonJdbcUtil.executeDml(connTargetDb, sqlInfo, entitySet,
-                        true);
-                // 生成されたキーをその後の処理に反映。
-                final List<UriParameter> keyPredicates = new ArrayList<>();
-                if (DatabaseType.ORCL18 == databaseType) {
-                    // ORCL18 の特殊ルール。ROWIDが戻るので決め打ちで検索.
+        final List<String> generatedKeys = OiyoCommonJdbcUtil.executeDml(connTargetDb, sqlInfo, entitySet, true);
+        // 生成されたキーをその後の処理に反映。
+        final List<UriParameter> keyPredicatesAfter = new ArrayList<>();
+        if (DatabaseType.ORCL18 == databaseType) {
+            // ORCL18 の特殊ルール。ROWIDが戻るので決め打ちで検索.
+            final UriParameterImpl newParam = new UriParameterImpl();
+            newParam.setName("ROWID");
+            newParam.setText(generatedKeys.get(0));
+            keyPredicatesAfter.add(newParam);
+        } else {
+            // 最初に generatedKeys の対応づけを実施.
+            int generatedKeyIndex = 0;
+            for (OiyoSettingsProperty property : entitySet.getEntityType().getProperty()) {
+                if (property.getAutoGenKey() != null && property.getAutoGenKey()) {
+                    // 自動生成対象.
                     final UriParameterImpl newParam = new UriParameterImpl();
-                    newParam.setName("ROWID");
-                    newParam.setText(generatedKeys.get(0));
-                    keyPredicates.add(newParam);
-                } else {
-                    // 最初に generatedKeys の対応づけを実施.
-                    int generatedKeyIndex = 0;
-                    for (OiyoSettingsProperty property : entitySet.getEntityType().getProperty()) {
-                        if (property.getAutoGenKey() != null && property.getAutoGenKey()) {
-                            // 自動生成対象.
-                            final UriParameterImpl newParam = new UriParameterImpl();
-                            newParam.setName(property.getName());
-                            // TODO 配列超えの例外処理およびmessage
-                            newParam.setText(generatedKeys.get(generatedKeyIndex++));
-                            keyPredicates.add(newParam);
-                        }
-                    }
+                    newParam.setName(property.getName());
+                    // TODO 配列超えの例外処理およびmessage
+                    newParam.setText(generatedKeys.get(generatedKeyIndex++));
+                    keyPredicatesAfter.add(newParam);
+                }
+            }
 
-                    // generatedKeys で対応づかなかった分はPOSTリクエストから導出
-                    KEYLOOP: for (String keyName : entitySet.getEntityType().getKeyName()) {
-                        String propValue = null;
-                        for (OiyoSettingsProperty property : entitySet.getEntityType().getProperty()) {
-                            if (property.getAutoGenKey() != null && property.getAutoGenKey()) {
-                                // すでに autoGenKeyから導出済み。スキップ。
-                                continue KEYLOOP;
-                            }
-                        }
-
-                        for (Property look : requestEntity.getProperties()) {
-                            if (look.getName().equals(keyName)) {
-                                if (look.getValue() instanceof java.util.Calendar) {
-                                    // TODO この箇所がどのようなケースで動作するのか調査。
-                                    java.util.Calendar cal = (java.util.Calendar) look.getValue();
-                                    Instant instant = cal.toInstant();
-                                    ZonedDateTime zdt = ZonedDateTime.ofInstant(instant, ZoneId.systemDefault());
-                                    propValue = zdt.format(DateTimeFormatter.ISO_INSTANT);
-                                } else {
-                                    propValue = String.valueOf(look.getValue());
-                                }
-                                break;
-                            }
-                        }
-                        if (propValue == null) {
-                            log.trace("TRACE: propKey:" + keyName + "に対応する入力なし.");
-                            // [M217] UNEXPECTED: Can't retrieve PreparedStatement#getGeneratedKeys: Fail to
-                            // map auto generated key field.
-                            log.error(OiyokanMessages.IY3114 + ": " + keyName);
-                            throw new ODataApplicationException(OiyokanMessages.IY3114 + ": " + keyName, //
-                                    OiyokanMessages.IY3114_CODE, Locale.ENGLISH);
-                        }
-
-                        final UriParameterImpl newParam = new UriParameterImpl();
-                        newParam.setName(keyName);
-                        newParam.setText(propValue);
-                        keyPredicates.add(newParam);
+            // generatedKeys で対応づかなかった分はPOSTリクエストから導出
+            KEYLOOP: for (String keyName : entitySet.getEntityType().getKeyName()) {
+                String propValue = null;
+                for (OiyoSettingsProperty property : entitySet.getEntityType().getProperty()) {
+                    if (property.getAutoGenKey() != null && property.getAutoGenKey()) {
+                        // すでに autoGenKeyから導出済み。スキップ。
+                        continue KEYLOOP;
                     }
                 }
 
-                // 更新後のデータをリロード.
-                Entity result = readEntityData(connTargetDb, uriInfo, edmEntitySet, keyPredicates);
-
-                // トランザクションを成功としてマーク.
-                isTranSuccessed = true;
-                return result;
-            } finally {
-                if (isTranSuccessed) {
-                    connTargetDb.commit();
-                } else {
-                    connTargetDb.rollback();
+                if (keyPredicatesInput != null) {
+                    for (UriParameter look : keyPredicatesInput) {
+                        if (look.getName().equals(keyName)) {
+                            propValue = look.getText();
+                            // TODO FIXME 文字列クオートが入るかどうか後で確認したい。
+                        }
+                    }
                 }
-                // Set auto commit ON.
-                connTargetDb.setAutoCommit(true);
+
+                for (Property look : requestEntity.getProperties()) {
+                    if (look.getName().equals(keyName)) {
+                        if (look.getValue() instanceof java.util.Calendar) {
+                            // TODO この箇所がどのようなケースで動作するのか調査。
+                            java.util.Calendar cal = (java.util.Calendar) look.getValue();
+                            Instant instant = cal.toInstant();
+                            ZonedDateTime zdt = ZonedDateTime.ofInstant(instant, ZoneId.systemDefault());
+                            propValue = zdt.format(DateTimeFormatter.ISO_INSTANT);
+                        } else {
+                            propValue = String.valueOf(look.getValue());
+                        }
+                        break;
+                    }
+                }
+                if (propValue == null) {
+                    log.trace("TRACE: propKey:" + keyName + "に対応する入力なし.");
+                    // [M217] UNEXPECTED: Can't retrieve PreparedStatement#getGeneratedKeys: Fail to
+                    // map auto generated key field.
+                    log.error(OiyokanMessages.IY3114 + ": " + keyName);
+                    throw new ODataApplicationException(OiyokanMessages.IY3114 + ": " + keyName, //
+                            OiyokanMessages.IY3114_CODE, Locale.ENGLISH);
+                }
+
+                final UriParameterImpl newParam = new UriParameterImpl();
+                newParam.setName(keyName);
+                newParam.setText(propValue);
+                keyPredicatesAfter.add(newParam);
             }
-        } catch (SQLException ex) {
-            // [M205] Fail to execute SQL.
-            log.error(OiyokanMessages.IY3152 + ": " + ex.toString(), ex);
-            throw new ODataApplicationException(OiyokanMessages.IY3152, //
-                    OiyokanMessages.IY3152_CODE, Locale.ENGLISH);
         }
+
+        // 更新後のデータをリロード.
+        return readInternal(connTargetDb, uriInfo, entitySet, keyPredicatesAfter);
     }
 
-    ////////////////////////
-    // DELETE
-
-    /**
-     * Delete Entity data.
-     * 
-     * @param uriInfo       URI info.
-     * @param edmEntitySet  EdmEntitySet.
-     * @param keyPredicates Keys to delete.
-     * @throws ODataApplicationException OData App exception occured.
-     */
-    public void deleteEntityData(UriInfo uriInfo, EdmEntitySet edmEntitySet, List<UriParameter> keyPredicates)
-            throws ODataApplicationException {
-        final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, edmEntitySet.getName());
-
-        // [IY1073] INFO: ENTITY: DELETE
-        log.info(OiyokanMessages.IY1073 + ": " + edmEntitySet.getName());
-
-        final OiyoSqlInfo sqlInfo = new OiyoSqlInfo(oiyoInfo, entitySet.getName());
-        new OiyoSqlDeleteOneBuilder(oiyoInfo, sqlInfo).buildDeleteDml(edmEntitySet.getName(), keyPredicates);
-
-        final OiyoSettingsDatabase database = OiyoInfoUtil.getOiyoDatabaseByEntitySetName(oiyoInfo,
-                entitySet.getName());
-
-        // データベースに接続.
-        boolean isTranSuccessed = false;
-        try (Connection connTargetDb = OiyoCommonJdbcUtil.getConnection(database)) {
-            // Set auto commit OFF.
-            connTargetDb.setAutoCommit(false);
-            try {
-                OiyoCommonJdbcUtil.executeDml(connTargetDb, sqlInfo, entitySet, false);
-
-                // トランザクションを成功としてマーク.
-                isTranSuccessed = true;
-            } finally {
-                if (isTranSuccessed) {
-                    connTargetDb.commit();
-                } else {
-                    connTargetDb.rollback();
-                }
-                // Set auto commit ON.
-                connTargetDb.setAutoCommit(true);
-            }
-        } catch (SQLException ex) {
-            // [M205] Fail to execute SQL.
-            log.error(OiyokanMessages.IY3153 + ": " + ex.toString());
-            throw new ODataApplicationException(OiyokanMessages.IY3153, //
-                    OiyokanMessages.IY3153_CODE, Locale.ENGLISH);
-        }
-    }
-
-    ////////////////////////
-    // UPDATE (PATCH)
-    // OiyokanはPUTをサポートしない
-
-    /**
-     * Update Entity data (PATCH).
-     * 
-     * @param uriInfo       URI info.
-     * @param edmEntitySet  EdmEntitySet.
-     * @param keyPredicates Keys to update.
-     * @param requestEntity Entity date for update.
-     * @param ifMatch       Header If-Match.
-     * @param ifNoneMatch   Header If-None-Match.
-     * @throws ODataApplicationException OData App exception occured.
-     */
-    public void updateEntityDataPatch(UriInfo uriInfo, EdmEntitySet edmEntitySet, List<UriParameter> keyPredicates,
-            Entity requestEntity, final boolean ifMatch, final boolean ifNoneMatch) throws ODataApplicationException {
-        final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, edmEntitySet.getName());
+    void updateInternal(Connection connTargetDb, UriInfo uriInfo, OiyoSettingsEntitySet entitySet,
+            List<UriParameter> keyPredicates, Entity requestEntity) throws ODataApplicationException {
 
         final OiyoSqlInfo sqlInfo = new OiyoSqlInfo(oiyoInfo, entitySet.getName());
 
-        final OiyoSettingsDatabase database = OiyoInfoUtil.getOiyoDatabaseByEntitySetName(oiyoInfo,
-                entitySet.getName());
-
-        /////////////////////////////////
-        // KEYに autoGenKey があるかどうか確認
-        boolean isAutoGenKeyIncludedInKey = false;
-        for (String keyName : entitySet.getEntityType().getKeyName()) {
-            for (OiyoSettingsProperty prop : entitySet.getEntityType().getProperty()) {
-                if (prop.getName().equals(keyName)) {
-                    if (prop.getAutoGenKey() != null && prop.getAutoGenKey()) {
-                        // KEYにautoGenKeyが含まれる。
-                        isAutoGenKeyIncludedInKey = true;
-                    }
-                }
-            }
-        }
-
         // データベースに接続.
-        try (Connection connTargetDb = OiyoCommonJdbcUtil.getConnection(database)) {
-            // Set auto commit OFF.
-            connTargetDb.setAutoCommit(false);
-            boolean isTranSuccessed = false;
+        try {
+            new OiyoSqlUpdateOneBuilder(oiyoInfo, sqlInfo).buildUpdatePatchDml(entitySet.getName(), keyPredicates,
+                    requestEntity);
 
-            if (ifMatch || isAutoGenKeyIncludedInKey) {
-                // If-Match header が '*' 指定されたら UPDATE.
-                // KEYにautoGenKeyが含まれる場合も If-Match 指定と同様と扱って UPDATE.
-                // [IY1074] INFO: ENTITY: PATCH: UPDATE (If-Match)
-                log.info(OiyokanMessages.IY1074 + ": " + edmEntitySet.getName());
-                new OiyoSqlUpdateOneBuilder(oiyoInfo, sqlInfo).buildUpdatePatchDml(edmEntitySet.getName(),
-                        keyPredicates, requestEntity);
-
-            } else if (ifNoneMatch) {
-                // If-None-Match header が '*' 指定されたら INSERT.
-                // [IY1075] INFO: ENTITY: PATCH: INSERT (If-None-Match)
-                log.info(OiyokanMessages.IY1075 + ": " + edmEntitySet.getName());
-                new OiyoSqlInsertOneBuilder(oiyoInfo, sqlInfo).buildInsertIntoDml(edmEntitySet.getName(), keyPredicates,
-                        requestEntity);
-
-            } else {
-                // If-Match header も If-None-Match header も指定がない場合は UPSERT.
-                // [IY1076] INFO: ENTITY: PATCH: UPSERT
-                log.info(OiyokanMessages.IY1076 + ": " + edmEntitySet.getName());
-
-                try {
-                    // SELECT to check exists
-                    readEntityData(connTargetDb, uriInfo, edmEntitySet, keyPredicates);
-
-                    // 読み込み成功。更新に入ります。
-
-                    // UPDATE
-                    new OiyoSqlUpdateOneBuilder(oiyoInfo, sqlInfo).buildUpdatePatchDml(edmEntitySet.getName(),
-                            keyPredicates, requestEntity);
-                } catch (ODataApplicationException ex) {
-                    // 404以外が返却は想定外でエラー。処理中断。
-                    if (OiyokanMessages.IY3105_CODE != ex.getStatusCode()) {
-                        // そのまま throw.
-                        throw ex;
-                    }
-
-                    // INSERT
-                    new OiyoSqlInsertOneBuilder(oiyoInfo, sqlInfo).buildInsertIntoDml(edmEntitySet.getName(),
-                            keyPredicates, requestEntity);
-                }
-            }
-
-            try {
-                OiyoCommonJdbcUtil.executeDml(connTargetDb, sqlInfo, entitySet, false);
-
-                // トランザクションを成功としてマーク.
-                isTranSuccessed = true;
-            } finally {
-                if (isTranSuccessed) {
-                    connTargetDb.commit();
-                } else {
-                    connTargetDb.rollback();
-                }
-                // Set auto commit ON.
-                connTargetDb.setAutoCommit(true);
-            }
-        } catch (SQLException ex) {
-            // [IY3154] Not modified by SQL.
-            log.error(OiyokanMessages.IY3154 + ": " + ex.toString());
-            throw new ODataApplicationException(OiyokanMessages.IY3154, OiyokanMessages.IY3154_CODE, Locale.ENGLISH);
+            OiyoCommonJdbcUtil.executeDml(connTargetDb, sqlInfo, entitySet, false);
         } catch (ODataApplicationException ex) {
-            // [IY3108] Not modified."
+            // [IY3108] Fail to update entity.
             log.error(OiyokanMessages.IY3108 + ": " + ex.toString());
-            throw new ODataApplicationException(OiyokanMessages.IY3108, OiyokanMessages.IY3108_CODE, Locale.ENGLISH);
+            throw ex;
         }
+    }
+
+    void deleteInternal(Connection connTargetDb, UriInfo uriInfo, OiyoSettingsEntitySet entitySet,
+            List<UriParameter> keyPredicates) throws ODataApplicationException {
+        final OiyoSqlInfo sqlInfo = new OiyoSqlInfo(oiyoInfo, entitySet.getName());
+        new OiyoSqlDeleteOneBuilder(oiyoInfo, sqlInfo).buildDeleteDml(entitySet.getName(), keyPredicates);
+
+        OiyoCommonJdbcUtil.executeDml(connTargetDb, sqlInfo, entitySet, false);
     }
 }

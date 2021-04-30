@@ -128,8 +128,8 @@ public class OiyokanTestUtil {
     /////////////////
     // UPDATE
 
-    public static ODataResponse callPatch(String rawODataPath, String bodyJson, final boolean ifMatch,
-            final boolean ifNoneMatch) throws Exception {
+    public static ODataResponse callPatch(String rawODataPath, String bodyJson, final boolean ifMatch /* UPDATE */,
+            final boolean ifNoneMatch/* INSERT */) throws Exception {
         final ODataHttpHandler handler = OiyokanTestUtil.getHandler();
         final ODataRequest req = new ODataRequest();
         req.setMethod(HttpMethod.PATCH);

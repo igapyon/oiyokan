@@ -58,7 +58,7 @@ class OiyoSqlQueryListExprTest {
         // アプリ情報が入っている内部DBをベースに処理。つまり h2 database 前提としての振る舞いをおこなう。
         OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, "ODataTest1");
         if (entitySet == null) {
-            final String message = "ERROR: Fail to load Oiyokans EntitySet.";
+            final String message = "ERROR: Fail to load Oiyokan EntitySet.";
             System.err.println(message);
             throw new ODataApplicationException(message, 500, Locale.ENGLISH);
         }

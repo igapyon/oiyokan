@@ -103,26 +103,26 @@ class Gen01OiyokanUnittestSettingsJsonTest {
             // UnitTestテーブルの名称調整
             for (OiyoSettingsEntitySet entitySet : oiyoSettings.getEntitySet()) {
                 if ("ODataTest1".equals(entitySet.getEntityType().getDbName())) {
-                    entitySet.setName("ODataTests1");
+                    entitySet.setName("ODataTest1");
                 }
                 if ("ODataTest2".equals(entitySet.getEntityType().getDbName())) {
-                    entitySet.setName("ODataTests2");
+                    entitySet.setName("ODataTest2");
                 }
                 if ("ODataTest3".equals(entitySet.getEntityType().getDbName())) {
-                    entitySet.setName("ODataTests3");
+                    entitySet.setName("ODataTest3");
                 }
                 if ("OData Test4".equals(entitySet.getEntityType().getDbName())) {
-                    entitySet.setName("ODataTests4");
+                    entitySet.setName("ODataTest4");
                     entitySet.getEntityType().setName("ODataTest4");
                 }
                 if ("ODataTest5".equals(entitySet.getEntityType().getDbName())) {
-                    entitySet.setName("ODataTests5");
+                    entitySet.setName("ODataTest5");
                 }
                 if ("ODataTest6".equals(entitySet.getEntityType().getDbName())) {
-                    entitySet.setName("ODataTests6");
+                    entitySet.setName("ODataTest6");
                 }
                 if ("ODataTest7".equals(entitySet.getEntityType().getDbName())) {
-                    entitySet.setName("ODataTests7");
+                    entitySet.setName("ODataTest7");
                 }
             }
 

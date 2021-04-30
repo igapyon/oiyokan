@@ -59,7 +59,7 @@ class UnitTestTypeBinary01Test {
                 + "}", false, false);
         result = OiyokanTestUtil.stream2String(resp.getContent());
         // System.err.println(result);
-        assertEquals(204, resp.getStatusCode(), "UPDATE(PATCH)できることを確認.");
+        assertEquals(200, resp.getStatusCode(), "UPDATE(PATCH)できることを確認.");
 
         resp = OiyokanTestUtil.callGet("/ODataTest6(" + idString + ")", null);
         result = OiyokanTestUtil.stream2String(resp.getContent());

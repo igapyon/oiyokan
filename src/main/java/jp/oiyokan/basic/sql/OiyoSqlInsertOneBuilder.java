@@ -36,7 +36,6 @@ import jp.oiyokan.dto.OiyoSettingsProperty;
  * データベースに1件レコードを追加.
  */
 public class OiyoSqlInsertOneBuilder {
-    @SuppressWarnings("unused")
     private static final Log log = LogFactory.getLog(OiyoSqlInsertOneBuilder.class);
 
     /**

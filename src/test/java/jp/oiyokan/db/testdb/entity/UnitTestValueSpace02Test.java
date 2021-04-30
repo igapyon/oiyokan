@@ -22,16 +22,12 @@ import org.junit.jupiter.api.Test;
 
 import jp.oiyokan.OiyokanUnittestUtil;
 import jp.oiyokan.common.OiyoInfo;
-import jp.oiyokan.common.OiyoUrlUtil;
 import jp.oiyokan.util.OiyokanTestUtil;
 
 /**
- * Entityの基本的なテスト.
+ * フィルタの型に着眼したテスト.
  */
-class UnitTestEntityPatchUpsert01Test {
-    /**
-     * INSERT (PATCH)
-     */
+class UnitTestValueSpace02Test {
     @Test
     void test01() throws Exception {
         @SuppressWarnings("unused")
@@ -39,33 +35,33 @@ class UnitTestEntityPatchUpsert01Test {
 
         final int TEST_ID = OiyokanTestUtil.getNextUniqueId();
 
-        // INSERT (PATCH)
-        // 存在しないのでINSERTになるケース.
-        // Decimal1,StringChar8,StringVar255
-        final String key = "Decimal1=543.21,StringChar8='ZZYYXX12',StringVar255='Val" + TEST_ID + "'";
-        ODataResponse resp = OiyokanTestUtil.callPatch("/ODataTest2(" + key + ")", "{\n" //
-                + "  \"Name\":\"Name2\",\n" //
-                + "  \"Description\":\"Description2\"\n" + "}", false, false);
-        assertEquals(201, resp.getStatusCode());
-
-        resp = OiyokanTestUtil.callGet( //
-                "/ODataTest2", OiyoUrlUtil.encodeUrlQuery("$select=Decimal1,StringChar8,StringVar255"));
-        @SuppressWarnings("unused")
+        // INSERT + DELETE
+        ODataResponse resp = OiyokanTestUtil.callPost("/ODataTest4", "{\n" //
+                + "  \"I_D\":" + TEST_ID + ",\n" //
+                + "  \"Na_me\":\"Name\"\n" //
+                + "}");
         String result = OiyokanTestUtil.stream2String(resp.getContent());
         // System.err.println(result);
+        if (409 == resp.getStatusCode()) {
+            // パス
+        } else {
+            assertEquals(201, resp.getStatusCode(), "項目名変形におけるINSERTの確認.");
+            assertEquals("{\"@odata.context\":\"$metadata#ODataTest4\",\"I_D\":" + TEST_ID
+                    + ",\"Na_me\":\"Name\",\"Va_lue1\":\"VALUEVALUE12345\"}", result);
+        }
 
-        // INSERTした後なので存在する
-        resp = OiyokanTestUtil.callGet("/ODataTest2(" + key + ")", null);
+        resp = OiyokanTestUtil.callGet("/ODataTest4(I_D=" + TEST_ID + ",Na_me='Name')", null);
         result = OiyokanTestUtil.stream2String(resp.getContent());
         // System.err.println(result);
         assertEquals(200, resp.getStatusCode());
 
-        // DELETE
-        resp = OiyokanTestUtil.callDelete("/ODataTest2(" + key + ")");
-        assertEquals(204, resp.getStatusCode());
-
-        // DELETE したあとなので存在しない.
-        resp = OiyokanTestUtil.callGet("/ODataTest2(" + key + ")", null);
-        assertEquals(404, resp.getStatusCode());
+        // UPDATE (PATCH)
+        // キーと更新値とを同時に指定されるとエラー
+        resp = OiyokanTestUtil.callPatch("/ODataTest4(I_D=" + TEST_ID + ",Na_me='Name')", "{\n" //
+                + "  \"Na_me\":\"Name2\",\n" //
+                + "  \"Va_lue1\":\"Description2\"\n" + "}", false, false);
+        result = OiyokanTestUtil.stream2String(resp.getContent());
+        // System.err.println(result);
+        assertEquals(400, resp.getStatusCode());
     }
 }
