@@ -319,26 +319,130 @@ public class OiyoCommonJdbcUtil {
             // there is no type information.
             log.warn(OiyokanMessages.IY7162);
             stmt.setNull(column, Types.NULL);
-        } else if (null == param.getValue()) {
+            return;
+        }
+        if (null == param.getValue()) {
             log.trace("TRACE: PreparedStatement#setNull: null with Type");
             if (null == param.getProperty()) {
                 // [IY7163] WARN: bind NULL value to an SQL statement, set Types.NULL because
                 // there is no property object information.
                 log.warn(OiyokanMessages.IY7163);
                 stmt.setNull(column, Types.NULL);
+                return;
+            }
+            if (null == param.getProperty().getDbType()) {
+                // [IY7164] WARN: bind NULL value to an SQL statement, set Types.NULL because
+                // there is no JDBC Type info in property information.
+                log.warn(OiyokanMessages.IY7164);
+                stmt.setNull(column, Types.NULL);
+                return;
             } else {
-                if (null == param.getProperty().getDbType()) {
-                    // [IY7164] WARN: bind NULL value to an SQL statement, set Types.NULL because
-                    // there is no JDBC Type info in property information.
-                    log.warn(OiyokanMessages.IY7164);
-                    stmt.setNull(column, Types.NULL);
-                } else {
-                    final int jdbcType = OiyoJdbcUtil.string2Types(param.getProperty().getJdbcType());
-                    // setNullの型は文字列とする。Types.NULLだとSQL Server の REAL型にてエラーとなるため。
-                    stmt.setNull(column, jdbcType);
+                final int jdbcType = OiyoJdbcUtil.string2Types(param.getProperty().getJdbcType());
+                // setNullの型は文字列とする。Types.NULLだとSQL Server の REAL型にてエラーとなるため。
+                stmt.setNull(column, jdbcType);
+                return;
+            }
+        }
+
+        if (param.getProperty() != null) {
+            final OiyoSettingsProperty property = param.getProperty();
+
+            // property 指定ありの場合.
+            log.trace("OiyoCommonJdbcUtil#bindPreparedParameter(" + property.getEdmType() + ")");
+            final EdmPrimitiveType edmType = OiyoEdmUtil.string2EdmType(property.getEdmType());
+            if (EdmSByte.getInstance() == edmType) {
+                if (param.getValue() instanceof Byte) {
+                    stmt.setByte(column, (Byte) param.getValue());
+                    return;
                 }
             }
-        } else if (param.getValue() instanceof Byte) {
+            if (EdmByte.getInstance() == edmType /* Edm.Byteに相当する型がJavaにないので Shortで代替と想定 */ //
+                    || EdmInt16.getInstance() == edmType //
+                    || EdmInt32.getInstance() == edmType //
+                    || EdmInt64.getInstance() == edmType) {
+                if (param.getValue() instanceof Short) {
+                    stmt.setShort(column, (Short) param.getValue());
+                    return;
+                }
+                if (param.getValue() instanceof Integer) {
+                    stmt.setInt(column, (Integer) param.getValue());
+                    return;
+                }
+                if (param.getValue() instanceof Long) {
+                    stmt.setLong(column, (Long) param.getValue());
+                    return;
+                }
+            }
+            if (EdmDecimal.getInstance() == edmType) {
+                if (param.getValue() instanceof BigDecimal) {
+                    stmt.setBigDecimal(column, (BigDecimal) param.getValue());
+                    return;
+                }
+            }
+            if (EdmBoolean.getInstance() == edmType) {
+                if (param.getValue() instanceof Boolean) {
+                    stmt.setBoolean(column, (Boolean) param.getValue());
+                    return;
+                }
+                // TODO BIT型の対応検討
+            }
+            if (EdmSingle.getInstance() == edmType) {
+                if (param.getValue() instanceof Float) {
+                    stmt.setFloat(column, (Float) param.getValue());
+                    return;
+                }
+            }
+            if (EdmDouble.getInstance() == edmType) {
+                if (param.getValue() instanceof Double) {
+                    stmt.setDouble(column, (Double) param.getValue());
+                    return;
+                }
+            }
+            if (EdmDate.getInstance() == edmType) {
+                if (param.getValue() instanceof java.util.Calendar) {
+                    java.util.Calendar cal = (java.util.Calendar) param.getValue();
+                    java.sql.Date sdate = new java.sql.Date(cal.getTime().getTime());
+                    stmt.setDate(column, sdate);
+                    return;
+                }
+            }
+            if (EdmDateTimeOffset.getInstance() == edmType) {
+                if (param.getValue() instanceof java.sql.Timestamp) {
+                    stmt.setTimestamp(column, (java.sql.Timestamp) param.getValue());
+                    return;
+                }
+            }
+            if (EdmTimeOfDay.getInstance() == edmType) {
+                if (param.getValue() instanceof java.sql.Time) {
+                    stmt.setTime(column, (java.sql.Time) param.getValue());
+                    return;
+                }
+            }
+            if (EdmString.getInstance() == edmType) {
+                if (param.getValue() instanceof String) {
+                    stmt.setString(column, (String) param.getValue());
+                    return;
+                }
+            }
+            if (EdmBinary.getInstance() == edmType) {
+                if (param.getValue() instanceof byte[]) {
+                    stmt.setBytes(column, (byte[]) param.getValue());
+                    return;
+                }
+            }
+            if (EdmGuid.getInstance() == edmType) {
+                // TODO GUID
+            }
+
+            // TODO message
+            log.error("property は与えられたが処理しなかった型: Edm:" + property.getEdmType() + ", class:"
+                    + param.getValue().getClass().getName());
+        }
+
+        ////////////////////////////////////
+        // ここからは property に依存しない処理.
+
+        if (param.getValue() instanceof Byte) {
             log.trace("TRACE: PreparedStatement#setByte: " + param);
             stmt.setByte(column, (Byte) param.getValue());
         } else if (param.getValue() instanceof Short) {
