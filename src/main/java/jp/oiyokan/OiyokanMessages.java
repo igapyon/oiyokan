@@ -132,6 +132,8 @@ public class OiyokanMessages {
     public static final int IY3113_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
     public static final String IY3114 = "[IY3114] UNEXPECTED: Can't retrieve PreparedStatement#getGeneratedKeys: Fail to map auto generated key field.";
     public static final int IY3114_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
+    public static final String IY3115 = "[IY3115] UNEXPECTED: Fail to map generated keys (autoGenKey) to new key.";
+    public static final int IY3115_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
 
     public static final String IY3121 = "[IY3121] WARN: Ignore given value during INSERT because property that was set as autoGenKey.";
     public static final String IY3122 = "[IY3122] ERROR: If-None-Match NOT allowed because there is property that was set as autoGenKey.";
@@ -145,6 +147,8 @@ public class OiyokanMessages {
     public static final int IY3153_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
     public static final String IY3154 = "[IY3154] Fail to update entity with SQL error.";
     public static final int IY3154_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
+    public static final String IY3155 = "[IY3155] UNEXPECTED database error occured.";
+    public static final int IY3155_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
     public static final String IY3161 = "[IY3161] UNEXPECTED: OiyoSettingsProperty NOT found.";
     public static final int IY3161_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
 
@@ -153,6 +157,8 @@ public class OiyokanMessages {
     // CONFLICT は400番台であるので利用して問題ない。
     public static final String IY3401 = "[IY3401] Integrity constraint violation occured (DML). 制約違反.";
     public static final int IY3401_CODE = HttpStatusCode.CONFLICT.getStatusCode();
+    public static final String IY3402 = "[IY3402] Integrity constraint violation occured (DML). 制約違反.";
+    public static final int IY3402_CODE = HttpStatusCode.CONFLICT.getStatusCode();
 
     ////////////////////////////////////////////////////////////////////////////////
     // IY35XX : Entity - TIMEOUT

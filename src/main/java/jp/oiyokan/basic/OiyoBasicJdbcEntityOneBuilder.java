@@ -128,11 +128,9 @@ public class OiyoBasicJdbcEntityOneBuilder {
             log.trace("[database transaction] WITHOUT database transaction.");
             return createInternal(connTargetDb, uriInfo, entitySet, null/* キーの与えられないパターン */, requestEntity);
         } catch (SQLException ex) {
-            // TODO v1.x message 別のIDを新規採番
-            // [M205] Fail to execute SQL.
-            log.error(OiyokanMessages.IY3152 + ": " + ex.toString(), ex);
-            throw new ODataApplicationException(OiyokanMessages.IY3152, //
-                    OiyokanMessages.IY3152_CODE, Locale.ENGLISH);
+            // [IY3155] UNEXPECTED database error occured.
+            log.error(OiyokanMessages.IY3155 + ": " + ex.toString(), ex);
+            throw new ODataApplicationException(OiyokanMessages.IY3155, OiyokanMessages.IY3155_CODE, Locale.ENGLISH);
         }
     }
 
@@ -425,8 +423,14 @@ public class OiyoBasicJdbcEntityOneBuilder {
                     // 自動生成対象.
                     final UriParameterImpl newParam = new UriParameterImpl();
                     newParam.setName(property.getName());
-                    // TODO v1.x 配列超えの例外処理およびmessage
-                    newParam.setText(generatedKeys.get(generatedKeyIndex++));
+                    try {
+                        newParam.setText(generatedKeys.get(generatedKeyIndex++));
+                    } catch (IndexOutOfBoundsException ex) {
+                        // [IY3115] UNEXPECTED: Fail to map generated keys (autoGenKey) to new key.
+                        log.error(OiyokanMessages.IY3115 + ": " + entitySet.getName(), ex);
+                        throw new ODataApplicationException(OiyokanMessages.IY3115 + ": " + entitySet.getName(),
+                                OiyokanMessages.IY3115_CODE, Locale.ENGLISH);
+                    }
                     keyPredicatesAfter.add(newParam);
                 }
             }
@@ -466,8 +470,8 @@ public class OiyoBasicJdbcEntityOneBuilder {
                 }
                 if (propValue == null) {
                     log.trace("TRACE: propKey:" + keyName + "に対応する入力なし.");
-                    // [M217] UNEXPECTED: Can't retrieve PreparedStatement#getGeneratedKeys: Fail to
-                    // map auto generated key field.
+                    // [IY3114] UNEXPECTED: Can't retrieve PreparedStatement#getGeneratedKeys: Fail
+                    // to map auto generated key field.
                     log.error(OiyokanMessages.IY3114 + ": " + keyName);
                     throw new ODataApplicationException(OiyokanMessages.IY3114 + ": " + keyName, //
                             OiyokanMessages.IY3114_CODE, Locale.ENGLISH);

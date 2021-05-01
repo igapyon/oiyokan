@@ -945,12 +945,11 @@ public class OiyoCommonJdbcUtil {
         } catch (SQLException ex) {
             if (ex.toString().toLowerCase().contains("unique constraint")/* PostgreSQL */ //
                     || ex.toString().toLowerCase().contains("重複したキー")/* SQLSV2008 */) {
-                // TODO v1.x message
-                // [IY3401] Integrity constraint violation occured (DML). 制約違反.
-                log.error(OiyokanMessages.IY3401 + ": " + sql + ", " + ex.toString());
+                // [IY3402] Integrity constraint violation occured (DML). 制約違反.
+                log.error(OiyokanMessages.IY3402 + ": " + sql + ", " + ex.toString());
                 // 制約違反については例外的に ex の getMessage についても呼出元に返却.
-                throw new ODataApplicationException(OiyokanMessages.IY3401 + ": " + sql + ": " + ex.getMessage(), //
-                        OiyokanMessages.IY3401_CODE, Locale.ENGLISH);
+                throw new ODataApplicationException(OiyokanMessages.IY3402 + ": " + sql + ": " + ex.getMessage(), //
+                        OiyokanMessages.IY3402_CODE, Locale.ENGLISH);
             } else if (ex.toString().toLowerCase().contains("timed out") /* SQL Server 2008 */ ) {
                 // [IY3512] SQL timeout at exec insert/update/delete.
                 log.error(OiyokanMessages.IY3512 + ": " + sql + ", " + ex.toString());
