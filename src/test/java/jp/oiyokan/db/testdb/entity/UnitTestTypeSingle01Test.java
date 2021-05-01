@@ -20,8 +20,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.apache.olingo.server.api.ODataResponse;
 import org.junit.jupiter.api.Test;
 
+import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanUnittestUtil;
 import jp.oiyokan.common.OiyoInfo;
+import jp.oiyokan.common.OiyoInfoUtil;
+import jp.oiyokan.dto.OiyoSettingsDatabase;
 import jp.oiyokan.util.OiyokanTestUtil;
 
 /**
@@ -45,10 +48,21 @@ class UnitTestTypeSingle01Test {
 
         resp = OiyokanTestUtil.callGet("/ODataTest1",
                 "$select=ID,Single1 &$filter=ID eq " + idString + " and Single1 eq 543.21");
-        result = OiyokanTestUtil.stream2String(resp.getContent());
-        assertEquals("{\"@odata.context\":\"$metadata#ODataTest1\",\"value\":[{\"ID\":" + idString //
-                + ",\"Single1\":543.21}]}", result);
-        assertEquals(200, resp.getStatusCode());
+
+        OiyoSettingsDatabase database = OiyoInfoUtil.getOiyoDatabaseByEntitySetName(oiyoInfo, "ODataTest1");
+        OiyokanConstants.DatabaseType databaseType = OiyokanConstants.DatabaseType.valueOf(database.getType());
+        switch (databaseType) {
+        case PostgreSQL:
+        case MySQL:
+            // PostgreSQL, MySQL だと Single1 は誤差により検索がヒットしない。
+            break;
+        default:
+            result = OiyokanTestUtil.stream2String(resp.getContent());
+            assertEquals("{\"@odata.context\":\"$metadata#ODataTest1\",\"value\":[{\"ID\":" + idString //
+                    + ",\"Single1\":543.21}]}", result);
+            assertEquals(200, resp.getStatusCode());
+            break;
+        }
 
         // DELETE
         resp = OiyokanTestUtil.callDelete("/ODataTest1(" + idString + ")");
