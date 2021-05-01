@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.math.BigDecimal;
-import java.nio.charset.Charset;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -243,47 +242,30 @@ public class OiyoCommonJdbcUtil {
         } else if (EdmTimeOfDay.getInstance() == edmType) {
             return new Property(edmTypeName, propName, ValueType.PRIMITIVE, rset.getTime(column));
         } else if (EdmString.getInstance() == edmType) {
-            if (Types.CLOB == OiyoJdbcUtil.string2Types(property.getJdbcType())) {
+            String value = null;
+            if (oiyoProp.getJdbcStream() != null && oiyoProp.getJdbcStream()) {
                 try {
-                    return new Property(edmTypeName, propName, ValueType.PRIMITIVE,
-                            IOUtils.toString(rset.getAsciiStream(column), Charset.forName("UTF-8")));
+                    final Reader reader = rset.getCharacterStream(column);
+                    if (reader != null) {
+                        value = IOUtils.toString(reader);
+                    }
                 } catch (IOException ex) {
-                    // [M007] UNEXPECTED: fail to read from CLOB
+                    // [IY7107] UNEXPECTED: fail to read from CLOB
                     log.error(OiyokanMessages.IY7107 + ": " + property.getName() + ": " + ex.toString(), ex);
                     throw new ODataApplicationException(OiyokanMessages.IY7107 + ": " + property.getName(), //
                             500, Locale.ENGLISH);
                 }
             } else {
-                String value = "";
-                if (oiyoProp.getJdbcStream() != null && oiyoProp.getJdbcStream()) {
-                    try {
-                        final char[] buf = new char[8192];
-                        final Reader reader = rset.getCharacterStream(column);
-                        for (;;) {
-                            int len = reader.read(buf);
-                            if (len <= 0) {
-                                break;
-                            }
-                            value += String.valueOf(buf, 0, len);
-                        }
-                    } catch (IOException ex) {
-                        // TODO message
-                        log.error(OiyokanMessages.IY9999 + ": " + property.getName() + ": " + ex.toString(), ex);
-                        throw new ODataApplicationException(OiyokanMessages.IY9999 + ": " + property.getName(), //
-                                OiyokanMessages.IY9999_CODE, Locale.ENGLISH);
-                    }
-                } else {
-                    value = rset.getString(column);
-                }
-                if (oiyoProp.getLengthFixed() != null && oiyoProp.getLengthFixed() && oiyoProp.getMaxLength() != null) {
-                    if (value != null) {
-                        // NULLではない場合は、固定長文字列。CHAR の後方に空白をFILL。
-                        final int fixedLength = oiyoProp.getMaxLength();
-                        value = StringUtils.rightPad(value, fixedLength);
-                    }
-                }
-                return new Property(edmTypeName, propName, ValueType.PRIMITIVE, value);
+                value = rset.getString(column);
             }
+            if (oiyoProp.getLengthFixed() != null && oiyoProp.getLengthFixed() && oiyoProp.getMaxLength() != null) {
+                if (value != null) {
+                    // NULLではない場合は、固定長文字列。CHAR の後方に空白をFILL。
+                    final int fixedLength = oiyoProp.getMaxLength();
+                    value = StringUtils.rightPad(value, fixedLength);
+                }
+            }
+            return new Property(edmTypeName, propName, ValueType.PRIMITIVE, value);
         } else if (EdmBinary.getInstance() == edmType) {
             try {
                 return new Property(edmTypeName, propName, ValueType.PRIMITIVE,
