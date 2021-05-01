@@ -218,13 +218,15 @@ public class OiyokanSettingsGenUtil {
                     property.setNullable(null);
                 }
 
-                if (property.getDbDefault() != null && property.getDbDefault().contains("NEXT VALUE FOR")) {
+                if (property.getDbDefault() != null //
+                        && (property.getDbDefault().contains("NEXT VALUE FOR")
+                                || property.getDbDefault().contains("nextval("))) {
                     if (!"IDENTITY".equalsIgnoreCase(property.getDbType()) //
                             && !"SERIAL".equalsIgnoreCase(property.getDbType()) //
                             && !"SEQUENCE".equalsIgnoreCase(property.getDbType())) {
                         property.setDbType("IDENTITY");
-                        property.setDbDefault(null);
                     }
+                    property.setDbDefault(null);
                 }
 
                 if ("IDENTITY".equalsIgnoreCase(property.getDbType()) //
@@ -331,12 +333,13 @@ public class OiyokanSettingsGenUtil {
 
                 OiyoSettingsProperty prop = null;
                 for (OiyoSettingsProperty look : entitySet.getEntityType().getProperty()) {
-                    if (look.getName().equals(key)) {
+                    if (look.getName().equalsIgnoreCase(key)) {
                         prop = look;
                     }
                 }
                 if (prop == null) {
-                    throw new IllegalArgumentException("EntitySetからProperty定義が発見できない. JSONファイル破損の疑い.");
+                    throw new IllegalArgumentException("EntitySetからProperty定義が発見できない. JSONファイル破損の疑い: EntitySet:"
+                            + entitySet.getName() + ", key:" + key);
                 }
 
                 sql.append(OiyoCommonJdbcUtil.escapeKakkoFieldName(databaseType, prop.getDbName()));
