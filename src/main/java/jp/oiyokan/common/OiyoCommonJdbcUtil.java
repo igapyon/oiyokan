@@ -497,12 +497,12 @@ public class OiyoCommonJdbcUtil {
             java.sql.Date sdate = new java.sql.Date(cal.getTime().getTime());
             stmt.setDate(column, sdate);
         } else if (param.getValue() instanceof ZonedDateTime) {
+            // ex: $filter で lt 2020-12-31T21:53:00Z により発生。
             log.trace("TRACE: PreparedStatement#setDate(ZonedDateTime): " + param);
             ZonedDateTime zdt = (ZonedDateTime) param.getValue();
             java.util.Date look = OiyoDateTimeUtil.zonedDateTime2Date(zdt);
-            // TODO FIXME これは java.sql.Timestampのほうがいいんちゃうかしら
-            java.sql.Date sdate = new java.sql.Date(look.getTime());
-            stmt.setDate(column, sdate);
+            java.sql.Timestamp timestamp = new java.sql.Timestamp(look.getTime());
+            stmt.setTimestamp(column, timestamp);
         } else if (param.getValue() instanceof String) {
             log.trace("TRACE: PreparedStatement#setString: " + param);
             stmt.setString(column, (String) param.getValue());
@@ -678,6 +678,7 @@ public class OiyoCommonJdbcUtil {
                 sqlInfo.getSqlBuilder().append("?");
                 sqlInfo.getSqlParamList().add(new OiyoSqlInfo.SqlParam(property, inputParam));
             } else {
+                // ex: $filter の 2021-01-01 でここを通過.
                 ZonedDateTime zdt = OiyoDateTimeUtil.parseStringDateTime(String.valueOf(inputParam));
                 sqlInfo.getSqlBuilder().append("?");
                 sqlInfo.getSqlParamList().add(new OiyoSqlInfo.SqlParam(property, zdt));
@@ -694,6 +695,7 @@ public class OiyoCommonJdbcUtil {
                 sqlInfo.getSqlBuilder().append("?");
                 sqlInfo.getSqlParamList().add(new OiyoSqlInfo.SqlParam(property, inputParam));
             } else {
+                // ex: $filter の 2020-12-31T21:53:00Z にてここを通過.
                 ZonedDateTime zdt = OiyoDateTimeUtil.parseStringDateTime(String.valueOf(inputParam));
                 sqlInfo.getSqlBuilder().append("?");
                 sqlInfo.getSqlParamList().add(new OiyoSqlInfo.SqlParam(property, zdt));
