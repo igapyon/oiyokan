@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test;
 class OiyoDateTimeUtilTest {
 
     @Test
-    void test() {
+    void test01() {
         @SuppressWarnings("unused")
         ZonedDateTime zdt = OiyoDateTimeUtil.parseStringDateTime("2021-04-10T19:12:49.082Z");
         // System.err.println(zdt.toString());
@@ -45,5 +45,12 @@ class OiyoDateTimeUtilTest {
 
         zdt = OiyoDateTimeUtil.parseStringDateTime("2021-04-10");
         // System.err.println(zdt.toString());
+
+    }
+
+    @Test
+    void test02() {
+        @SuppressWarnings("unused")
+        java.sql.Time time = OiyoDateTimeUtil.parseStringTime("21:53:00");
     }
 }
