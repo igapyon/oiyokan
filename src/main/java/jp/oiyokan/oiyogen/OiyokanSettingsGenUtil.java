@@ -240,6 +240,14 @@ public class OiyokanSettingsGenUtil {
                         property.setNullable(true);
                     }
                 }
+
+                if ("BLOB".equalsIgnoreCase(property.getDbType()) //
+                        || "CLOB".equalsIgnoreCase(property.getDbType()) //
+                        || "TEXT".equalsIgnoreCase(property.getDbType()) //
+                ) {
+                    // Stream軽の入出力をヒント.
+                    property.setJdbcStream(true);
+                }
             }
 
             // テーブルのキー情報
