@@ -20,11 +20,11 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.Locale;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.olingo.server.api.ODataApplicationException;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.util.StreamUtils;
 
 import jp.oiyokan.OiyokanMessages;
 
@@ -46,7 +46,7 @@ public class OiyokanResourceSqlUtil {
         // resources から読み込み。
         final ClassPathResource cpres = new ClassPathResource(resourceSqlFileName);
         try (InputStream inStream = cpres.getInputStream()) {
-            String sqlresources = StreamUtils.copyToString(inStream, Charset.forName("UTF-8"));
+            String sqlresources = IOUtils.toString(inStream, Charset.forName("UTF-8"));
             final String[] sqls = sqlresources.split(";");
             return sqls;
         } catch (IOException ex) {

@@ -17,6 +17,7 @@ package jp.oiyokan.common;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.Reader;
 import java.io.StringReader;
 import java.math.BigDecimal;
 import java.nio.charset.Charset;
@@ -39,6 +40,7 @@ import java.util.Locale;
 import java.util.UUID;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -62,7 +64,6 @@ import org.apache.olingo.commons.core.edm.primitivetype.EdmSingle;
 import org.apache.olingo.commons.core.edm.primitivetype.EdmString;
 import org.apache.olingo.commons.core.edm.primitivetype.EdmTimeOfDay;
 import org.apache.olingo.server.api.ODataApplicationException;
-import org.springframework.util.StreamUtils;
 
 import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanMessages;
@@ -245,7 +246,7 @@ public class OiyoCommonJdbcUtil {
             if (Types.CLOB == OiyoJdbcUtil.string2Types(property.getJdbcType())) {
                 try {
                     return new Property(edmTypeName, propName, ValueType.PRIMITIVE,
-                            StreamUtils.copyToString(rset.getAsciiStream(column), Charset.forName("UTF-8")));
+                            IOUtils.toString(rset.getAsciiStream(column), Charset.forName("UTF-8")));
                 } catch (IOException ex) {
                     // [M007] UNEXPECTED: fail to read from CLOB
                     log.error(OiyokanMessages.IY7107 + ": " + property.getName() + ": " + ex.toString(), ex);
@@ -253,7 +254,27 @@ public class OiyoCommonJdbcUtil {
                             500, Locale.ENGLISH);
                 }
             } else {
-                String value = rset.getString(column);
+                String value = "";
+                if (oiyoProp.getJdbcStream() != null && oiyoProp.getJdbcStream()) {
+                    try {
+                        final char[] buf = new char[8192];
+                        final Reader reader = rset.getCharacterStream(column);
+                        for (;;) {
+                            int len = reader.read(buf);
+                            if (len <= 0) {
+                                break;
+                            }
+                            value += String.valueOf(buf, 0, len);
+                        }
+                    } catch (IOException ex) {
+                        // TODO message
+                        log.error(OiyokanMessages.IY9999 + ": " + property.getName() + ": " + ex.toString(), ex);
+                        throw new ODataApplicationException(OiyokanMessages.IY9999 + ": " + property.getName(), //
+                                OiyokanMessages.IY9999_CODE, Locale.ENGLISH);
+                    }
+                } else {
+                    value = rset.getString(column);
+                }
                 if (oiyoProp.getLengthFixed() != null && oiyoProp.getLengthFixed() && oiyoProp.getMaxLength() != null) {
                     if (value != null) {
                         // NULLではない場合は、固定長文字列。CHAR の後方に空白をFILL。
@@ -266,7 +287,7 @@ public class OiyoCommonJdbcUtil {
         } else if (EdmBinary.getInstance() == edmType) {
             try {
                 return new Property(edmTypeName, propName, ValueType.PRIMITIVE,
-                        StreamUtils.copyToByteArray(rset.getBinaryStream(column)));
+                        IOUtils.toByteArray(rset.getBinaryStream(column)));
             } catch (IOException ex) {
                 // [M008] UNEXPECTED: fail to read from binary
                 log.error(OiyokanMessages.IY7108 + ": " + property.getName() + ": " + ex.toString(), ex);
