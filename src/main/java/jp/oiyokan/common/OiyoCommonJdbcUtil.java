@@ -731,9 +731,9 @@ public class OiyoCommonJdbcUtil {
                 sqlInfo.getSqlBuilder().append("?");
                 sqlInfo.getSqlParamList().add(new OiyoSqlInfo.SqlParam(property, look));
             } else {
-                ZonedDateTime zdt = OiyoDateTimeUtil.parseStringDateTime(String.valueOf(inputParam));
+                java.sql.Time look = OiyoDateTimeUtil.parseStringTime(String.valueOf(inputParam));
                 sqlInfo.getSqlBuilder().append("?");
-                sqlInfo.getSqlParamList().add(new OiyoSqlInfo.SqlParam(property, zdt));
+                sqlInfo.getSqlParamList().add(new OiyoSqlInfo.SqlParam(property, look));
             }
             return;
         }

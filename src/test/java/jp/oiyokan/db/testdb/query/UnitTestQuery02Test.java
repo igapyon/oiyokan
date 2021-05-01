@@ -34,11 +34,11 @@ class UnitTestQuery02Test {
         final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
 
         final ODataResponse resp = OiyokanTestUtil.callGet("/ODataTest1",
-                "$select=ID &$filter=Date1 lt 2021-01-01 &$orderby=ID &$top=51");
+                "$select=ID &$filter=Date1 lt 2021-01-01 and Date1 gt 2021-01-01 &$orderby=ID &$top=51");
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         // System.err.println("result: " + result);
-        assertEquals("{\"@odata.context\":\"$metadata#ODataTest1\",\"value\":[{\"ID\":206}]}", result);
+        assertEquals("{\"@odata.context\":\"$metadata#ODataTest1\",\"value\":[]}", result);
         assertEquals(200, resp.getStatusCode());
     }
 }

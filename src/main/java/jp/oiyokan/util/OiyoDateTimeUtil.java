@@ -108,4 +108,25 @@ public class OiyoDateTimeUtil {
         Instant instant = arg.toInstant();
         return java.util.Date.from(instant);
     }
+
+    public static java.sql.Time parseStringTime(String inputTimeString) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+            java.util.Date look = sdf.parse(inputTimeString);
+            return new java.sql.Time(look.getTime());
+        } catch (ParseException e) {
+        }
+
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss.SSS");
+            java.util.Date look = sdf.parse(inputTimeString);
+            return new java.sql.Time(look.getTime());
+        } catch (ParseException e) {
+        }
+
+        // TODO message
+        // [IY7161] Error: Fail to parse DateTime string.
+        log.error(OiyokanMessages.IY7161 + ": " + inputTimeString);
+        throw new IllegalArgumentException(OiyokanMessages.IY7161 + ": " + inputTimeString);
+    }
 }
