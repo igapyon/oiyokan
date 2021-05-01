@@ -418,6 +418,13 @@ public class OiyoCommonJdbcUtil {
                     stmt.setTimestamp(column, (java.sql.Timestamp) param.getValue());
                     return;
                 }
+                if (param.getValue() instanceof java.time.ZonedDateTime) {
+                    final ZonedDateTime zdt = (java.time.ZonedDateTime) param.getValue();
+                    java.util.Date look = OiyoDateTimeUtil.zonedDateTime2Date(zdt);
+                    java.sql.Timestamp sdate = new java.sql.Timestamp(look.getTime());
+                    stmt.setTimestamp(column, sdate);
+                    return;
+                }
             }
             if (EdmTimeOfDay.getInstance() == edmType) {
                 if (param.getValue() instanceof java.sql.Time) {
