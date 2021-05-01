@@ -316,7 +316,7 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
                         final Property prop = ent.getProperty(entitySet.getEntityType().getKeyName().get(0));
                         String idVal = prop.getValue().toString();
                         if ("Edm.String".equals(prop.getType())) {
-                            // TODO FIXME Property の値を文字列に変換する共通関数を期待したい.
+                            // TODO v2.x にて Property の値を文字列に変換する共通関数を作成.
                             idVal = "'" + OiyoUrlUtil.encodeUrl4Key(idVal) + "'";
                         }
                         ent.setId(createId(entitySetName, idVal));
@@ -334,7 +334,7 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
                             keyString += prop.getName() + "=";
                             String idVal = prop.getValue().toString();
                             if ("Edm.String".equals(prop.getType())) {
-                                // TODO FIXME Property の値を文字列に変換する共通関数を期待したい.
+                                // TODO v2.x にて Property の値を文字列に変換する共通関数を作成.
                                 idVal = "'" + OiyoUrlUtil.encodeUrl4Key(idVal) + "'";
                             }
                             keyString += idVal;

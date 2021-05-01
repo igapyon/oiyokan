@@ -621,7 +621,7 @@ public class OiyoSqlQueryListExpr {
             sqlInfo.getSqlBuilder().append(")");
             return;
         }
-        // TODO 未テスト.
+        // TODO will be testead at v2.x
 
         // MONTH
         if (impl.getMethod() == MethodKind.MONTH) {
@@ -630,7 +630,7 @@ public class OiyoSqlQueryListExpr {
             sqlInfo.getSqlBuilder().append(")");
             return;
         }
-        // TODO 未テスト.
+        // TODO will be testead at v2.x
 
         // DAY
         if (impl.getMethod() == MethodKind.DAY) {
@@ -639,7 +639,7 @@ public class OiyoSqlQueryListExpr {
             sqlInfo.getSqlBuilder().append(")");
             return;
         }
-        // TODO 未テスト.
+        // TODO will be testead at v2.x
 
         // HOUR
         if (impl.getMethod() == MethodKind.HOUR) {
@@ -648,7 +648,7 @@ public class OiyoSqlQueryListExpr {
             sqlInfo.getSqlBuilder().append(")");
             return;
         }
-        // TODO 未テスト.
+        // TODO will be testead at v2.x
 
         // MINUTE
         if (impl.getMethod() == MethodKind.MINUTE) {
@@ -657,7 +657,7 @@ public class OiyoSqlQueryListExpr {
             sqlInfo.getSqlBuilder().append(")");
             return;
         }
-        // TODO 未テスト.
+        // TODO will be testead at v2.x
 
         // SECOND
         if (impl.getMethod() == MethodKind.SECOND) {
@@ -666,7 +666,7 @@ public class OiyoSqlQueryListExpr {
             sqlInfo.getSqlBuilder().append(")");
             return;
         }
-        // TODO 未テスト.
+        // TODO will be testead at v2.x
 
         // FRACTIONALSECONDS
         if (impl.getMethod() == MethodKind.FRACTIONALSECONDS) {
@@ -731,7 +731,7 @@ public class OiyoSqlQueryListExpr {
             sqlInfo.getSqlBuilder().append(")");
             return;
         }
-        // TODO 未テスト.
+        // TODO will be testead at v2.x
 
         // FLOOR
         if (impl.getMethod() == MethodKind.FLOOR) {
@@ -740,7 +740,7 @@ public class OiyoSqlQueryListExpr {
             sqlInfo.getSqlBuilder().append(")");
             return;
         }
-        // TODO 未テスト.
+        // TODO will be testead at v2.x
 
         // CEILING
         if (impl.getMethod() == MethodKind.CEILING) {
@@ -749,7 +749,7 @@ public class OiyoSqlQueryListExpr {
             sqlInfo.getSqlBuilder().append(")");
             return;
         }
-        // TODO 未テスト.
+        // TODO will be testead at v2.x
 
         // GEODISTANCE
         if (impl.getMethod() == MethodKind.GEODISTANCE) {

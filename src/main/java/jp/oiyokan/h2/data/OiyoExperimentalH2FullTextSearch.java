@@ -52,7 +52,7 @@ public class OiyoExperimentalH2FullTextSearch {
         try {
             SearchOptionImpl searchOpt = (SearchOptionImpl) uriInfo.getSearchOption();
 
-            // TODO FIXME h2のこの呼び出し方だと日本語が検索できない。
+            // TODO v3.x FIXME h2のこの呼び出し方だと日本語が検索できない。
 
             int topValue = 100;
             if (uriInfo.getTopOption() != null) {
@@ -65,25 +65,25 @@ public class OiyoExperimentalH2FullTextSearch {
 
             String sql = "SELECT QUERY,SCORE FROM FT_SEARCH(?, " + topValue + ", " + offsetValue + ")";
             try (PreparedStatement stmt = connTargetDb.prepareStatement(sql)) {
-                // TODO FIXME メッセージ外だし
+                // TODO v3.x メッセージ外だし
                 log.info("OData v4: TRACE: $search: SQL: " + sql);
 
                 stmt.setString(1, searchOpt.getText());
                 ResultSet rset = stmt.executeQuery();
                 for (; rset.next();) {
                     String valQuery = rset.getString(1);
-                    // TODO , FIXME ハードコード。なぜなら現状このテーブルにしか全文検索が対応しない。
+                    // TODO v3.x FIXME ハードコード。なぜなら現状このテーブルにしか全文検索が対応しない。
                     if (valQuery.contains("ODataTestFulls1") == false) {
                         continue;
                     }
 
                     final Entity ent = new Entity();
 
-                    // TODO たぶんこれだとだめ。検索結果のIDから、select から与えられた指定の項目を取る必要あり。
+                    // TODO v3.x たぶんこれだとだめ。検索結果のIDから、select から与えられた指定の項目を取る必要あり。
                     // ただし、h2としての故記述は正しい。
                     try (PreparedStatement stmt2 = connTargetDb.prepareStatement("SELECT ID FROM " + valQuery)) {
                         ResultSet rset2 = stmt2.executeQuery();
-                        // TODO 戻り値チェックが実装されていない.
+                        // TODO v3.x 戻り値チェックが実装されていない.
                         rset2.next();
 
                         ent.addProperty( //

@@ -388,7 +388,7 @@ public class OiyoCommonJdbcUtil {
                     stmt.setBoolean(column, (Boolean) param.getValue());
                     return;
                 }
-                // TODO BIT型の対応検討
+                // TODO v1.x BIT型の対応状況確認
             }
             if (EdmSingle.getInstance() == edmType) {
                 if (param.getValue() instanceof Float) {
@@ -463,7 +463,7 @@ public class OiyoCommonJdbcUtil {
                 }
             }
             if (EdmGuid.getInstance() == edmType) {
-                // TODO GUID
+                // TODO GUID は v2.xで対応
             }
 
             // [IY1111] WARN: A literal associated with property was given but could not be
@@ -520,13 +520,13 @@ public class OiyoCommonJdbcUtil {
         } else if (param.getValue() instanceof java.util.Date) {
             log.trace("TRACE: PreparedStatement#setDate(java.util.Date): " + param);
             java.util.Date udate = (java.util.Date) param.getValue();
-            // TODO FIXME これは java.sql.Timestampのほうがいいんちゃうかしら
+            // TODO v1.x FIXME これは java.sql.Timestampのほうがいいんちゃうかしら
             java.sql.Date sdate = new java.sql.Date(udate.getTime());
             stmt.setDate(column, sdate);
         } else if (param.getValue() instanceof java.util.Calendar) {
             log.trace("TRACE: PreparedStatement#setDate(java.util.Calendar): " + param);
             java.util.Calendar cal = (java.util.Calendar) param.getValue();
-            // TODO FIXME これは java.sql.Timestampのほうがいいんちゃうかしら
+            // TODO v1.x FIXME これは java.sql.Timestampのほうがいいんちゃうかしら
             java.sql.Date sdate = new java.sql.Date(cal.getTime().getTime());
             stmt.setDate(column, sdate);
         } else if (param.getValue() instanceof ZonedDateTime) {
@@ -744,7 +744,8 @@ public class OiyoCommonJdbcUtil {
                 sqlInfo.getSqlParamList().add(new OiyoSqlInfo.SqlParam(property, inputParam));
             } else if (inputParam instanceof java.util.Calendar) {
                 java.util.Calendar cal = (java.util.Calendar) inputParam;
-                // TODO FIXME 以下の箇所をいつか内容確認。
+                // TODO v1.x FIXME 以下の箇所をいつか内容確認。
+                // TODO v1.x new Time(getTime())の実装に変更。共通化.
                 @SuppressWarnings("deprecation")
                 java.sql.Time look = new java.sql.Time(cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE),
                         cal.get(Calendar.SECOND));
@@ -944,7 +945,7 @@ public class OiyoCommonJdbcUtil {
         } catch (SQLException ex) {
             if (ex.toString().toLowerCase().contains("unique constraint")/* PostgreSQL */ //
                     || ex.toString().toLowerCase().contains("重複したキー")/* SQLSV2008 */) {
-                // TODO message
+                // TODO v1.x message
                 // [IY3401] Integrity constraint violation occured (DML). 制約違反.
                 log.error(OiyokanMessages.IY3401 + ": " + sql + ", " + ex.toString());
                 // 制約違反については例外的に ex の getMessage についても呼出元に返却.

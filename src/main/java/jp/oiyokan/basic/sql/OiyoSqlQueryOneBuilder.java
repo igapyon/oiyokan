@@ -107,8 +107,8 @@ public class OiyoSqlQueryOneBuilder {
             } catch (ODataApplicationException ex) {
                 // ORCL18 のROWIDを利用する場合、この処理で例外.
                 // 例外の場合は Edm.String 決め打ちで処理する。
-                OiyoCommonJdbcUtil.expandLiteralOrBindParameter(sqlInfo, "Edm.String", null/* TODO Property化を検討 */,
-                        param.getText());
+                OiyoCommonJdbcUtil.expandLiteralOrBindParameter(sqlInfo, "Edm.String",
+                        null/* TODO v2.xにて Property化する */, param.getText());
             }
         }
     }
