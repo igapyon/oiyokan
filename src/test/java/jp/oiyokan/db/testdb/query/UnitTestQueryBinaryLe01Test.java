@@ -37,13 +37,12 @@ class UnitTestQueryBinaryLe01Test {
 
         final ODataResponse resp = OiyokanTestUtil.callGet( //
                 "/ODataTest1", //
-                OiyoUrlUtil.encodeUrlQuery(
-                        "&$filter=Double1 le 500 &$top=5 &$skip=2 &$count=true &$select=ID &$orderby=ID asc"));
+                OiyoUrlUtil.encodeUrlQuery("&$filter=Double1 le 500 &$top=5 &$skip=2 &$select=ID &$orderby=ID asc"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         // System.err.println("result: " + result);
         assertEquals(
-                "{\"@odata.context\":\"$metadata#ODataTest1\",\"@odata.count\":204,\"value\":[{\"ID\":3},{\"ID\":4},{\"ID\":5},{\"ID\":6},{\"ID\":7}]}",
+                "{\"@odata.context\":\"$metadata#ODataTest1\",\"value\":[{\"ID\":3},{\"ID\":4},{\"ID\":5},{\"ID\":6},{\"ID\":7}]}",
                 result);
         assertEquals(200, resp.getStatusCode());
     }

@@ -405,6 +405,13 @@ public class OiyoCommonJdbcUtil {
                     stmt.setDate(column, sdate);
                     return;
                 }
+                if (param.getValue() instanceof java.time.ZonedDateTime) {
+                    final ZonedDateTime zdt = (java.time.ZonedDateTime) param.getValue();
+                    java.util.Date look = OiyoDateTimeUtil.zonedDateTime2Date(zdt);
+                    java.sql.Date sdate = new java.sql.Date(look.getTime());
+                    stmt.setDate(column, sdate);
+                    return;
+                }
             }
             if (EdmDateTimeOffset.getInstance() == edmType) {
                 if (param.getValue() instanceof java.sql.Timestamp) {
@@ -434,8 +441,9 @@ public class OiyoCommonJdbcUtil {
                 // TODO GUID
             }
 
-            // TODO message
-            log.error("property は与えられたが処理しなかった型: Edm:" + property.getEdmType() + ", class:"
+            // [IY1111] WARN: A literal associated with property was given but could not be
+            // processed.
+            log.warn(OiyokanMessages.IY1111 + ": Edm:" + property.getEdmType() + ", class:"
                     + param.getValue().getClass().getName());
         }
 

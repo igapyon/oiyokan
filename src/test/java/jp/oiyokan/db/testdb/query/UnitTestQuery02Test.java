@@ -34,12 +34,11 @@ class UnitTestQuery02Test {
         final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
 
         final ODataResponse resp = OiyokanTestUtil.callGet("/ODataTest1",
-                "$select=ID &$filter=Date1 lt 2021-01-01 &$orderby=ID &$count=true &$top=51");
+                "$select=ID &$filter=Date1 lt 2021-01-01 &$orderby=ID &$top=51");
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         // System.err.println("result: " + result);
-        // TODO FIXME 結果が存在するテストパターンが欲しい。
-        assertEquals("{\"@odata.context\":\"$metadata#ODataTest1\",\"@odata.count\":0,\"value\":[]}", result);
+        assertEquals("{\"@odata.context\":\"$metadata#ODataTest1\",\"value\":[{\"ID\":206}]}", result);
         assertEquals(200, resp.getStatusCode());
     }
 }

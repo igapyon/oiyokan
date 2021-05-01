@@ -89,7 +89,7 @@ public class OiyoBasicJdbcEntityOneBuilder {
                 entitySet.getName());
 
         // [IY1071] INFO: ENTITY: READ
-        log.debug(OiyokanMessages.IY1071 + ": " + entitySet.getName());
+        log.info(OiyokanMessages.IY1071 + ": " + entitySet.getName());
 
         // データベースに接続.
         try (Connection connTargetDb = OiyoCommonJdbcUtil.getConnection(database)) {
