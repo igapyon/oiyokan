@@ -17,6 +17,7 @@ package jp.oiyokan.common;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.StringReader;
 import java.math.BigDecimal;
 import java.nio.charset.Charset;
 import java.sql.Connection;
@@ -434,14 +435,28 @@ public class OiyoCommonJdbcUtil {
             }
             if (EdmString.getInstance() == edmType) {
                 if (param.getValue() instanceof String) {
-                    stmt.setString(column, (String) param.getValue());
-                    return;
+                    final String value = (String) param.getValue();
+                    if (property.getJdbcStream() != null && property.getJdbcStream()) {
+                        final StringReader reader = new StringReader(value);
+                        stmt.setCharacterStream(column, reader);
+                        return;
+                    } else {
+                        stmt.setString(column, value);
+                        return;
+                    }
                 }
             }
             if (EdmBinary.getInstance() == edmType) {
                 if (param.getValue() instanceof byte[]) {
-                    stmt.setBytes(column, (byte[]) param.getValue());
-                    return;
+                    final byte[] value = (byte[]) param.getValue();
+                    if (property.getJdbcStream() != null && property.getJdbcStream()) {
+                        final ByteArrayInputStream inStream = new ByteArrayInputStream(value);
+                        stmt.setBinaryStream(column, inStream);
+                        return;
+                    } else {
+                        stmt.setBytes(column, value);
+                        return;
+                    }
                 }
             }
             if (EdmGuid.getInstance() == edmType) {
@@ -520,6 +535,7 @@ public class OiyoCommonJdbcUtil {
             stmt.setTimestamp(column, timestamp);
         } else if (param.getValue() instanceof String) {
             log.trace("TRACE: PreparedStatement#setString: " + param);
+            // property 情報がないため、setString のみ選択可能
             stmt.setString(column, (String) param.getValue());
         } else if (param.getValue() instanceof byte[]) {
             log.trace("TRACE: PreparedStatement#setBytes: " + param);
