@@ -333,12 +333,13 @@ public class OiyokanSettingsGenUtil {
 
                 OiyoSettingsProperty prop = null;
                 for (OiyoSettingsProperty look : entitySet.getEntityType().getProperty()) {
-                    if (look.getName().equals(key)) {
+                    if (look.getName().equalsIgnoreCase(key)) {
                         prop = look;
                     }
                 }
                 if (prop == null) {
-                    throw new IllegalArgumentException("EntitySetからProperty定義が発見できない. JSONファイル破損の疑い.");
+                    throw new IllegalArgumentException("EntitySetからProperty定義が発見できない. JSONファイル破損の疑い: EntitySet:"
+                            + entitySet.getName() + ", key:" + key);
                 }
 
                 sql.append(OiyoCommonJdbcUtil.escapeKakkoFieldName(databaseType, prop.getDbName()));
