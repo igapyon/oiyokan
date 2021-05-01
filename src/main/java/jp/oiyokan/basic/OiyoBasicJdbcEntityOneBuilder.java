@@ -128,7 +128,7 @@ public class OiyoBasicJdbcEntityOneBuilder {
             log.trace("[database transaction] WITHOUT database transaction.");
             return createInternal(connTargetDb, uriInfo, entitySet, null/* キーの与えられないパターン */, requestEntity);
         } catch (SQLException ex) {
-            // TODO message 別のIDを新規採番
+            // TODO v1.x message 別のIDを新規採番
             // [M205] Fail to execute SQL.
             log.error(OiyokanMessages.IY3152 + ": " + ex.toString(), ex);
             throw new ODataApplicationException(OiyokanMessages.IY3152, //
@@ -425,7 +425,7 @@ public class OiyoBasicJdbcEntityOneBuilder {
                     // 自動生成対象.
                     final UriParameterImpl newParam = new UriParameterImpl();
                     newParam.setName(property.getName());
-                    // TODO 配列超えの例外処理およびmessage
+                    // TODO v1.x 配列超えの例外処理およびmessage
                     newParam.setText(generatedKeys.get(generatedKeyIndex++));
                     keyPredicatesAfter.add(newParam);
                 }
@@ -445,7 +445,7 @@ public class OiyoBasicJdbcEntityOneBuilder {
                     for (UriParameter look : keyPredicatesInput) {
                         if (look.getName().equals(keyName)) {
                             propValue = look.getText();
-                            // TODO FIXME 文字列クオートが入るかどうか後で確認したい。
+                            // TODO v2.x にて、ここで得られる getText() に文字列クオートが入るかどうか確認すること.
                         }
                     }
                 }

@@ -82,7 +82,7 @@ public class OiyokanSettingsGenUtil {
         entitySet.setCanRead(true);
         entitySet.setCanUpdate(true);
         entitySet.setCanDelete(true);
-        // TODO FIXME 処理の共通化
+        // TODO v2.x にて処理共通化
         entitySet.getEntityType().setName(tableName.replaceAll(" ", "_"));
         entitySet.getEntityType().setDbName(tableName);
         entitySet.getEntityType().setProperty(new ArrayList<OiyoSettingsProperty>());
@@ -153,7 +153,7 @@ public class OiyokanSettingsGenUtil {
                     break;
                 case Types.BINARY:
                     if ("UUID".equalsIgnoreCase(rsmeta.getColumnTypeName(column))) {
-                        // TODO FIXME 対応調査.
+                        // TODO v2.x にて確認
                         // 型名が UUID の時だけ特殊な挙動をする.
                         property.setEdmType("Edm.Guid");
                     } else {
@@ -233,7 +233,7 @@ public class OiyokanSettingsGenUtil {
                         || "SERIAL".equalsIgnoreCase(property.getDbType()) //
                         || "SEQUENCE".equalsIgnoreCase(property.getDbType()) //
                 ) {
-                    // TODO SQLSV2008の時の挙動は調査が必要.
+                    // TODO v2.x にてあらためて SQLSV2008の時の挙動確認.
                     property.setAutoGenKey(true);
 
                     // autoGenKey の場合には nullable である必要がある。
@@ -256,7 +256,7 @@ public class OiyokanSettingsGenUtil {
             final ResultSet rsKey = dbmeta.getPrimaryKeys(null, null, tableName);
             for (; rsKey.next();) {
                 String colName = rsKey.getString("COLUMN_NAME");
-                // TODO FIXME 処理の共通化の検討.
+                // TODO v2.x にて処理共通化
                 colName = colName.replaceAll(" ", "_");
                 entitySet.getEntityType().getKeyName().add(colName);
             }

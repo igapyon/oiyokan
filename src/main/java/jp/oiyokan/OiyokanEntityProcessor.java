@@ -293,12 +293,9 @@ public class OiyokanEntityProcessor implements EntityProcessor {
                 final Entity entity = builder.updateEntityDataPatch(uriInfo, entitySet, keyPredicates, requestEntity,
                         ifMatch, ifNoneMatch);
 
-                // TODO FIXME 下記仕様が未実装。
-                // Upon successful completion the service responds with either 200 OK and a
-                // representation of the updated entity, or 204 No Content. The client may
-                // request that the response SHOULD include a body by specifying a Prefer header
-                // with a value of return=representation, or by specifying the system query
-                // options $select or $expand.
+                // 正常に処理した場合は 200 (ただしINSERTした場合には Oiyokanでは201を返却)
+                // return=representation または $select で本文を200で返却するが、ここは現状全てを返却している
+                // TODO v2.x にて return=representation または $select を反映した挙動に変更.
 
                 if (entity != null) {
                     final EdmEntityType edmEntityType = edmEntitySet.getEntityType();

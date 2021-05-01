@@ -124,9 +124,8 @@ public class OiyoDateTimeUtil {
         } catch (ParseException e) {
         }
 
-        // TODO message
-        // [IY7161] Error: Fail to parse DateTime string.
-        log.error(OiyokanMessages.IY7161 + ": " + inputTimeString);
-        throw new IllegalArgumentException(OiyokanMessages.IY7161 + ": " + inputTimeString);
+        // [IY7160] Error: Fail to parse Time string.
+        log.error(OiyokanMessages.IY7160 + ": " + inputTimeString);
+        throw new IllegalArgumentException(OiyokanMessages.IY7160 + ": " + inputTimeString);
     }
 }
