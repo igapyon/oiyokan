@@ -338,7 +338,7 @@ public class OiyoCommonJdbcUtil {
                 return;
             } else {
                 final int jdbcType = OiyoJdbcUtil.string2Types(param.getProperty().getJdbcType());
-                // setNullの型は文字列とする。Types.NULLだとSQL Server の REAL型にてエラーとなるため。
+                // oiyokan-settings.json に設定された JDBC型をもちいてNULL設定する。
                 stmt.setNull(column, jdbcType);
                 return;
             }
@@ -618,8 +618,9 @@ public class OiyoCommonJdbcUtil {
         if (EdmInt64.getInstance() == edmType) {
             log.trace("TRACE: expandLiteralOrBindParameter: EdmInt64: " + inputParam);
             if (inputParam instanceof Byte //
-                    || inputParam instanceof Short//
-                    || inputParam instanceof Integer) {
+                    || inputParam instanceof Short //
+                    || inputParam instanceof Integer //
+                    || inputParam instanceof Long) {
                 sqlInfo.getSqlBuilder().append("?");
                 sqlInfo.getSqlParamList().add(new OiyoSqlInfo.SqlParam(property, inputParam));
             } else {
