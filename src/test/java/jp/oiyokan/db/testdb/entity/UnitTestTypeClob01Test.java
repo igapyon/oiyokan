@@ -20,8 +20,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.apache.olingo.server.api.ODataResponse;
 import org.junit.jupiter.api.Test;
 
+import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanUnittestUtil;
 import jp.oiyokan.common.OiyoInfo;
+import jp.oiyokan.common.OiyoInfoUtil;
+import jp.oiyokan.dto.OiyoSettingsDatabase;
 import jp.oiyokan.util.OiyokanTestUtil;
 
 /**
@@ -43,12 +46,21 @@ class UnitTestTypeClob01Test {
         assertEquals("\"ABCDXYZ\"", OiyokanTestUtil.getValueFromResultByKey(result, "Clob1"));
         assertEquals(201, resp.getStatusCode());
 
-        resp = OiyokanTestUtil.callGet("/ODataTest1",
-                "$select=ID,Clob1 &$filter=ID eq " + idString + " and Clob1 eq 'ABCDXYZ'");
-        result = OiyokanTestUtil.stream2String(resp.getContent());
-        assertEquals("{\"@odata.context\":\"$metadata#ODataTest1\",\"value\":[{\"ID\":" + idString //
-                + ",\"Clob1\":\"ABCDXYZ\"}]}", result);
-        assertEquals(200, resp.getStatusCode());
+        OiyoSettingsDatabase database = OiyoInfoUtil.getOiyoDatabaseByEntitySetName(oiyoInfo, "ODataTest1");
+        OiyokanConstants.DatabaseType databaseType = OiyokanConstants.DatabaseType.valueOf(database.getType());
+        switch (databaseType) {
+        case SQLSV2008:
+            // SQL ServerではCLOBをWHEREには指定できない.
+            break;
+        default:
+            resp = OiyokanTestUtil.callGet("/ODataTest1",
+                    "$select=ID,Clob1 &$filter=ID eq " + idString + " and Clob1 eq 'ABCDXYZ'");
+            result = OiyokanTestUtil.stream2String(resp.getContent());
+            assertEquals("{\"@odata.context\":\"$metadata#ODataTest1\",\"value\":[{\"ID\":" + idString //
+                    + ",\"Clob1\":\"ABCDXYZ\"}]}", result);
+            assertEquals(200, resp.getStatusCode());
+            break;
+        }
 
         // DELETE
         resp = OiyokanTestUtil.callDelete("/ODataTest1(" + idString + ")");

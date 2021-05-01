@@ -35,19 +35,20 @@ class UnitTestTypeSbyte01Test {
         @SuppressWarnings("unused")
         final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
 
+        // SQL Server では 正の値の TINYINT型を利用している。
         ODataResponse resp = OiyokanTestUtil.callPost("/ODataTest1", "{\n" //
-                + "  \"Sbyte1\":-1\n" //
+                + "  \"Sbyte1\":1\n" //
                 + "}");
         String result = OiyokanTestUtil.stream2String(resp.getContent());
         final String idString = OiyokanTestUtil.getValueFromResultByKey(result, "ID");
-        assertEquals("-1", OiyokanTestUtil.getValueFromResultByKey(result, "Sbyte1"));
+        assertEquals("1", OiyokanTestUtil.getValueFromResultByKey(result, "Sbyte1"));
         assertEquals(201, resp.getStatusCode());
 
         resp = OiyokanTestUtil.callGet("/ODataTest1",
-                "$select=ID,Sbyte1 &$filter=ID eq " + idString + " and Sbyte1 eq -1");
+                "$select=ID,Sbyte1 &$filter=ID eq " + idString + " and Sbyte1 eq 1");
         result = OiyokanTestUtil.stream2String(resp.getContent());
         assertEquals("{\"@odata.context\":\"$metadata#ODataTest1\",\"value\":[{\"ID\":" + idString //
-                + ",\"Sbyte1\":-1}]}", result);
+                + ",\"Sbyte1\":1}]}", result);
         assertEquals(200, resp.getStatusCode());
 
         // DELETE
