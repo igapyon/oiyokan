@@ -17,8 +17,9 @@ package jp.oiyokan.common;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
 import java.math.BigDecimal;
-import java.nio.charset.Charset;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -38,6 +39,7 @@ import java.util.Locale;
 import java.util.UUID;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -61,7 +63,6 @@ import org.apache.olingo.commons.core.edm.primitivetype.EdmSingle;
 import org.apache.olingo.commons.core.edm.primitivetype.EdmString;
 import org.apache.olingo.commons.core.edm.primitivetype.EdmTimeOfDay;
 import org.apache.olingo.server.api.ODataApplicationException;
-import org.springframework.util.StreamUtils;
 
 import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanMessages;
@@ -241,31 +242,34 @@ public class OiyoCommonJdbcUtil {
         } else if (EdmTimeOfDay.getInstance() == edmType) {
             return new Property(edmTypeName, propName, ValueType.PRIMITIVE, rset.getTime(column));
         } else if (EdmString.getInstance() == edmType) {
-            if (Types.CLOB == OiyoJdbcUtil.string2Types(property.getJdbcType())) {
+            String value = null;
+            if (oiyoProp.getJdbcStream() != null && oiyoProp.getJdbcStream()) {
                 try {
-                    return new Property(edmTypeName, propName, ValueType.PRIMITIVE,
-                            StreamUtils.copyToString(rset.getAsciiStream(column), Charset.forName("UTF-8")));
+                    final Reader reader = rset.getCharacterStream(column);
+                    if (reader != null) {
+                        value = IOUtils.toString(reader);
+                    }
                 } catch (IOException ex) {
-                    // [M007] UNEXPECTED: fail to read from CLOB
+                    // [IY7107] UNEXPECTED: fail to read from CLOB
                     log.error(OiyokanMessages.IY7107 + ": " + property.getName() + ": " + ex.toString(), ex);
                     throw new ODataApplicationException(OiyokanMessages.IY7107 + ": " + property.getName(), //
                             500, Locale.ENGLISH);
                 }
             } else {
-                String value = rset.getString(column);
-                if (oiyoProp.getLengthFixed() != null && oiyoProp.getLengthFixed() && oiyoProp.getMaxLength() != null) {
-                    if (value != null) {
-                        // NULLではない場合は、固定長文字列。CHAR の後方に空白をFILL。
-                        final int fixedLength = oiyoProp.getMaxLength();
-                        value = StringUtils.rightPad(value, fixedLength);
-                    }
-                }
-                return new Property(edmTypeName, propName, ValueType.PRIMITIVE, value);
+                value = rset.getString(column);
             }
+            if (oiyoProp.getLengthFixed() != null && oiyoProp.getLengthFixed() && oiyoProp.getMaxLength() != null) {
+                if (value != null) {
+                    // NULLではない場合は、固定長文字列。CHAR の後方に空白をFILL。
+                    final int fixedLength = oiyoProp.getMaxLength();
+                    value = StringUtils.rightPad(value, fixedLength);
+                }
+            }
+            return new Property(edmTypeName, propName, ValueType.PRIMITIVE, value);
         } else if (EdmBinary.getInstance() == edmType) {
             try {
                 return new Property(edmTypeName, propName, ValueType.PRIMITIVE,
-                        StreamUtils.copyToByteArray(rset.getBinaryStream(column)));
+                        IOUtils.toByteArray(rset.getBinaryStream(column)));
             } catch (IOException ex) {
                 // [M008] UNEXPECTED: fail to read from binary
                 log.error(OiyokanMessages.IY7108 + ": " + property.getName() + ": " + ex.toString(), ex);
@@ -434,14 +438,28 @@ public class OiyoCommonJdbcUtil {
             }
             if (EdmString.getInstance() == edmType) {
                 if (param.getValue() instanceof String) {
-                    stmt.setString(column, (String) param.getValue());
-                    return;
+                    final String value = (String) param.getValue();
+                    if (property.getJdbcStream() != null && property.getJdbcStream()) {
+                        final StringReader reader = new StringReader(value);
+                        stmt.setCharacterStream(column, reader);
+                        return;
+                    } else {
+                        stmt.setString(column, value);
+                        return;
+                    }
                 }
             }
             if (EdmBinary.getInstance() == edmType) {
                 if (param.getValue() instanceof byte[]) {
-                    stmt.setBytes(column, (byte[]) param.getValue());
-                    return;
+                    final byte[] value = (byte[]) param.getValue();
+                    if (property.getJdbcStream() != null && property.getJdbcStream()) {
+                        final ByteArrayInputStream inStream = new ByteArrayInputStream(value);
+                        stmt.setBinaryStream(column, inStream);
+                        return;
+                    } else {
+                        stmt.setBytes(column, value);
+                        return;
+                    }
                 }
             }
             if (EdmGuid.getInstance() == edmType) {
@@ -520,6 +538,7 @@ public class OiyoCommonJdbcUtil {
             stmt.setTimestamp(column, timestamp);
         } else if (param.getValue() instanceof String) {
             log.trace("TRACE: PreparedStatement#setString: " + param);
+            // property 情報がないため、setString のみ選択可能
             stmt.setString(column, (String) param.getValue());
         } else if (param.getValue() instanceof byte[]) {
             log.trace("TRACE: PreparedStatement#setBytes: " + param);

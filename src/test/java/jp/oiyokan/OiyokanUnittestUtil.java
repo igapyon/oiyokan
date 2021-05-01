@@ -7,11 +7,11 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Locale;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.olingo.server.api.ODataApplicationException;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.util.StreamUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -52,7 +52,7 @@ public class OiyokanUnittestUtil {
             // resources から読み込み。
             final ClassPathResource cpres = new ClassPathResource(settings);
             try (InputStream inStream = cpres.getInputStream()) {
-                final String strOiyokanSettings = StreamUtils.copyToString(inStream, Charset.forName("UTF-8"));
+                final String strOiyokanSettings = IOUtils.toString(inStream, Charset.forName("UTF-8"));
 
                 final ObjectMapper mapper = new ObjectMapper();
                 final OiyoSettings loadedSettings = mapper.readValue(strOiyokanSettings, OiyoSettings.class);
