@@ -50,7 +50,10 @@ class UnitTestTypeClob01Test {
         OiyokanConstants.DatabaseType databaseType = OiyokanConstants.DatabaseType.valueOf(database.getType());
         switch (databaseType) {
         case SQLSV2008:
-            // SQL ServerではCLOBをWHEREには指定できない.
+            // SQLSV2008ではCLOBをWHEREには指定できない.
+            break;
+        case ORCL18:
+            // ORCL18ではCLOBをWHEREには指定できない.
             break;
         default:
             resp = OiyokanTestUtil.callGet("/ODataTest1",
