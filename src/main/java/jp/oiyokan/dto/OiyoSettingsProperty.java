@@ -31,8 +31,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
  * http://www.jsonschema2pojo.org/ を利用して自動生成.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({ "name", "dbName", "edmType", "jdbcType", "dbType", "jdbcSetMethod", "autoGenKey", "nullable",
-        "maxLength", "lengthFixed", "precision", "scale", "dbDefault", "filterTreatNullAsBlank" })
+@JsonPropertyOrder({ "name", "dbName", "edmType", "jdbcType", "dbType", "jdbcStream", "jdbcSetMethod", "autoGenKey",
+        "nullable", "maxLength", "lengthFixed", "precision", "scale", "dbDefault", "filterTreatNullAsBlank" })
 @Generated("jsonschema2pojo")
 public class OiyoSettingsProperty {
     @JsonProperty("name")
@@ -45,6 +45,8 @@ public class OiyoSettingsProperty {
     private String jdbcType;
     @JsonProperty("dbType")
     private String dbType;
+    @JsonProperty("jdbcStream")
+    private Boolean jdbcStream;
     @JsonProperty("jdbcSetMethod")
     private String jdbcSetMethod;
     @JsonProperty("autoGenKey")
@@ -114,6 +116,16 @@ public class OiyoSettingsProperty {
     @JsonProperty("dbType")
     public void setDbType(String dbType) {
         this.dbType = dbType;
+    }
+
+    @JsonProperty("jdbcStream")
+    public Boolean getJdbcStream() {
+        return jdbcStream;
+    }
+
+    @JsonProperty("jdbcStream")
+    public void setJdbcStream(Boolean jdbcStream) {
+        this.jdbcStream = jdbcStream;
     }
 
     @JsonProperty("jdbcSetMethod")

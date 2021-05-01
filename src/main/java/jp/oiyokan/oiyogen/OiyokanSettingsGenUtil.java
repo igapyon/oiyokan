@@ -75,8 +75,7 @@ public class OiyokanSettingsGenUtil {
             }
         }
 
-        // TODO FIXME 処理の共通化
-        entitySet.setName(tableName.replaceAll(" ", "") + "s");
+        entitySet.setName(tableName.replaceAll(" ", ""));
         entitySet.setDbSettingName("oiyoUnitTestDb");
         entitySet.setDescription("Description.");
         entitySet.setCanCreate(true);
@@ -239,6 +238,14 @@ public class OiyokanSettingsGenUtil {
                     if (property.getNullable() != null && property.getNullable() == false) {
                         property.setNullable(true);
                     }
+                }
+
+                if ("BLOB".equalsIgnoreCase(property.getDbType()) //
+                        || "CLOB".equalsIgnoreCase(property.getDbType()) //
+                        || "TEXT".equalsIgnoreCase(property.getDbType()) //
+                ) {
+                    // Stream軽の入出力をヒント.
+                    property.setJdbcStream(true);
                 }
             }
 
