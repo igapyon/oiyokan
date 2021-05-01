@@ -218,13 +218,15 @@ public class OiyokanSettingsGenUtil {
                     property.setNullable(null);
                 }
 
-                if (property.getDbDefault() != null && property.getDbDefault().contains("NEXT VALUE FOR")) {
+                if (property.getDbDefault() != null //
+                        && (property.getDbDefault().contains("NEXT VALUE FOR")
+                                || property.getDbDefault().contains("nextval("))) {
                     if (!"IDENTITY".equalsIgnoreCase(property.getDbType()) //
                             && !"SERIAL".equalsIgnoreCase(property.getDbType()) //
                             && !"SEQUENCE".equalsIgnoreCase(property.getDbType())) {
                         property.setDbType("IDENTITY");
-                        property.setDbDefault(null);
                     }
+                    property.setDbDefault(null);
                 }
 
                 if ("IDENTITY".equalsIgnoreCase(property.getDbType()) //
