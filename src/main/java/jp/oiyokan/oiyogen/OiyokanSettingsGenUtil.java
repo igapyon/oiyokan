@@ -75,8 +75,7 @@ public class OiyokanSettingsGenUtil {
             }
         }
 
-        // TODO FIXME 処理の共通化
-        entitySet.setName(tableName.replaceAll(" ", "") + "s");
+        entitySet.setName(tableName.replaceAll(" ", ""));
         entitySet.setDbSettingName("oiyoUnitTestDb");
         entitySet.setDescription("Description.");
         entitySet.setCanCreate(true);

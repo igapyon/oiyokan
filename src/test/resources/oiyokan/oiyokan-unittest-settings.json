@@ -137,6 +137,7 @@
             "edmType": "Edm.String",
             "jdbcType": "Types.CLOB",
             "dbType": "CLOB",
+            "jdbcStream": true,
             "nullable": true,
             "dbDefault": "'CLOB'"
           },
@@ -229,6 +230,7 @@
             "edmType": "Edm.Binary",
             "jdbcType": "Types.BLOB",
             "dbType": "BLOB",
+            "jdbcStream": true,
             "nullable": true,
             "maxLength": 128,
             "dbDefault": "X'48656c6c6f20776f726c6421'"
@@ -428,6 +430,7 @@
             "edmType": "Edm.String",
             "jdbcType": "Types.CLOB",
             "dbType": "CLOB",
+            "jdbcStream": true,
             "nullable": true,
             "dbDefault": "'CLOB'"
           },
@@ -520,6 +523,7 @@
             "edmType": "Edm.Binary",
             "jdbcType": "Types.BLOB",
             "dbType": "BLOB",
+            "jdbcStream": true,
             "nullable": true,
             "maxLength": 128,
             "dbDefault": "X'48656c6c6f20776f726c6421'"
@@ -693,6 +697,7 @@
             "edmType": "Edm.Binary",
             "jdbcType": "Types.BLOB",
             "dbType": "BLOB",
+            "jdbcStream": true,
             "nullable": true,
             "maxLength": 128,
             "dbDefault": "X'48656c6c6f20776f726c6421'"
