@@ -66,6 +66,7 @@ public class OiyokanMessages {
     public static final int IY1106_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
     public static final String IY1107 = "[IY1107] NOT SUPPORTED: URI: $search";
     public static final int IY1107_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
+    public static final String IY1111 = "[IY1111] WARN: A literal associated with property was given but could not be processed.";
 
     ////////////////////////////////////////////////////////////////////////////////
     // IY15XX : DB接続(Client)

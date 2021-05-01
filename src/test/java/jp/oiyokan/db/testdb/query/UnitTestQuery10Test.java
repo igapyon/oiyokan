@@ -35,7 +35,7 @@ class UnitTestQuery10Test {
         final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
 
         final ODataResponse resp = OiyokanTestUtil.callGet("/ODataTest1", OiyoUrlUtil
-                .encodeUrlQuery("$top=51 &$filter=Double1 lt 123.456789 &$orderby=ID &$count=true &$select=ID"));
+                .encodeUrlQuery("$select=ID &$filter=Double1 lt 123.456789 &$orderby=ID &$count=true &$top=51"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         // System.err.println("result: " + result);
