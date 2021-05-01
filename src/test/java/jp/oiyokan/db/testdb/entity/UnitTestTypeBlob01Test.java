@@ -29,25 +29,24 @@ import jp.oiyokan.util.OiyokanTestUtil;
  * 
  * 通常 $filterも交えて確認.
  */
-class UnitTestTypeClob101Test {
+class UnitTestTypeBlob01Test {
     @Test
     void test01() throws Exception {
         @SuppressWarnings("unused")
         final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
 
         ODataResponse resp = OiyokanTestUtil.callPost("/ODataTest1", "{\n" //
-                + "  \"Clob1\":\"ABCDXYZ\"\n" //
+                + "  \"Blob1\":\"VG9uYXJpIG5vIGt5YWt1Lg==\"\n" //
                 + "}");
         String result = OiyokanTestUtil.stream2String(resp.getContent());
         final String idString = OiyokanTestUtil.getValueFromResultByKey(result, "ID");
-        assertEquals("\"ABCDXYZ\"", OiyokanTestUtil.getValueFromResultByKey(result, "Clob1"));
+        assertEquals("\"VG9uYXJpIG5vIGt5YWt1Lg==\"", OiyokanTestUtil.getValueFromResultByKey(result, "Blob1"));
         assertEquals(201, resp.getStatusCode());
 
-        resp = OiyokanTestUtil.callGet("/ODataTest1",
-                "$select=ID,Clob1 &$filter=ID eq " + idString + " and Clob1 eq 'ABCDXYZ'");
+        resp = OiyokanTestUtil.callGet("/ODataTest1", "$select=ID,Blob1 &$filter=ID eq " + idString);
         result = OiyokanTestUtil.stream2String(resp.getContent());
         assertEquals("{\"@odata.context\":\"$metadata#ODataTest1\",\"value\":[{\"ID\":" + idString //
-                + ",\"Clob1\":\"ABCDXYZ\"}]}", result);
+                + ",\"Blob1\":\"VG9uYXJpIG5vIGt5YWt1Lg==\"}]}", result);
         assertEquals(200, resp.getStatusCode());
 
         // DELETE
