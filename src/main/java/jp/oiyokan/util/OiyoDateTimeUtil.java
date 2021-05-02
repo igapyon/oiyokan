@@ -113,14 +113,14 @@ public class OiyoDateTimeUtil {
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
             java.util.Date look = sdf.parse(inputTimeString);
-            return new java.sql.Time(look.getTime());
+            return OiyoJdbcUtil.toSqlTime(look);
         } catch (ParseException e) {
         }
 
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss.SSS");
             java.util.Date look = sdf.parse(inputTimeString);
-            return new java.sql.Time(look.getTime());
+            return OiyoJdbcUtil.toSqlTime(look);
         } catch (ParseException e) {
         }
 

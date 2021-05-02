@@ -33,7 +33,6 @@ import java.sql.Types;
 import java.time.ZonedDateTime;
 import java.time.temporal.TemporalAccessor;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
@@ -405,15 +404,13 @@ public class OiyoCommonJdbcUtil {
             if (EdmDate.getInstance() == edmType) {
                 if (param.getValue() instanceof java.util.Calendar) {
                     java.util.Calendar cal = (java.util.Calendar) param.getValue();
-                    java.sql.Date sdate = new java.sql.Date(cal.getTime().getTime());
-                    stmt.setDate(column, sdate);
+                    stmt.setDate(column, OiyoJdbcUtil.toSqlDate(cal.getTime()));
                     return;
                 }
                 if (param.getValue() instanceof java.time.ZonedDateTime) {
                     final ZonedDateTime zdt = (java.time.ZonedDateTime) param.getValue();
                     java.util.Date look = OiyoDateTimeUtil.zonedDateTime2Date(zdt);
-                    java.sql.Date sdate = new java.sql.Date(look.getTime());
-                    stmt.setDate(column, sdate);
+                    stmt.setDate(column, OiyoJdbcUtil.toSqlDate(look));
                     return;
                 }
             }
@@ -425,8 +422,7 @@ public class OiyoCommonJdbcUtil {
                 if (param.getValue() instanceof java.time.ZonedDateTime) {
                     final ZonedDateTime zdt = (java.time.ZonedDateTime) param.getValue();
                     java.util.Date look = OiyoDateTimeUtil.zonedDateTime2Date(zdt);
-                    java.sql.Timestamp sdate = new java.sql.Timestamp(look.getTime());
-                    stmt.setTimestamp(column, sdate);
+                    stmt.setTimestamp(column, OiyoJdbcUtil.toSqlTimestamp(look));
                     return;
                 }
             }
@@ -520,22 +516,19 @@ public class OiyoCommonJdbcUtil {
         } else if (param.getValue() instanceof java.util.Date) {
             log.trace("TRACE: PreparedStatement#setDate(java.util.Date): " + param);
             java.util.Date udate = (java.util.Date) param.getValue();
-            // TODO v1.x FIXME これは java.sql.Timestampのほうがいいんちゃうかしら
-            java.sql.Date sdate = new java.sql.Date(udate.getTime());
-            stmt.setDate(column, sdate);
+            // Date か Timestamp 判別できないため、情報量の多い Date を利用.
+            stmt.setTimestamp(column, OiyoJdbcUtil.toSqlTimestamp(udate));
         } else if (param.getValue() instanceof java.util.Calendar) {
             log.trace("TRACE: PreparedStatement#setDate(java.util.Calendar): " + param);
             java.util.Calendar cal = (java.util.Calendar) param.getValue();
-            // TODO v1.x FIXME これは java.sql.Timestampのほうがいいんちゃうかしら
-            java.sql.Date sdate = new java.sql.Date(cal.getTime().getTime());
-            stmt.setDate(column, sdate);
+            // Date か Timestamp 判別できないため、情報量の多い Date を利用.
+            stmt.setTimestamp(column, OiyoJdbcUtil.toSqlTimestamp(cal.getTime()));
         } else if (param.getValue() instanceof ZonedDateTime) {
             // ex: $filter で lt 2020-12-31T21:53:00Z により発生。
             log.trace("TRACE: PreparedStatement#setDate(ZonedDateTime): " + param);
             ZonedDateTime zdt = (ZonedDateTime) param.getValue();
             java.util.Date look = OiyoDateTimeUtil.zonedDateTime2Date(zdt);
-            java.sql.Timestamp timestamp = new java.sql.Timestamp(look.getTime());
-            stmt.setTimestamp(column, timestamp);
+            stmt.setTimestamp(column, OiyoJdbcUtil.toSqlTimestamp(look));
         } else if (param.getValue() instanceof String) {
             log.trace("TRACE: PreparedStatement#setString: " + param);
             // property 情報がないため、setString のみ選択可能
@@ -744,17 +737,13 @@ public class OiyoCommonJdbcUtil {
                 sqlInfo.getSqlParamList().add(new OiyoSqlInfo.SqlParam(property, inputParam));
             } else if (inputParam instanceof java.util.Calendar) {
                 java.util.Calendar cal = (java.util.Calendar) inputParam;
-                // TODO v1.x FIXME 以下の箇所をいつか内容確認。
-                // TODO v1.x new Time(getTime())の実装に変更。共通化.
-                @SuppressWarnings("deprecation")
-                java.sql.Time look = new java.sql.Time(cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE),
-                        cal.get(Calendar.SECOND));
                 sqlInfo.getSqlBuilder().append("?");
-                sqlInfo.getSqlParamList().add(new OiyoSqlInfo.SqlParam(property, look));
+                sqlInfo.getSqlParamList().add( //
+                        new OiyoSqlInfo.SqlParam(property, OiyoJdbcUtil.toSqlTime(cal.getTime())));
             } else {
-                java.sql.Time look = OiyoDateTimeUtil.parseStringTime(String.valueOf(inputParam));
                 sqlInfo.getSqlBuilder().append("?");
-                sqlInfo.getSqlParamList().add(new OiyoSqlInfo.SqlParam(property, look));
+                sqlInfo.getSqlParamList().add(new OiyoSqlInfo.SqlParam(property, //
+                        OiyoDateTimeUtil.parseStringTime(String.valueOf(inputParam))));
             }
             return;
         }

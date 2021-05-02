@@ -253,4 +253,46 @@ public class OiyoJdbcUtil {
         log.error(OiyokanMessages.IY7153 + ": " + typesString);
         throw new IllegalArgumentException(OiyokanMessages.IY7153 + ": " + typesString);
     }
+
+    /**
+     * 与えられた引数を java.sql.Dateに変換
+     * 
+     * @param date java.util.Date
+     * @return java.sql.Date
+     */
+    public static java.sql.Date toSqlDate(java.util.Date date) {
+        if (date == null) {
+            return null;
+        } else {
+            return new java.sql.Date(date.getTime());
+        }
+    }
+
+    /**
+     * 与えられた引数を java.sql.Timestampに変換
+     * 
+     * @param date java.util.Date
+     * @return java.sql.Timestamp
+     */
+    public static java.sql.Timestamp toSqlTimestamp(java.util.Date date) {
+        if (date == null) {
+            return null;
+        } else {
+            return new java.sql.Timestamp(date.getTime());
+        }
+    }
+
+    /**
+     * 与えられた引数を java.sql.Timeに変換
+     * 
+     * @param date java.util.Date
+     * @return java.sql.Time
+     */
+    public static java.sql.Time toSqlTime(java.util.Date date) {
+        if (date == null) {
+            return null;
+        } else {
+            return new java.sql.Time(date.getTime());
+        }
+    }
 }
