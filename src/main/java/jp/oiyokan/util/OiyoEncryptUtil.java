@@ -42,12 +42,7 @@ public class OiyoEncryptUtil {
      */
     public static String encrypt(final String source, final String passphrase) {
         try {
-            final MessageDigest sha256 = MessageDigest.getInstance("SHA-256");
-            final byte[] key = Arrays.copyOf(sha256.digest(passphrase.getBytes("UTF-8")), 32);
-            final SecretKeySpec keySpec = new SecretKeySpec(key, "AES");
-            final IvParameterSpec ivParamSpec = new IvParameterSpec(Arrays.copyOf(key, 16));
-            final Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
-            cipher.init(Cipher.ENCRYPT_MODE, keySpec, ivParamSpec);
+            final Cipher cipher = getCipher(passphrase, true);
             final byte[] byteCipherText = cipher.doFinal(source.getBytes("UTF-8"));
             return Base64.encodeBase64String(byteCipherText);
         } catch (GeneralSecurityException | IOException ex) {
@@ -63,12 +58,7 @@ public class OiyoEncryptUtil {
      */
     public static String decrypt(final String encSource, final String passphrase) {
         try {
-            final MessageDigest sha256 = MessageDigest.getInstance("SHA-256");
-            final byte[] key = Arrays.copyOf(sha256.digest(passphrase.getBytes("UTF-8")), 32);
-            final SecretKeySpec keySpec = new SecretKeySpec(key, "AES");
-            final IvParameterSpec ivParamSPec = new IvParameterSpec(Arrays.copyOf(key, 16));
-            final Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
-            cipher.init(Cipher.DECRYPT_MODE, keySpec, ivParamSPec);
+            final Cipher cipher = getCipher(passphrase, false);
             final byte[] decoded = Base64.decodeBase64(encSource);
             final byte[] decodedBytes = cipher.doFinal(decoded);
             return new String(decodedBytes, "UTF-8");
@@ -77,13 +67,18 @@ public class OiyoEncryptUtil {
         }
     }
 
-    private static Cipher getCipher(final String passphrase) throws GeneralSecurityException, IOException {
+    private static Cipher getCipher(final String passphrase, final boolean isEncrypt)
+            throws GeneralSecurityException, IOException {
         final MessageDigest sha256 = MessageDigest.getInstance("SHA-256");
         final byte[] sha256Key = Arrays.copyOf(sha256.digest(passphrase.getBytes("UTF-8")), 32);
         final SecretKeySpec keySpec = new SecretKeySpec(sha256Key, "AES");
         final IvParameterSpec ivParamSpec = new IvParameterSpec(Arrays.copyOf(sha256Key, 16));
         final Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
-        cipher.init(Cipher.DECRYPT_MODE, keySpec, ivParamSpec);
+        if (isEncrypt) {
+            cipher.init(Cipher.ENCRYPT_MODE, keySpec, ivParamSpec);
+        } else {
+            cipher.init(Cipher.DECRYPT_MODE, keySpec, ivParamSpec);
+        }
         return cipher;
     }
 }

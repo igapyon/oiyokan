@@ -15,14 +15,17 @@
  */
 package jp.oiyokan.util;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.jupiter.api.Test;
 
 class OiyoEncryptUtilTest {
     @Test
     void test() {
-        String enc = OiyoEncryptUtil.encrypt("あいうえおかきくけこ", "passwdpasswd");
-        System.err.println(enc);
-        String dec = OiyoEncryptUtil.decrypt(enc, "passwdpasswd");
-        System.err.println(dec);
+        final String ENCDATA = "あいうえおかきくけこABCDEFG";
+        final String MY_PASSPHRASE = "passwd123/パスワード";
+        final String enc = OiyoEncryptUtil.encrypt(ENCDATA, MY_PASSPHRASE);
+        final String dec = OiyoEncryptUtil.decrypt(enc, MY_PASSPHRASE);
+        assertEquals(ENCDATA, dec);
     }
 }
