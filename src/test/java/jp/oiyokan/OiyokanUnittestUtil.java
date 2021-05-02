@@ -45,7 +45,7 @@ public class OiyokanUnittestUtil {
     private static final Log log = LogFactory.getLog(OiyokanUnittestUtil.class);
 
     private static final String[][] OIYOKAN_FILE_SQLS = new String[][] { //
-            { "oiyoUnitTestDb", "oiyokan-unittest-db-h2.sql" }, //
+            { "oiyoUnitTestDb", "/oiyokan/sql/oiyokan-unittest-db-h2.sql" }, //
     };
 
     public static synchronized OiyoInfo setupUnittestDatabase() throws ODataApplicationException {
@@ -62,7 +62,7 @@ public class OiyokanUnittestUtil {
         }
 
         if (true) {
-            String settings = "oiyokan/oiyokan-unittest-settings.json";
+            String settings = "/oiyokan/oiyokan-unittest-settings.json";
             log.trace("Unittest: OData v4: resources: load: " + settings);
             // resources から読み込み。
             final ClassPathResource cpres = new ClassPathResource(settings);
@@ -93,7 +93,7 @@ public class OiyokanUnittestUtil {
                 OiyoSettingsDatabase lookDatabase = OiyoInfoUtil.getOiyoDatabaseByName(oiyoInfo, sqlFileDef[0]);
 
                 try (Connection connLoookDatabase = OiyoCommonJdbcUtil.getConnection(lookDatabase)) {
-                    final String[] sqls = OiyokanResourceSqlUtil.loadOiyokanResourceSql("oiyokan/sql/" + sqlFileDef[1]);
+                    final String[] sqls = OiyokanResourceSqlUtil.loadOiyokanResourceSql(sqlFileDef[1]);
                     for (String sql : sqls) {
                         try (var stmt = connLoookDatabase.prepareStatement(sql.trim())) {
                             stmt.executeUpdate();
