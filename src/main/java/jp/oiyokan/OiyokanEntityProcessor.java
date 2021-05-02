@@ -263,6 +263,8 @@ public class OiyokanEntityProcessor implements EntityProcessor {
                 String ifMatchString = request.getHeader("If-Match");
                 ifMatchString = (ifMatchString == null ? null : ifMatchString.trim());
                 if (ifMatchString != null && ifMatchString.length() > 0 && !"*".equals(ifMatchString)) {
+                    // ETagハンドリング実装は OData v4.01 準拠。
+                    // TODO v2.x OData v4.0リクエストではETagは無視するよう、バージョンにより挙動を変える必要あり。
                     // [IY3109] If-Match: ETag is NOT supported. Only * supported.
                     log.error(OiyokanMessages.IY3109 + ": " + ifMatchString);
                     throw new ODataApplicationException(OiyokanMessages.IY3109 + ": " + ifMatchString,
@@ -273,6 +275,8 @@ public class OiyokanEntityProcessor implements EntityProcessor {
                 String ifNoneMatchString = request.getHeader("If-None-Match");
                 ifNoneMatchString = (ifNoneMatchString == null ? null : ifNoneMatchString.trim());
                 if (ifNoneMatchString != null && ifNoneMatchString.length() > 0 && !"*".equals(ifNoneMatchString)) {
+                    // ETagハンドリング実装は OData v4.01 準拠。
+                    // TODO v2.x OData v4.0リクエストではETagは無視するよう、バージョンにより挙動を変える必要あり。
                     // [IY3110] If-None-Match: ETag is NOT supported. Only * supported.
                     log.error(OiyokanMessages.IY3110 + ": " + ifNoneMatchString);
                     throw new ODataApplicationException(OiyokanMessages.IY3110 + ": " + ifNoneMatchString,
