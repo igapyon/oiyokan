@@ -70,7 +70,7 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
         // singleton by static synchronized.
         if (oiyoInfo == null) {
             final OiyoInfo wrk = new OiyoInfo();
-            wrk.setSettings(OiyoInfoUtil.loadOiyokanSettings());
+            wrk.setSettings(OiyoInfoUtil.loadOiyokanSettings(wrk));
             // ロードが終わってから変数に値をセット。念には念を)
             oiyoInfo = wrk;
         }

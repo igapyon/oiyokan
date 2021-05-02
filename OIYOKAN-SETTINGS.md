@@ -36,7 +36,8 @@ src/main/resources/iyokan/oiyokan-settings.json
 | jdbcDriver     | Classname of JDBC driver. ex: `org.h2.Driver`                     |
 | jdbcUrl        | JDBC url to connect. ex: `jdbc:h2:mem:mydb;DB_CLOSE_DELAY=-1;`    |
 | jdbcUser       | JDBC user name. ex: `user1`                                       |
-| jdbcPass       | JDBC password.                                                    |
+| jdbcPassEnc    | JDBC password with Encryption. (Recommended)                      |
+| jdbcPassPlain  | JDBC password without Encryption. (jdbcPassEnc is recommended)    |
 
 #### entitySet section
 

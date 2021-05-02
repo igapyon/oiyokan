@@ -104,7 +104,7 @@ public class OiyoCommonJdbcUtil {
             } else {
                 // User が指定ある場合は user と pass を利用.
                 conn = DriverManager.getConnection(settingsDatabase.getJdbcUrl(), settingsDatabase.getJdbcUser(),
-                        settingsDatabase.getJdbcPass());
+                        settingsDatabase.getJdbcPassPlain());
             }
             // TRANSACTION_READ_COMMITTED を設定.
             conn.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);

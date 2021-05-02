@@ -27,11 +27,13 @@ import org.junit.jupiter.api.Test;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
+import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.dto.OiyoSettings;
 import jp.oiyokan.dto.OiyoSettingsDatabase;
 import jp.oiyokan.dto.OiyoSettingsEntitySet;
 import jp.oiyokan.dto.OiyoSettingsEntityType;
 import jp.oiyokan.dto.OiyoSettingsProperty;
+import jp.oiyokan.util.OiyoEncryptUtil;
 
 /**
  * Generate oiyokanKan-settings.json
@@ -41,6 +43,8 @@ class Gen01OiyokanKanSettingsJsonTest {
 
     @Test
     void test01() throws Exception {
+        final OiyoInfo wrkOiyoInfo = new OiyoInfo();
+
         final OiyoSettings oiyoSettings = new OiyoSettings();
         oiyoSettings.setEntitySet(new ArrayList<>());
 
@@ -64,7 +68,7 @@ class Gen01OiyokanKanSettingsJsonTest {
             database.setJdbcDriver(databaseSetting[3]);
             database.setJdbcUrl(databaseSetting[4]);
             database.setJdbcUser(databaseSetting[5]);
-            database.setJdbcPass(databaseSetting[6]);
+            database.setJdbcPassEnc(OiyoEncryptUtil.encrypt(databaseSetting[6], wrkOiyoInfo.getPassphrase()));
         }
 
         OiyoSettingsEntitySet entitySet = new OiyoSettingsEntitySet();

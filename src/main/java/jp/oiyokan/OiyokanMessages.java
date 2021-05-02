@@ -213,6 +213,8 @@ public class OiyokanMessages {
     public static final String IY6102 = "[IY6102] INFO: settings: load containerName";
     public static final String IY6103 = "[IY6103] INFO: settings: load database";
     public static final String IY6104 = "[IY6104] INFO: settings: load entitySet";
+    public static final String IY6111 = "[IY6111] ERROR: settings: Fail to decrypt jdbcPassEnc. Check OIYOKAN_PASSPHRASE env value.";
+    public static final int IY6111_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
     public static final String IY6151 = "[IY6151] WARN: Overwrite nullable with true because autoGenKey for property is true.";
 
     ////////////////////////////////////////////////////////////////////////////////

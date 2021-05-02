@@ -33,6 +33,7 @@ import jp.oiyokan.dto.OiyoSettings;
 import jp.oiyokan.dto.OiyoSettingsDatabase;
 import jp.oiyokan.dto.OiyoSettingsEntitySet;
 import jp.oiyokan.dto.OiyoSettingsProperty;
+import jp.oiyokan.util.OiyoEncryptUtil;
 
 /**
  * oiyokan-settings.json ファイルに関する処理。
@@ -43,10 +44,11 @@ public class OiyoInfoUtil {
     /**
      * resources フォルダから設定ファイルを読み込み.
      * 
+     * @param oiyoInfo 環境情報読み込みのために利用.
      * @return OiyokanSettings 設定情報.
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
-    public static OiyoSettings loadOiyokanSettings() throws ODataApplicationException {
+    public static OiyoSettings loadOiyokanSettings(OiyoInfo oiyoInfo) throws ODataApplicationException {
         // [IY7173] INFO: start to load oiyokan settings
         log.info(OiyokanMessages.IY7173);
 
@@ -82,6 +84,23 @@ public class OiyoInfoUtil {
                     // [IY6103] INFO: settings: load database
                     log.info(OiyokanMessages.IY6103 + ": " + database.getName());
                     mergedOiyoSettings.getDatabase().add(database);
+
+                    // Password
+                    if (database.getJdbcPassEnc() != null && database.getJdbcPassEnc().trim().length() > 0) {
+                        log.trace(database.getName() + ": jdbcPassEnc を読み込み.");
+                        try {
+                            final String passEncv = database.getJdbcPassEnc().trim();
+                            database.setJdbcPassPlain(OiyoEncryptUtil.decrypt(passEncv, oiyoInfo.getPassphrase()));
+                        } catch (Exception ex) {
+                            // [IY6111] ERROR: settings: Fail to decrypt jdbcPassEnc. Check
+                            // OIYOKAN_PASSPHRASE env value.
+                            log.fatal(OiyokanMessages.IY6111 + database.getName() + ": " + ex.toString());
+                            throw new ODataApplicationException(OiyokanMessages.IY6111 + ": " + database.getName(),
+                                    OiyokanMessages.IY6111_CODE, Locale.ENGLISH);
+                        }
+                    } else {
+                        log.trace(database.getName() + ": jdbcPassPlain をそのまま利用.");
+                    }
                 }
                 for (OiyoSettingsEntitySet entitySet : loadedSettings.getEntitySet()) {
                     // [IY6104] INFO: settings: load entitySet

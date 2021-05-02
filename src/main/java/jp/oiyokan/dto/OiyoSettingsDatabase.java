@@ -33,7 +33,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
  * http://www.jsonschema2pojo.org/ を利用して自動生成.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({ "name", "type", "description", "jdbcDriver", "jdbcUrl", "jdbcUser", "jdbcPass" })
+@JsonPropertyOrder({ "name", "type", "description", "jdbcDriver", "jdbcUrl", "jdbcUser", "jdbcPassEnc",
+        "jdbcPassPlain" })
 @Generated("jsonschema2pojo")
 public class OiyoSettingsDatabase {
 
@@ -49,8 +50,10 @@ public class OiyoSettingsDatabase {
     private String jdbcUrl;
     @JsonProperty("jdbcUser")
     private String jdbcUser;
-    @JsonProperty("jdbcPass")
-    private String jdbcPass;
+    @JsonProperty("jdbcPassEnc")
+    private String jdbcPassEnc;
+    @JsonProperty("jdbcPassPlain")
+    private String jdbcPassPlain;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -114,14 +117,24 @@ public class OiyoSettingsDatabase {
         this.jdbcUser = jdbcUser;
     }
 
-    @JsonProperty("jdbcPass")
-    public String getJdbcPass() {
-        return jdbcPass;
+    @JsonProperty("jdbcPassEnc")
+    public String getJdbcPassEnc() {
+        return jdbcPassEnc;
     }
 
-    @JsonProperty("jdbcPass")
-    public void setJdbcPass(String jdbcPass) {
-        this.jdbcPass = jdbcPass;
+    @JsonProperty("jdbcPassEnc")
+    public void setJdbcPassEnc(String jdbcPassEnc) {
+        this.jdbcPassEnc = jdbcPassEnc;
+    }
+
+    @JsonProperty("jdbcPassPlain")
+    public String getJdbcPassPlain() {
+        return jdbcPassPlain;
+    }
+
+    @JsonProperty("jdbcPassPlain")
+    public void setJdbcPassPlain(String jdbcPassPlain) {
+        this.jdbcPassPlain = jdbcPassPlain;
     }
 
     @JsonAnyGetter
