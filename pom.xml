@@ -10,9 +10,9 @@
 		<relativePath />
 	</parent>
 
-	<groupId>jp.oiyokan</groupId>
+	<groupId>jp.igapyon.oiyokan</groupId>
 	<artifactId>oiyokan</artifactId>
-	<version>1.10.20210502a</version>
+	<version>1.10.20210502b</version>
 	<name>oiyokan</name>
 	<description>Oiyokan is a simple OData v4 Server. (based on Apache
 		Olingo / Spring Boot / h2 database)</description>
