@@ -66,6 +66,7 @@ public class OiyokanMessages {
     public static final int IY1106_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
     public static final String IY1107 = "[IY1107] NOT SUPPORTED: URI: $search";
     public static final int IY1107_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
+    public static final String IY1111 = "[IY1111] WARN: A literal associated with property was given but could not be processed.";
 
     ////////////////////////////////////////////////////////////////////////////////
     // IY15XX : DB接続(Client)
@@ -111,10 +112,8 @@ public class OiyokanMessages {
     // IY31XX : Entity
     public static final String IY3101 = "[IY3101] NO record processed. No Entity effects.";
     public static final int IY3101_CODE = HttpStatusCode.NOT_FOUND.getStatusCode();
-    public static final String IY3102 = "[IY3102] Duplicate name given as keyPredicates.";
-    public static final int IY3102_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
-    public static final String IY3103 = "[IY3103] Duplicate name given as Entity Property.";
-    public static final int IY3103_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
+    public static final String IY3102 = "[IY3102] WARN: Duplicate name given as keyPredicates.";
+    public static final String IY3103 = "[IY3103] WARN: Duplicate name given as Entity Property.";
     // IY3104
     public static final String IY3105 = "[IY3105] WARN: No such Entity data";
     public static final int IY3105_CODE = HttpStatusCode.NOT_FOUND.getStatusCode();
@@ -124,15 +123,17 @@ public class OiyokanMessages {
     public static final int IY3107_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
     public static final String IY3108 = "[IY3108] Fail to update entity.";
     public static final String IY3109 = "[IY3109] If-Match: ETag is NOT supported. Only * supported.";
-    public static final int IY3109_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
+    public static final int IY3109_CODE = HttpStatusCode.PRECONDITION_FAILED.getStatusCode();
     public static final String IY3110 = "[IY3110] If-None-Match: ETag is NOT supported. Only * supported.";
-    public static final int IY3110_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
+    public static final int IY3110_CODE = HttpStatusCode.PRECONDITION_FAILED.getStatusCode();
     public static final String IY3112 = "[IY3112] UNEXPECTED: Too many rows found (readEntity)";
     public static final int IY3112_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
     public static final String IY3113 = "[IY3113] UNEXPECTED: Must NOT pass this case.";
     public static final int IY3113_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
     public static final String IY3114 = "[IY3114] UNEXPECTED: Can't retrieve PreparedStatement#getGeneratedKeys: Fail to map auto generated key field.";
     public static final int IY3114_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
+    public static final String IY3115 = "[IY3115] UNEXPECTED: Fail to map generated keys (autoGenKey) to new key.";
+    public static final int IY3115_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
 
     public static final String IY3121 = "[IY3121] WARN: Ignore given value during INSERT because property that was set as autoGenKey.";
     public static final String IY3122 = "[IY3122] ERROR: If-None-Match NOT allowed because there is property that was set as autoGenKey.";
@@ -146,6 +147,8 @@ public class OiyokanMessages {
     public static final int IY3153_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
     public static final String IY3154 = "[IY3154] Fail to update entity with SQL error.";
     public static final int IY3154_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
+    public static final String IY3155 = "[IY3155] UNEXPECTED database error occured.";
+    public static final int IY3155_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
     public static final String IY3161 = "[IY3161] UNEXPECTED: OiyoSettingsProperty NOT found.";
     public static final int IY3161_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
 
@@ -154,6 +157,8 @@ public class OiyokanMessages {
     // CONFLICT は400番台であるので利用して問題ない。
     public static final String IY3401 = "[IY3401] Integrity constraint violation occured (DML). 制約違反.";
     public static final int IY3401_CODE = HttpStatusCode.CONFLICT.getStatusCode();
+    public static final String IY3402 = "[IY3402] Integrity constraint violation occured (DML). 制約違反.";
+    public static final int IY3402_CODE = HttpStatusCode.CONFLICT.getStatusCode();
 
     ////////////////////////////////////////////////////////////////////////////////
     // IY35XX : Entity - TIMEOUT
@@ -204,10 +209,12 @@ public class OiyokanMessages {
 
     ////////////////////////////////////////////////////////////////////////////////
     // IY61XX : oiyokan-settings
-    public static final String IY6101 = "[IY6101] INFO: load namespace";
-    public static final String IY6102 = "[IY6102] INFO: load containerName";
-    public static final String IY6103 = "[IY6103] INFO: load database";
-    public static final String IY6104 = "[IY6104] INFO: load entitySet";
+    public static final String IY6101 = "[IY6101] INFO: settings: load namespace";
+    public static final String IY6102 = "[IY6102] INFO: settings: load containerName";
+    public static final String IY6103 = "[IY6103] INFO: settings: load database";
+    public static final String IY6104 = "[IY6104] INFO: settings: load entitySet";
+    public static final String IY6111 = "[IY6111] ERROR: settings: Fail to decrypt jdbcPassEnc. Check OIYOKAN_PASSPHRASE env value.";
+    public static final int IY6111_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
     public static final String IY6151 = "[IY6151] WARN: Overwrite nullable with true because autoGenKey for property is true.";
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -249,6 +256,7 @@ public class OiyokanMessages {
     public static final String IY7153 = "[IY7153] NOT SUPPORTED: JDBC Type String.";
     public static final String IY7154 = "[IY7154] NOT SUPPORTED: JDBC Type";
 
+    public static final String IY7160 = "[IY7160] Error: Fail to parse Time string.";
     public static final String IY7161 = "[IY7161] Error: Fail to parse DateTime string.";
     public static final String IY7162 = "[IY7162] WARN: bind NULL value to an SQL statement, set Types.NULL because there is no type information.";
     public static final String IY7163 = "[IY7163] WARN: bind NULL value to an SQL statement, set Types.NULL because there is no property object information.";

@@ -15,7 +15,9 @@
  */
 package jp.oiyokan.basic.sql;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -80,6 +82,8 @@ public class OiyoSqlInsertOneBuilder {
         sqlInfo.getSqlBuilder().append(" (");
         boolean isFirst = true;
 
+        final Map<String, Object> alreadyUsedMap = new HashMap<>();
+
         // PATCH(INSERT)
         if (keyPredicates != null) {
             for (UriParameter param : keyPredicates) {
@@ -90,6 +94,7 @@ public class OiyoSqlInsertOneBuilder {
                 }
                 sqlInfo.getSqlBuilder().append(OiyoCommonJdbcUtil.escapeKakkoFieldName(sqlInfo,
                         OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, entitySetName, param.getName()).getDbName()));
+                alreadyUsedMap.put(param.getName(), param);
             }
         }
 
@@ -100,6 +105,11 @@ public class OiyoSqlInsertOneBuilder {
                 // [IY3121] WARN: Ignore given value during INSERT because property that was set
                 // as autoGenKey.
                 log.warn(OiyokanMessages.IY3121 + ": name:" + property.getName());
+                continue;
+            }
+
+            if (alreadyUsedMap.get(prop.getName()) != null) {
+                // すでにキーで指定済みの値
                 continue;
             }
 
@@ -127,6 +137,12 @@ public class OiyoSqlInsertOneBuilder {
 
                 final OiyoSettingsProperty prop = OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, entitySetName,
                         param.getName());
+                /*
+                 * log.
+                 * error("[DO NOT ENABLE IN PRODUCTION] OiyoSqlInsertOneBuilder#buildInsertIntoDml: Key:"
+                 * // + prop.getName() + ", Edm:" + prop.getEdmType() + ", " + param.getText() +
+                 * "(" // + param.getClass().getName() + ")"); //
+                 */
                 OiyoCommonJdbcUtil.expandLiteralOrBindParameter(sqlInfo, prop.getEdmType(), prop, param.getText());
             }
         }
@@ -140,12 +156,23 @@ public class OiyoSqlInsertOneBuilder {
                 continue;
             }
 
+            if (alreadyUsedMap.get(prop.getName()) != null) {
+                // すでにキーで指定済みの値
+                continue;
+            }
+
             if (isFirst) {
                 isFirst = false;
             } else {
                 sqlInfo.getSqlBuilder().append(",");
             }
-
+            /*
+             * log.
+             * error("[DO NOT ENABLE IN PRODUCTION] OiyoSqlInsertOneBuilder#buildInsertIntoDml: Entity:"
+             * // + prop.getName() + ", Edm:" + prop.getType() + ", " + prop.getValue() +
+             * "(" // + (prop.getValue() == null ? "" :
+             * prop.getValue().getClass().getName()) + ")"); //
+             */
             OiyoCommonJdbcUtil.expandLiteralOrBindParameter(sqlInfo, prop.getType(), oiyoProp, prop.getValue());
         }
 

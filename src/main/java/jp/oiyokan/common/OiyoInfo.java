@@ -15,6 +15,7 @@
  */
 package jp.oiyokan.common;
 
+import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.dto.OiyoSettings;
 
 /**
@@ -25,6 +26,11 @@ public class OiyoInfo {
      * JSONから読み込んだ oiyokan-settings.json の内容.
      */
     private OiyoSettings settings = null;
+
+    /**
+     * パスフレーズ。O
+     */
+    private String passphrase = null;
 
     /**
      * oiyokan-settings.json 設定情報の取得.
@@ -42,5 +48,23 @@ public class OiyoInfo {
      */
     public void setSettings(OiyoSettings settings) {
         this.settings = settings;
+    }
+
+    /**
+     * パスフレーズを取得.
+     * 
+     * @return パスフレーズ.
+     */
+    public String getPassphrase() {
+        if (passphrase == null) {
+            final String lookup = System.getenv(OiyokanConstants.OIYOKAN_PASSPHRASE);
+            if (lookup == null || lookup.trim().length() == 0) {
+                passphrase = OiyokanConstants.OIYOKAN_PASSPHRASE;
+            } else {
+                passphrase = lookup;
+            }
+        }
+
+        return passphrase;
     }
 }

@@ -9,7 +9,8 @@
       "jdbcDriver": "org.h2.Driver",
       "jdbcUrl": "jdbc:h2:mem:oiyoUnitTestDb;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=FALSE;MODE=MSSQLServer",
       "jdbcUser": "sa",
-      "jdbcPass": ""
+      "jdbcPassEnc": "Ckg+Af2U4q9FgV+TnUTPoA==",
+      "jdbcPassPlain": ""
     }
   ],
   "entitySet": [
@@ -137,6 +138,7 @@
             "edmType": "Edm.String",
             "jdbcType": "Types.CLOB",
             "dbType": "CLOB",
+            "jdbcStream": true,
             "nullable": true,
             "dbDefault": "'CLOB'"
           },
@@ -229,6 +231,7 @@
             "edmType": "Edm.Binary",
             "jdbcType": "Types.BLOB",
             "dbType": "BLOB",
+            "jdbcStream": true,
             "nullable": true,
             "maxLength": 128,
             "dbDefault": "X'48656c6c6f20776f726c6421'"
@@ -428,6 +431,7 @@
             "edmType": "Edm.String",
             "jdbcType": "Types.CLOB",
             "dbType": "CLOB",
+            "jdbcStream": true,
             "nullable": true,
             "dbDefault": "'CLOB'"
           },
@@ -520,6 +524,7 @@
             "edmType": "Edm.Binary",
             "jdbcType": "Types.BLOB",
             "dbType": "BLOB",
+            "jdbcStream": true,
             "nullable": true,
             "maxLength": 128,
             "dbDefault": "X'48656c6c6f20776f726c6421'"
@@ -693,6 +698,7 @@
             "edmType": "Edm.Binary",
             "jdbcType": "Types.BLOB",
             "dbType": "BLOB",
+            "jdbcStream": true,
             "nullable": true,
             "maxLength": 128,
             "dbDefault": "X'48656c6c6f20776f726c6421'"

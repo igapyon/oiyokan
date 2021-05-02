@@ -36,6 +36,8 @@ public class OiyoUrlUtil {
     /**
      * 与えられた文字列を URL クエリとしてエンコード.
      * 
+     * TODO v2.x OData の仕様との整合性をチェック。
+     * 
      * @param inputString URLクエリ.
      * @return エンコード済みURLクエリ.
      */
@@ -71,6 +73,8 @@ public class OiyoUrlUtil {
 
     /**
      * 与えられた文字列を キー用にエンコード.
+     * 
+     * TODO v2.x OData の仕様との整合性をチェック。
      * 
      * @param inputString URLクエリ.
      * @return エンコード済みURLクエリ.

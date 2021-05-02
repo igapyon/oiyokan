@@ -40,13 +40,12 @@ class UnitTestQuery09Test {
         OiyokanConstants.DatabaseType databaseType = OiyokanConstants.DatabaseType.valueOf(database.getType());
 
         final ODataResponse resp = OiyokanTestUtil.callGet("/ODataTest1",
-                OiyoUrlUtil.encodeUrlQuery("$top=1 &$filter=Single1 eq 123.45 &$orderby=ID &$count=true &$select=ID"));
+                OiyoUrlUtil.encodeUrlQuery("$select=ID &$filter=Single1 eq 123.45 &$orderby=ID &$top=1"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         switch (databaseType) {
         default:
-            assertEquals(
-                    "{\"@odata.context\":\"$metadata#ODataTest1\",\"@odata.count\":204,\"value\":[{\"ID\":1,\"Single1\":123.45}]}",
+            assertEquals("{\"@odata.context\":\"$metadata#ODataTest1\",\"value\":[{\"ID\":1,\"Single1\":123.45}]}",
                     result, "Single型の確認");
             assertEquals(200, resp.getStatusCode());
             break;

@@ -16,16 +16,14 @@
 package jp.oiyokan.common;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.olingo.server.api.ODataApplicationException;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.util.StreamUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -35,6 +33,7 @@ import jp.oiyokan.dto.OiyoSettings;
 import jp.oiyokan.dto.OiyoSettingsDatabase;
 import jp.oiyokan.dto.OiyoSettingsEntitySet;
 import jp.oiyokan.dto.OiyoSettingsProperty;
+import jp.oiyokan.util.OiyoEncryptUtil;
 
 /**
  * oiyokan-settings.json ファイルに関する処理。
@@ -45,10 +44,11 @@ public class OiyoInfoUtil {
     /**
      * resources フォルダから設定ファイルを読み込み.
      * 
+     * @param oiyoInfo 環境情報読み込みのために利用.
      * @return OiyokanSettings 設定情報.
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
-    public static OiyoSettings loadOiyokanSettings() throws ODataApplicationException {
+    public static OiyoSettings loadOiyokanSettings(OiyoInfo oiyoInfo) throws ODataApplicationException {
         // [IY7173] INFO: start to load oiyokan settings
         log.info(OiyokanMessages.IY7173);
 
@@ -57,37 +57,53 @@ public class OiyoInfoUtil {
         mergedOiyoSettings.setEntitySet(new ArrayList<>());
 
         final String[] OIYOKAN_SETTINGS = new String[] { //
-                "oiyokan/oiyokanKan-settings.json", //
-                "oiyokan/oiyokan-settings.json", //
+                "/oiyokan/oiyokanKan-settings.json", //
+                "/oiyokan/oiyokan-settings.json", //
         };
 
         for (String settings : OIYOKAN_SETTINGS) {
             // [IY7174] INFO: load oiyokan settings
             log.info(OiyokanMessages.IY7174 + ": " + settings);
             // resources から読み込み。
-            final ClassPathResource cpres = new ClassPathResource(settings);
-            try (InputStream inStream = cpres.getInputStream()) {
-                final String strOiyokanSettings = StreamUtils.copyToString(inStream, Charset.forName("UTF-8"));
+            try {
+                final String strOiyokanSettings = IOUtils.resourceToString(settings, StandardCharsets.UTF_8);
 
                 final ObjectMapper mapper = new ObjectMapper();
                 final OiyoSettings loadedSettings = mapper.readValue(strOiyokanSettings, OiyoSettings.class);
                 if (mergedOiyoSettings.getNamespace() == null) {
-                    // [IY6101] INFO: load namespace
+                    // [IY6101] INFO: settings: load namespace
                     log.info(OiyokanMessages.IY6101 + ": " + loadedSettings.getNamespace());
                     mergedOiyoSettings.setNamespace(loadedSettings.getNamespace());
                 }
                 if (mergedOiyoSettings.getContainerName() == null) {
-                    // [IY6102] INFO: load containerName
+                    // [IY6102] INFO: settings: load containerName
                     log.info(OiyokanMessages.IY6102 + ": " + loadedSettings.getContainerName());
                     mergedOiyoSettings.setContainerName(loadedSettings.getContainerName());
                 }
                 for (OiyoSettingsDatabase database : loadedSettings.getDatabase()) {
-                    // [IY6103] INFO: load database
+                    // [IY6103] INFO: settings: load database
                     log.info(OiyokanMessages.IY6103 + ": " + database.getName());
                     mergedOiyoSettings.getDatabase().add(database);
+
+                    // Password
+                    if (database.getJdbcPassEnc() != null && database.getJdbcPassEnc().trim().length() > 0) {
+                        log.trace(database.getName() + ": jdbcPassEnc を読み込み.");
+                        try {
+                            final String passEncv = database.getJdbcPassEnc().trim();
+                            database.setJdbcPassPlain(OiyoEncryptUtil.decrypt(passEncv, oiyoInfo.getPassphrase()));
+                        } catch (Exception ex) {
+                            // [IY6111] ERROR: settings: Fail to decrypt jdbcPassEnc. Check
+                            // OIYOKAN_PASSPHRASE env value.
+                            log.fatal(OiyokanMessages.IY6111 + database.getName() + ": " + ex.toString());
+                            throw new ODataApplicationException(OiyokanMessages.IY6111 + ": " + database.getName(),
+                                    OiyokanMessages.IY6111_CODE, Locale.ENGLISH);
+                        }
+                    } else {
+                        log.trace(database.getName() + ": jdbcPassPlain をそのまま利用.");
+                    }
                 }
                 for (OiyoSettingsEntitySet entitySet : loadedSettings.getEntitySet()) {
-                    // [IY6104] INFO: load entitySet
+                    // [IY6104] INFO: settings: load entitySet
                     log.info(OiyokanMessages.IY6104 + ": " + entitySet.getName());
                     mergedOiyoSettings.getEntitySet().add(entitySet);
 

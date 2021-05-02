@@ -78,7 +78,7 @@ public class OiyoBasicJdbcEntityOneBuilder {
      * Read Entity data.
      * 
      * @param uriInfo       URI info.
-     * @param edmEntitySet  EdmEntitySet.
+     * @param entitySet     EntitySet info.
      * @param keyPredicates List of UriParameter.
      * @return Entity.
      * @throws ODataApplicationException OData App exception occured.
@@ -89,7 +89,7 @@ public class OiyoBasicJdbcEntityOneBuilder {
                 entitySet.getName());
 
         // [IY1071] INFO: ENTITY: READ
-        log.debug(OiyokanMessages.IY1071 + ": " + entitySet.getName());
+        log.info(OiyokanMessages.IY1071 + ": " + entitySet.getName());
 
         // データベースに接続.
         try (Connection connTargetDb = OiyoCommonJdbcUtil.getConnection(database)) {
@@ -110,7 +110,7 @@ public class OiyoBasicJdbcEntityOneBuilder {
      * Create Entity data.
      * 
      * @param uriInfo       URI info.
-     * @param edmEntitySet  EdmEntitySet.
+     * @param entitySet     EntitySet info.
      * @param requestEntity Entity to create.
      * @return Entity created.
      * @throws ODataApplicationException OData App exception occured.
@@ -128,11 +128,9 @@ public class OiyoBasicJdbcEntityOneBuilder {
             log.trace("[database transaction] WITHOUT database transaction.");
             return createInternal(connTargetDb, uriInfo, entitySet, null/* キーの与えられないパターン */, requestEntity);
         } catch (SQLException ex) {
-            // TODO message 別のIDを新規採番
-            // [M205] Fail to execute SQL.
-            log.error(OiyokanMessages.IY3152 + ": " + ex.toString(), ex);
-            throw new ODataApplicationException(OiyokanMessages.IY3152, //
-                    OiyokanMessages.IY3152_CODE, Locale.ENGLISH);
+            // [IY3155] UNEXPECTED database error occured.
+            log.error(OiyokanMessages.IY3155 + ": " + ex.toString(), ex);
+            throw new ODataApplicationException(OiyokanMessages.IY3155, OiyokanMessages.IY3155_CODE, Locale.ENGLISH);
         }
     }
 
@@ -143,7 +141,7 @@ public class OiyoBasicJdbcEntityOneBuilder {
      * Delete Entity data.
      * 
      * @param uriInfo       URI info.
-     * @param edmEntitySet  EdmEntitySet.
+     * @param entitySet     entitySet info.
      * @param keyPredicates Keys to delete.
      * @throws ODataApplicationException OData App exception occured.
      */
@@ -175,11 +173,11 @@ public class OiyoBasicJdbcEntityOneBuilder {
      * Update Entity data (PATCH).
      * 
      * @param uriInfo       URI info.
-     * @param edmEntitySet  EdmEntitySet.
+     * @param entitySet     EntitySet info.
      * @param keyPredicates Keys to update.
      * @param requestEntity Entity date for update.
-     * @param ifMatch       Header If-Match.
-     * @param ifNoneMatch   Header If-None-Match.
+     * @param ifMatch       Header If-Match. force UPDATE.
+     * @param ifNoneMatch   Header If-None-Match. force INSERT.
      * @throws ODataApplicationException OData App exception occured.
      */
     public Entity updateEntityDataPatch(UriInfo uriInfo, OiyoSettingsEntitySet entitySet,
@@ -377,6 +375,8 @@ public class OiyoBasicJdbcEntityOneBuilder {
                 log.info(OiyokanMessages.IY1082 + ": " + (endMillisec - startMillisec));
             }
 
+            OiyoBasicJdbcEntityCollectionBuilder.setEntityId(entitySet, ent);
+
             return ent;
         } catch (SQLTimeoutException ex) {
             // [IY3501] SQL timeout at query one
@@ -425,8 +425,14 @@ public class OiyoBasicJdbcEntityOneBuilder {
                     // 自動生成対象.
                     final UriParameterImpl newParam = new UriParameterImpl();
                     newParam.setName(property.getName());
-                    // TODO 配列超えの例外処理およびmessage
-                    newParam.setText(generatedKeys.get(generatedKeyIndex++));
+                    try {
+                        newParam.setText(generatedKeys.get(generatedKeyIndex++));
+                    } catch (IndexOutOfBoundsException ex) {
+                        // [IY3115] UNEXPECTED: Fail to map generated keys (autoGenKey) to new key.
+                        log.error(OiyokanMessages.IY3115 + ": " + entitySet.getName(), ex);
+                        throw new ODataApplicationException(OiyokanMessages.IY3115 + ": " + entitySet.getName(),
+                                OiyokanMessages.IY3115_CODE, Locale.ENGLISH);
+                    }
                     keyPredicatesAfter.add(newParam);
                 }
             }
@@ -445,7 +451,7 @@ public class OiyoBasicJdbcEntityOneBuilder {
                     for (UriParameter look : keyPredicatesInput) {
                         if (look.getName().equals(keyName)) {
                             propValue = look.getText();
-                            // TODO FIXME 文字列クオートが入るかどうか後で確認したい。
+                            // TODO v2.x にて、ここで得られる getText() に文字列クオートが入るかどうか確認すること.
                         }
                     }
                 }
@@ -453,7 +459,7 @@ public class OiyoBasicJdbcEntityOneBuilder {
                 for (Property look : requestEntity.getProperties()) {
                     if (look.getName().equals(keyName)) {
                         if (look.getValue() instanceof java.util.Calendar) {
-                            // TODO この箇所がどのようなケースで動作するのか調査。
+                            log.trace("TRACE: OiyoBasicJdbcEntityOneBuilder#createInternal: java.util.Calendar");
                             java.util.Calendar cal = (java.util.Calendar) look.getValue();
                             Instant instant = cal.toInstant();
                             ZonedDateTime zdt = ZonedDateTime.ofInstant(instant, ZoneId.systemDefault());
@@ -466,8 +472,8 @@ public class OiyoBasicJdbcEntityOneBuilder {
                 }
                 if (propValue == null) {
                     log.trace("TRACE: propKey:" + keyName + "に対応する入力なし.");
-                    // [M217] UNEXPECTED: Can't retrieve PreparedStatement#getGeneratedKeys: Fail to
-                    // map auto generated key field.
+                    // [IY3114] UNEXPECTED: Can't retrieve PreparedStatement#getGeneratedKeys: Fail
+                    // to map auto generated key field.
                     log.error(OiyokanMessages.IY3114 + ": " + keyName);
                     throw new ODataApplicationException(OiyokanMessages.IY3114 + ": " + keyName, //
                             OiyokanMessages.IY3114_CODE, Locale.ENGLISH);

@@ -70,7 +70,7 @@ public class OiyokanEntityCollectionProcessor implements EntityCollectionProcess
     private ServiceMetadata serviceMetadata;
 
     /**
-     * 初期化タイミングにて ODataやサービスメタデータの情報を記憶.
+     * 初期化タイミングにて ODataやサービスメタデータの情報を記憶. {@inheritDoc}
      * 
      * @param odata           ODataインスタンス.
      * @param serviceMetadata サービスメタデータ.
@@ -84,7 +84,7 @@ public class OiyokanEntityCollectionProcessor implements EntityCollectionProcess
     }
 
     /**
-     * 要素コレクションを読み込み.
+     * 要素コレクションを読み込み. {@inheritDoc}
      * 
      * @param request        OData リクエスト.
      * @param response       OData レスポンス.
@@ -140,11 +140,11 @@ public class OiyokanEntityCollectionProcessor implements EntityCollectionProcess
             }
             if (uriInfo.getSelectOption() != null) {
                 // $select あり.
-                // EQはexpandする特殊モードによる実装。
-                // TODO フラグでON/OFFできるようしたい。
                 if (eCollection.getEntities().size() == 0) {
                     builder.select(uriInfo.getSelectOption());
                 } else {
+                    // ここにはEQ対象項目を$selectに自動で加える特殊モードが実装されている。
+                    // TODO v2.x EQで自動$selectはフラグでON/OFFできるようすること。
                     String propNames = "";
                     for (int index = 0; index < eCollection.getEntities().size(); index++) {
                         for (Property prop : eCollection.getEntities().get(index).getProperties()) {

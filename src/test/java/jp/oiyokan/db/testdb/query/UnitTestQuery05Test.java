@@ -34,13 +34,13 @@ class UnitTestQuery05Test {
         @SuppressWarnings("unused")
         final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
 
-        final ODataResponse resp = OiyokanTestUtil.callGet("/ODataTest1", OiyoUrlUtil
-                .encodeUrlQuery("$top=2 &$filter=Int32a eq 2147483647 &$orderby=ID &$count=true &$select=ID"));
+        final ODataResponse resp = OiyokanTestUtil.callGet("/ODataTest1",
+                OiyoUrlUtil.encodeUrlQuery("$select=ID &$filter=Int32a eq 2147483647 &$orderby=ID &$top=2"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         // System.err.println("result: " + result);
         assertEquals(
-                "{\"@odata.context\":\"$metadata#ODataTest1\",\"@odata.count\":204,\"value\":[{\"ID\":1,\"Int32a\":2147483647},{\"ID\":2,\"Int32a\":2147483647}]}",
+                "{\"@odata.context\":\"$metadata#ODataTest1\",\"value\":[{\"ID\":1,\"Int32a\":2147483647},{\"ID\":2,\"Int32a\":2147483647}]}",
                 result);
         assertEquals(200, resp.getStatusCode());
     }

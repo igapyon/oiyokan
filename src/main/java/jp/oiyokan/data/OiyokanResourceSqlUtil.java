@@ -16,15 +16,13 @@
 package jp.oiyokan.data;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.olingo.server.api.ODataApplicationException;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.util.StreamUtils;
 
 import jp.oiyokan.OiyokanMessages;
 
@@ -44,9 +42,9 @@ public class OiyokanResourceSqlUtil {
     public static String[] loadOiyokanResourceSql(final String resourceSqlFileName) throws ODataApplicationException {
         // このメソッドは、テストデータベースを生成する際に呼び出されます。
         // resources から読み込み。
-        final ClassPathResource cpres = new ClassPathResource(resourceSqlFileName);
-        try (InputStream inStream = cpres.getInputStream()) {
-            String sqlresources = StreamUtils.copyToString(inStream, Charset.forName("UTF-8"));
+        try {
+            log.info(resourceSqlFileName);
+            final String sqlresources = IOUtils.resourceToString(resourceSqlFileName, StandardCharsets.UTF_8);
             final String[] sqls = sqlresources.split(";");
             return sqls;
         } catch (IOException ex) {

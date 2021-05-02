@@ -63,6 +63,9 @@ public class OiyokanEntityProcessor implements EntityProcessor {
     private OData odata;
     private ServiceMetadata serviceMetadata;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void init(OData odata, ServiceMetadata serviceMetadata) {
         log.trace("OiyokanEntityProcessor#init()");
@@ -71,6 +74,9 @@ public class OiyokanEntityProcessor implements EntityProcessor {
         this.serviceMetadata = serviceMetadata;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void readEntity(ODataRequest request, ODataResponse response, UriInfo uriInfo, ContentType responseFormat)
             throws ODataApplicationException, ODataLibraryException {
@@ -132,6 +138,9 @@ public class OiyokanEntityProcessor implements EntityProcessor {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void createEntity(ODataRequest request, ODataResponse response, UriInfo uriInfo, ContentType requestFormat,
             ContentType responseFormat) throws ODataApplicationException, ODataLibraryException {
@@ -206,6 +215,9 @@ public class OiyokanEntityProcessor implements EntityProcessor {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void updateEntity(ODataRequest request, ODataResponse response, UriInfo uriInfo, ContentType requestFormat,
             ContentType responseFormat) throws ODataApplicationException, ODataLibraryException {
@@ -246,18 +258,14 @@ public class OiyokanEntityProcessor implements EntityProcessor {
                 for (UriParameter param : keyPredicates) {
                     if (mapKeyOrPropertyName.get(param.getName()) != null) {
                         // [IY3102] Duplicate name given as keyPredicates.
-                        log.warn(OiyokanMessages.IY3102);
-                        throw new ODataApplicationException(OiyokanMessages.IY3102, OiyokanMessages.IY3102_CODE,
-                                Locale.ENGLISH);
+                        log.warn(OiyokanMessages.IY3102 + ": " + param.getName());
                     }
                     mapKeyOrPropertyName.put(param.getName(), param);
                 }
                 for (Property prop : requestEntity.getProperties()) {
                     if (mapKeyOrPropertyName.get(prop.getName()) != null) {
                         // [IY3103] Duplicate name given as Entity Property.";
-                        log.warn(OiyokanMessages.IY3103);
-                        throw new ODataApplicationException(OiyokanMessages.IY3103, OiyokanMessages.IY3103_CODE,
-                                Locale.ENGLISH);
+                        log.warn(OiyokanMessages.IY3103 + ": " + prop.getName());
                     }
                     mapKeyOrPropertyName.put(prop.getName(), prop);
                 }
@@ -267,6 +275,8 @@ public class OiyokanEntityProcessor implements EntityProcessor {
                 String ifMatchString = request.getHeader("If-Match");
                 ifMatchString = (ifMatchString == null ? null : ifMatchString.trim());
                 if (ifMatchString != null && ifMatchString.length() > 0 && !"*".equals(ifMatchString)) {
+                    // ETagハンドリング実装は OData v4.01 準拠。
+                    // TODO v2.x OData v4.0リクエストではETagは無視するよう、バージョンにより挙動を変える必要あり。
                     // [IY3109] If-Match: ETag is NOT supported. Only * supported.
                     log.error(OiyokanMessages.IY3109 + ": " + ifMatchString);
                     throw new ODataApplicationException(OiyokanMessages.IY3109 + ": " + ifMatchString,
@@ -277,6 +287,8 @@ public class OiyokanEntityProcessor implements EntityProcessor {
                 String ifNoneMatchString = request.getHeader("If-None-Match");
                 ifNoneMatchString = (ifNoneMatchString == null ? null : ifNoneMatchString.trim());
                 if (ifNoneMatchString != null && ifNoneMatchString.length() > 0 && !"*".equals(ifNoneMatchString)) {
+                    // ETagハンドリング実装は OData v4.01 準拠。
+                    // TODO v2.x OData v4.0リクエストではETagは無視するよう、バージョンにより挙動を変える必要あり。
                     // [IY3110] If-None-Match: ETag is NOT supported. Only * supported.
                     log.error(OiyokanMessages.IY3110 + ": " + ifNoneMatchString);
                     throw new ODataApplicationException(OiyokanMessages.IY3110 + ": " + ifNoneMatchString,
@@ -297,12 +309,9 @@ public class OiyokanEntityProcessor implements EntityProcessor {
                 final Entity entity = builder.updateEntityDataPatch(uriInfo, entitySet, keyPredicates, requestEntity,
                         ifMatch, ifNoneMatch);
 
-                // TODO FIXME 下記仕様が未実装。
-                // Upon successful completion the service responds with either 200 OK and a
-                // representation of the updated entity, or 204 No Content. The client may
-                // request that the response SHOULD include a body by specifying a Prefer header
-                // with a value of return=representation, or by specifying the system query
-                // options $select or $expand.
+                // 正常に処理した場合は 200 (ただしINSERTした場合には Oiyokanでは201を返却)
+                // return=representation または $select で本文を200で返却するが、ここは現状全てを返却している
+                // TODO v2.x にて return=representation または $select を反映した挙動に変更.
 
                 if (entity != null) {
                     final EdmEntityType edmEntityType = edmEntitySet.getEntityType();
@@ -343,6 +352,9 @@ public class OiyokanEntityProcessor implements EntityProcessor {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void deleteEntity(ODataRequest request, ODataResponse response, UriInfo uriInfo)
             throws ODataApplicationException, ODataLibraryException {

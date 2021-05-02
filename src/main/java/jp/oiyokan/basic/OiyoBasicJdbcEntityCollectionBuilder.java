@@ -148,17 +148,15 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
                     log.info(OiyokanMessages.IY2101);
                 } else {
                     // $count.
-                    processCountQuery(csdlEntitySet.getName(), uriInfo, connTargetDb, entityCollection);
+                    processCountQuery(uriInfo, csdlEntitySet.getName(), connTargetDb, entityCollection);
                 }
             }
 
             // 実際のデータ取得処理を実行。
-            processCollectionQuery(csdlEntitySet.getName(), uriInfo, connTargetDb, entityCollection);
+            processCollectionQuery(uriInfo, csdlEntitySet.getName(), connTargetDb, entityCollection);
 
             return entityCollection;
-        } catch (
-
-        SQLException ex) {
+        } catch (SQLException ex) {
             // [M015] UNEXPECTED: An error occurred in SQL that counts the number of search
             // results.
             log.error(OiyokanMessages.IY2103 + ": " + ex.toString(), ex);
@@ -166,7 +164,7 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
         }
     }
 
-    private void processCountQuery(String entitySetName, UriInfo uriInfo, Connection connTargetDb,
+    private void processCountQuery(UriInfo uriInfo, String entitySetName, Connection connTargetDb,
             EntityCollection entityCollection) throws ODataApplicationException {
         final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, entitySetName);
 
@@ -225,14 +223,14 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
     /**
      * クエリを実行してエンティティの一覧を取得。直接は利用しないでください。
      * 
-     * @param csdlEntitySet    instance of OiyokanCsdlEntitySet.
      * @param uriInfo          instance of
      *                         org.apache.olingo.server.core.uri.UriInfoImpl.
+     * @param entitySetName    Name of EntitySet.
      * @param connTargetDb     Connection of db.
      * @param entityCollection result of search.
      * @throws ODataApplicationException OData App Exception occured.
      */
-    public void processCollectionQuery(String entitySetName, UriInfo uriInfo, Connection connTargetDb,
+    public void processCollectionQuery(UriInfo uriInfo, String entitySetName, Connection connTargetDb,
             EntityCollection entityCollection) throws ODataApplicationException {
         final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, entitySetName);
 
@@ -306,42 +304,7 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
                     ent.addProperty(prop);
                 }
 
-                if (entitySet.getEntityType().getKeyName().size() == 0) {
-                    // キーが存在しないのは OData としてはまずい。
-                    // 別の箇所にて標準エラー出力にて報告。
-                } else {
-                    // キーが存在する場合は、キーの値を元にIDとして設定。
-                    if (entitySet.getEntityType().getKeyName().size() == 1) {
-                        // 単一項目によるキー
-                        final Property prop = ent.getProperty(entitySet.getEntityType().getKeyName().get(0));
-                        String idVal = prop.getValue().toString();
-                        if ("Edm.String".equals(prop.getType())) {
-                            // TODO FIXME Property の値を文字列に変換する共通関数を期待したい.
-                            idVal = "'" + OiyoUrlUtil.encodeUrl4Key(idVal) + "'";
-                        }
-                        ent.setId(createId(entitySetName, idVal));
-                    } else {
-                        // 複数項目によるキー
-                        String keyString = "";
-                        boolean isFirst = true;
-                        for (String keyName : entitySet.getEntityType().getKeyName()) {
-                            if (isFirst) {
-                                isFirst = false;
-                            } else {
-                                keyString += ",";
-                            }
-                            final Property prop = ent.getProperty(keyName);
-                            keyString += prop.getName() + "=";
-                            String idVal = prop.getValue().toString();
-                            if ("Edm.String".equals(prop.getType())) {
-                                // TODO FIXME Property の値を文字列に変換する共通関数を期待したい.
-                                idVal = "'" + OiyoUrlUtil.encodeUrl4Key(idVal) + "'";
-                            }
-                            keyString += idVal;
-                        }
-                        ent.setId(createId(entitySetName, keyString));
-                    }
-                }
+                setEntityId(entitySet, ent);
 
                 entityCollection.getEntities().add(ent);
             }
@@ -379,7 +342,7 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
      * @param id            ユニーク性を実現するId.
      * @return 要素セット名およびユニーク性を実現するIdをもとにつくられた部分的なURI.
      */
-    public static URI createId(String entitySetName, Object id) {
+    private static URI createId(String entitySetName, Object id) {
         try {
             // 事前に BasicUrlUtil.encodeUrl4Key() が実施されていること。
             return new URI(entitySetName + "(" + id + ")");
@@ -387,6 +350,51 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
             // [M018] UNEXPECTED: Fail to create ID EntitySet name
             log.fatal(OiyokanMessages.IY2105 + ": " + entitySetName + ": " + ex.toString(), ex);
             throw new ODataRuntimeException(OiyokanMessages.IY2105 + ": " + entitySetName);
+        }
+    }
+
+    /**
+     * 与えられた情報をもとに Entityに IDをセット.
+     * 
+     * @param entitySet EntitySet info.
+     * @param ent       output Entity.
+     */
+    public static void setEntityId(OiyoSettingsEntitySet entitySet, Entity ent) {
+        if (entitySet.getEntityType().getKeyName().size() == 0) {
+            // キーが存在しないのは OData としてはまずい。
+            // 別の箇所にて標準エラー出力にて報告。
+        } else {
+            // キーが存在する場合は、キーの値を元にIDとして設定。
+            if (entitySet.getEntityType().getKeyName().size() == 1) {
+                // 単一項目によるキー
+                final Property prop = ent.getProperty(entitySet.getEntityType().getKeyName().get(0));
+                String idVal = prop.getValue().toString();
+                if ("Edm.String".equals(prop.getType())) {
+                    // TODO v2.x にて Property の値を文字列に変換する共通関数を作成.
+                    idVal = "'" + OiyoUrlUtil.encodeUrl4Key(idVal) + "'";
+                }
+                ent.setId(OiyoBasicJdbcEntityCollectionBuilder.createId(entitySet.getName(), idVal));
+            } else {
+                // 複数項目によるキー
+                String keyString = "";
+                boolean isFirst = true;
+                for (String keyName : entitySet.getEntityType().getKeyName()) {
+                    if (isFirst) {
+                        isFirst = false;
+                    } else {
+                        keyString += ",";
+                    }
+                    final Property prop = ent.getProperty(keyName);
+                    keyString += prop.getName() + "=";
+                    String idVal = prop.getValue().toString();
+                    if ("Edm.String".equals(prop.getType())) {
+                        // TODO v2.x にて Property の値を文字列に変換する共通関数を作成.
+                        idVal = "'" + OiyoUrlUtil.encodeUrl4Key(idVal) + "'";
+                    }
+                    keyString += idVal;
+                }
+                ent.setId(OiyoBasicJdbcEntityCollectionBuilder.createId(entitySet.getName(), keyString));
+            }
         }
     }
 }

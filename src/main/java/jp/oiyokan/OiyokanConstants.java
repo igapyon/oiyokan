@@ -27,17 +27,24 @@ public class OiyokanConstants {
     /**
      * Oiyokan のバージョン番号
      */
-    public static final String VERSION = "1.10.20210430g";
+    public static final String VERSION = "1.11.20210502d";
+
+    /**
+     * 暗号化で利用するパスフレーズ。環境変数 OIYOKAN_PASSPHRASE で上書き動作。
+     */
+    public static final String OIYOKAN_PASSPHRASE = "OIYOKAN_PASSPHRASE";
 
     /**
      * 実験的な $search 機能(全文検索)が有効化されているかどうか。
      * 
-     * 当面、リリース時には false.
+     * v1.x (当面の間) は false. v2.x で有効化される可能性あり。
      */
     public static final boolean IS_EXPERIMENTAL_SEARCH_ENABLED = false;
 
     /**
      * 接続先リソースの Databaseの型の列挙. 基本的にはリレーショナルデータベースを想定.
+     * 
+     * h2, PostgreSQL, MySQL, SQLSV2008, ORCL18 のいずれかの値がプログラム中で利用される。
      */
     public enum DatabaseType {
         /** h2 database */

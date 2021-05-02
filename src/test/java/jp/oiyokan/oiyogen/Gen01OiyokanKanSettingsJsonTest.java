@@ -20,23 +20,31 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
+import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.dto.OiyoSettings;
 import jp.oiyokan.dto.OiyoSettingsDatabase;
 import jp.oiyokan.dto.OiyoSettingsEntitySet;
 import jp.oiyokan.dto.OiyoSettingsEntityType;
 import jp.oiyokan.dto.OiyoSettingsProperty;
+import jp.oiyokan.util.OiyoEncryptUtil;
 
 /**
  * Generate oiyokanKan-settings.json
  */
 class Gen01OiyokanKanSettingsJsonTest {
+    private static final Log log = LogFactory.getLog(Gen01OiyokanKanSettingsJsonTest.class);
+
     @Test
     void test01() throws Exception {
+        final OiyoInfo wrkOiyoInfo = new OiyoInfo();
+
         final OiyoSettings oiyoSettings = new OiyoSettings();
         oiyoSettings.setEntitySet(new ArrayList<>());
 
@@ -60,7 +68,7 @@ class Gen01OiyokanKanSettingsJsonTest {
             database.setJdbcDriver(databaseSetting[3]);
             database.setJdbcUrl(databaseSetting[4]);
             database.setJdbcUser(databaseSetting[5]);
-            database.setJdbcPass(databaseSetting[6]);
+            database.setJdbcPassEnc(OiyoEncryptUtil.encrypt(databaseSetting[6], wrkOiyoInfo.getPassphrase()));
         }
 
         OiyoSettingsEntitySet entitySet = new OiyoSettingsEntitySet();
@@ -121,6 +129,6 @@ class Gen01OiyokanKanSettingsJsonTest {
         new File("./target/generated-oiyokan").mkdirs();
         final File generateFile = new File("./target/generated-oiyokan/auto-generated-oiyokanKan-settings.json");
         FileUtils.writeStringToFile(generateFile, writer.toString(), "UTF-8");
-        System.err.println("oiyokan kanri setting file auto-generated: " + generateFile.getCanonicalPath());
+        log.info("oiyokan kanri setting file auto-generated: " + generateFile.getCanonicalPath());
     }
 }

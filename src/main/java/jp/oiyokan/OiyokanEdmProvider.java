@@ -70,7 +70,7 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
         // singleton by static synchronized.
         if (oiyoInfo == null) {
             final OiyoInfo wrk = new OiyoInfo();
-            wrk.setSettings(OiyoInfoUtil.loadOiyokanSettings());
+            wrk.setSettings(OiyoInfoUtil.loadOiyokanSettings(wrk));
             // ロードが終わってから変数に値をセット。念には念を)
             oiyoInfo = wrk;
         }
@@ -79,7 +79,7 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
     }
 
     /**
-     * 与えられた型名のEntityTypeを取得.
+     * 与えられた型名のEntityTypeを取得.{@inheritDoc}
      * 
      * @param entityTypeName 要素型名のFQN.
      * @return CSDL要素型.
@@ -131,7 +131,7 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
     }
 
     /**
-     * 与えられた型名の EntitySet(要素セット)情報を取得. 複数形.
+     * 与えられた型名の EntitySet(要素セット)情報を取得. 複数形. {@inheritDoc}
      * 
      * @param entityContainer 要素コンテナ.
      * @param entitySetName   要素セット(複数形)の名前.
@@ -175,7 +175,7 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
     }
 
     /**
-     * 要素コンテナを取得.
+     * 要素コンテナを取得.{@inheritDoc}
      * 
      * @return CSDL要素コンテナ.
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
@@ -250,7 +250,7 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
     }
 
     /**
-     * スキーマ一覧を取得.
+     * スキーマ一覧を取得.{@inheritDoc}
      * 
      * @return CSDLスキーマ.
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
@@ -298,7 +298,7 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
     }
 
     /**
-     * 要素コンテナ情報を取得.
+     * 要素コンテナ情報を取得. {@inheritDoc}
      * 
      * 次のようなURLの場合に呼び出される: http://localhost:8080/odata4.svc/
      * 

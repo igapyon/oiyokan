@@ -1,3 +1,35 @@
+# Release 1.11 (2021-05-02)
+
+v1.x Feature freeze.
+
+## EN
+
+- Changed Oiyokan Library to be independent of Spring Boot.
+- Added DB connection password encryption function.
+- Changed to set ID in Entity search.
+- Check / change group id to prepare Maven Repository registration.
+- Standardizing the processing related to time and re-tested.
+- Implemented CLOB, BLOB judgment processing and implement behavior switching.
+- Checked SQL Server BIT type support.
+- Confirmed that the request body is not output to the log by log.trace.
+- Confirmed that no garbage records remain in the unit test.
+- Conducted source code coverage test.
+- Bug fixes.
+
+## JA
+
+- Oiyokan Library が Spring Boot に依存しないよう変更。
+- DB接続パスワードの暗号化機能を追加。
+- Entityの検索で IDを設定する。
+- Maven Repository 登録を意識して group id を確認・変更。
+- 時間に関する処理を共通化したうえでテストを実施。
+- CLOB、BLOB判定処理および指定に伴う挙動変更を実装。
+- SQL Server の BIT 型の対応確認。
+- log.traceにて リクエストボディがログに出力されないよう確認。
+- 単体テストでゴミレコードが残らないよう確認。
+- ソースコードカバレッジテストの実施。
+- その他バグ修正
+
 # Release 1.10 (2021-04-30)
 
 ## EN

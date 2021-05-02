@@ -38,7 +38,7 @@ class UnitTestQuery03Test {
         OiyokanConstants.DatabaseType databaseType = OiyokanConstants.DatabaseType.valueOf(database.getType());
 
         final ODataResponse resp = OiyokanTestUtil.callGet("/ODataTest1",
-                "$filter=Boolean1 eq false&$orderby=ID&$select=ID&$top=1");
+                "$select=ID &$filter=Boolean1 eq false &$orderby=ID &$top=1");
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         switch (databaseType) {
