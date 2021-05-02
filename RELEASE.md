@@ -1,4 +1,6 @@
-# Release 1.11 (2021-05-03)
+# Release 1.11 (2021-05-02)
+
+v1.x Feature freeze.
 
 ## EN
 
