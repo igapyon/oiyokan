@@ -9,7 +9,8 @@
       "jdbcDriver": "org.h2.Driver",
       "jdbcUrl": "jdbc:h2:mem:oiyoUnitTestDb;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=FALSE;MODE=MSSQLServer",
       "jdbcUser": "sa",
-      "jdbcPass": ""
+      "jdbcPassEnc": "Ckg+Af2U4q9FgV+TnUTPoA==",
+      "jdbcPassPlain": ""
     }
   ],
   "entitySet": [
