@@ -90,19 +90,38 @@ public class OiyoSqlInfo {
         return binaryOperatorEqPropertyList;
     }
 
+    /**
+     * Param info of SQL.
+     */
     public static class SqlParam {
         private OiyoSettingsProperty property = null;
         private Object value = null;
 
+        /**
+         * Construct SqlParam with property and value.
+         * 
+         * @param property Property info of parameter.
+         * @param value    Value of parameter.
+         */
         public SqlParam(OiyoSettingsProperty property, Object value) {
             this.property = property;
             this.value = value;
         }
 
+        /**
+         * Get Property info.
+         * 
+         * @return Property info.
+         */
         public OiyoSettingsProperty getProperty() {
             return property;
         }
 
+        /**
+         * Get value of sql paramter.
+         * 
+         * @return Value of sql paramter.
+         */
         public Object getValue() {
             return value;
         }
