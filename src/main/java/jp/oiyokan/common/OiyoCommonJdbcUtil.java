@@ -564,7 +564,7 @@ public class OiyoCommonJdbcUtil {
         }
         final EdmPrimitiveType edmType = OiyoEdmUtil.string2EdmType(edmTypeName);
         if (EdmSByte.getInstance() == edmType) {
-            log.trace("TRACE: expandLiteralOrBindParameter: EdmSByte: " + inputParam);
+            log.trace("TRACE: expandLiteralOrBindParameter: EdmSByte: " + "****"/* inputParam */);
             if (inputParam instanceof Byte //
                     || inputParam instanceof Short//
                     || inputParam instanceof Integer) {
@@ -577,7 +577,7 @@ public class OiyoCommonJdbcUtil {
             return;
         }
         if (EdmByte.getInstance() == edmType) {
-            log.trace("TRACE: expandLiteralOrBindParameter: EdmByte: " + inputParam);
+            log.trace("TRACE: expandLiteralOrBindParameter: EdmByte: " + "****"/* inputParam */);
             // 符号なしByteはJavaには該当する型がないので Shortで代用.
             if (inputParam instanceof Byte //
                     || inputParam instanceof Short//
@@ -591,7 +591,7 @@ public class OiyoCommonJdbcUtil {
             return;
         }
         if (EdmInt16.getInstance() == edmType) {
-            log.trace("TRACE: expandLiteralOrBindParameter: EdmInt16: " + inputParam);
+            log.trace("TRACE: expandLiteralOrBindParameter: EdmInt16: " + "****"/* inputParam */);
             if (inputParam instanceof Byte //
                     || inputParam instanceof Short//
                     || inputParam instanceof Integer) {
@@ -610,7 +610,7 @@ public class OiyoCommonJdbcUtil {
             return;
         }
         if (EdmInt32.getInstance() == edmType) {
-            log.trace("TRACE: expandLiteralOrBindParameter: EdmInt32: " + inputParam);
+            log.trace("TRACE: expandLiteralOrBindParameter: EdmInt32: " + "****"/* inputParam */);
             if (inputParam instanceof Byte //
                     || inputParam instanceof Short//
                     || inputParam instanceof Integer) {
@@ -629,7 +629,7 @@ public class OiyoCommonJdbcUtil {
             return;
         }
         if (EdmInt64.getInstance() == edmType) {
-            log.trace("TRACE: expandLiteralOrBindParameter: EdmInt64: " + inputParam);
+            log.trace("TRACE: expandLiteralOrBindParameter: EdmInt64: " + "****"/* inputParam */);
             if (inputParam instanceof Byte //
                     || inputParam instanceof Short //
                     || inputParam instanceof Integer //
@@ -649,7 +649,7 @@ public class OiyoCommonJdbcUtil {
             return;
         }
         if (EdmDecimal.getInstance() == edmType) {
-            log.trace("TRACE: expandLiteralOrBindParameter: EdmDecimal: " + inputParam);
+            log.trace("TRACE: expandLiteralOrBindParameter: EdmDecimal: " + "****"/* inputParam */);
             if (inputParam instanceof BigDecimal) {
                 sqlInfo.getSqlBuilder().append("?");
                 sqlInfo.getSqlParamList().add(new OiyoSqlInfo.SqlParam(property, inputParam));
@@ -660,7 +660,7 @@ public class OiyoCommonJdbcUtil {
             return;
         }
         if (EdmBoolean.getInstance() == edmType) {
-            log.trace("TRACE: expandLiteralOrBindParameter: EdmBoolean: " + inputParam);
+            log.trace("TRACE: expandLiteralOrBindParameter: EdmBoolean: " + "****"/* inputParam */);
             if (inputParam instanceof Boolean) {
                 sqlInfo.getSqlBuilder().append("?");
                 sqlInfo.getSqlParamList().add(new OiyoSqlInfo.SqlParam(property, (Boolean) inputParam));
@@ -672,7 +672,7 @@ public class OiyoCommonJdbcUtil {
             return;
         }
         if (EdmSingle.getInstance() == edmType) {
-            log.trace("TRACE: expandLiteralOrBindParameter: EdmSingle: " + inputParam);
+            log.trace("TRACE: expandLiteralOrBindParameter: EdmSingle: " + "****"/* inputParam */);
             if (inputParam instanceof Float //
                     || inputParam instanceof Short//
                     || inputParam instanceof Integer) {
@@ -685,7 +685,7 @@ public class OiyoCommonJdbcUtil {
             return;
         }
         if (EdmDouble.getInstance() == edmType) {
-            log.trace("TRACE: expandLiteralOrBindParameter: EdmDouble: " + inputParam);
+            log.trace("TRACE: expandLiteralOrBindParameter: EdmDouble: " + "****"/* inputParam */);
             if (inputParam instanceof Double //
                     || inputParam instanceof Short//
                     || inputParam instanceof Integer) {
@@ -698,7 +698,7 @@ public class OiyoCommonJdbcUtil {
             return;
         }
         if (EdmDate.getInstance() == edmType) {
-            log.trace("TRACE: expandLiteralOrBindParameter: EdmDate: " + inputParam);
+            log.trace("TRACE: expandLiteralOrBindParameter: EdmDate: " + "****"/* inputParam */);
             if (inputParam instanceof java.sql.Timestamp //
                     || inputParam instanceof java.sql.Date //
                     || inputParam instanceof java.util.Date//
@@ -715,7 +715,7 @@ public class OiyoCommonJdbcUtil {
             return;
         }
         if (EdmDateTimeOffset.getInstance() == edmType) {
-            log.trace("TRACE: expandLiteralOrBindParameter: EdmDateTimeOffset: " + inputParam);
+            log.trace("TRACE: expandLiteralOrBindParameter: EdmDateTimeOffset: " + "****"/* inputParam */);
             if (inputParam instanceof java.sql.Timestamp //
                     || inputParam instanceof java.sql.Date //
                     || inputParam instanceof java.util.Date//
@@ -732,7 +732,7 @@ public class OiyoCommonJdbcUtil {
             return;
         }
         if (EdmTimeOfDay.getInstance() == edmType) {
-            log.trace("TRACE: expandLiteralOrBindParameter: EdmTimeOfDay: " + inputParam);
+            log.trace("TRACE: expandLiteralOrBindParameter: EdmTimeOfDay: " + "****"/* inputParam */);
             if (inputParam instanceof java.sql.Time) {
                 sqlInfo.getSqlBuilder().append("?");
                 sqlInfo.getSqlParamList().add(new OiyoSqlInfo.SqlParam(property, inputParam));
@@ -749,7 +749,7 @@ public class OiyoCommonJdbcUtil {
             return;
         }
         if (EdmString.getInstance() == edmType) {
-            log.trace("TRACE: expandLiteralOrBindParameter: EdmString: " + inputParam);
+            log.trace("TRACE: expandLiteralOrBindParameter: EdmString: " + "****"/* inputParam */);
             String value = String.valueOf(inputParam);
             if (value.startsWith("'") && value.endsWith("'")) {
                 // 文字列リテラルについては前後のクオートを除去して記憶.
@@ -767,7 +767,7 @@ public class OiyoCommonJdbcUtil {
             return;
         }
         if (EdmBinary.getInstance() == edmType) {
-            log.trace("TRACE: expandLiteralOrBindParameter: EdmBinary: " + inputParam);
+            log.trace("TRACE: expandLiteralOrBindParameter: EdmBinary: " + "****"/* inputParam */);
             if (inputParam instanceof byte[] //
                     || inputParam instanceof ByteArrayInputStream) {
                 sqlInfo.getSqlBuilder().append("?");
@@ -780,7 +780,7 @@ public class OiyoCommonJdbcUtil {
             return;
         }
         if (EdmGuid.getInstance() == edmType) {
-            log.trace("TRACE: expandLiteralOrBindParameter: EdmGuid: " + inputParam);
+            log.trace("TRACE: expandLiteralOrBindParameter: EdmGuid: " + "****"/* inputParam */);
             if (inputParam instanceof byte[] //
                     || inputParam instanceof ByteArrayInputStream) {
                 sqlInfo.getSqlBuilder().append("?");

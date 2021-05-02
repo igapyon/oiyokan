@@ -63,5 +63,13 @@ class UnitTestTypeDateTimeOffset01Test {
         // log.info(result);
         dateString = OiyokanTestUtil.getValueFromResultByKey(result, "DateTimeOffset1");
         assertEquals(200, resp.getStatusCode());
+
+        // DELETE
+        resp = OiyokanTestUtil.callDelete("/ODataTest1(" + idString + ")");
+        assertEquals(204, resp.getStatusCode(), "DELETEが成功すること.");
+
+        // after DELETE
+        resp = OiyokanTestUtil.callGet("/ODataTest1(" + idString + ")", null);
+        assertEquals(404, resp.getStatusCode(), "DELETEのあとはレコードが存在しない.");
     }
 }

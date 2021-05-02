@@ -63,7 +63,7 @@ public class OiyokanUnittestUtil {
 
         if (true) {
             String settings = "oiyokan/oiyokan-unittest-settings.json";
-            log.trace("OData v4: resources: load: " + settings);
+            log.trace("Unittest: OData v4: resources: load: " + settings);
             // resources から読み込み。
             final ClassPathResource cpres = new ClassPathResource(settings);
             try (InputStream inStream = cpres.getInputStream()) {
@@ -76,7 +76,7 @@ public class OiyokanUnittestUtil {
                     oiyoInfo.getSettings().getDatabase().add(database);
                 }
                 for (OiyoSettingsEntitySet entitySet : loadedSettings.getEntitySet()) {
-                    log.trace("load: entitySet: " + entitySet.getName());
+                    log.trace("Unittest: load: entitySet: " + entitySet.getName());
                     oiyoInfo.getSettings().getEntitySet().add(entitySet);
                 }
             } catch (IOException ex) {
@@ -88,7 +88,7 @@ public class OiyokanUnittestUtil {
 
         try {
             for (String[] sqlFileDef : OIYOKAN_FILE_SQLS) {
-                log.trace("OData: load: internal db:" + sqlFileDef[0] + ", sql: " + sqlFileDef[1]);
+                log.trace("Unittest: load: internal db:" + sqlFileDef[0] + ", sql: " + sqlFileDef[1]);
 
                 OiyoSettingsDatabase lookDatabase = OiyoInfoUtil.getOiyoDatabaseByName(oiyoInfo, sqlFileDef[0]);
 

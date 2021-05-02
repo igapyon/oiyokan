@@ -19,6 +19,8 @@ import java.io.File;
 import java.io.StringReader;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -32,6 +34,8 @@ import jp.oiyokan.dto.OiyoSettingsEntitySet;
  * 内部データベース用のCSDL用内部テーブルのDDLをコマンドライン生成.
  */
 class Gen02OiyokanUnittestDdlFromJsonTest {
+    private static final Log log = LogFactory.getLog(Gen02OiyokanUnittestDdlFromJsonTest.class);
+
     @Test
     void test01() throws Exception {
         new File("./target/").mkdirs();
@@ -64,6 +68,6 @@ class Gen02OiyokanUnittestDdlFromJsonTest {
 
         final File generateFile = new File("./target/generated-oiyokan/auto-generated-oiyokan-unittest-ddl.sql");
         FileUtils.writeStringToFile(generateFile, sql.toString(), "UTF-8");
-        System.err.println("sample oiyokan create ddl file generated: " + generateFile.getCanonicalPath());
+        log.info("sample oiyokan create ddl file generated: " + generateFile.getCanonicalPath());
     }
 }

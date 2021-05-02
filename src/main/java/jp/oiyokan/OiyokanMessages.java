@@ -209,10 +209,10 @@ public class OiyokanMessages {
 
     ////////////////////////////////////////////////////////////////////////////////
     // IY61XX : oiyokan-settings
-    public static final String IY6101 = "[IY6101] INFO: load namespace";
-    public static final String IY6102 = "[IY6102] INFO: load containerName";
-    public static final String IY6103 = "[IY6103] INFO: load database";
-    public static final String IY6104 = "[IY6104] INFO: load entitySet";
+    public static final String IY6101 = "[IY6101] INFO: settings: load namespace";
+    public static final String IY6102 = "[IY6102] INFO: settings: load containerName";
+    public static final String IY6103 = "[IY6103] INFO: settings: load database";
+    public static final String IY6104 = "[IY6104] INFO: settings: load entitySet";
     public static final String IY6151 = "[IY6151] WARN: Overwrite nullable with true because autoGenKey for property is true.";
 
     ////////////////////////////////////////////////////////////////////////////////
