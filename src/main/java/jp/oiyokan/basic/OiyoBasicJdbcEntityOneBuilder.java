@@ -375,6 +375,8 @@ public class OiyoBasicJdbcEntityOneBuilder {
                 log.info(OiyokanMessages.IY1082 + ": " + (endMillisec - startMillisec));
             }
 
+            OiyoBasicJdbcEntityCollectionBuilder.setEntityId(entitySet, ent);
+
             return ent;
         } catch (SQLTimeoutException ex) {
             // [IY3501] SQL timeout at query one
