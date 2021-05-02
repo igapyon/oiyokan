@@ -72,22 +72,22 @@ public class OiyoInfoUtil {
                 final ObjectMapper mapper = new ObjectMapper();
                 final OiyoSettings loadedSettings = mapper.readValue(strOiyokanSettings, OiyoSettings.class);
                 if (mergedOiyoSettings.getNamespace() == null) {
-                    // [IY6101] INFO: load namespace
+                    // [IY6101] INFO: settings: load namespace
                     log.info(OiyokanMessages.IY6101 + ": " + loadedSettings.getNamespace());
                     mergedOiyoSettings.setNamespace(loadedSettings.getNamespace());
                 }
                 if (mergedOiyoSettings.getContainerName() == null) {
-                    // [IY6102] INFO: load containerName
+                    // [IY6102] INFO: settings: load containerName
                     log.info(OiyokanMessages.IY6102 + ": " + loadedSettings.getContainerName());
                     mergedOiyoSettings.setContainerName(loadedSettings.getContainerName());
                 }
                 for (OiyoSettingsDatabase database : loadedSettings.getDatabase()) {
-                    // [IY6103] INFO: load database
+                    // [IY6103] INFO: settings: load database
                     log.info(OiyokanMessages.IY6103 + ": " + database.getName());
                     mergedOiyoSettings.getDatabase().add(database);
                 }
                 for (OiyoSettingsEntitySet entitySet : loadedSettings.getEntitySet()) {
-                    // [IY6104] INFO: load entitySet
+                    // [IY6104] INFO: settings: load entitySet
                     log.info(OiyokanMessages.IY6104 + ": " + entitySet.getName());
                     mergedOiyoSettings.getEntitySet().add(entitySet);
 

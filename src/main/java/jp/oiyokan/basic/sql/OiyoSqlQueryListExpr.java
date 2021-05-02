@@ -203,7 +203,7 @@ public class OiyoSqlQueryListExpr {
 
                 // まず Member を展開.
                 OiyoSettingsProperty propMember = expandMember(member);
-                log.trace("TRACE: $filter において EQ とともに使用された property: " + propMember.getName());
+                log.trace("TRACE: property used with EQ at $filter: " + propMember.getName());
                 sqlInfo.getBinaryOperatorEqPropertyList().add(propMember);
 
                 // 両辺とも MemberImpl の場合。
@@ -213,7 +213,7 @@ public class OiyoSqlQueryListExpr {
                     MemberImpl nextMember = (MemberImpl) other;
                     // もう片方も展開.
                     OiyoSettingsProperty propNextMember = expandMember(nextMember);
-                    log.trace("TRACE: $filter において EQ とともに使用された property: " + propNextMember.getName());
+                    log.trace("TRACE: property used with EQ at $filter (both): " + propNextMember.getName());
                     sqlInfo.getBinaryOperatorEqPropertyList().add(propNextMember);
 
                     sqlInfo.getSqlBuilder().append(")");

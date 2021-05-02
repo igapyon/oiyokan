@@ -20,6 +20,8 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -35,6 +37,8 @@ import jp.oiyokan.dto.OiyoSettingsProperty;
  * Generate oiyokanKan-settings.json
  */
 class Gen01OiyokanKanSettingsJsonTest {
+    private static final Log log = LogFactory.getLog(Gen01OiyokanKanSettingsJsonTest.class);
+
     @Test
     void test01() throws Exception {
         final OiyoSettings oiyoSettings = new OiyoSettings();
@@ -121,6 +125,6 @@ class Gen01OiyokanKanSettingsJsonTest {
         new File("./target/generated-oiyokan").mkdirs();
         final File generateFile = new File("./target/generated-oiyokan/auto-generated-oiyokanKan-settings.json");
         FileUtils.writeStringToFile(generateFile, writer.toString(), "UTF-8");
-        System.err.println("oiyokan kanri setting file auto-generated: " + generateFile.getCanonicalPath());
+        log.info("oiyokan kanri setting file auto-generated: " + generateFile.getCanonicalPath());
     }
 }
