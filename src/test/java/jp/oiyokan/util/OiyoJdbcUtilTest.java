@@ -21,6 +21,9 @@ import java.sql.Types;
 
 import org.junit.jupiter.api.Test;
 
+/**
+ * OiyoJdbcUtil に関するテスト。
+ */
 class OiyoJdbcUtilTest {
 
     private static final int[] TYPES = { //

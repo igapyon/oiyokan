@@ -86,17 +86,5 @@ class H2DatabaseTest {
             // 内部データベースのテーブルをセットアップ.
             OiyokanKanDatabase.setupKanDatabase(oiyoInfo);
         }
-
-        /*
-         * try (Connection conn = OiyoCommonJdbcUtil
-         * .getConnection(OiyoInfoUtil.getOiyoDatabaseByName(oiyoInfo,
-         * OIYOKAN_UNITTEST_DB))) {
-         * 
-         * try (var stmt = conn.prepareStatement(
-         * "SELECT address_id FROM address WHERE ((address2 IS NULL) AND (address = ?)) LIMIT 2001"
-         * )) { int column = 1; stmt.setString(column++, "47 MySakila Drive");
-         * stmt.executeQuery(); var rset = stmt.getResultSet(); if (rset.next()) {
-         * assertEquals("1", rset.getString(1)); } } }
-         */
     }
 }
