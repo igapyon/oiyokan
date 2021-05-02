@@ -92,10 +92,11 @@ public class OiyoInfoUtil {
                             final String passEncv = database.getJdbcPassEnc().trim();
                             database.setJdbcPassPlain(OiyoEncryptUtil.decrypt(passEncv, oiyoInfo.getPassphrase()));
                         } catch (Exception ex) {
-                            // TODO message
-                            log.fatal(OiyokanMessages.IY9999 + ": " + ex.toString(), ex);
-                            throw new ODataApplicationException(OiyokanMessages.IY9999 + ": " + database.getName(), 500,
-                                    Locale.ENGLISH);
+                            // [IY6111] ERROR: settings: Fail to decrypt jdbcPassEnc. Check
+                            // OIYOKAN_PASSPHRASE env value.
+                            log.fatal(OiyokanMessages.IY6111 + database.getName() + ": " + ex.toString());
+                            throw new ODataApplicationException(OiyokanMessages.IY6111 + ": " + database.getName(),
+                                    OiyokanMessages.IY6111_CODE, Locale.ENGLISH);
                         }
                     } else {
                         log.trace(database.getName() + ": jdbcPassPlain をそのまま利用.");
