@@ -123,9 +123,9 @@ public class OiyokanMessages {
     public static final int IY3107_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
     public static final String IY3108 = "[IY3108] Fail to update entity.";
     public static final String IY3109 = "[IY3109] If-Match: ETag is NOT supported. Only * supported.";
-    public static final int IY3109_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
+    public static final int IY3109_CODE = HttpStatusCode.PRECONDITION_FAILED.getStatusCode();
     public static final String IY3110 = "[IY3110] If-None-Match: ETag is NOT supported. Only * supported.";
-    public static final int IY3110_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
+    public static final int IY3110_CODE = HttpStatusCode.PRECONDITION_FAILED.getStatusCode();
     public static final String IY3112 = "[IY3112] UNEXPECTED: Too many rows found (readEntity)";
     public static final int IY3112_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
     public static final String IY3113 = "[IY3113] UNEXPECTED: Must NOT pass this case.";

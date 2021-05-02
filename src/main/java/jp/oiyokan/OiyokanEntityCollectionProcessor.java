@@ -70,7 +70,7 @@ public class OiyokanEntityCollectionProcessor implements EntityCollectionProcess
     private ServiceMetadata serviceMetadata;
 
     /**
-     * 初期化タイミングにて ODataやサービスメタデータの情報を記憶.
+     * 初期化タイミングにて ODataやサービスメタデータの情報を記憶. {@inheritDoc}
      * 
      * @param odata           ODataインスタンス.
      * @param serviceMetadata サービスメタデータ.
@@ -84,7 +84,7 @@ public class OiyokanEntityCollectionProcessor implements EntityCollectionProcess
     }
 
     /**
-     * 要素コレクションを読み込み.
+     * 要素コレクションを読み込み. {@inheritDoc}
      * 
      * @param request        OData リクエスト.
      * @param response       OData レスポンス.

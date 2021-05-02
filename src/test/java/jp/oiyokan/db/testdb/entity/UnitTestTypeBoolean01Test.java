@@ -17,6 +17,8 @@ package jp.oiyokan.db.testdb.entity;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.olingo.server.api.ODataResponse;
 import org.junit.jupiter.api.Test;
 
@@ -29,7 +31,10 @@ import jp.oiyokan.util.OiyokanTestUtil;
  * 
  * 通常 $filterも交えて確認.
  */
-class UnitTestTypeBoolean101Test {
+class UnitTestTypeBoolean01Test {
+    @SuppressWarnings("unused")
+    private static final Log log = LogFactory.getLog(UnitTestTypeBoolean01Test.class);
+
     @Test
     void test01() throws Exception {
         @SuppressWarnings("unused")
@@ -48,6 +53,23 @@ class UnitTestTypeBoolean101Test {
         result = OiyokanTestUtil.stream2String(resp.getContent());
         assertEquals("{\"@odata.context\":\"$metadata#ODataTest1\",\"value\":[{\"ID\":" + idString //
                 + ",\"Boolean1\":true}]}", result);
+        assertEquals(200, resp.getStatusCode());
+
+        // Boolean を false で上書き実験
+
+        // UPDATE (If-Match)
+        resp = OiyokanTestUtil.callPatch("/ODataTest1(" + idString + ")", "{\n" //
+                + "  \"Boolean1\":false\n" //
+                + "}", true, false);
+        result = OiyokanTestUtil.stream2String(resp.getContent());
+      //  log.info(result);
+        assertEquals(200, resp.getStatusCode());
+
+        resp = OiyokanTestUtil.callGet("/ODataTest1",
+                "$select=ID,Boolean1 &$filter=ID eq " + idString + " and Boolean1 eq false");
+        result = OiyokanTestUtil.stream2String(resp.getContent());
+        assertEquals("{\"@odata.context\":\"$metadata#ODataTest1\",\"value\":[{\"ID\":" + idString //
+                + ",\"Boolean1\":false}]}", result);
         assertEquals(200, resp.getStatusCode());
 
         // DELETE
