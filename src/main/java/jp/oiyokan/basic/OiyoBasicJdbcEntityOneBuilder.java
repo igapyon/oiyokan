@@ -78,7 +78,7 @@ public class OiyoBasicJdbcEntityOneBuilder {
      * Read Entity data.
      * 
      * @param uriInfo       URI info.
-     * @param edmEntitySet  EdmEntitySet.
+     * @param entitySet     EntitySet info.
      * @param keyPredicates List of UriParameter.
      * @return Entity.
      * @throws ODataApplicationException OData App exception occured.
@@ -110,7 +110,7 @@ public class OiyoBasicJdbcEntityOneBuilder {
      * Create Entity data.
      * 
      * @param uriInfo       URI info.
-     * @param edmEntitySet  EdmEntitySet.
+     * @param entitySet     EntitySet info.
      * @param requestEntity Entity to create.
      * @return Entity created.
      * @throws ODataApplicationException OData App exception occured.
@@ -141,7 +141,7 @@ public class OiyoBasicJdbcEntityOneBuilder {
      * Delete Entity data.
      * 
      * @param uriInfo       URI info.
-     * @param edmEntitySet  EdmEntitySet.
+     * @param entitySet     entitySet info.
      * @param keyPredicates Keys to delete.
      * @throws ODataApplicationException OData App exception occured.
      */
@@ -173,11 +173,11 @@ public class OiyoBasicJdbcEntityOneBuilder {
      * Update Entity data (PATCH).
      * 
      * @param uriInfo       URI info.
-     * @param edmEntitySet  EdmEntitySet.
+     * @param entitySet     EntitySet info.
      * @param keyPredicates Keys to update.
      * @param requestEntity Entity date for update.
-     * @param ifMatch       Header If-Match.
-     * @param ifNoneMatch   Header If-None-Match.
+     * @param ifMatch       Header If-Match. force UPDATE.
+     * @param ifNoneMatch   Header If-None-Match. force INSERT.
      * @throws ODataApplicationException OData App exception occured.
      */
     public Entity updateEntityDataPatch(UriInfo uriInfo, OiyoSettingsEntitySet entitySet,

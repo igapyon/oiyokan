@@ -65,7 +65,7 @@ public class OiyoSqlUpdateOneBuilder {
     /**
      * Create DML for UPDATE (PATCH).
      * 
-     * @param edmEntitySet  instance of EdmEntitySet.
+     * @param entitySetName name of EntitySet.
      * @param keyPredicates keys to update.
      * @param requestEntity entity to delete.
      * @throws ODataApplicationException OData App exception occured.

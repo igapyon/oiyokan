@@ -185,13 +185,14 @@ public class OiyoCommonJdbcUtil {
     /**
      * 実際の EntityCollection 生成時に、ResultSet から Property を作成.
      * 
-     * @param rset      結果セット.
-     * @param rsmeta    結果セットメタデータ.
-     * @param column    項目番号. 1オリジン.
-     * @param entitySet EntitySetインスタンス.
+     * @param oiyoInfo  Oiyokan Information.
+     * @param rset      ResultSet to process.
+     * @param column    Column Number. 1 origin.
+     * @param entitySet EntitySet information.
+     * @param property  Property information.
      * @return 作成された Property.
-     * @throws SQLException              SQL例外が発生した場合.
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
+     * @throws SQLException              SQL例外が発生した場合.
      */
     public static Property resultSet2Property(OiyoInfo oiyoInfo, ResultSet rset, int column,
             OiyoSettingsEntitySet entitySet, OiyoSettingsProperty property)

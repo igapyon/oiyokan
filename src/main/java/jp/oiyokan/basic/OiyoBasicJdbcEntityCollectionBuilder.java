@@ -148,17 +148,15 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
                     log.info(OiyokanMessages.IY2101);
                 } else {
                     // $count.
-                    processCountQuery(csdlEntitySet.getName(), uriInfo, connTargetDb, entityCollection);
+                    processCountQuery(uriInfo, csdlEntitySet.getName(), connTargetDb, entityCollection);
                 }
             }
 
             // 実際のデータ取得処理を実行。
-            processCollectionQuery(csdlEntitySet.getName(), uriInfo, connTargetDb, entityCollection);
+            processCollectionQuery(uriInfo, csdlEntitySet.getName(), connTargetDb, entityCollection);
 
             return entityCollection;
-        } catch (
-
-        SQLException ex) {
+        } catch (SQLException ex) {
             // [M015] UNEXPECTED: An error occurred in SQL that counts the number of search
             // results.
             log.error(OiyokanMessages.IY2103 + ": " + ex.toString(), ex);
@@ -166,7 +164,7 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
         }
     }
 
-    private void processCountQuery(String entitySetName, UriInfo uriInfo, Connection connTargetDb,
+    private void processCountQuery(UriInfo uriInfo, String entitySetName, Connection connTargetDb,
             EntityCollection entityCollection) throws ODataApplicationException {
         final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, entitySetName);
 
@@ -225,14 +223,14 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
     /**
      * クエリを実行してエンティティの一覧を取得。直接は利用しないでください。
      * 
-     * @param csdlEntitySet    instance of OiyokanCsdlEntitySet.
      * @param uriInfo          instance of
      *                         org.apache.olingo.server.core.uri.UriInfoImpl.
+     * @param entitySetName    Name of EntitySet.
      * @param connTargetDb     Connection of db.
      * @param entityCollection result of search.
      * @throws ODataApplicationException OData App Exception occured.
      */
-    public void processCollectionQuery(String entitySetName, UriInfo uriInfo, Connection connTargetDb,
+    public void processCollectionQuery(UriInfo uriInfo, String entitySetName, Connection connTargetDb,
             EntityCollection entityCollection) throws ODataApplicationException {
         final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, entitySetName);
 
