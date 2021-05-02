@@ -16,8 +16,7 @@
 package jp.oiyokan;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Locale;
@@ -26,7 +25,6 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.olingo.server.api.ODataApplicationException;
-import org.springframework.core.io.ClassPathResource;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -65,10 +63,8 @@ public class OiyokanUnittestUtil {
             String settings = "/oiyokan/oiyokan-unittest-settings.json";
             log.trace("Unittest: OData v4: resources: load: " + settings);
             // resources から読み込み。
-            final ClassPathResource cpres = new ClassPathResource(settings);
-            try (InputStream inStream = cpres.getInputStream()) {
-                final String strOiyokanSettings = IOUtils.toString(inStream, Charset.forName("UTF-8"));
-
+            try {
+                final String strOiyokanSettings = IOUtils.resourceToString(settings, StandardCharsets.UTF_8);
                 final ObjectMapper mapper = new ObjectMapper();
                 final OiyoSettings loadedSettings = mapper.readValue(strOiyokanSettings, OiyoSettings.class);
                 for (OiyoSettingsDatabase database : loadedSettings.getDatabase()) {
