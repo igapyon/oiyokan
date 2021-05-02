@@ -76,4 +76,14 @@ public class OiyoEncryptUtil {
             throw new IllegalArgumentException("Unexpected Exception.: " + ex.toString(), ex);
         }
     }
+
+    private static Cipher getCipher(final String passphrase) throws GeneralSecurityException, IOException {
+        final MessageDigest sha256 = MessageDigest.getInstance("SHA-256");
+        final byte[] sha256Key = Arrays.copyOf(sha256.digest(passphrase.getBytes("UTF-8")), 32);
+        final SecretKeySpec keySpec = new SecretKeySpec(sha256Key, "AES");
+        final IvParameterSpec ivParamSpec = new IvParameterSpec(Arrays.copyOf(sha256Key, 16));
+        final Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
+        cipher.init(Cipher.DECRYPT_MODE, keySpec, ivParamSpec);
+        return cipher;
+    }
 }
