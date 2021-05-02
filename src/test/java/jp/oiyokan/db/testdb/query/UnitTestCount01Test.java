@@ -47,8 +47,7 @@ class UnitTestCount01Test {
         log.info(getCount("ODataTest8Sub"));
         log.info(getCount("ODataTest8SubSub"));
 
-        final ODataResponse resp = OiyokanTestUtil.callGet("/ODataTest2",
-                OiyoUrlUtil.encodeUrlQuery("$count=true"));
+        final ODataResponse resp = OiyokanTestUtil.callGet("/ODataTest2", OiyoUrlUtil.encodeUrlQuery("$count=true"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
         log.info(result);
     }
