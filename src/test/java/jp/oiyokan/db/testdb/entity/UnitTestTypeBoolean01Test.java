@@ -62,7 +62,7 @@ class UnitTestTypeBoolean01Test {
                 + "  \"Boolean1\":false\n" //
                 + "}", true, false);
         result = OiyokanTestUtil.stream2String(resp.getContent());
-      //  log.info(result);
+        // log.info(result);
         assertEquals(200, resp.getStatusCode());
 
         resp = OiyokanTestUtil.callGet("/ODataTest1",

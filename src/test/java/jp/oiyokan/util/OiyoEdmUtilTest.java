@@ -20,6 +20,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.apache.olingo.commons.api.edm.EdmPrimitiveType;
 import org.junit.jupiter.api.Test;
 
+/**
+ * OiyoEdmUtil に関するテスト。
+ */
 class OiyoEdmUtilTest {
 
     private static final String[] EDMTYPES = new String[] { "Edm.Binary" //
