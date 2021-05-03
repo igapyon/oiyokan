@@ -27,3 +27,10 @@ mvn release:perform
 ## Sonatype リリース操作
 
 リリース操作.
+
+# MEMO
+
+Sonatype のデプロイプラグインだとそのまま Central までいってしまうぽい。
+
+
+
