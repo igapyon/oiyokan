@@ -28,9 +28,13 @@ mvn release:perform
 
 リリース操作.
 
+- https://oss.sonatype.org/
+- Staging Repositories
+- Close
+- Release
+- `しばらく` 待つ
+
 # MEMO
 
-Sonatype のデプロイプラグインだとそのまま Central までいってしまうぽい。
-
-
-
+- Maven デフォルトのデプロイを選択する方向性
+- Sonatype のデプロイプラグインだと GUI 操作抜きで そのまま Central までいってしまうぽい。
