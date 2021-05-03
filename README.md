@@ -33,7 +33,7 @@ You can use Oiyokan to turn RDBMS into OData v4 services.
 
 ## Oiyokan in Maven repository
 
-- https://mvnrepository.com/artifact/jp.igapyon.oiyokan
+- [Maven Repository - Oiyokan](https://mvnrepository.com/artifact/jp.igapyon.oiyokan)
 
 ## Oiyokan 関連リポジトリ 
 
