@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>jp.igapyon.oiyokan</groupId>
 	<artifactId>oiyokan</artifactId>
-	<version>1.11.20210503f</version>
+	<version>1.11.20210503g-SNAPSHOT</version>
 	<name>oiyokan</name>
 	<description>Oiyokan is a simple OData v4 Server. (based on Apache
 		Olingo / Spring Boot / h2 database)</description>
@@ -22,7 +22,7 @@
 		<url>https://github.com/igapyon/oiyokan</url>
 		<connection>scm:git:https://github.com/igapyon/oiyokan.git</connection>
 		<developerConnection>scm:git:https://github.com/igapyon/oiyokan.git</developerConnection>
-		<tag>oiyokan-1.11.20210503f</tag>
+		<tag>HEAD</tag>
 	</scm>
 
 	<developers>
