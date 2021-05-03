@@ -50,6 +50,11 @@ public class OiyokanOdata4RegisterImpl {
      */
     public static void serv(final HttpServletRequest req, final HttpServletResponse resp, final String odataRootPath)
             throws ServletException {
+        if (resp != null) {
+            // デフォルト挙動として no-cacne, no-store で動作させる.
+            resp.setHeader("Cache-Control", "no-cache, no-store");
+        }
+
         String uri = req.getRequestURI();
         if (req.getQueryString() != null) {
             try {
