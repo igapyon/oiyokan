@@ -67,4 +67,13 @@ public class OiyoInfo {
 
         return passphrase;
     }
+
+    /**
+     * パスフレーズを設定。
+     * 
+     * @param passphrase パスフレーズ.
+     */
+    public void setPassphrase(String passphrase) {
+        this.passphrase = passphrase;
+    }
 }

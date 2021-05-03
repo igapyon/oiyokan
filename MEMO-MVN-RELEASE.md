@@ -32,7 +32,7 @@ mvn release:perform
 - Staging Repositories
 - Close
 - Release
-- `しばらく` 待つ
+- `しばらく` 待つ。目安は 60分
 
 # MEMO
 
