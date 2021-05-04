@@ -250,6 +250,7 @@ public class OiyokanMessages {
     public static final String IY7124 = "[IY7124] NOT SUPPORTED: Database type";
 
     public static final String IY7130 = "[IY7130] WARN: No key provided EntitySet. Specify key no EntitySet.";
+    public static final String IY7131 = "[IY7131] WARN: Fail to load property settings. Skipping this property.";
 
     public static final String IY7151 = "[IY7151] NOT SUPPORTED: JDBC Type";
     public static final String IY7152 = "[IY7152] NOT SUPPORTED: Edm Type";
