@@ -81,9 +81,9 @@ public class OiyoBasicJdbcEntityTypeBuilder {
             try {
                 csdlPropertyList.add(OiyoCommonJdbcUtil.settingsProperty2CsdlProperty(oiyoProp));
             } catch (IllegalArgumentException ex) {
-                // TODO message
-                log.error("指定の entitySet の読み込み時にエラー発生。この property は処理スキップ: " + entitySet.getName() + ": property:"
-                        + oiyoProp.getName() + ": " + ex.toString());
+                // [IY7131] WARN: Fail to load property settings. Skipping this property.
+                log.error(OiyokanMessages.IY7131 + ": entitySet:" + entitySet.getName() + ", property:"
+                        + oiyoProp.getName() + " : " + ex.getMessage());
             }
         }
 
