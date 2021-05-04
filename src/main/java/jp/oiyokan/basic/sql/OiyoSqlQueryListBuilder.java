@@ -258,11 +258,14 @@ public class OiyoSqlQueryListBuilder {
                             + keyOrEqTarget.get(index));
             sqlInfo.getSqlBuilder().append(itemCount++ == 0 ? "" : ",");
             final String unescapedName = OiyoCommonJdbcUtil.unescapeKakkoFieldName(keyOrEqTarget.get(index));
+            OiyoSettingsProperty prop = OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, entitySet.getName(),
+                    unescapedName);
+
             // SELECTの検索項目名を追加。
             if (!isSecondPass) {
                 sqlInfo.getSelectColumnNameList().add(unescapedName);
             }
-            sqlInfo.getSqlBuilder().append(unescapedName);
+            sqlInfo.getSqlBuilder().append(OiyoCommonJdbcUtil.escapeKakkoFieldName(sqlInfo, prop.getDbName()));
         }
     }
 
