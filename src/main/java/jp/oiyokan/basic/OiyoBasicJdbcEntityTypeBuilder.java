@@ -78,7 +78,13 @@ public class OiyoBasicJdbcEntityTypeBuilder {
         OiyoSettingsEntitySet oiyoEntitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, entitySet.getName());
 
         for (OiyoSettingsProperty oiyoProp : oiyoEntitySet.getEntityType().getProperty()) {
-            csdlPropertyList.add(OiyoCommonJdbcUtil.settingsProperty2CsdlProperty(oiyoProp));
+            try {
+                csdlPropertyList.add(OiyoCommonJdbcUtil.settingsProperty2CsdlProperty(oiyoProp));
+            } catch (IllegalArgumentException ex) {
+                // [IY7131] WARN: Fail to load property settings. Skipping this property.
+                log.error(OiyokanMessages.IY7131 + ": entitySet:" + entitySet.getName() + ", property:"
+                        + oiyoProp.getName() + " : " + ex.getMessage());
+            }
         }
 
         // テーブルのキー情報
