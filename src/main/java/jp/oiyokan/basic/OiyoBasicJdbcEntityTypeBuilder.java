@@ -78,7 +78,13 @@ public class OiyoBasicJdbcEntityTypeBuilder {
         OiyoSettingsEntitySet oiyoEntitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, entitySet.getName());
 
         for (OiyoSettingsProperty oiyoProp : oiyoEntitySet.getEntityType().getProperty()) {
-            csdlPropertyList.add(OiyoCommonJdbcUtil.settingsProperty2CsdlProperty(oiyoProp));
+            try {
+                csdlPropertyList.add(OiyoCommonJdbcUtil.settingsProperty2CsdlProperty(oiyoProp));
+            } catch (IllegalArgumentException ex) {
+                // TODO message
+                log.error("指定の entitySet の読み込み時にエラー発生。この property は処理スキップ: " + entitySet.getName() + ": property:"
+                        + oiyoProp.getName() + ": " + ex.toString());
+            }
         }
 
         // テーブルのキー情報
