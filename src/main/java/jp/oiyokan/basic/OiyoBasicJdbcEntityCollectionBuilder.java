@@ -188,9 +188,10 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
             }
 
             stmt.executeQuery();
-            var rset = stmt.getResultSet();
-            rset.next();
-            countWithWhere = rset.getInt(1);
+            try (var rset = stmt.getResultSet()) {
+                rset.next();
+                countWithWhere = rset.getInt(1);
+            }
         } catch (SQLTimeoutException ex) {
             // [IY2501] SQL timeout at count query
             log.error(OiyokanMessages.IY2501 + ": " + sql + ", " + ex.toString());
@@ -291,22 +292,23 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
             stmt.executeQuery();
 
             // 検索結果を取得.
-            var rset = stmt.getResultSet();
-            for (; rset.next();) {
-                final Entity ent = new Entity();
-                for (int index = 0; index < sqlInfo.getSelectColumnNameList().size(); index++) {
-                    log.trace("TRACE: Bind parameter:" + sqlInfo.getSelectColumnNameList().get(index));
-                    // 取得された検索結果を Property に組み替え.
-                    OiyoSettingsProperty oiyoProp = OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, entitySetName,
-                            sqlInfo.getSelectColumnNameList().get(index));
-                    Property prop = OiyoCommonJdbcUtil.resultSet2Property(oiyoInfo, rset, index + 1, entitySet,
-                            oiyoProp);
-                    ent.addProperty(prop);
+            try (var rset = stmt.getResultSet()) {
+                for (; rset.next();) {
+                    final Entity ent = new Entity();
+                    for (int index = 0; index < sqlInfo.getSelectColumnNameList().size(); index++) {
+                        log.trace("TRACE: Bind parameter:" + sqlInfo.getSelectColumnNameList().get(index));
+                        // 取得された検索結果を Property に組み替え.
+                        OiyoSettingsProperty oiyoProp = OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, entitySetName,
+                                sqlInfo.getSelectColumnNameList().get(index));
+                        Property prop = OiyoCommonJdbcUtil.resultSet2Property(oiyoInfo, rset, index + 1, entitySet,
+                                oiyoProp);
+                        ent.addProperty(prop);
+                    }
+
+                    setEntityId(entitySet, ent);
+
+                    entityCollection.getEntities().add(ent);
                 }
-
-                setEntityId(entitySet, ent);
-
-                entityCollection.getEntities().add(ent);
             }
 
             final long endMillisec = System.currentTimeMillis();

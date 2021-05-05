@@ -66,8 +66,7 @@ public class OiyokanSettingsGenUtil {
         entitySet.setEntityType(new OiyoSettingsEntityType());
 
         final Map<String, String> defaultValueMap = new HashMap<>();
-        {
-            final ResultSet rsdbmetacolumns = connTargetDb.getMetaData().getColumns(null, null, tableName, "%");
+        try (ResultSet rsdbmetacolumns = connTargetDb.getMetaData().getColumns(null, null, tableName, "%")) {
             for (; rsdbmetacolumns.next();) {
                 String colName = rsdbmetacolumns.getString("COLUMN_NAME");
                 String defValue = rsdbmetacolumns.getString("COLUMN_DEF");
@@ -253,12 +252,13 @@ public class OiyokanSettingsGenUtil {
 
             // テーブルのキー情報
             final DatabaseMetaData dbmeta = connTargetDb.getMetaData();
-            final ResultSet rsKey = dbmeta.getPrimaryKeys(null, null, tableName);
-            for (; rsKey.next();) {
-                String colName = rsKey.getString("COLUMN_NAME");
-                // TODO v2.x にて処理共通化
-                colName = colName.replaceAll(" ", "_");
-                entitySet.getEntityType().getKeyName().add(colName);
+            try (ResultSet rsKey = dbmeta.getPrimaryKeys(null, null, tableName)) {
+                for (; rsKey.next();) {
+                    String colName = rsKey.getString("COLUMN_NAME");
+                    // TODO v2.x にて処理共通化
+                    colName = colName.replaceAll(" ", "_");
+                    entitySet.getEntityType().getKeyName().add(colName);
+                }
             }
         }
 

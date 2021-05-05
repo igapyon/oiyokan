@@ -332,40 +332,42 @@ public class OiyoBasicJdbcEntityOneBuilder {
             }
 
             stmt.executeQuery();
-            var rset = stmt.getResultSet();
-            if (!rset.next()) {
-                // [IY3105] WARN: No such Entity data
-                log.warn(OiyokanMessages.IY3105 + ": " + sql);
-                throw new ODataApplicationException(OiyokanMessages.IY3105 + ": " //
-                        + sql, OiyokanMessages.IY3105_CODE, Locale.ENGLISH);
-            }
-
             final Entity ent = new Entity();
-            for (int index = 0; index < sqlInfo.getSelectColumnNameList().size(); index++) {
-                OiyoSettingsProperty oiyoProp = null;
-                for (OiyoSettingsProperty prop : entitySet.getEntityType().getProperty()) {
-                    if (prop.getName().equals(sqlInfo.getSelectColumnNameList().get(index))) {
-                        oiyoProp = prop;
-                        break;
+            try (var rset = stmt.getResultSet()) {
+                if (!rset.next()) {
+                    // [IY3105] WARN: No such Entity data
+                    log.warn(OiyokanMessages.IY3105 + ": " + sql);
+                    throw new ODataApplicationException(OiyokanMessages.IY3105 + ": " //
+                            + sql, OiyokanMessages.IY3105_CODE, Locale.ENGLISH);
+                }
+
+                for (int index = 0; index < sqlInfo.getSelectColumnNameList().size(); index++) {
+                    OiyoSettingsProperty oiyoProp = null;
+                    for (OiyoSettingsProperty prop : entitySet.getEntityType().getProperty()) {
+                        if (prop.getName().equals(sqlInfo.getSelectColumnNameList().get(index))) {
+                            oiyoProp = prop;
+                            break;
+                        }
                     }
-                }
-                if (oiyoProp == null) {
-                    // [IY3161] UNEXPECTED: OiyoSettingsProperty NOT found.
-                    log.fatal(OiyokanMessages.IY3161 + ": " + sqlInfo.getSelectColumnNameList().get(index));
-                    throw new ODataApplicationException(
-                            OiyokanMessages.IY3161 + ": " + sqlInfo.getSelectColumnNameList().get(index), //
-                            OiyokanMessages.IY3161_CODE, Locale.ENGLISH);
+                    if (oiyoProp == null) {
+                        // [IY3161] UNEXPECTED: OiyoSettingsProperty NOT found.
+                        log.fatal(OiyokanMessages.IY3161 + ": " + sqlInfo.getSelectColumnNameList().get(index));
+                        throw new ODataApplicationException(
+                                OiyokanMessages.IY3161 + ": " + sqlInfo.getSelectColumnNameList().get(index), //
+                                OiyokanMessages.IY3161_CODE, Locale.ENGLISH);
+                    }
+
+                    Property prop = OiyoCommonJdbcUtil.resultSet2Property(oiyoInfo, rset, index + 1, entitySet,
+                            oiyoProp);
+                    ent.addProperty(prop);
                 }
 
-                Property prop = OiyoCommonJdbcUtil.resultSet2Property(oiyoInfo, rset, index + 1, entitySet, oiyoProp);
-                ent.addProperty(prop);
-            }
-
-            if (rset.next()) {
-                // [M215] UNEXPECTED: Too many rows found (readEntity)
-                log.fatal(OiyokanMessages.IY3112 + ": " + sql);
-                throw new ODataApplicationException(OiyokanMessages.IY3112 + ": " + sql, //
-                        OiyokanMessages.IY3112_CODE, Locale.ENGLISH);
+                if (rset.next()) {
+                    // [M215] UNEXPECTED: Too many rows found (readEntity)
+                    log.fatal(OiyokanMessages.IY3112 + ": " + sql);
+                    throw new ODataApplicationException(OiyokanMessages.IY3112 + ": " + sql, //
+                            OiyokanMessages.IY3112_CODE, Locale.ENGLISH);
+                }
             }
 
             final long endMillisec = System.currentTimeMillis();
