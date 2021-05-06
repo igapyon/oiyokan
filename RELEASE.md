@@ -1,3 +1,27 @@
+# Release 1.12 (2021-05-06)
+
+v1.x Testing.
+
+## EN
+
+- Stabilization work of software v1.x.
+- Fixed a bug that the DB cursor was not closed in some case.
+- Created a new project oiyokan-initializr for Getting Started.
+- Deployed the oiyokan library to Maven Repository.
+- Changed mvn to work with en.
+- Changed Javadoc to be generated with en.
+- Changed to output cache control meta to http response.
+
+## JA
+
+- v1.x ソフトウェア安定化作業
+- DBカーソルのクローズ漏れバグがあったのを訂正
+- Getting Started 用のプロジェクト oiyokan-initializr を新規作成
+- Maven Repository にデプロイ
+- mvn を en で動作するように変更
+- Javadocを en で生成するように変更
+- キャッシュコントロール記述をレスポンスに出力するよう変更
+
 # Release 1.11 (2021-05-02)
 
 v1.x Feature freeze.
