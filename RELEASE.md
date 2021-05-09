@@ -1,3 +1,15 @@
+# Release 1.13 (2021-05-09)
+
+## EN
+
+- Create a new `oiyokan-initializr` project that allows you to edit the Oiyokan configuration file on the web screen.
+- Add `java.io.Serializable` to DTO of setting information
+
+## JA
+
+- Oiyokan 設定ファイルを Web 画面で編集できる `oiyokan-initializr` プロジェクトを新規作成
+- 設定情報の DTO に `java.io.Serializable` を付与
+
 # Release 1.12 (2021-05-06)
 
 v1.x Testing.
