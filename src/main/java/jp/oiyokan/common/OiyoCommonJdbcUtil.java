@@ -904,11 +904,12 @@ public class OiyoCommonJdbcUtil {
             // 生成されたキーがあればそれを採用。
             final List<String> generatedKeys = new ArrayList<>();
             if (returnGeneratedKeys) {
-                final ResultSet rsKeys = stmt.getGeneratedKeys();
-                if (rsKeys.next()) {
-                    final ResultSetMetaData rsmetaKeys = rsKeys.getMetaData();
-                    for (int column = 1; column <= rsmetaKeys.getColumnCount(); column++) {
-                        generatedKeys.add(rsKeys.getString(column));
+                try (ResultSet rsKeys = stmt.getGeneratedKeys()) {
+                    if (rsKeys.next()) {
+                        final ResultSetMetaData rsmetaKeys = rsKeys.getMetaData();
+                        for (int column = 1; column <= rsmetaKeys.getColumnCount(); column++) {
+                            generatedKeys.add(rsKeys.getString(column));
+                        }
                     }
                 }
             }

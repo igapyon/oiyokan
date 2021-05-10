@@ -29,6 +29,7 @@ import org.apache.olingo.server.core.uri.queryoption.FilterOptionImpl;
 import org.apache.olingo.server.core.uri.queryoption.expression.MemberImpl;
 
 import jp.oiyokan.OiyokanConstants;
+import jp.oiyokan.OiyokanMessages;
 import jp.oiyokan.common.OiyoCommonJdbcUtil;
 import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.common.OiyoInfoUtil;
@@ -367,17 +368,26 @@ public class OiyoSqlQueryListBuilder {
     private void expandOrderByWithPrimary() throws ODataApplicationException {
         final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, sqlInfo.getEntitySetName());
 
-        // 無指定の場合はプライマリキーにてソート.
-        boolean isFirst = true;
-        for (String look : entitySet.getEntityType().getKeyName()) {
-            if (isFirst) {
-                isFirst = false;
-            } else {
-                sqlInfo.getSqlBuilder().append(",");
+        if (entitySet.getEntityType().getKeyName().size() != 0) {
+            // 無指定の場合はプライマリキーにてソート.
+            boolean isFirst = true;
+            for (String look : entitySet.getEntityType().getKeyName()) {
+                if (isFirst) {
+                    isFirst = false;
+                } else {
+                    sqlInfo.getSqlBuilder().append(",");
+                }
+
+                final OiyoSettingsProperty prop = OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, entitySet.getName(),
+                        look);
+                sqlInfo.getSqlBuilder().append(OiyoCommonJdbcUtil.escapeKakkoFieldName(sqlInfo, prop.getDbName()));
             }
-
-            final OiyoSettingsProperty prop = OiyoInfoUtil.getOiyoEntityProperty(oiyoInfo, entitySet.getName(), look);
-
+        } else {
+            // プライマリキーの存在しない異常状態の場合です. しかたなく最初の項目でソートします。
+            final OiyoSettingsProperty prop = entitySet.getEntityType().getProperty().get(0);
+            // [IY2107] WARN: EntitySet should have Primary Key. First property was used for
+            // orderby.
+            log.warn(OiyokanMessages.IY2107 + ": " + entitySet.getName() + ": " + prop.getName());
             sqlInfo.getSqlBuilder().append(OiyoCommonJdbcUtil.escapeKakkoFieldName(sqlInfo, prop.getDbName()));
         }
     }

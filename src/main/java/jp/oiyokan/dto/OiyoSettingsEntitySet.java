@@ -15,6 +15,7 @@
  */
 package jp.oiyokan.dto;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,7 +37,9 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @JsonPropertyOrder({ "name", "description", "dbSettingName", "canCreate", "canRead", "canUpdate", "canDelete",
         "omitCountAll", "jdbcStmtTimeout", "entityType" })
 @Generated("jsonschema2pojo")
-public class OiyoSettingsEntitySet {
+public class OiyoSettingsEntitySet implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     @JsonProperty("name")
     private String name;
     @JsonProperty("description")

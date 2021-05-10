@@ -37,4 +37,4 @@ mvn release:perform
 # MEMO
 
 - Maven デフォルトのデプロイを選択する方向性
-- Sonatype のデプロイプラグインだと GUI 操作抜きで そのまま Central までいってしまうぽい。
+- Sonatype のデプロイプラグインだと GUI 操作を飛ばせるメリットがあるが、この仕様は私には好ましくない。

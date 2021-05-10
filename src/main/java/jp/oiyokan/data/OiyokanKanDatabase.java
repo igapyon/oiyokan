@@ -72,11 +72,12 @@ public class OiyokanKanDatabase {
             // ODataAppInfos が既に存在するかどうか確認. 存在する場合は処理中断.
             try (var stmt = connInterDb.prepareStatement("SELECT COUNT(*) FROM Oiyokan")) {
                 stmt.executeQuery();
-                var rset = stmt.getResultSet();
-                rset.next();
-                if (rset.getInt(1) > 0) {
-                    // すでにテーブルがセットアップ済み。処理中断します。
-                    return false;
+                try (var rset = stmt.getResultSet()) {
+                    rset.next();
+                    if (rset.getInt(1) > 0) {
+                        // すでにテーブルがセットアップ済み。処理中断します。
+                        return false;
+                    }
                 }
             } catch (SQLException ex) {
                 // [M028] UNEXPECTED: Fail to check local table exists: Oiyokan

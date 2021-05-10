@@ -1,3 +1,49 @@
+# Release 1.14 (2021-05-10)
+
+## EN
+
+- Fixed search under Entity without Key (table without Primary Key).
+
+## JA
+
+- Key の存在しないEntity (Primary Key のないテーブル) でも検索が正しく動作するよう変更。
+
+# Release 1.13 (2021-05-09)
+
+## EN
+
+- Create a new `oiyokan-initializr` project that allows you to edit the Oiyokan configuration file on the web screen.
+- Add `java.io.Serializable` to DTO of setting information
+
+## JA
+
+- Oiyokan 設定ファイルを Web 画面で編集できる `oiyokan-initializr` プロジェクトを新規作成
+- 設定情報の DTO に `java.io.Serializable` を付与
+
+# Release 1.12 (2021-05-06)
+
+v1.x Testing.
+
+## EN
+
+- Stabilization work of software v1.x.
+- Fixed a bug that the DB cursor was not closed in some case.
+- Created a new project oiyokan-initializr for Getting Started.
+- Deployed the oiyokan library to Maven Repository.
+- Changed mvn to work with en.
+- Changed Javadoc to be generated with en.
+- Changed to output cache control meta to http response.
+
+## JA
+
+- v1.x ソフトウェア安定化作業
+- DBカーソルのクローズ漏れバグがあったのを訂正
+- Getting Started 用のプロジェクト oiyokan-initializr を新規作成
+- Maven Repository にデプロイ
+- mvn を en で動作するように変更
+- Javadocを en で生成するように変更
+- キャッシュコントロール記述をレスポンスに出力するよう変更
+
 # Release 1.11 (2021-05-02)
 
 v1.x Feature freeze.
