@@ -124,6 +124,12 @@ CREATE TABLE IF NOT EXISTS
   );
 
 CREATE TABLE IF NOT EXISTS
+  ODataTest9 (
+    Name VARCHAR(80) DEFAULT 'Ubnormal test case. Without Primary Key.'
+    , Description VARCHAR(250) DEFAULT 'Ubnormal test case. Without Primary Key.'
+  );
+
+CREATE TABLE IF NOT EXISTS
   ODataTestFulls1 (
     ID IDENTITY NOT NULL
     , Name VARCHAR(80) DEFAULT 'Fulltext UnitTest (Experimental)' NOT NULL

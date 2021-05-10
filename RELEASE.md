@@ -1,3 +1,13 @@
+# Release 1.14 (2021-05-10)
+
+## EN
+
+- Fixed search under Entity without Key (table without Primary Key).
+
+## JA
+
+- Key の存在しないEntity (Primary Key のないテーブル) でも検索が正しく動作するよう変更。
+
 # Release 1.13 (2021-05-09)
 
 ## EN
