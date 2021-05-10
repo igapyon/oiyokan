@@ -85,7 +85,7 @@ public class OiyokanMessages {
     public static final String IY2105 = "[IY2105] UNEXPECTED: Fail to create ID EntitySet name";
     public static final String IY2106 = "[IY2106] NOT SUPPORTED: unknown UUID object given";
     public static final int IY2106_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
-    // IY2107
+    public static final String IY2107 = "[IY2107] WARN: EntitySet should have Primary Key. First property was used for orderby.";
     public static final String IY2108 = "[IY2108] NOT SUPPORTED: Parameter Type";
     public static final int IY2108_CODE = HttpStatusCode.BAD_REQUEST.getStatusCode();
 

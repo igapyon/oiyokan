@@ -25,7 +25,7 @@ import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.util.OiyokanTestUtil;
 
 /**
- * ごく基本的な OData の挙動を確認.
+ * Primary Key のない誤ったテーブルであっても正常動作することの確認。
  */
 class UnitTestNonKeyQuery01Test {
     @Test
@@ -36,9 +36,7 @@ class UnitTestNonKeyQuery01Test {
         final ODataResponse resp = OiyokanTestUtil.callGet("/ODataTest9", "$select=Name,Description");
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
-        assertEquals(
-                "{\"@odata.context\":\"$metadata#ODataTest1\",\"value\":[{\"ID\":1,\"Name\":\"MacBookPro16,2\",\"Description\":\"MacBook Pro (13-inch, 2020, Thunderbolt 3ポートx 4)\"}]}",
-                result);
+        assertEquals("{\"@odata.context\":\"$metadata#ODataTest9\",\"value\":[]}", result);
         assertEquals(200, resp.getStatusCode());
     }
 }
