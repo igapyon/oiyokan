@@ -7,6 +7,12 @@ You can use Oiyokan to turn RDBMS into OData v4 services.
 - Oiyokan uses JDBC to provide OData v4 access to the RDB.
 - Source code at github, license : Apache License.
 
+## Getting Started with the Oiyokan
+
+Getting Started with the Oiyokan can be viewed at the following URL  (written in Japanese).
+
+- http://www.igapyon.jp/igapyon/diary/2021/ig210511.html
+
 ## Supported target RDBMS
 
 - h2 database (1.4)
