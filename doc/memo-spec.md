@@ -10,10 +10,7 @@
 
 ## Supported OData Method
 
-- GET
-- POST
-- PATCH
-- DELETE
+see `spec-httpmethod.md`.
 
 ## Supported OData system query options
 
@@ -23,6 +20,8 @@
 - $orderby
 - $top
 - $skip
+
+see `spec-notsupported.md` for more details.
 
 # Mapping memo at standard
 

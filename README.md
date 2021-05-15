@@ -28,6 +28,8 @@ Getting Started with the Oiyokan can be viewed at the following URL  (written in
 - PATCH
 - DELETE
 
+see `spec-httpmethod.md` for more details.
+
 ## Supported OData system query options
 
 - $select
@@ -37,6 +39,8 @@ Getting Started with the Oiyokan can be viewed at the following URL  (written in
 - $top
 - $skip
 
+see `spec-notsupported.md` for more details.
+
 ## Oiyokan in Maven repository
 
 - [Maven Repository - Oiyokan](https://mvnrepository.com/artifact/jp.igapyon.oiyokan)
@@ -45,6 +49,7 @@ Getting Started with the Oiyokan can be viewed at the following URL  (written in
 
 - [Oiyokan Library - github](https://github.com/igapyon/oiyokan)
 - [Oiyokan Initializr - github](https://github.com/igapyon/oiyokan-initializr)
+- [Oiyokan UnitTest - github](https://github.com/igapyon/oiyokan-unittest)
 - [Oiyokan Demosite - github](https://github.com/igapyon/oiyokan-demosite)
 - [Oiyokan Demosite-Test - github](https://github.com/igapyon/oiyokan-demosite-test)
 
