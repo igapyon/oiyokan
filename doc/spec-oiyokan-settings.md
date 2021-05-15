@@ -1,23 +1,24 @@
-# How to set `oiyokan-settings.json`
+## [Oiyokan] oiyokan-settings.json spec
+
+### How to set `oiyokan-settings.json`
 
 `oiyokan-settings.json` is an important settings file to control Oiyokan.
 
-## `oiyokan-settings.json` location
+### `oiyokan-settings.json` location
 
 ```sh
 src/main/resources/iyokan/oiyokan-settings.json
 ```
 
-## おおよその構造
+### Abstract of structure
 
-### ファイル形式
+#### File format
 
-ファイルはJSONで記述する。
+- oiyokan-settings.json must be written as JSON format.
 
-### セクション
+#### Section
 
-`oiyokan-settings.json` は、container section, database section, entitySet section の 3 main section から成り立ちます。
-
+`oiyokan-settings.json` has 3 main section: container section, database section, entitySet section.
 
 #### container section
 
@@ -31,7 +32,7 @@ src/main/resources/iyokan/oiyokan-settings.json
 | key            | description                                                       |
 | -------------- | ----------------------------------------------------------------- |
 | name           | Name of database setting. ex `oiyoUnitTestDb`                     |
-| type           | Database Type. one of: `h2`, `postgres`, `MySQL`, `SQLSV2008`, `ORCL18` |
+| type           | Database Type. one of: `h2`, `PostgreSQL`, `MySQL`, `SQLSV2008`, `ORCL18` |
 | description    | Description of this database setting.                             |
 | jdbcDriver     | Classname of JDBC driver. ex: `org.h2.Driver`                     |
 | jdbcUrl        | JDBC url to connect. ex: `jdbc:h2:mem:mydb;DB_CLOSE_DELAY=-1;`    |
@@ -60,7 +61,7 @@ src/main/resources/iyokan/oiyokan-settings.json
 | -------------- | ----------------------------------------------------------------- |
 | name           | Name of EntityType                                                |
 | dbName         | Table name on Database                                            |
-| keyName        | Array of key property name.                                       |
+| keyName        | Array of key property name. Entity should have key.               |
 | property       | Array of property.                                                |
 
 #### property - sub sub section
@@ -81,3 +82,4 @@ src/main/resources/iyokan/oiyokan-settings.json
 | dbDefault      | Default value of database. Default:`null`.                        |
 | filterTreatNullAsBlank | Treat property (String) value null as blank. Default:`false`. |
 
+via: [diary](https://raw.githubusercontent.com/igapyon/diary/devel/2021/ig210426.src.md)
