@@ -24,6 +24,7 @@ Type mapping of Oiyokan v1.14 is like below:
 | Edm.Binary         | Types.BLOB      | BLOB      | bytea            | BLOB      | VARBINARY      | BLOB      |
 
 - Edm.Guid is not supported by Oiyokan v1.14
+- Oiyokan allows you to override the mapping behavior by editing the JSON file.
 
 from: [github v1.14.20210510 OiyoMapJdbcEdmUtil.java](https://github.com/igapyon/oiyokan/blob/v1.14.20210510/src/main/java/jp/oiyokan/util/OiyoMapJdbcEdmUtil.java#L52)
 
