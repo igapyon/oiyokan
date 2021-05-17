@@ -1,7 +1,7 @@
 > * この記事は、RESTや標準化などに知見のある人を想定読者としています。
 
 # OData とは
-[OData](https://www.odata.org/) は [OASIS](https://www.oasis-open.org/) という標準化団体により仕様策定された REST ベースの標準仕様です。
+[OData](https://www.odata.org/) は [OASIS](https://www.oasis-open.org/) という標準化団体により仕様策定された REST ベースの Web標準仕様です。
 
 ![OASIS-OData.png](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/105739/b8c30beb-759c-21f3-66f0-55127917819c.png)
 
@@ -13,7 +13,7 @@ OData v4 は、(うんざりしそうなほどの) 大量の読み応えある�
 
 # OData v4 を試しに使ってみるには
 
-OData v4 標準仕様は多岐にわたるため、いちから全てを自力で実装するのには手間と時間そして仕様の正しさの担保しにくさなどの理由によって、大抵の場合は OData v4対応ツール一式を導入したり、あるいは OData v4対応ライブラリを利用してコーディング省力化を図ることでしょう。
+OData v4 標準仕様は多岐にわたるため、いちから全てを自力で実装するのには手間と時間がかかりすぎ、そして仕様の正しさの担保しにくさなどの理由によって、大抵の場合は OData v4対応ツール一式を導入したり、あるいは OData v4対応ライブラリを利用してフルスクラッチを避けるコーディング省力化を図ることでしょう。
 
 筆者が利用経験を持っているのは [Apache Olingo](https://olingo.apache.org/doc/odata4/index.html) という OData v4 対応ライブラリです。Olingo Serverを利用することにより、私は OData v4プロトコルの大部分の実装を Olingo に任せてしまい、実現したい実装内容に集中できました。OData v4ライブラリは[様々な言語処理系にも提供されています](https://www.odata.org/libraries/)。
 
@@ -24,7 +24,7 @@ OData v4 標準仕様は多岐にわたるため、いちから全てを自力�
 
 OData は REST でもあるため、REST API と同様に GET, POST, PATCH, PUT, DELETE メソッドを利用可能ですが、一方で OData v4 仕様による明確な利用方法の規定があります。
 
-| HTTP method               | SQLに例えると | 準拠する OData specification 記述               |
+| HTTP メソッド               | SQLに例えると | 準拠する OData 仕様記述               |
 | ------                    | ------            | ------                                             |
 | GET                       | SELECT            | [Request](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_RequestingData) ([Individual](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_RequestingIndividualEntities), [Query](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)) |
 | POST                      | INSERT            | [Create](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_CreateanEntity) |
@@ -36,12 +36,13 @@ OData は REST でもあるため、REST API と同様に GET, POST, PATCH, PUT,
 
 こうやって見ると、普通に REST API ですね。さて、注目しておくべきポイントは 多くの人にとっては PATCH および PUT になることでしょう。If-Match, If-None-Matchヘッダの指定により、挙動が UPSERT/UPDATE/INSERT と切り替わる点に注意が必要です。
 
-- データの更新には PATCH メソッドを `If-Match = "*"` ヘッダー付きで利用することを推奨
-- PATCH は対象の一部分に影響し、PUT は対象全体に影響
+- データの更新には PATCH メソッドを `If-Match = "*"` ヘッダー付きで利用することを推奨します。
+- PATCH は対象の一部分に影響し、PUT は対象全体に影響します。
+- OData v4 で操作する先がデータベーステーブルである場合は、PUTよりもPATCHを優先して利用することを推奨します。
 
 # OData v4 のシステム クエリ オプション
 
-OData v4 で複数データを検索するには システムクエリを利用します。
+OData v4 で複数データを検索するには システムクエリを利用します。クエリパラメータに以下に示すような `$` オプションを付与することにより検索をコントロールできます。
 
 | クエリ     | 意味                                         |
 | ---      | ---                                         | 
@@ -54,7 +55,8 @@ OData v4 で複数データを検索するには システムクエリを利用�
 | $skip    | 検索結果の上位の何件をスキップするか指定           |
 | $top     | 検索結果上位の何件を取得するか指定               |
 
-これらシステムクエリパラメータの詳しい仕様は [OData v4 System Query Option](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#_Toc31361038) で確認できます。
+- OData システム クエリ オプションの入門に [Microsoft Graph API](https://docs.microsoft.com/ja-jp/graph/query-parameters) 説明ページは実例も豊富で有益だと考えます。これは Graph API が OData v4 と互換性を持つための恩恵です。
+- これらシステムクエリパラメータの詳しい仕様は [OData v4 System Query Option](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#_Toc31361038) で確認できます。
 
 # もっと OData v4を知りたい方は
 
