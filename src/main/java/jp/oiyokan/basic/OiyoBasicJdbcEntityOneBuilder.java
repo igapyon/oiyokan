@@ -42,6 +42,7 @@ import jp.oiyokan.basic.sql.OiyoSqlDeleteOneBuilder;
 import jp.oiyokan.basic.sql.OiyoSqlInsertOneBuilder;
 import jp.oiyokan.basic.sql.OiyoSqlQueryOneBuilder;
 import jp.oiyokan.basic.sql.OiyoSqlUpdateOneBuilder;
+import jp.oiyokan.common.OiyoCommonJdbcBindParamUtil;
 import jp.oiyokan.common.OiyoCommonJdbcUtil;
 import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.common.OiyoInfoUtil;
@@ -328,7 +329,7 @@ public class OiyoBasicJdbcEntityOneBuilder {
 
             int idxColumn = 1;
             for (OiyoSqlInfo.SqlParam look : sqlInfo.getSqlParamList()) {
-                OiyoCommonJdbcUtil.bindPreparedParameter(stmt, idxColumn++, look);
+                OiyoCommonJdbcBindParamUtil.bindPreparedParameter(stmt, idxColumn++, look);
             }
 
             stmt.executeQuery();
