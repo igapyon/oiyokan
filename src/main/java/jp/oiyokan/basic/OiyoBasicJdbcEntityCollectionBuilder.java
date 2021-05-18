@@ -39,6 +39,7 @@ import jp.oiyokan.OiyokanEntityCollectionBuilderInterface;
 import jp.oiyokan.OiyokanMessages;
 import jp.oiyokan.basic.sql.OiyoSqlQueryListBuilder;
 import jp.oiyokan.basic.sql.OiyoSqlQueryListExpr;
+import jp.oiyokan.common.OiyoCommonJdbcBindParamUtil;
 import jp.oiyokan.common.OiyoCommonJdbcUtil;
 import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.common.OiyoInfoUtil;
@@ -184,7 +185,7 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
 
             int column = 1;
             for (OiyoSqlInfo.SqlParam look : basicSqlBuilder.getSqlInfo().getSqlParamList()) {
-                OiyoCommonJdbcUtil.bindPreparedParameter(stmt, column++, look);
+                OiyoCommonJdbcBindParamUtil.bindPreparedParameter(stmt, column++, look);
             }
 
             stmt.executeQuery();
@@ -285,7 +286,7 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
             // 組み立て後のバインド変数を PreparedStatement にセット.
             int idxColumn = 1;
             for (OiyoSqlInfo.SqlParam look : sqlInfo.getSqlParamList()) {
-                OiyoCommonJdbcUtil.bindPreparedParameter(stmt, idxColumn++, look);
+                OiyoCommonJdbcBindParamUtil.bindPreparedParameter(stmt, idxColumn++, look);
             }
 
             // 検索を実行.

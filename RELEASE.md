@@ -1,3 +1,11 @@
+# Release 1.15 (2021-05-??)
+
+## EN
+
+## JA
+
+- PreparedStatement へのバインドの処理について OiyoCommonJdbcBindParamUtil.java に処理内容を分離
+
 # Release 1.14 (2021-05-10)
 
 ## EN
