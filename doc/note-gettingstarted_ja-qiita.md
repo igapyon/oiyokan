@@ -1,12 +1,9 @@
-## [Oiyokan] Getting Started Oiyokan Initializr (v0.5)
-
 RDBのテーブルを REST API Server として公開する Spring Boot アプリは、Oiyokan Initializrを使うとすばやく生成することができます。
 この記事では、Oiyokan Initializr を入手して実行して、RDBからテーブルを選択して、Spring Boot アプリの生成および実行までを扱います。生成される webアプリは OData v4 が定める定義に従った REST API Server になります。
 
 ### 期待される読者スキル
 * Spring Boot + web開発の知見があること
 * Maven についての知見があること
-* REST、セキュリティについての知見があること
 * JDBC 設定についての知見があること
 
 なお、この記事は Oiyokan Initializr Release 0.5 (2021-05-11) バージョンをもとに記載されています。また、一連の手順の実行のためにインターネット接続環境が必要です。
@@ -19,17 +16,17 @@ RDBのテーブルを REST API Server として公開する Spring Boot アプ�
 
 #### 1-0. [github.com](https://github.com/igapyon/oiyokan-initializr/releases) にアクセスして `oiyokan-initializr` の Release ページを開きます
 
-![01](http://www.igapyon.jp/igapyon/diary/images/2021/20210511-01.png)
+![20210511-01.png](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/105739/98d4c026-37e6-377f-501b-598e9a4d7007.png)
 
 #### 1-1. Release ページから `Source code (zip)` をダウンロードします
 
-![02](http://www.igapyon.jp/igapyon/diary/images/2021/20210511-02.png)
+![20210511-02.png](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/105739/e9ec0290-2826-b978-ffa1-046b8f858497.png)
 
 #### 1-2. 作業に向いた都合のよいディレクトリに `Source code (zip)` を展開します
 
 展開後の ZIPファイルは以下のような内容になります。
 
-![03](http://www.igapyon.jp/igapyon/diary/images/2021/20210511-03.png)
+![20210511-03.png](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/105739/695d7f29-e7a6-429c-9b27-c0c64d2307f5.png)
 
 ### oiyokan-initializr を実行
 
@@ -61,7 +58,7 @@ http://localhost:8082/
 
 アクセスに成功すると以下のような画面が開きます。
 
-![04](http://www.igapyon.jp/igapyon/diary/images/2021/20210511-04.png)
+![20210511-04.png](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/105739/1a9d7720-6958-0f5f-6d84-3dbda5d17c9b.png)
 
 この画面を用いて、REST API Server の設定を入力していきます。
 
@@ -75,14 +72,14 @@ http://localhost:8082/
 
 BASIC認証のダイアログが表示されたら、User: admin, Password: passwd123 を利用してログインします。
 
-![05](http://www.igapyon.jp/igapyon/diary/images/2021/20210511-05.png)
+![20210511-05.png](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/105739/36ca7d1c-9330-801d-bdcc-9c249582c670.png)
 
 > - Note: Spring Boot に知見がある方は、このログイン認証を容易に変更あるいは除去などを実施できます。
 > - Note: 必要に応じて Spring Security を上書き設定しましょう
 
 #### 3-4. `ADD DATABASE` をクリックします
 
-![06](http://www.igapyon.jp/igapyon/diary/images/2021/20210511-06.png)
+![20210511-06.png](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/105739/4a69df12-dc0f-41dc-1719-a63f09f9d520.png)
 
 > - Note: `Oiyokan Initializr` で REST API Server プロジェクトを生成するには、少なくとも 1つのデータベースにアクセスできている必要があります。
 
@@ -90,7 +87,7 @@ BASIC認証のダイアログが表示されたら、User: admin, Password: pass
 
 REST API Server として公開したいデータベースへの接続情報を入力します。
 
-![07](http://www.igapyon.jp/igapyon/diary/images/2021/20210511-07.png)
+![20210511-07.png](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/105739/7496a4c7-ea7b-38be-4c18-e27e413d0868.png)
 
 > - Note: Oiyokan で動作確認が行われているのは PostgreSQL最新版, MySQL最新版, SQLSV2008, ORCL18, h2 database最新版 に対してです。
 > - Note: もし、PostgreSQL, MySQL, SQLSV2008, ORCL18, h2 database 以外のデータベース接続を利用する場合には、pom.xml に JDBCドライバ記述を追記する必要があります。そのようなデータベースを利用する場合は、DB type から一番近い挙動をすると思われるDBを選択します。よくわからない場合は 'h2' を選択するようにします。
@@ -99,7 +96,7 @@ REST API Server として公開したいデータベースへの接続情報を�
 
 入力したデータベース接続情報が適切であるかどうかをテストします。
 
-![08](http://www.igapyon.jp/igapyon/diary/images/2021/20210511-08.png)
+![20210511-08.png](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/105739/5dc56beb-3b8f-0b55-0aca-f287ea3c3fd0.png)
 
 - データベースに接続成功した場合には `Connection test success` などと表示されます。
 - もしデータベース接続テストが失敗する場合には、JDBC設定情報やネットワーク経路、データベースが起動しているかどうかを確認して再度実行するようにします。
@@ -114,13 +111,13 @@ REST API Server として公開したいデータベースへの接続情報を�
 
 #### 4-1. `ADD ENTITY` をクリックします
 
-![09](http://www.igapyon.jp/igapyon/diary/images/2021/20210511-09.png)
+![20210511-09.png](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/105739/4de4196b-b55c-b87f-2f4a-b73da15f0b64.png)
 
 前の手順で作成したデータベース接続情報の右にある `ADD ENTITY` ボタンをクリックします。
 
 #### 4-2. REST API Server に公開したい Entity (テーブル) をチェックボックスをクリックして選択します
 
-![10](http://www.igapyon.jp/igapyon/diary/images/2021/20210511-10.png)
+![20210511-10.png](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/105739/30cfac9d-3687-d41e-9326-c00a10ca4063.png)
 
 公開したい Entity (テーブル) を探し、テーブル名の左にあるチェックボックスを ON にします。
 
@@ -128,7 +125,7 @@ REST API Server として公開したいデータベースへの接続情報を�
 
 #### 4-3. Entity の選択を終えたら `APPLY ENTITY SELECTION` をクリックします
 
-![11](http://www.igapyon.jp/igapyon/diary/images/2021/20210511-11.png)
+![20210511-11.png](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/105739/6665e30f-b688-8f63-af4c-24e74e362026.png)
 
 Entity (テーブル) の選択が終わったら `APPLY ENTITY SELECTION` をクリックします。
 
@@ -143,7 +140,7 @@ Entity (テーブル) の選択が終わったら `APPLY ENTITY SELECTION` を�
 
 #### 5-1. `GENERATE REST API SERVER` をクリックして、`oiyokan-demo.zip` という名前の ZIP ファイルをダウンロードします
 
-![12](http://www.igapyon.jp/igapyon/diary/images/2021/20210511-12.png)
+![20210511-12.png](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/105739/ea54ba5f-f946-b228-d5d0-dd4672443cfb.png)
 
 `GENERATE REST API SERVER` をクリックして、生成された REST API Server をダウンロードします。
 
@@ -168,7 +165,7 @@ CTRL+C などの操作により、`Oiyokan Initializr` を停止します。
 
 #### 6-1. 作業に都合の良いディレクトリで `oiyokan-demo.zip` を zip展開します
 
-![13](http://www.igapyon.jp/igapyon/diary/images/2021/20210511-13.png)
+![20210511-13.png](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/105739/56cbf15a-d44e-169c-6b39-90230a689145.png)
 
 > - Note: ここで展開したファイルの `oiyokan-settings.json` にはデータベースの接続情報が含まれますので、必要ない場合は手順の後で必ず削除してください。
 > - Note: 生成直後の Spring Boot webアプリにはセキュリティ設定がおこなわれていないため、必要に応じて Spring Security設定などを実施してください。
@@ -199,13 +196,13 @@ http://localhost:8080/
 
 `oiyokan-demo` には初期状態として簡易なホームページが設定されています。ここから REST サーバの状況を簡易に確認できます。
 
-![14](http://www.igapyon.jp/igapyon/diary/images/2021/20210511-14.png)
+![20210511-14.png](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/105739/18b6159f-e477-d14f-4aa8-d88fa6542ed7.png)
 
 #### 7-1. `OData v4 ROOT` をクリックすると、公開されている Entity の概要を確認できます
 
 利用可能な REST アクセス情報は、REST ルートディレクトリにアクセスすることにより確認できます。デフォルトで `/odata4.svc/` が REST (OData v4) ルートディレクトリです。
 
-![15](http://www.igapyon.jp/igapyon/diary/images/2021/20210511-15.png)
+![20210511-15.png](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/105739/8eace6c5-1801-30e5-0421-477b014f3d04.png)
 
 > - Note: 内部情報: この画面は Apache Olingo の応答による実現です。
 
@@ -213,7 +210,7 @@ http://localhost:8080/
 
 REST アクセスの詳細情報は `$metadata` にアクセスすることにより確認できます。
 
-![16](http://www.igapyon.jp/igapyon/diary/images/2021/20210511-16.png)
+![20210511-16.png](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/105739/62dbc6ca-a734-f1b0-7c3a-abcc66472bac.png)
 
 > - Note: 内部情報: この画面は Apache Olingo の応答による実現です。
 
@@ -221,7 +218,7 @@ REST アクセスの詳細情報は `$metadata` にアクセスすることに�
 
 REST ルートディレクトリ (デフォルトでは `/odata4.svc/`) に Entity 名を付与したクエリにより、対象の Entity (テーブル) を検索および表示することができます。
 
-![17](http://www.igapyon.jp/igapyon/diary/images/2021/20210511-17.png)
+![20210511-17.png](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/105739/c17e00d3-d60a-bb00-cdbb-268e3140cca6.png)
 
 > - Note: Chromeのような Webブラウザからアクセスすると デフォルトでは XMLで応答します。クエリに $format=JSON を付与すると JSON 形式を強制できます。
 
@@ -236,7 +233,7 @@ REST ルートディレクトリ (デフォルトでは `/odata4.svc/`) に Enti
 | $top | 検索結果上位の何件を取得するか指定 |
 | $skip | 検索結果の上位の何件をスキップするか指定 |
 
-これらクエリの詳しい仕様は [OData v4 System Query Option](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#sec_SystemQueryOptionfilter) で確認できます。
+これらクエリの詳しい仕様は [OData v4 System Query Option](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part2-url-conventions.html#_Toc31361038) で確認できます。
 なお、Oiyokan 1.14 では `$search` および `$expand` はサポート外です。
 
 #### 7-4. POST, PATCH, DELETE メソッドをもちいて、データベースのレコードを操作することができます
@@ -274,4 +271,6 @@ RDB テーブルの変更は、POST, PATCH, DELETE をもちいて実現でき�
 
 以上で Oiyokan Initializr の簡易な説明はおわりです。
 
-- via: [diary](https://raw.githubusercontent.com/igapyon/diary/devel/2021/ig210511.src.md)
+## link at Qiita
+
+- [https://qiita.com/igapyon/items/3fbdb0f3d3520a54f2a9](https://qiita.com/igapyon/items/3fbdb0f3d3520a54f2a9)

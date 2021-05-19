@@ -1,8 +1,4 @@
-## [Oiyokan] OData Edm to JDBC Types mapping of Oiyokan v1.14
-
-### Supported types mapping
-
-Type mapping of Oiyokan v1.14 is like below:
+Oiyokan v1.14 では OData Edm と JDBC Types のデフォルトのマッピングを以下のように定義しています。
 
 | Edm type           | JDBC type       | h2 type   | PostgreSQL       | MySQL     | SQLSV2008      | ORCL18    |
 | ------             | ------          | ------    | ------           | ------    | ------         | ------    |
@@ -23,10 +19,5 @@ Type mapping of Oiyokan v1.14 is like below:
 | Edm.Binary         | Types.VARBINARY | VARBINARY | bytea            | VARBINARY | VARBINARY      | RAW       |
 | Edm.Binary         | Types.BLOB      | BLOB      | bytea            | BLOB      | VARBINARY      | BLOB      |
 
-- Edm.Guid is not supported by Oiyokan v1.14
-- Oiyokan allows you to override the mapping behavior by editing the JSON file.
-
-from: [github v1.14.20210510 OiyoMapJdbcEdmUtil.java](https://github.com/igapyon/oiyokan/blob/v1.14.20210510/src/main/java/jp/oiyokan/util/OiyoMapJdbcEdmUtil.java#L52)
-
-
-via: [diary](https://raw.githubusercontent.com/igapyon/diary/devel/2021/ig210516.src.md)
+- Edm.Guid は Oiyokan v1.14 ではサポートされていません。
+- Oiyokanでは JSON ファイルを編集することによりマッピングの挙動を上書き変更することができます。

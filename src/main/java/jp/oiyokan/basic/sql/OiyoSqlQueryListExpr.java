@@ -256,6 +256,40 @@ public class OiyoSqlQueryListExpr {
                 return;
             }
 
+            // いずれかが Literal の場合
+            if (impl.getLeftOperand() instanceof LiteralImpl || impl.getRightOperand() instanceof LiteralImpl) {
+                LiteralImpl literal = null;
+                Expression other = null;
+
+                if (impl.getLeftOperand() instanceof LiteralImpl) {
+                    literal = (LiteralImpl) impl.getLeftOperand();
+                    other = impl.getRightOperand();
+                } else {
+                    other = impl.getLeftOperand();
+                    literal = (LiteralImpl) impl.getRightOperand();
+                }
+
+                final OiyokanConstants.DatabaseType databaseType = OiyoInfoUtil
+                        .getOiyoDatabaseTypeByEntitySetName(sqlInfo.getOiyoInfo(), sqlInfo.getEntitySetName());
+                if (OiyokanConstants.DatabaseType.SQLSV2008 == databaseType //
+                        || OiyokanConstants.DatabaseType.ORCL18 == databaseType) {
+                    // SQLSV2008/ORCL18のみ特殊ルート。booleanのない世界に対応
+                    if ("true".equalsIgnoreCase(String.valueOf(literal.getText()))) {
+                        // 特殊ルート。SQLSV2008/ORCL18 で eq true の場合は、それ自体の出力を抑止。
+                        expand(other);
+                        sqlInfo.getSqlBuilder().append(")");
+                        return;
+                    }
+                    if ("false".equalsIgnoreCase(String.valueOf(literal.getText()))) {
+                        // 特殊ルート。SQLSV2008/ORCL18 で eq false の場合は、それ自体の出力を抑止。
+                        sqlInfo.getSqlBuilder().append("NOT");
+                        expand(other);
+                        sqlInfo.getSqlBuilder().append(")");
+                        return;
+                    }
+                }
+            }
+
             // 与えられた条件をそのまま展開.
             expand(impl.getLeftOperand());
             sqlInfo.getSqlBuilder().append(" = ");

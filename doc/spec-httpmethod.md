@@ -1,6 +1,6 @@
-## [Oiyokan] Supported HTML method by Oiyokan v1.14
+## [Oiyokan] Supported HTTP method by Oiyokan v1.14
 
-| HTTP method               | Corresponding SQL | Corresponding OData v4                             |
+| HTTP method               | Corresponding SQL | OData specification to be compliant                |
 | ------                    | ------            | ------                                             |
 | GET                       | SELECT            | [Request](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_RequestingData) ([Individual](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_RequestingIndividualEntities), [Query](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_SystemQueryOptionselect)) |
 | POST                      | INSERT            | [Create](https://docs.oasis-open.org/odata/odata/v4.01/odata-v4.01-part1-protocol.html#sec_CreateanEntity) |
