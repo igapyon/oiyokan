@@ -4,6 +4,7 @@
 
 ## JA
 
+- SQLSV2008とORCL18について val eq true をSQL出力抑止
 - PreparedStatement へのバインドの処理について OiyoCommonJdbcBindParamUtil.java に処理内容を分離
 
 # Release 1.14 (2021-05-10)
