@@ -1,3 +1,13 @@
+# Release 1.16 (2021-05-22)
+
+## EN
+
+- TBD
+
+## JA
+
+- Connection.setTransactionIsolation を JSON で指定できるように変更。
+
 # Release 1.15 (2021-05-19)
 
 ## EN
