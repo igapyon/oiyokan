@@ -34,8 +34,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
  * http://www.jsonschema2pojo.org/ を利用して自動生成.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({ "name", "type", "description", "jdbcDriver", "jdbcUrl", "jdbcUser", "jdbcPassEnc",
-        "jdbcPassPlain" })
+@JsonPropertyOrder({ "name", "type", "description", "jdbcDriver", "jdbcUrl", "jdbcUser", "jdbcPassEnc", "jdbcPassPlain",
+        "transactionIsolation" })
 @Generated("jsonschema2pojo")
 public class OiyoSettingsDatabase implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -56,6 +56,8 @@ public class OiyoSettingsDatabase implements Serializable {
     private String jdbcPassEnc;
     @JsonProperty("jdbcPassPlain")
     private String jdbcPassPlain;
+    @JsonProperty("transactionIsolation")
+    private String transactionIsolation;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -137,6 +139,16 @@ public class OiyoSettingsDatabase implements Serializable {
     @JsonProperty("jdbcPassPlain")
     public void setJdbcPassPlain(String jdbcPassPlain) {
         this.jdbcPassPlain = jdbcPassPlain;
+    }
+
+    @JsonProperty("transactionIsolation")
+    public String getTransactionIsolation() {
+        return transactionIsolation;
+    }
+
+    @JsonProperty("transactionIsolation")
+    public void setTransactionIsolation(String transactionIsolation) {
+        this.transactionIsolation = transactionIsolation;
     }
 
     @JsonAnyGetter

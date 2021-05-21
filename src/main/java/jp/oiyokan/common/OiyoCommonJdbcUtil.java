@@ -103,8 +103,16 @@ public class OiyoCommonJdbcUtil {
                 conn = DriverManager.getConnection(settingsDatabase.getJdbcUrl(), settingsDatabase.getJdbcUser(),
                         settingsDatabase.getJdbcPassPlain());
             }
-            // TRANSACTION_READ_COMMITTED を設定.
-            conn.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+
+            if (settingsDatabase.getTransactionIsolation() != null
+                    && settingsDatabase.getTransactionIsolation().length() > 0) {
+                // [IY7175] DEBUG: DB set connection transaction isolation.
+                log.debug(OiyokanMessages.IY7175 + ": " + settingsDatabase.getTransactionIsolation());
+
+                final int transactionIsolation = OiyoJdbcUtil
+                        .string2TransactionIsolation(settingsDatabase.getTransactionIsolation());
+                conn.setTransactionIsolation(transactionIsolation);
+            }
         } catch (SQLException ex) {
             // [M005] UNEXPECTED: データベースの接続に失敗:
             // しばらく待って再度トライしてください。しばらく経っても改善しない場合はIT部門に連絡してください
