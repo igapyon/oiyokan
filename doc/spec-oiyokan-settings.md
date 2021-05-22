@@ -39,6 +39,8 @@ src/main/resources/iyokan/oiyokan-settings.json
 | jdbcUser       | JDBC user name. ex: `user1`                                       |
 | jdbcPassEnc    | JDBC password with Encryption. (Recommended)                      |
 | jdbcPassPlain  | JDBC password without Encryption. (jdbcPassEnc is recommended)    |
+| transactionIsolation | Transaction Isolation. Default:`Connection.TRANSACTION_READ_COMMITTED` |
+| initSqlExec    | (experimental) Initialize sql when connect.                       |
 
 #### entitySet section
 
