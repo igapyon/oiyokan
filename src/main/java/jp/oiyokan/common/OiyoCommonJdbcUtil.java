@@ -21,6 +21,7 @@ import java.io.Reader;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -103,8 +104,37 @@ public class OiyoCommonJdbcUtil {
                 conn = DriverManager.getConnection(settingsDatabase.getJdbcUrl(), settingsDatabase.getJdbcUser(),
                         settingsDatabase.getJdbcPassPlain());
             }
-            // TRANSACTION_READ_COMMITTED を設定.
-            conn.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+
+            if (settingsDatabase.getTransactionIsolation() != null
+                    && settingsDatabase.getTransactionIsolation().length() > 0) {
+                // [IY7175] DEBUG: DB set connection transaction isolation.
+                log.debug(OiyokanMessages.IY7175 + ": " + settingsDatabase.getTransactionIsolation());
+
+                final int transactionIsolation = OiyoJdbcUtil
+                        .string2TransactionIsolation(settingsDatabase.getTransactionIsolation());
+                conn.setTransactionIsolation(transactionIsolation);
+            }
+
+            if (settingsDatabase.getInitSqlExec() != null && settingsDatabase.getInitSqlExec().trim().length() > 0) {
+                // [IY7176] DEBUG: DB init sql exec.
+                log.debug(OiyokanMessages.IY7176 + ": " + settingsDatabase.getInitSqlExec());
+
+                try (PreparedStatement stmt = conn.prepareStatement(settingsDatabase.getInitSqlExec())) {
+                    final boolean hasResultSet = stmt.execute();
+                    if (hasResultSet) {
+                        try (ResultSet rs = stmt.getResultSet()) {
+                            ResultSetMetaData rsmeta = rs.getMetaData();
+                            int columnCount = rsmeta.getColumnCount();
+                            for (; rs.next();) {
+                                log.trace("  row:");
+                                for (int column = 1; column <= columnCount; column++) {
+                                    log.trace("    " + rsmeta.getColumnName(column) + ": " + rs.getString(column));
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         } catch (SQLException ex) {
             // [M005] UNEXPECTED: データベースの接続に失敗:
             // しばらく待って再度トライしてください。しばらく経っても改善しない場合はIT部門に連絡してください

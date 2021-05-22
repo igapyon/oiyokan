@@ -17,6 +17,7 @@ package jp.oiyokan.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.sql.Connection;
 import java.sql.Types;
 
 import org.junit.jupiter.api.Test;
@@ -68,8 +69,15 @@ class OiyoJdbcUtilTest {
             , Types.TIMESTAMP_WITH_TIMEZONE // 2014
     };
 
+    private static final int[] TRANSACTIONS = { //
+            Connection.TRANSACTION_NONE //
+            , Connection.TRANSACTION_READ_UNCOMMITTED //
+            , Connection.TRANSACTION_READ_COMMITTED //
+            , Connection.TRANSACTION_REPEATABLE_READ //
+            , Connection.TRANSACTION_SERIALIZABLE };
+
     @Test
-    void test() {
+    void testTypes() {
         for (int origin : TYPES) {
             String val = OiyoJdbcUtil.types2String(origin);
             int result = OiyoJdbcUtil.string2Types(val);
@@ -77,4 +85,12 @@ class OiyoJdbcUtilTest {
         }
     }
 
+    @Test
+    void testTransactionIsolation() {
+        for (int origin : TRANSACTIONS) {
+            String val = OiyoJdbcUtil.transactionIsolation2String(origin);
+            int result = OiyoJdbcUtil.string2TransactionIsolation(val);
+            assertEquals(origin, result);
+        }
+    }
 }

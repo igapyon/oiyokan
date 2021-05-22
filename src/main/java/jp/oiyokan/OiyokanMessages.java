@@ -256,6 +256,8 @@ public class OiyokanMessages {
     public static final String IY7152 = "[IY7152] NOT SUPPORTED: Edm Type";
     public static final String IY7153 = "[IY7153] NOT SUPPORTED: JDBC Type String.";
     public static final String IY7154 = "[IY7154] NOT SUPPORTED: JDBC Type";
+    public static final String IY7155 = "[IY7155] NOT SUPPORTED: JDBC Connection transaction isolation";
+    public static final String IY7156 = "[IY7156] NOT SUPPORTED: JDBC Connection transaction isolation string";
 
     public static final String IY7160 = "[IY7160] Error: Fail to parse Time string.";
     public static final String IY7161 = "[IY7161] Error: Fail to parse DateTime string.";
@@ -267,6 +269,8 @@ public class OiyokanMessages {
     public static final String IY7172 = "[IY7172] INFO: setup oiyokanKan database";
     public static final String IY7173 = "[IY7173] INFO: start to load oiyokan settings";
     public static final String IY7174 = "[IY7174] INFO: load oiyokan settings";
+    public static final String IY7175 = "[IY7175] DEBUG: DB set connection transaction isolation.";
+    public static final String IY7176 = "[IY7176] DEBUG: DB init sql exec.";
 
     ////////////////////////////////////////////////////////////////////////////////
     // Authz (Server Side)

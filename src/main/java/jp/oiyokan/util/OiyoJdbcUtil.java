@@ -15,6 +15,7 @@
  */
 package jp.oiyokan.util;
 
+import java.sql.Connection;
 import java.sql.Types;
 
 import org.apache.commons.logging.Log;
@@ -252,6 +253,47 @@ public class OiyoJdbcUtil {
         // [IY7153] NOT SUPPORTED: JDBC Type String.
         log.error(OiyokanMessages.IY7153 + ": " + typesString);
         throw new IllegalArgumentException(OiyokanMessages.IY7153 + ": " + typesString);
+    }
+
+    public static String transactionIsolation2String(int transactionIsolation) {
+        switch (transactionIsolation) {
+        case Connection.TRANSACTION_NONE:
+            return "Connection.TRANSACTION_NONE";
+        case Connection.TRANSACTION_READ_UNCOMMITTED:
+            return "Connection.TRANSACTION_READ_UNCOMMITTED";
+        case Connection.TRANSACTION_READ_COMMITTED:
+            return "Connection.TRANSACTION_READ_COMMITTED";
+        case Connection.TRANSACTION_REPEATABLE_READ:
+            return "Connection.TRANSACTION_REPEATABLE_READ";
+        case Connection.TRANSACTION_SERIALIZABLE:
+            return "Connection.TRANSACTION_SERIALIZABLE";
+        }
+
+        // [IY7155] NOT SUPPORTED: JDBC Connection transaction isolation
+        log.error(OiyokanMessages.IY7155 + ": " + transactionIsolation);
+        throw new IllegalArgumentException(OiyokanMessages.IY7155 + ": " + transactionIsolation);
+    }
+
+    public static int string2TransactionIsolation(String transactionIsolation) {
+        if ("Connection.TRANSACTION_NONE".equals(transactionIsolation)) {
+            return Connection.TRANSACTION_NONE;
+        }
+        if ("Connection.TRANSACTION_READ_UNCOMMITTED".equals(transactionIsolation)) {
+            return Connection.TRANSACTION_READ_UNCOMMITTED;
+        }
+        if ("Connection.TRANSACTION_READ_COMMITTED".equals(transactionIsolation)) {
+            return Connection.TRANSACTION_READ_COMMITTED;
+        }
+        if ("Connection.TRANSACTION_REPEATABLE_READ".equals(transactionIsolation)) {
+            return Connection.TRANSACTION_REPEATABLE_READ;
+        }
+        if ("Connection.TRANSACTION_SERIALIZABLE".equals(transactionIsolation)) {
+            return Connection.TRANSACTION_SERIALIZABLE;
+        }
+
+        // [IY7156] NOT SUPPORTED: JDBC Connection transaction isolation string
+        log.error(OiyokanMessages.IY7156 + ": " + transactionIsolation);
+        throw new IllegalArgumentException(OiyokanMessages.IY7156 + ": " + transactionIsolation);
     }
 
     /**
