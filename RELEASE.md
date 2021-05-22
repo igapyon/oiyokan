@@ -2,11 +2,13 @@
 
 ## EN
 
-- TBD
+- Added field named transactionIsolation to JSON to configure isolation level like Connection.setTransactionIsolation.
+- Added field named initSqlExec to JSON to specify the initialization SQL statement at the time of DB connection (experimental).
 
 ## JA
 
-- Connection.setTransactionIsolation を JSON で指定できるように変更。
+- transactionIsolation という名前の項目を JSON に追加して Connection.setTransactionIsolation などを指定できるように変更。
+- initSqlExec という名前の項目を JSON に追加して DB接続時の初期化SQL文を指定できるようにする (experimental)。
 
 # Release 1.15 (2021-05-19)
 
