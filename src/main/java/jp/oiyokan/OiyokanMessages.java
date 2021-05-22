@@ -270,6 +270,7 @@ public class OiyokanMessages {
     public static final String IY7173 = "[IY7173] INFO: start to load oiyokan settings";
     public static final String IY7174 = "[IY7174] INFO: load oiyokan settings";
     public static final String IY7175 = "[IY7175] DEBUG: DB set connection transaction isolation.";
+    public static final String IY7176 = "[IY7176] DEBUG: DB init sql exec.";
 
     ////////////////////////////////////////////////////////////////////////////////
     // Authz (Server Side)

@@ -11,7 +11,8 @@
       "jdbcUser": "sa",
       "jdbcPassEnc": "Ckg+Af2U4q9FgV+TnUTPoA==",
       "jdbcPassPlain": "",
-      "transactionIsolation": "Connection.TRANSACTION_READ_COMMITTED"
+      "transactionIsolation": "Connection.TRANSACTION_READ_COMMITTED",
+      "initSqlExec": ""
     }
   ],
   "entitySet": [
