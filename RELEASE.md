@@ -1,3 +1,14 @@
+# Release 1.17 (2021-05-??)
+
+## EN
+
+- Use java.sql.Statement for parameterless queries.
+
+## JA
+
+- パラメータなしクエリは java.sql.Statement を利用する 
+- 上記: 各DBで確認済み
+
 # Release 1.16 (2021-05-22)
 
 ## EN
