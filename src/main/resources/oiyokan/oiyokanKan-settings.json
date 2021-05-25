@@ -11,6 +11,7 @@
       "jdbcUser": "sa",
       "jdbcPassEnc": "Ckg+Af2U4q9FgV+TnUTPoA==",
       "jdbcPassPlain": "",
+      "autoCommit": false,
       "transactionIsolation": "Connection.TRANSACTION_READ_COMMITTED",
       "initSqlExec": ""
     }
@@ -26,6 +27,8 @@
       "canDelete": false,
       "omitCountAll": false,
       "jdbcStmtTimeout": 30,
+      "jdbcFetchSize": 100,
+      "filterEqAutoSelect": false,
       "entityType": {
         "name": "Oiyokan",
         "dbName": "Oiyokan",

@@ -1,13 +1,17 @@
-# Release 1.17 (2021-05-??)
+# Release 1.17 (2021-05-25)
 
 ## EN
 
+- Some JSON params are added to `oiyokan-settings.json`: autoCommit, jdbcFetchSize, filterEqAutoSelect。
+- Added ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY to collection Statement.
 - Use java.sql.Statement for parameterless queries.
 
 ## JA
 
-- パラメータなしクエリは java.sql.Statement を利用する 
-- 上記: 各DBで確認済み
+- `oiyokan-settings.json` にいくつかの JSON パラメータを追加: autoCommit, jdbcFetchSize, filterEqAutoSelect。
+- 一覧取得Statementに ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY 指定を追加。
+- パラメータなしクエリは java.sql.Statement を利用。
+- 上記: 各DBで確認済み。
 
 # Release 1.16 (2021-05-22)
 

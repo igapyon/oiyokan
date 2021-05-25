@@ -16,6 +16,7 @@
 package jp.oiyokan.basic;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLTimeoutException;
 import java.time.Instant;
@@ -211,7 +212,10 @@ public class OiyoBasicJdbcEntityOneBuilder {
         // データベースに接続.
         try (Connection connTargetDb = OiyoCommonJdbcUtil.getConnection(database)) {
             log.trace("[database transaction] BEGIN database transaction.");
-            connTargetDb.setAutoCommit(false);
+            if (database.getAutoCommit() == null || database.getAutoCommit()) {
+                // autoCommit 指定なし、または、true の場合、autoCommitをfalseに設定.
+                connTargetDb.setAutoCommit(false);
+            }
             boolean isTranSuccessed = false;
 
             try {
@@ -289,7 +293,10 @@ public class OiyoBasicJdbcEntityOneBuilder {
                 }
 
                 log.trace("[database transaction] END database transaction.");
-                connTargetDb.setAutoCommit(true);
+                if (database.getAutoCommit() == null || database.getAutoCommit()) {
+                    // autoCommit 指定なし、または、true の場合、autoCommitをtrueに戻す。
+                    connTargetDb.setAutoCommit(true);
+                }
             }
         } catch (SQLException ex) {
             // [IY3154] Fail to update entity with SQL error.
@@ -323,7 +330,7 @@ public class OiyoBasicJdbcEntityOneBuilder {
         log.info(OiyokanMessages.IY1081 + ": " + sql);
 
         final long startMillisec = System.currentTimeMillis();
-        try (var stmt = connTargetDb.prepareStatement(sql)) {
+        try (var stmt = connTargetDb.prepareStatement(sql, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY)) {
             final int jdbcStmtTimeout = (entitySet.getJdbcStmtTimeout() == null ? 30 : entitySet.getJdbcStmtTimeout());
             stmt.setQueryTimeout(jdbcStmtTimeout);
 

@@ -45,8 +45,7 @@ class UnitTestQuery09Test {
 
         switch (databaseType) {
         default:
-            assertEquals("{\"@odata.context\":\"$metadata#ODataTest1\",\"value\":[{\"ID\":1,\"Single1\":123.45}]}",
-                    result, "Single型の確認");
+            assertEquals("{\"@odata.context\":\"$metadata#ODataTest1\",\"value\":[{\"ID\":1}]}", result, "Single型の確認");
             assertEquals(200, resp.getStatusCode());
             break;
         case PostgreSQL:

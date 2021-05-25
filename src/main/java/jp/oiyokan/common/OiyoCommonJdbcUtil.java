@@ -105,6 +105,11 @@ public class OiyoCommonJdbcUtil {
                         settingsDatabase.getJdbcPassPlain());
             }
 
+            if (settingsDatabase.getAutoCommit() != null) {
+                // TODO message
+                conn.setAutoCommit(settingsDatabase.getAutoCommit());
+            }
+
             if (settingsDatabase.getTransactionIsolation() != null
                     && settingsDatabase.getTransactionIsolation().length() > 0) {
                 // [IY7175] DEBUG: DB set connection transaction isolation.

@@ -35,7 +35,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({ "name", "type", "description", "jdbcDriver", "jdbcUrl", "jdbcUser", "jdbcPassEnc", "jdbcPassPlain",
-        "transactionIsolation", "initSqlExec" })
+        "autoCommit", "transactionIsolation", "initSqlExec" })
 @Generated("jsonschema2pojo")
 public class OiyoSettingsDatabase implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -56,6 +56,8 @@ public class OiyoSettingsDatabase implements Serializable {
     private String jdbcPassEnc;
     @JsonProperty("jdbcPassPlain")
     private String jdbcPassPlain;
+    @JsonProperty("autoCommit")
+    private Boolean autoCommit;
     @JsonProperty("transactionIsolation")
     private String transactionIsolation;
     @JsonProperty("initSqlExec")
@@ -141,6 +143,16 @@ public class OiyoSettingsDatabase implements Serializable {
     @JsonProperty("jdbcPassPlain")
     public void setJdbcPassPlain(String jdbcPassPlain) {
         this.jdbcPassPlain = jdbcPassPlain;
+    }
+
+    @JsonProperty("autoCommit")
+    public Boolean getAutoCommit() {
+        return autoCommit;
+    }
+
+    @JsonProperty("autoCommit")
+    public void setAutoCommit(Boolean autoCommit) {
+        this.autoCommit = autoCommit;
     }
 
     @JsonProperty("transactionIsolation")

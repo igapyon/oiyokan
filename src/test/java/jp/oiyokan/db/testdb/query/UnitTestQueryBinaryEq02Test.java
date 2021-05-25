@@ -40,8 +40,7 @@ class UnitTestQueryBinaryEq02Test {
                 OiyoUrlUtil.encodeUrlQuery("&$filter=32767 eq Int16a &$top=3 &$select=ID &$orderby=ID asc"));
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
-        assertEquals(
-                "{\"@odata.context\":\"$metadata#ODataTest1\",\"value\":[{\"ID\":1,\"Int16a\":32767},{\"ID\":2,\"Int16a\":32767},{\"ID\":3,\"Int16a\":32767}]}",
+        assertEquals("{\"@odata.context\":\"$metadata#ODataTest1\",\"value\":[{\"ID\":1},{\"ID\":2},{\"ID\":3}]}",
                 result);
         assertEquals(200, resp.getStatusCode());
     }
