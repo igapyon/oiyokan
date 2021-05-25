@@ -6,6 +6,11 @@
 
 ## JA
 
+
+- JSON params are added. autoCommit, jdbcFetchSize, filterEqAutoSelect
+- 一覧取得ent(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY)
+                : connTargetDb.prepareStatement(sql, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY))) {
+                
 - パラメータなしクエリは java.sql.Statement を利用する 
 - 上記: 各DBで確認済み
 
