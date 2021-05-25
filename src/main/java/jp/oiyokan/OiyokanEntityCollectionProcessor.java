@@ -104,6 +104,9 @@ public class OiyokanEntityCollectionProcessor implements EntityCollectionProcess
         try {
             // シングルトンな OiyoInfo を利用。
             final OiyoInfo oiyoInfo = OiyokanEdmProvider.getOiyoInfoInstance();
+            if (oiyoInfo.getRawBaseUri() == null) {
+                oiyoInfo.setRawBaseUri(request.getRawBaseUri());
+            }
 
             // URI情報からURIリソースの指定を取得.
             List<UriResource> resourcePaths = uriInfo.getUriResourceParts();
