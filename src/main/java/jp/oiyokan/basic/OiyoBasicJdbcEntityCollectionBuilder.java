@@ -182,8 +182,8 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
         int countWithWhere = 0;
         final long startMillisec = System.currentTimeMillis();
         try (var stmt = (basicSqlBuilder.getSqlInfo().getSqlParamList().size() == 0 //
-                ? connTargetDb.createStatement()
-                : connTargetDb.prepareStatement(sql))) {
+                ? connTargetDb.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY)
+                : connTargetDb.prepareStatement(sql, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY))) {
             final int jdbcStmtTimeout = (entitySet.getJdbcStmtTimeout() == null ? 30 : entitySet.getJdbcStmtTimeout());
             stmt.setQueryTimeout(jdbcStmtTimeout);
 
@@ -290,8 +290,12 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
 
         final long startMillisec = System.currentTimeMillis();
         try (var stmt = (basicSqlBuilder.getSqlInfo().getSqlParamList().size() == 0 //
-                ? connTargetDb.createStatement()
-                : connTargetDb.prepareStatement(sql))) {
+                ? connTargetDb.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY)
+                : connTargetDb.prepareStatement(sql, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY))) {
+            if (entitySet.getJdbcFetchSize() != null) {
+                stmt.setFetchSize(entitySet.getJdbcFetchSize());
+            }
+
             final int jdbcStmtTimeout = (entitySet.getJdbcStmtTimeout() == null ? 30 : entitySet.getJdbcStmtTimeout());
             stmt.setQueryTimeout(jdbcStmtTimeout);
 
