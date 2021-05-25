@@ -1,3 +1,30 @@
+# Release 1.17 (2021-05-25)
+
+## EN
+
+- Some JSON params are added to `oiyokan-settings.json`: autoCommit, jdbcFetchSize, filterEqAutoSelect。
+- Added ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY to collection Statement.
+- Use java.sql.Statement for parameterless queries.
+
+## JA
+
+- `oiyokan-settings.json` にいくつかの JSON パラメータを追加: autoCommit, jdbcFetchSize, filterEqAutoSelect。
+- 一覧取得Statementに ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY 指定を追加。
+- パラメータなしクエリは java.sql.Statement を利用。
+- 上記: 各DBで確認済み。
+
+# Release 1.16 (2021-05-22)
+
+## EN
+
+- Added field named transactionIsolation to JSON to configure isolation level like Connection.setTransactionIsolation.
+- Added field named initSqlExec to JSON to specify the initialization SQL statement at the time of DB connection (experimental).
+
+## JA
+
+- transactionIsolation という名前の項目を JSON に追加して Connection.setTransactionIsolation などを指定できるように変更。
+- initSqlExec という名前の項目を JSON に追加して DB接続時の初期化SQL文を指定できるようにする (experimental)。
+
 # Release 1.15 (2021-05-19)
 
 ## EN

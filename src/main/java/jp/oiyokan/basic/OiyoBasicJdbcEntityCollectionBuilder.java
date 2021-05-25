@@ -18,6 +18,8 @@ package jp.oiyokan.basic;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLTimeoutException;
 import java.util.Locale;
@@ -179,17 +181,25 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
 
         int countWithWhere = 0;
         final long startMillisec = System.currentTimeMillis();
-        try (var stmt = connTargetDb.prepareStatement(sql)) {
+        try (var stmt = (basicSqlBuilder.getSqlInfo().getSqlParamList().size() == 0 //
+                ? connTargetDb.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY)
+                : connTargetDb.prepareStatement(sql, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY))) {
             final int jdbcStmtTimeout = (entitySet.getJdbcStmtTimeout() == null ? 30 : entitySet.getJdbcStmtTimeout());
             stmt.setQueryTimeout(jdbcStmtTimeout);
 
-            int column = 1;
-            for (OiyoSqlInfo.SqlParam look : basicSqlBuilder.getSqlInfo().getSqlParamList()) {
-                OiyoCommonJdbcBindParamUtil.bindPreparedParameter(stmt, column++, look);
+            ResultSet prepRset = null;
+            if (basicSqlBuilder.getSqlInfo().getSqlParamList().size() == 0) {
+                prepRset = stmt.executeQuery(sql);
+            } else {
+                final PreparedStatement pstmt = (PreparedStatement) stmt;
+                int column = 1;
+                for (OiyoSqlInfo.SqlParam look : basicSqlBuilder.getSqlInfo().getSqlParamList()) {
+                    OiyoCommonJdbcBindParamUtil.bindPreparedParameter(pstmt, column++, look);
+                }
+                pstmt.executeQuery();
+                prepRset = pstmt.getResultSet();
             }
-
-            stmt.executeQuery();
-            try (var rset = stmt.getResultSet()) {
+            try (var rset = prepRset) {
                 rset.next();
                 countWithWhere = rset.getInt(1);
             }
@@ -279,21 +289,32 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
         log.info(OiyokanMessages.IY1064 + ": " + sql);
 
         final long startMillisec = System.currentTimeMillis();
-        try (var stmt = connTargetDb.prepareStatement(sql)) {
+        try (var stmt = (basicSqlBuilder.getSqlInfo().getSqlParamList().size() == 0 //
+                ? connTargetDb.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY)
+                : connTargetDb.prepareStatement(sql, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY))) {
+            if (entitySet.getJdbcFetchSize() != null) {
+                stmt.setFetchSize(entitySet.getJdbcFetchSize());
+            }
+
             final int jdbcStmtTimeout = (entitySet.getJdbcStmtTimeout() == null ? 30 : entitySet.getJdbcStmtTimeout());
             stmt.setQueryTimeout(jdbcStmtTimeout);
 
-            // 組み立て後のバインド変数を PreparedStatement にセット.
-            int idxColumn = 1;
-            for (OiyoSqlInfo.SqlParam look : sqlInfo.getSqlParamList()) {
-                OiyoCommonJdbcBindParamUtil.bindPreparedParameter(stmt, idxColumn++, look);
+            ResultSet prepRset = null;
+            if (basicSqlBuilder.getSqlInfo().getSqlParamList().size() == 0) {
+                prepRset = stmt.executeQuery(sql);
+            } else {
+                final PreparedStatement pstmt = (PreparedStatement) stmt;
+                // 組み立て後のバインド変数を PreparedStatement にセット.
+                int column = 1;
+                for (OiyoSqlInfo.SqlParam look : sqlInfo.getSqlParamList()) {
+                    OiyoCommonJdbcBindParamUtil.bindPreparedParameter(pstmt, column++, look);
+                }
+                // 検索を実行.
+                pstmt.executeQuery();
+                prepRset = pstmt.getResultSet();
             }
-
-            // 検索を実行.
-            stmt.executeQuery();
-
             // 検索結果を取得.
-            try (var rset = stmt.getResultSet()) {
+            try (var rset = prepRset) {
                 for (; rset.next();) {
                     final Entity ent = new Entity();
                     for (int index = 0; index < sqlInfo.getSelectColumnNameList().size(); index++) {

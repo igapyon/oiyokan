@@ -39,6 +39,9 @@ src/main/resources/iyokan/oiyokan-settings.json
 | jdbcUser       | JDBC user name. ex: `user1`                                       |
 | jdbcPassEnc    | JDBC password with Encryption. (Recommended)                      |
 | jdbcPassPlain  | JDBC password without Encryption. (jdbcPassEnc is recommended)    |
+| autoCommit     | call setAutoCommit if value is set: Default: `null`           |
+| transactionIsolation | Transaction Isolation. Default: `Connection.TRANSACTION_READ_COMMITTED` |
+| initSqlExec    | (experimental) Initialize sql when connect.                       |
 
 #### entitySet section
 
@@ -47,12 +50,14 @@ src/main/resources/iyokan/oiyokan-settings.json
 | name           | Name of EntitySet.                                                |
 | description    | Description of this EntitySet.                                    |
 | dbSettingName  | Name of database setting.                                         |
-| canCreate      | CRUD authz of Create. Default:`true`.                             |
-| canRead        | CRUD authz of Read. true supported only. Default:`true`.          |
-| canUpdate      | CRUD authz of Update. Default:`true`.                             |
-| canDelete      | CRUD authz of Delete. Default:`true`.                             |
-| omitCountAll   | Ignore `$count` in the case of NO conditional query. Default:`false`. |
+| canCreate      | CRUD authz of Create. Default: `true`.                             |
+| canRead        | CRUD authz of Read. true supported only. Default: `true`.          |
+| canUpdate      | CRUD authz of Update. Default: `true`.                             |
+| canDelete      | CRUD authz of Delete. Default: `true`.                             |
+| omitCountAll   | Ignore `$count` in the case of NO conditional query. Default: `false`. |
 | jdbcStmtTimeout | Timeout seconds. Default:'30'                                    |
+| jdbcFetchSize  | Call setFetchSize if value is set. Default: `null`         |
+| filterEqAutoSelect | (experimental) Auto select property if `$filter` specify property with eq. Defalut: `null`   |
 | entityType     | List of entityType.                                               |
 
 #### entityType - sub section
@@ -73,13 +78,13 @@ src/main/resources/iyokan/oiyokan-settings.json
 | edmType        | Column name on Database. ex: `Edm.String`                         |
 | dbType         | Type name on Database. ex: `VARCHAR`                              |
 | jdbcSetMethod  | (reserved) Hint method name of JDBC API. ex: `setString`          |
-| autoGenKey     | Set true if this property is auto generated key. Default:`false`  |
-| nullable       | true:Nullable, false:NOT NULL, null:Unknown. Default:`true`.      |
+| autoGenKey     | Set true if this property is auto generated key. Default: `false`  |
+| nullable       | true:Nullable, false:NOT NULL, null:Unknown. Default: `true`.      |
 | maxLength      | Length of string field.                                           |
-| lengthFixed    | Set field fixed. For CHAR type. Default:`false`.                  |
-| precision      | precision of decimal. Default:`null`.                             |
-| scale          | scale of decimal. Default:`null`.                                 |
-| dbDefault      | Default value of database. Default:`null`.                        |
-| filterTreatNullAsBlank | Treat property (String) value null as blank. Default:`false`. |
+| lengthFixed    | Set field fixed. For CHAR type. Default: `false`.                  |
+| precision      | precision of decimal. Default: `null`.                             |
+| scale          | scale of decimal. Default: `null`.                                 |
+| dbDefault      | Default value of database. Default: `null`.                        |
+| filterTreatNullAsBlank | Treat property (String) value null as blank. Default: `false`. |
 
 via: [diary](https://raw.githubusercontent.com/igapyon/diary/devel/2021/ig210426.src.md)

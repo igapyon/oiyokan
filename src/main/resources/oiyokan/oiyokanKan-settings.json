@@ -10,7 +10,10 @@
       "jdbcUrl": "jdbc:h2:mem:oiyokan;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=FALSE;MODE=MSSQLServer",
       "jdbcUser": "sa",
       "jdbcPassEnc": "Ckg+Af2U4q9FgV+TnUTPoA==",
-      "jdbcPassPlain": ""
+      "jdbcPassPlain": "",
+      "autoCommit": false,
+      "transactionIsolation": "Connection.TRANSACTION_READ_COMMITTED",
+      "initSqlExec": ""
     }
   ],
   "entitySet": [
@@ -24,6 +27,8 @@
       "canDelete": false,
       "omitCountAll": false,
       "jdbcStmtTimeout": 30,
+      "jdbcFetchSize": 100,
+      "filterEqAutoSelect": false,
       "entityType": {
         "name": "Oiyokan",
         "dbName": "Oiyokan",

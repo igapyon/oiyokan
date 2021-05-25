@@ -53,8 +53,10 @@ class UnitTestTypeChar01Test {
         /// 通常のfilter
         resp = OiyokanTestUtil.callGet("/ODataTest3", "$filter=ID eq " + idString + "&$select=StringChar8");
         result = OiyokanTestUtil.stream2String(resp.getContent());
-        assertEquals("{\"@odata.context\":\"$metadata#ODataTest3\",\"value\":[{\"ID\":" + idString
-                + ",\"StringChar8\":\"  C456  \"}]}", result, "前後空白付きでFILTER検索できることを確認.");
+        assertEquals(
+                "{\"@odata.context\":\"$metadata#ODataTest3\",\"value\":[{\"@odata.id\":\"ODataTest3(" + idString
+                        + ")\",\"ID\":" + idString + ",\"StringChar8\":\"  C456  \"}]}",
+                result, "前後空白付きでFILTER検索できることを確認.");
         assertEquals(200, resp.getStatusCode());
 
         // DELETE

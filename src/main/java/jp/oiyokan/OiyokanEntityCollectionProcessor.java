@@ -50,6 +50,7 @@ import org.apache.olingo.server.core.uri.validator.UriValidationException;
 import jp.oiyokan.basic.OiyoBasicJdbcEntityCollectionBuilder;
 import jp.oiyokan.common.OiyoInfo;
 import jp.oiyokan.common.OiyoInfoUtil;
+import jp.oiyokan.dto.OiyoSettingsEntitySet;
 
 /**
  * Oiyokan による EntityCollectionProcessor 実装.
@@ -140,11 +141,13 @@ public class OiyokanEntityCollectionProcessor implements EntityCollectionProcess
             }
             if (uriInfo.getSelectOption() != null) {
                 // $select あり.
-                if (eCollection.getEntities().size() == 0) {
+                final OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, edmEntitySet.getName());
+
+                if (eCollection.getEntities().size() == 0 //
+                        || (entitySet.getFilterEqAutoSelect() == null || !entitySet.getFilterEqAutoSelect())) {
                     builder.select(uriInfo.getSelectOption());
                 } else {
                     // ここにはEQ対象項目を$selectに自動で加える特殊モードが実装されている。
-                    // TODO v2.x EQで自動$selectはフラグでON/OFFできるようすること。
                     String propNames = "";
                     for (int index = 0; index < eCollection.getEntities().size(); index++) {
                         for (Property prop : eCollection.getEntities().get(index).getProperties()) {

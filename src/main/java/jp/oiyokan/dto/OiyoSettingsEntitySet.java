@@ -35,7 +35,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({ "name", "description", "dbSettingName", "canCreate", "canRead", "canUpdate", "canDelete",
-        "omitCountAll", "jdbcStmtTimeout", "entityType" })
+        "omitCountAll", "jdbcStmtTimeout", "jdbcFetchSize", "filterEqAutoSelect", "entityType" })
 @Generated("jsonschema2pojo")
 public class OiyoSettingsEntitySet implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -58,6 +58,10 @@ public class OiyoSettingsEntitySet implements Serializable {
     private Boolean omitCountAll;
     @JsonProperty("jdbcStmtTimeout")
     private Integer jdbcStmtTimeout;
+    @JsonProperty("jdbcFetchSize")
+    private Integer jdbcFetchSize;
+    @JsonProperty("filterEqAutoSelect")
+    private Boolean filterEqAutoSelect;
     @JsonProperty("entityType")
     private OiyoSettingsEntityType entityType;
     @JsonIgnore
@@ -151,6 +155,26 @@ public class OiyoSettingsEntitySet implements Serializable {
     @JsonProperty("jdbcStmtTimeout")
     public void setJdbcStmtTimeout(Integer jdbcStmtTimeout) {
         this.jdbcStmtTimeout = jdbcStmtTimeout;
+    }
+
+    @JsonProperty("jdbcFetchSize")
+    public Integer getJdbcFetchSize() {
+        return jdbcFetchSize;
+    }
+
+    @JsonProperty("jdbcFetchSize")
+    public void setJdbcFetchSize(Integer jdbcFetchSize) {
+        this.jdbcFetchSize = jdbcFetchSize;
+    }
+
+    @JsonProperty("filterEqAutoSelect")
+    public Boolean getFilterEqAutoSelect() {
+        return filterEqAutoSelect;
+    }
+
+    @JsonProperty("filterEqAutoSelect")
+    public void setFilterEqAutoSelect(Boolean filterEqAutoSelect) {
+        this.filterEqAutoSelect = filterEqAutoSelect;
     }
 
     @JsonProperty("entityType")

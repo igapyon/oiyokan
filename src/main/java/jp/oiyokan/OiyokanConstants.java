@@ -27,7 +27,7 @@ public class OiyokanConstants {
     /**
      * Oiyokan のバージョン番号
      */
-    public static final String VERSION = "1.15.20210519b";
+    public static final String VERSION = "1.17.20210525e";
 
     /**
      * 暗号化で利用するパスフレーズ。環境変数 OIYOKAN_PASSPHRASE で上書き動作。

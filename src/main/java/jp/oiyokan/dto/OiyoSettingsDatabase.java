@@ -34,8 +34,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
  * http://www.jsonschema2pojo.org/ を利用して自動生成.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({ "name", "type", "description", "jdbcDriver", "jdbcUrl", "jdbcUser", "jdbcPassEnc",
-        "jdbcPassPlain" })
+@JsonPropertyOrder({ "name", "type", "description", "jdbcDriver", "jdbcUrl", "jdbcUser", "jdbcPassEnc", "jdbcPassPlain",
+        "autoCommit", "transactionIsolation", "initSqlExec" })
 @Generated("jsonschema2pojo")
 public class OiyoSettingsDatabase implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -56,6 +56,12 @@ public class OiyoSettingsDatabase implements Serializable {
     private String jdbcPassEnc;
     @JsonProperty("jdbcPassPlain")
     private String jdbcPassPlain;
+    @JsonProperty("autoCommit")
+    private Boolean autoCommit;
+    @JsonProperty("transactionIsolation")
+    private String transactionIsolation;
+    @JsonProperty("initSqlExec")
+    private String initSqlExec;
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -137,6 +143,36 @@ public class OiyoSettingsDatabase implements Serializable {
     @JsonProperty("jdbcPassPlain")
     public void setJdbcPassPlain(String jdbcPassPlain) {
         this.jdbcPassPlain = jdbcPassPlain;
+    }
+
+    @JsonProperty("autoCommit")
+    public Boolean getAutoCommit() {
+        return autoCommit;
+    }
+
+    @JsonProperty("autoCommit")
+    public void setAutoCommit(Boolean autoCommit) {
+        this.autoCommit = autoCommit;
+    }
+
+    @JsonProperty("transactionIsolation")
+    public String getTransactionIsolation() {
+        return transactionIsolation;
+    }
+
+    @JsonProperty("transactionIsolation")
+    public void setTransactionIsolation(String transactionIsolation) {
+        this.transactionIsolation = transactionIsolation;
+    }
+
+    @JsonProperty("initSqlExec")
+    public String getInitSqlExec() {
+        return initSqlExec;
+    }
+
+    @JsonProperty("initSqlExec")
+    public void setInitSqlExec(String initSqlExec) {
+        this.initSqlExec = initSqlExec;
     }
 
     @JsonAnyGetter

@@ -39,9 +39,7 @@ class UnitTestQuery06Test {
         final String result = OiyokanTestUtil.stream2String(resp.getContent());
 
         // System.err.println("result: " + result);
-        assertEquals(
-                "{\"@odata.context\":\"$metadata#ODataTest1\",\"value\":[{\"ID\":3,\"Int64a\":2147483647},{\"ID\":4,\"Int64a\":2147483647}]}",
-                result);
+        assertEquals("{\"@odata.context\":\"$metadata#ODataTest1\",\"value\":[{\"ID\":3},{\"ID\":4}]}", result);
         assertEquals(200, resp.getStatusCode());
     }
 }
