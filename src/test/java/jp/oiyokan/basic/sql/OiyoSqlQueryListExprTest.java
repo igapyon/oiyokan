@@ -53,7 +53,7 @@ class OiyoSqlQueryListExprTest {
         final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
 
         OData odata = OData.newInstance();
-        ServiceMetadata edm = odata.createServiceMetadata(new OiyokanEdmProvider(), new ArrayList<>());
+        ServiceMetadata edm = odata.createServiceMetadata(new OiyokanEdmProvider(oiyoInfo), new ArrayList<>());
 
         // アプリ情報が入っている内部DBをベースに処理。つまり h2 database 前提としての振る舞いをおこなう。
         OiyoSettingsEntitySet entitySet = OiyoInfoUtil.getOiyoEntitySet(oiyoInfo, "ODataTest1");

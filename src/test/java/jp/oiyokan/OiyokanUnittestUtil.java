@@ -47,7 +47,10 @@ public class OiyokanUnittestUtil {
     };
 
     public static synchronized OiyoInfo setupUnittestDatabase() throws ODataApplicationException {
-        final OiyoInfo oiyoInfo = OiyokanEdmProvider.getOiyoInfoInstance();
+        final OiyoInfo oiyoInfo = new OiyoInfo();
+        // シングルトンな OiyoSettings を利用。
+        OiyokanEdmProvider.setupOiyoSettingsInstance(oiyoInfo);
+
         boolean isUnittestDatabaseExists = false;
         for (OiyoSettingsDatabase database : oiyoInfo.getSettings().getDatabase()) {
             if (database.getName().equals("oiyoUnitTestDb")) {

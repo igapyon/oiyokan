@@ -80,7 +80,7 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
     public EntityCollection build(EdmEntitySet edmEntitySet, UriInfo uriInfo) throws ODataApplicationException {
         final EntityCollection entityCollection = new EntityCollection();
 
-        OiyokanEdmProvider provider = new OiyokanEdmProvider();
+        OiyokanEdmProvider provider = new OiyokanEdmProvider(oiyoInfo);
         if (!edmEntitySet.getEntityContainer().getName().equals(provider.getEntityContainer().getName())) {
             // Container 名が不一致. 処理せずに戻します.
             return entityCollection;

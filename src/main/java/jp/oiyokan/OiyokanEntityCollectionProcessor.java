@@ -70,6 +70,12 @@ public class OiyokanEntityCollectionProcessor implements EntityCollectionProcess
      */
     private ServiceMetadata serviceMetadata;
 
+    private OiyoInfo oiyoInfo = null;
+
+    public OiyokanEntityCollectionProcessor(OiyoInfo oiyoInfo) {
+        this.oiyoInfo = oiyoInfo;
+    }
+
     /**
      * 初期化タイミングにて ODataやサービスメタデータの情報を記憶. {@inheritDoc}
      * 
@@ -102,8 +108,8 @@ public class OiyokanEntityCollectionProcessor implements EntityCollectionProcess
                 + request.getRawQueryPath() + ")");
 
         try {
-            // シングルトンな OiyoInfo を利用。
-            final OiyoInfo oiyoInfo = OiyokanEdmProvider.getOiyoInfoInstance();
+            // シングルトンな OiyoSettings を利用。
+            OiyokanEdmProvider.setupOiyoSettingsInstance(oiyoInfo);
             if (oiyoInfo.getRawBaseUri() == null) {
                 oiyoInfo.setRawBaseUri(request.getRawBaseUri());
             }
