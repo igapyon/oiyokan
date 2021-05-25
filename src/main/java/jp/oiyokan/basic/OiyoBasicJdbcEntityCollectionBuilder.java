@@ -327,7 +327,7 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
                         ent.addProperty(prop);
                     }
 
-                    setEntityId(entitySet, ent);
+                    setEntityId(oiyoInfo, entitySet, ent);
 
                     entityCollection.getEntities().add(ent);
                 }
@@ -366,10 +366,10 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
      * @param id            ユニーク性を実現するId.
      * @return 要素セット名およびユニーク性を実現するIdをもとにつくられた部分的なURI.
      */
-    private static URI createId(String entitySetName, Object id) {
+    private static URI createId(OiyoInfo oiyoInfo, String entitySetName, Object id) {
         try {
             // 事前に BasicUrlUtil.encodeUrl4Key() が実施されていること。
-            return new URI(entitySetName + "(" + id + ")");
+            return new URI(oiyoInfo.getRawBaseUri() + "/" + entitySetName + "(" + id + ")");
         } catch (URISyntaxException ex) {
             // [M018] UNEXPECTED: Fail to create ID EntitySet name
             log.fatal(OiyokanMessages.IY2105 + ": " + entitySetName + ": " + ex.toString(), ex);
@@ -380,10 +380,11 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
     /**
      * 与えられた情報をもとに Entityに IDをセット.
      * 
+     * @param oiyoInfo  OiyoInfo instance.
      * @param entitySet EntitySet info.
      * @param ent       output Entity.
      */
-    public static void setEntityId(OiyoSettingsEntitySet entitySet, Entity ent) {
+    public static void setEntityId(OiyoInfo oiyoInfo, OiyoSettingsEntitySet entitySet, Entity ent) {
         if (entitySet.getEntityType().getKeyName().size() == 0) {
             // キーが存在しないのは OData としてはまずい。
             // 別の箇所にて標準エラー出力にて報告。
@@ -397,7 +398,7 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
                     // TODO v2.x にて Property の値を文字列に変換する共通関数を作成.
                     idVal = "'" + OiyoUrlUtil.encodeUrl4Key(idVal) + "'";
                 }
-                ent.setId(OiyoBasicJdbcEntityCollectionBuilder.createId(entitySet.getName(), idVal));
+                ent.setId(createId(oiyoInfo, entitySet.getName(), idVal));
             } else {
                 // 複数項目によるキー
                 String keyString = "";
@@ -417,7 +418,7 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
                     }
                     keyString += idVal;
                 }
-                ent.setId(OiyoBasicJdbcEntityCollectionBuilder.createId(entitySet.getName(), keyString));
+                ent.setId(OiyoBasicJdbcEntityCollectionBuilder.createId(oiyoInfo, entitySet.getName(), keyString));
             }
         }
     }

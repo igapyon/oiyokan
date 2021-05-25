@@ -28,9 +28,22 @@ public class OiyoInfo {
     private OiyoSettings settings = null;
 
     /**
-     * パスフレーズ。O
+     * パスフレーズ。
      */
     private String passphrase = null;
+
+    /**
+     * RawBaseUri
+     */
+    private volatile String rawBaseUri = null;
+
+    public String getRawBaseUri() {
+        return rawBaseUri;
+    }
+
+    public void setRawBaseUri(String rawBaseUri) {
+        this.rawBaseUri = rawBaseUri;
+    }
 
     /**
      * oiyokan-settings.json 設定情報の取得.
