@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>jp.igapyon.oiyokan</groupId>
 	<artifactId>oiyokan</artifactId>
-	<version>1.16.20210525d-SNAPSHOT</version>
+	<version>1.17.20210525e-SNAPSHOT</version>
 	<name>oiyokan</name>
 	<description>Oiyokan is a simple OData v4 Server. (based on Apache
 		Olingo / h2 database)</description>
