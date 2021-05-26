@@ -106,7 +106,11 @@ public class OiyoCommonJdbcUtil {
             }
 
             if (settingsDatabase.getAutoCommit() != null) {
-                // TODO message
+                if (settingsDatabase.getAutoCommit()) {
+                    log.trace("conn.setAutoCommit(true)");
+                } else {
+                    log.trace("conn.setAutoCommit(false)");
+                }
                 conn.setAutoCommit(settingsDatabase.getAutoCommit());
             }
 
