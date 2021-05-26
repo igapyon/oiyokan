@@ -80,7 +80,7 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
     public EntityCollection build(EdmEntitySet edmEntitySet, UriInfo uriInfo) throws ODataApplicationException {
         final EntityCollection entityCollection = new EntityCollection();
 
-        OiyokanEdmProvider provider = new OiyokanEdmProvider();
+        OiyokanEdmProvider provider = new OiyokanEdmProvider(oiyoInfo);
         if (!edmEntitySet.getEntityContainer().getName().equals(provider.getEntityContainer().getName())) {
             // Container 名が不一致. 処理せずに戻します.
             return entityCollection;
@@ -293,6 +293,8 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
                 ? connTargetDb.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY)
                 : connTargetDb.prepareStatement(sql, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY))) {
             if (entitySet.getJdbcFetchSize() != null) {
+                // [IY1068] DEBUG: JDBC: setFetchSize
+                log.debug(OiyokanMessages.IY1068 + ": " + entitySet.getJdbcFetchSize());
                 stmt.setFetchSize(entitySet.getJdbcFetchSize());
             }
 

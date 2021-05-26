@@ -1,8 +1,24 @@
+# Release 1.18 (2021-05-26)
+
+## EN
+
+- Implementation: Changed to pass OiyoInfo instance from the outside.
+- Changed to return URI with FQN.
+- Added messages regarding autoCommit, jdbcFetchSize, filterEqAutoSelect.
+- Added log.trace where EntityCollection is expected to take a time.
+
+## JA
+
+- 実装: OiyoInfo インスタンスを外側から引き渡すよう変更
+- URIをFQNで戻すよう変更
+- autoCommit, jdbcFetchSize, filterEqAutoSelect のメッセージを追加
+- EntityCollection で時間がかかると予見される箇所に log.trace を追加
+
 # Release 1.17 (2021-05-25)
 
 ## EN
 
-- Some JSON params are added to `oiyokan-settings.json`: autoCommit, jdbcFetchSize, filterEqAutoSelect。
+- Some JSON params are added to `oiyokan-settings.json`: autoCommit, jdbcFetchSize, filterEqAutoSelect.
 - Added ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY to collection Statement.
 - Use java.sql.Statement for parameterless queries.
 

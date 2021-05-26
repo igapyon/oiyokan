@@ -30,6 +30,8 @@ import org.apache.olingo.server.api.OData;
 import org.apache.olingo.server.api.ODataHttpHandler;
 import org.apache.olingo.server.api.ServiceMetadata;
 
+import jp.oiyokan.common.OiyoInfo;
+
 /**
  * Oiyokan (OData v4 server) を Spring Boot の Servlet として登録.
  * 
@@ -43,13 +45,14 @@ public class OiyokanOdata4RegisterImpl {
     /**
      * Oiyokan (OData v4 server) を Spring Boot の Servlet として登録.
      * 
+     * @param oiyoInfo      Oiyokan 情報.
      * @param req           HTTPリクエスト.
      * @param resp          HTTPレスポンス.
      * @param odataRootPath ルートパス名. ex: "/odata4.svc".
      * @throws ServletException サーブレット例外.
      */
-    public static void serv(final HttpServletRequest req, final HttpServletResponse resp, final String odataRootPath)
-            throws ServletException {
+    public static void serv(final OiyoInfo oiyoInfo, final HttpServletRequest req, final HttpServletResponse resp,
+            final String odataRootPath) throws ServletException {
         if (resp != null) {
             // デフォルト挙動として no-cacne, no-store で動作させる.
             resp.setHeader("Cache-Control", "no-cache, no-store");
@@ -74,14 +77,14 @@ public class OiyokanOdata4RegisterImpl {
             OData odata = OData.newInstance();
 
             // EdmProvider を登録.
-            ServiceMetadata edm = odata.createServiceMetadata(new OiyokanEdmProvider(), new ArrayList<>());
+            ServiceMetadata edm = odata.createServiceMetadata(new OiyokanEdmProvider(oiyoInfo), new ArrayList<>());
             ODataHttpHandler handler = odata.createHandler(edm);
 
             // EntityCollectionProcessor を登録.
-            handler.register(new OiyokanEntityCollectionProcessor());
+            handler.register(new OiyokanEntityCollectionProcessor(oiyoInfo));
 
             // EntityProcessor を登録.
-            handler.register(new OiyokanEntityProcessor());
+            handler.register(new OiyokanEntityProcessor(oiyoInfo));
 
             // Spring と Servlet の挙動を調整.
             handler.process(new HttpServletRequestWrapper(req) {

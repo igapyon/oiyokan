@@ -62,6 +62,11 @@ public class OiyokanEntityProcessor implements EntityProcessor {
 
     private OData odata;
     private ServiceMetadata serviceMetadata;
+    private OiyoInfo oiyoInfo = null;
+
+    public OiyokanEntityProcessor(OiyoInfo oiyoInfo) {
+        this.oiyoInfo = oiyoInfo;
+    }
 
     /**
      * {@inheritDoc}
@@ -84,8 +89,8 @@ public class OiyokanEntityProcessor implements EntityProcessor {
                 + ")");
 
         try {
-            // シングルトンな OiyoInfo を利用。
-            final OiyoInfo oiyoInfo = OiyokanEdmProvider.getOiyoInfoInstance();
+            // シングルトンな OiyoSettings を利用。
+            OiyokanEdmProvider.setupOiyoSettingsInstance(oiyoInfo);
             if (oiyoInfo.getRawBaseUri() == null) {
                 oiyoInfo.setRawBaseUri(request.getRawBaseUri());
             }
@@ -151,8 +156,8 @@ public class OiyokanEntityProcessor implements EntityProcessor {
                 + ")");
 
         try {
-            // シングルトンな OiyoInfo を利用。
-            final OiyoInfo oiyoInfo = OiyokanEdmProvider.getOiyoInfoInstance();
+            // シングルトンな OiyoSettings を利用。
+            OiyokanEdmProvider.setupOiyoSettingsInstance(oiyoInfo);
             if (oiyoInfo.getRawBaseUri() == null) {
                 oiyoInfo.setRawBaseUri(request.getRawBaseUri());
             }
@@ -231,8 +236,8 @@ public class OiyokanEntityProcessor implements EntityProcessor {
                 + ")");
 
         try {
-            // シングルトンな OiyoInfo を利用。
-            final OiyoInfo oiyoInfo = OiyokanEdmProvider.getOiyoInfoInstance();
+            // シングルトンな OiyoSettings を利用。
+            OiyokanEdmProvider.setupOiyoSettingsInstance(oiyoInfo);
             if (oiyoInfo.getRawBaseUri() == null) {
                 oiyoInfo.setRawBaseUri(request.getRawBaseUri());
             }
@@ -371,8 +376,8 @@ public class OiyokanEntityProcessor implements EntityProcessor {
                 + ")");
 
         try {
-            // シングルトンな OiyoInfo を利用。
-            final OiyoInfo oiyoInfo = OiyokanEdmProvider.getOiyoInfoInstance();
+            // シングルトンな OiyoSettings を利用。
+            OiyokanEdmProvider.setupOiyoSettingsInstance(oiyoInfo);
             if (oiyoInfo.getRawBaseUri() == null) {
                 oiyoInfo.setRawBaseUri(request.getRawBaseUri());
             }

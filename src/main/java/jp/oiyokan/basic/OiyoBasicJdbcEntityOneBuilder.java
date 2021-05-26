@@ -214,6 +214,7 @@ public class OiyoBasicJdbcEntityOneBuilder {
             log.trace("[database transaction] BEGIN database transaction.");
             if (database.getAutoCommit() == null || database.getAutoCommit()) {
                 // autoCommit 指定なし、または、true の場合、autoCommitをfalseに設定.
+                log.trace("conn.setAutoCommit(false)");
                 connTargetDb.setAutoCommit(false);
             }
             boolean isTranSuccessed = false;
@@ -295,6 +296,7 @@ public class OiyoBasicJdbcEntityOneBuilder {
                 log.trace("[database transaction] END database transaction.");
                 if (database.getAutoCommit() == null || database.getAutoCommit()) {
                     // autoCommit 指定なし、または、true の場合、autoCommitをtrueに戻す。
+                    log.trace("conn.setAutoCommit(true)");
                     connTargetDb.setAutoCommit(true);
                 }
             }
