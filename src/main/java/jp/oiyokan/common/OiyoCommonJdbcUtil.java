@@ -106,10 +106,9 @@ public class OiyoCommonJdbcUtil {
             }
 
             if (settingsDatabase.getAutoCommit() != null) {
-                if (settingsDatabase.getAutoCommit()) {
-                    log.trace("conn.setAutoCommit(true)");
-                } else {
-                    log.trace("conn.setAutoCommit(false)");
+                if (log.isDebugEnabled()) {
+                    // [IY7181] DEBUG: JDBC: call setAutoCommit
+                    log.debug(OiyokanMessages.IY7181 + ": " + settingsDatabase.getAutoCommit());
                 }
                 conn.setAutoCommit(settingsDatabase.getAutoCommit());
             }

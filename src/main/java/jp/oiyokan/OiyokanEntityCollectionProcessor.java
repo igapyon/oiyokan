@@ -156,11 +156,11 @@ public class OiyokanEntityCollectionProcessor implements EntityCollectionProcess
 
                 if (eCollection.getEntities().size() == 0 //
                         || (entitySet.getFilterEqAutoSelect() == null || !entitySet.getFilterEqAutoSelect())) {
-                    log.trace("OiyokanEntityCollectionProcessor#readEntityCollection: filterEqAutoSelect==false");
                     builder.select(uriInfo.getSelectOption());
                 } else {
-                    log.trace("OiyokanEntityCollectionProcessor#readEntityCollection: filterEqAutoSelect==true");
-
+                    // [IY2151] DEBUG: filterEqAutoSelect: (experimental) Auto select property if
+                    // `$filter` specify property with eq.
+                    log.debug(OiyokanMessages.IY2151);
                     // ここにはEQ対象項目を$selectに自動で加える特殊モードが実装されている。
                     String propNames = "";
                     for (int index = 0; index < eCollection.getEntities().size(); index++) {

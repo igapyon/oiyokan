@@ -293,6 +293,8 @@ public class OiyoBasicJdbcEntityCollectionBuilder implements OiyokanEntityCollec
                 ? connTargetDb.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY)
                 : connTargetDb.prepareStatement(sql, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY))) {
             if (entitySet.getJdbcFetchSize() != null) {
+                // [IY1068] DEBUG: JDBC: setFetchSize
+                log.debug(OiyokanMessages.IY1068 + ": " + entitySet.getJdbcFetchSize());
                 stmt.setFetchSize(entitySet.getJdbcFetchSize());
             }
 
