@@ -2,10 +2,13 @@
 
 ## EN
 
+- Entity UPDATE: If the update item of UPDATE contains a KEY, skip it.
+- Fixed a bug that wasNull was missing in getting search results. When a numeric item was null, it would erroneously return 0.
+
 ## JA
 
 - Entity UPDATE: UPDATEの更新項目にKEYが含まれていたらそれは処理対象外としてスキップ。
-- 検索結果取得に wasNull判定が抜けていたのを訂正。数値項目で null の場合に誤って 0.0 などが戻っていたバグの訂正。
+- 検索結果取得に wasNull判定が抜けていたのを訂正。数値項目で null の場合に誤って 0 が戻っていたバグの訂正。
 
 # Release 1.18 (2021-05-26)
 
