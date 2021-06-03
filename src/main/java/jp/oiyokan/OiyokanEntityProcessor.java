@@ -62,6 +62,11 @@ public class OiyokanEntityProcessor implements EntityProcessor {
 
     private OData odata;
     private ServiceMetadata serviceMetadata;
+    private OiyoInfo oiyoInfo = null;
+
+    public OiyokanEntityProcessor(OiyoInfo oiyoInfo) {
+        this.oiyoInfo = oiyoInfo;
+    }
 
     /**
      * {@inheritDoc}
@@ -84,8 +89,11 @@ public class OiyokanEntityProcessor implements EntityProcessor {
                 + ")");
 
         try {
-            // シングルトンな OiyoInfo を利用。
-            final OiyoInfo oiyoInfo = OiyokanEdmProvider.getOiyoInfoInstance();
+            // シングルトンな OiyoSettings を利用。
+            OiyokanEdmProvider.setupOiyoSettingsInstance(oiyoInfo);
+            if (oiyoInfo.getRawBaseUri() == null) {
+                oiyoInfo.setRawBaseUri(request.getRawBaseUri());
+            }
 
             log.trace("OiyokanEntityProcessor#readEntity: 1. retrieve the Entity Type");
             List<UriResource> resourcePaths = uriInfo.getUriResourceParts();
@@ -148,8 +156,11 @@ public class OiyokanEntityProcessor implements EntityProcessor {
                 + ")");
 
         try {
-            // シングルトンな OiyoInfo を利用。
-            final OiyoInfo oiyoInfo = OiyokanEdmProvider.getOiyoInfoInstance();
+            // シングルトンな OiyoSettings を利用。
+            OiyokanEdmProvider.setupOiyoSettingsInstance(oiyoInfo);
+            if (oiyoInfo.getRawBaseUri() == null) {
+                oiyoInfo.setRawBaseUri(request.getRawBaseUri());
+            }
 
             // https://olingo.apache.org/doc/odata4/tutorials/write/tutorial_write.html
 
@@ -225,8 +236,11 @@ public class OiyokanEntityProcessor implements EntityProcessor {
                 + ")");
 
         try {
-            // シングルトンな OiyoInfo を利用。
-            final OiyoInfo oiyoInfo = OiyokanEdmProvider.getOiyoInfoInstance();
+            // シングルトンな OiyoSettings を利用。
+            OiyokanEdmProvider.setupOiyoSettingsInstance(oiyoInfo);
+            if (oiyoInfo.getRawBaseUri() == null) {
+                oiyoInfo.setRawBaseUri(request.getRawBaseUri());
+            }
 
             List<UriResource> resourcePaths = uriInfo.getUriResourceParts();
 
@@ -362,8 +376,11 @@ public class OiyokanEntityProcessor implements EntityProcessor {
                 + ")");
 
         try {
-            // シングルトンな OiyoInfo を利用。
-            final OiyoInfo oiyoInfo = OiyokanEdmProvider.getOiyoInfoInstance();
+            // シングルトンな OiyoSettings を利用。
+            OiyokanEdmProvider.setupOiyoSettingsInstance(oiyoInfo);
+            if (oiyoInfo.getRawBaseUri() == null) {
+                oiyoInfo.setRawBaseUri(request.getRawBaseUri());
+            }
 
             log.trace("OiyokanEntityProcessor#deleteEntity: "
                     + "1. Retrieve the entity set which belongs to the requested entity");

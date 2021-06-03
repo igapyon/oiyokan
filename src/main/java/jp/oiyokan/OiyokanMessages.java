@@ -36,6 +36,7 @@ public class OiyokanMessages {
     public static final String IY1065 = "[IY1065] INFO: SQL collect: elapsed";
     public static final String IY1066 = "[IY1066] INFO: SQL exec";
     public static final String IY1067 = "[IY1067] INFO: SQL exec: elapsed";
+    public static final String IY1068 = "[IY1068] DEBUG: JDBC: setFetchSize";
 
     // Entity
     public static final String IY1071 = "[IY1071] INFO: ENTITY: READ";
@@ -93,6 +94,8 @@ public class OiyokanMessages {
     public static final int IY2111_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
     public static final String IY2112 = "[IY2112] UNEXPECTED: UriValidationException occured.";
     public static final int IY2112_CODE = HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode();
+
+    public static final String IY2151 = "[IY2151] DEBUG: filterEqAutoSelect: (experimental) Auto select property if `$filter` specify property with eq.";
 
     ////////////////////////////////////////////////////////////////////////////////
     // IY25XX : EntityCollection - TIMEOUT
@@ -271,6 +274,7 @@ public class OiyokanMessages {
     public static final String IY7174 = "[IY7174] INFO: load oiyokan settings";
     public static final String IY7175 = "[IY7175] DEBUG: DB set connection transaction isolation.";
     public static final String IY7176 = "[IY7176] DEBUG: DB init sql exec.";
+    public static final String IY7181 = "[IY7181] DEBUG: JDBC: call setAutoCommit";
 
     ////////////////////////////////////////////////////////////////////////////////
     // Authz (Server Side)

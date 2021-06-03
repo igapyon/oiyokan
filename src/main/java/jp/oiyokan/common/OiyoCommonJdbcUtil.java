@@ -17,6 +17,7 @@ package jp.oiyokan.common;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Reader;
 import java.math.BigDecimal;
 import java.sql.Connection;
@@ -106,7 +107,10 @@ public class OiyoCommonJdbcUtil {
             }
 
             if (settingsDatabase.getAutoCommit() != null) {
-                // TODO message
+                if (log.isDebugEnabled()) {
+                    // [IY7181] DEBUG: JDBC: call setAutoCommit
+                    log.debug(OiyokanMessages.IY7181 + ": " + settingsDatabase.getAutoCommit());
+                }
                 conn.setAutoCommit(settingsDatabase.getAutoCommit());
             }
 
@@ -248,36 +252,87 @@ public class OiyoCommonJdbcUtil {
         final String edmTypeName = oiyoProp.getEdmType();
         final EdmPrimitiveType edmType = OiyoEdmUtil.string2EdmType(edmTypeName);
         if (EdmSByte.getInstance() == edmType) {
-            return new Property(edmTypeName, propName, ValueType.PRIMITIVE, rset.getByte(column));
+            final byte value = rset.getByte(column);
+            if (rset.wasNull()) {
+                return new Property("Edm.Null", propName, ValueType.PRIMITIVE, null);
+            }
+            return new Property(edmTypeName, propName, ValueType.PRIMITIVE, value);
         } else if (EdmByte.getInstance() == edmType) {
             // 符号なしのバイト. h2 database には該当なし.
             // Edm.Byteに相当する型がJavaにないので Shortで代替.
-            return new Property(edmTypeName, propName, ValueType.PRIMITIVE, rset.getShort(column));
+            final short value = rset.getShort(column);
+            if (rset.wasNull()) {
+                return new Property("Edm.Null", propName, ValueType.PRIMITIVE, null);
+            }
+            return new Property(edmTypeName, propName, ValueType.PRIMITIVE, value);
         } else if (EdmInt16.getInstance() == edmType) {
-            return new Property(edmTypeName, propName, ValueType.PRIMITIVE, rset.getShort(column));
+            final short value = rset.getShort(column);
+            if (rset.wasNull()) {
+                return new Property("Edm.Null", propName, ValueType.PRIMITIVE, null);
+            }
+            return new Property(edmTypeName, propName, ValueType.PRIMITIVE, value);
         } else if (EdmInt32.getInstance() == edmType) {
-            return new Property(edmTypeName, propName, ValueType.PRIMITIVE, rset.getInt(column));
+            final int value = rset.getInt(column);
+            if (rset.wasNull()) {
+                return new Property("Edm.Null", propName, ValueType.PRIMITIVE, null);
+            }
+            return new Property(edmTypeName, propName, ValueType.PRIMITIVE, value);
         } else if (EdmInt64.getInstance() == edmType) {
-            return new Property(edmTypeName, propName, ValueType.PRIMITIVE, rset.getLong(column));
+            final long value = rset.getLong(column);
+            if (rset.wasNull()) {
+                return new Property("Edm.Null", propName, ValueType.PRIMITIVE, null);
+            }
+            return new Property(edmTypeName, propName, ValueType.PRIMITIVE, value);
         } else if (EdmDecimal.getInstance() == edmType) {
-            return new Property(edmTypeName, propName, ValueType.PRIMITIVE, rset.getBigDecimal(column));
+            final BigDecimal value = rset.getBigDecimal(column);
+            if (rset.wasNull()) {
+                return new Property("Edm.Null", propName, ValueType.PRIMITIVE, null);
+            }
+            return new Property(edmTypeName, propName, ValueType.PRIMITIVE, value);
         } else if (EdmBoolean.getInstance() == edmType) {
-            return new Property(edmTypeName, propName, ValueType.PRIMITIVE, rset.getBoolean(column));
+            final boolean value = rset.getBoolean(column);
+            if (rset.wasNull()) {
+                return new Property("Edm.Null", propName, ValueType.PRIMITIVE, null);
+            }
+            return new Property(edmTypeName, propName, ValueType.PRIMITIVE, value);
         } else if (EdmSingle.getInstance() == edmType) {
-            return new Property(edmTypeName, propName, ValueType.PRIMITIVE, rset.getFloat(column));
+            final float value = rset.getFloat(column);
+            if (rset.wasNull()) {
+                return new Property("Edm.Null", propName, ValueType.PRIMITIVE, null);
+            }
+            return new Property(edmTypeName, propName, ValueType.PRIMITIVE, value);
         } else if (EdmDouble.getInstance() == edmType) {
-            return new Property(edmTypeName, propName, ValueType.PRIMITIVE, rset.getDouble(column));
+            final double value = rset.getDouble(column);
+            if (rset.wasNull()) {
+                return new Property("Edm.Null", propName, ValueType.PRIMITIVE, null);
+            }
+            return new Property(edmTypeName, propName, ValueType.PRIMITIVE, value);
         } else if (EdmDate.getInstance() == edmType) {
-            return new Property(edmTypeName, propName, ValueType.PRIMITIVE, rset.getDate(column));
+            final java.sql.Date value = rset.getDate(column);
+            if (rset.wasNull()) {
+                return new Property("Edm.Null", propName, ValueType.PRIMITIVE, null);
+            }
+            return new Property(edmTypeName, propName, ValueType.PRIMITIVE, value);
         } else if (EdmDateTimeOffset.getInstance() == edmType) {
-            return new Property(edmTypeName, propName, ValueType.PRIMITIVE, rset.getTimestamp(column));
+            final java.sql.Timestamp value = rset.getTimestamp(column);
+            if (rset.wasNull()) {
+                return new Property("Edm.Null", propName, ValueType.PRIMITIVE, null);
+            }
+            return new Property(edmTypeName, propName, ValueType.PRIMITIVE, value);
         } else if (EdmTimeOfDay.getInstance() == edmType) {
-            return new Property(edmTypeName, propName, ValueType.PRIMITIVE, rset.getTime(column));
+            final java.sql.Time value = rset.getTime(column);
+            if (rset.wasNull()) {
+                return new Property("Edm.Null", propName, ValueType.PRIMITIVE, null);
+            }
+            return new Property(edmTypeName, propName, ValueType.PRIMITIVE, value);
         } else if (EdmString.getInstance() == edmType) {
             String value = null;
             if (oiyoProp.getJdbcStream() != null && oiyoProp.getJdbcStream()) {
                 try {
                     final Reader reader = rset.getCharacterStream(column);
+                    if (rset.wasNull()) {
+                        return new Property("Edm.Null", propName, ValueType.PRIMITIVE, null);
+                    }
                     if (reader != null) {
                         value = IOUtils.toString(reader);
                     }
@@ -289,6 +344,9 @@ public class OiyoCommonJdbcUtil {
                 }
             } else {
                 value = rset.getString(column);
+                if (rset.wasNull()) {
+                    return new Property("Edm.Null", propName, ValueType.PRIMITIVE, null);
+                }
             }
             if (oiyoProp.getLengthFixed() != null && oiyoProp.getLengthFixed() && oiyoProp.getMaxLength() != null) {
                 if (value != null) {
@@ -300,8 +358,11 @@ public class OiyoCommonJdbcUtil {
             return new Property(edmTypeName, propName, ValueType.PRIMITIVE, value);
         } else if (EdmBinary.getInstance() == edmType) {
             try {
-                return new Property(edmTypeName, propName, ValueType.PRIMITIVE,
-                        IOUtils.toByteArray(rset.getBinaryStream(column)));
+                final InputStream value = rset.getBinaryStream(column);
+                if (rset.wasNull()) {
+                    return new Property("Edm.Null", propName, ValueType.PRIMITIVE, null);
+                }
+                return new Property(edmTypeName, propName, ValueType.PRIMITIVE, IOUtils.toByteArray(value));
             } catch (IOException ex) {
                 // [M008] UNEXPECTED: fail to read from binary
                 log.error(OiyokanMessages.IY7108 + ": " + property.getName() + ": " + ex.toString(), ex);
@@ -311,9 +372,12 @@ public class OiyoCommonJdbcUtil {
         } else if (EdmGuid.getInstance() == edmType) {
             // Guid については UUID として読み込む。
             final Object obj = rset.getObject(column);
+            if (rset.wasNull()) {
+                return new Property("Edm.Null", propName, ValueType.PRIMITIVE, null);
+            }
             if (obj == null) {
                 // UUID に null が与えられた場合、そのままnullをセット. (null対応)
-                return new Property(edmTypeName, propName, ValueType.PRIMITIVE, null);
+                return new Property("Edm.Null", propName, ValueType.PRIMITIVE, null);
             } else if (obj instanceof java.util.UUID) {
                 // h2 database で通過
                 return new Property(edmTypeName, propName, ValueType.PRIMITIVE, (java.util.UUID) obj);

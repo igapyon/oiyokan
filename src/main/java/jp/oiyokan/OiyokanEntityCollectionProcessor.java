@@ -70,6 +70,12 @@ public class OiyokanEntityCollectionProcessor implements EntityCollectionProcess
      */
     private ServiceMetadata serviceMetadata;
 
+    private OiyoInfo oiyoInfo = null;
+
+    public OiyokanEntityCollectionProcessor(OiyoInfo oiyoInfo) {
+        this.oiyoInfo = oiyoInfo;
+    }
+
     /**
      * 初期化タイミングにて ODataやサービスメタデータの情報を記憶. {@inheritDoc}
      * 
@@ -102,8 +108,11 @@ public class OiyokanEntityCollectionProcessor implements EntityCollectionProcess
                 + request.getRawQueryPath() + ")");
 
         try {
-            // シングルトンな OiyoInfo を利用。
-            final OiyoInfo oiyoInfo = OiyokanEdmProvider.getOiyoInfoInstance();
+            // シングルトンな OiyoSettings を利用。
+            OiyokanEdmProvider.setupOiyoSettingsInstance(oiyoInfo);
+            if (oiyoInfo.getRawBaseUri() == null) {
+                oiyoInfo.setRawBaseUri(request.getRawBaseUri());
+            }
 
             // URI情報からURIリソースの指定を取得.
             List<UriResource> resourcePaths = uriInfo.getUriResourceParts();
@@ -118,7 +127,9 @@ public class OiyokanEntityCollectionProcessor implements EntityCollectionProcess
 
             // 要素セットの指定をもとに要素コレクションを取得.
             // これがデータ本体に該当.
+            log.trace("OiyokanEntityCollectionProcessor#readEntityCollection: eCollection: begin.");
             EntityCollection eCollection = entityCollectionBuilder.build(edmEntitySet, uriInfo);
+            log.trace("OiyokanEntityCollectionProcessor#readEntityCollection: eCollection: end.");
 
             // 指定のレスポンスフォーマットに合致する直列化を準備.
             ODataSerializer serializer = odata.createSerializer(responseFormat);
@@ -147,6 +158,9 @@ public class OiyokanEntityCollectionProcessor implements EntityCollectionProcess
                         || (entitySet.getFilterEqAutoSelect() == null || !entitySet.getFilterEqAutoSelect())) {
                     builder.select(uriInfo.getSelectOption());
                 } else {
+                    // [IY2151] DEBUG: filterEqAutoSelect: (experimental) Auto select property if
+                    // `$filter` specify property with eq.
+                    log.debug(OiyokanMessages.IY2151);
                     // ここにはEQ対象項目を$selectに自動で加える特殊モードが実装されている。
                     String propNames = "";
                     for (int index = 0; index < eCollection.getEntities().size(); index++) {
@@ -184,13 +198,16 @@ public class OiyokanEntityCollectionProcessor implements EntityCollectionProcess
                 }
             }
 
+            log.trace("OiyokanEntityCollectionProcessor#readEntityCollection: serializer.entityCollection: begin.");
             SerializerResult serResult = serializer.entityCollection( //
                     serviceMetadata, edmEntityType, eCollection, builder.build());
+            log.trace("OiyokanEntityCollectionProcessor#readEntityCollection: serializer.entityCollection: end.");
 
             // OData レスポンスを返却.
             response.setContent(serResult.getContent());
             response.setStatusCode(HttpStatusCode.OK.getStatusCode());
             response.setHeader(HttpHeader.CONTENT_TYPE, responseFormat.toContentTypeString());
+            log.trace("OiyokanEntityCollectionProcessor#readEntityCollection: end response.");
         } catch (ODataApplicationException | ODataLibraryException ex) {
             // [IY9521] WARN: EntityCollectionProcessor.readEntityCollection: exception
             // caught

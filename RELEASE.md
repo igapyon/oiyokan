@@ -1,8 +1,36 @@
+# Release 1.19 (2021-06-03)
+
+## EN
+
+- Entity UPDATE: If the update item of UPDATE contains a KEY, skip it.
+- Fixed a bug that wasNull was missing in getting search results. When a numeric item was null, it would erroneously return 0.
+
+## JA
+
+- Entity UPDATE: UPDATEの更新項目にKEYが含まれていたらそれは処理対象外としてスキップ。
+- 検索結果取得に wasNull判定が抜けていたのを訂正。数値項目で null の場合に誤って 0 が戻っていたバグの訂正。
+
+# Release 1.18 (2021-05-26)
+
+## EN
+
+- Implementation: Changed to pass OiyoInfo instance from the outside.
+- Changed to return URI with FQN.
+- Added messages regarding autoCommit, jdbcFetchSize, filterEqAutoSelect.
+- Added log.trace where EntityCollection is expected to take a time.
+
+## JA
+
+- 実装: OiyoInfo インスタンスを外側から引き渡すよう変更
+- URIをFQNで戻すよう変更
+- autoCommit, jdbcFetchSize, filterEqAutoSelect のメッセージを追加
+- EntityCollection で時間がかかると予見される箇所に log.trace を追加
+
 # Release 1.17 (2021-05-25)
 
 ## EN
 
-- Some JSON params are added to `oiyokan-settings.json`: autoCommit, jdbcFetchSize, filterEqAutoSelect。
+- Some JSON params are added to `oiyokan-settings.json`: autoCommit, jdbcFetchSize, filterEqAutoSelect.
 - Added ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY to collection Statement.
 - Use java.sql.Statement for parameterless queries.
 

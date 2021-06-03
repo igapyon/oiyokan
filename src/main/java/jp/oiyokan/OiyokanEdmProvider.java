@@ -48,34 +48,43 @@ import jp.oiyokan.dto.OiyoSettingsEntitySet;
 public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
     private static final Log log = LogFactory.getLog(OiyokanEdmProvider.class);
 
+    private OiyoInfo oiyoInfo = null;
+
     /**
-     * OiyokanSettings を singleton に記憶.
+     * OiyoSettings を singleton に記憶.
      */
-    private static volatile OiyoInfo oiyoInfo = null;
+    private static volatile OiyoSettings oiyoSettings = null;
 
     /**
      * Oiyokan が内部的に利用するデータベースがセットアップ済みかどうか。
      */
     private static volatile boolean isKanDatabaseSetupDone = false;
 
+    public OiyokanEdmProvider(OiyoInfo oiyoInfo) {
+        this.oiyoInfo = oiyoInfo;
+    }
+
     /**
      * OiyoInfo (OiyokanSettings 設定情報を含む) を singleton に取得.
      * 
      * このパッケージからのみアクセスを許容。
      * 
-     * @return OiyoInfo OiyokanSettings instanceを含む. 参照のみで利用.
+     * @return OiyoSettings instance. 参照のみで利用.
      * @throws ODataApplicationException ODataアプリ例外が発生した場合.
      */
-    static synchronized OiyoInfo getOiyoInfoInstance() throws ODataApplicationException {
-        // singleton by static synchronized.
-        if (oiyoInfo == null) {
-            final OiyoInfo wrk = new OiyoInfo();
-            wrk.setSettings(OiyoInfoUtil.loadOiyokanSettings(wrk));
-            // ロードが終わってから変数に値をセット。念には念を)
-            oiyoInfo = wrk;
+    static synchronized void setupOiyoSettingsInstance(final OiyoInfo oiyoInfo) throws ODataApplicationException {
+        if (oiyoInfo.getSettings() != null) {
+            return; /* 何もする必要なし */
         }
 
-        return oiyoInfo;
+        // singleton by static synchronized.
+        if (oiyoSettings == null) {
+            final OiyoSettings wrk = OiyoInfoUtil.loadOiyokanSettings(oiyoInfo);
+            // ロードが終わってから変数に値をセット。念には念を)
+            oiyoSettings = wrk;
+        }
+
+        oiyoInfo.setSettings(oiyoSettings);
     }
 
     /**
@@ -90,6 +99,9 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
         log.trace("OiyokanEdmProvider#getEntityType(" + entityTypeName + ")");
 
         try {
+            // シングルトンな OiyoSettings を利用。
+            setupOiyoSettingsInstance(oiyoInfo);
+
             OiyoSettingsEntitySet entitySet = null;
             final OiyoSettings settingsOiyokan = oiyoInfo.getSettings();
             for (OiyoSettingsEntitySet look : settingsOiyokan.getEntitySet()) {
@@ -104,8 +116,7 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
                         OiyokanMessages.IY7119_CODE, Locale.ENGLISH);
             }
 
-            OiyoBasicJdbcEntityTypeBuilder entityTypeBuilder = new OiyoBasicJdbcEntityTypeBuilder(
-                    OiyokanEdmProvider.getOiyoInfoInstance(), entitySet);
+            OiyoBasicJdbcEntityTypeBuilder entityTypeBuilder = new OiyoBasicJdbcEntityTypeBuilder(oiyoInfo, entitySet);
             CsdlEntityType csdlEntityType = entityTypeBuilder.getEntityType();
 
             if (log.isTraceEnabled()) {
@@ -143,8 +154,8 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
         log.trace("OiyokanEdmProvider#getEntitySet(" + entitySetName + ")");
 
         try {
-            // シングルトンな OiyoInfo を利用。
-            final OiyoInfo oiyoInfo = getOiyoInfoInstance();
+            // シングルトンな OiyoSettings を利用。
+            setupOiyoSettingsInstance(oiyoInfo);
 
             final FullQualifiedName fqn = new FullQualifiedName(oiyoInfo.getSettings().getNamespace(),
                     oiyoInfo.getSettings().getContainerName());
@@ -185,8 +196,8 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
         log.trace("OiyokanEdmProvider#getEntityContainer()");
 
         try {
-            // シングルトンな OiyoInfo を利用。
-            final OiyoInfo oiyoInfo = getOiyoInfoInstance();
+            // シングルトンな OiyoSettings を利用。
+            setupOiyoSettingsInstance(oiyoInfo);
 
             final CsdlEntityContainer csdlEntityContainer = new CsdlEntityContainer();
             csdlEntityContainer.setName(oiyoInfo.getSettings().getContainerName());
@@ -200,7 +211,7 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
                 // [IY1001] Start Oiyokan server.
                 log.info(OiyokanMessages.IY1001 + " (Oiyokan: " + OiyokanConstants.VERSION + ")");
 
-                for (OiyoSettingsDatabase settingsDatabase : getOiyoInfoInstance().getSettings().getDatabase()) {
+                for (OiyoSettingsDatabase settingsDatabase : oiyoInfo.getSettings().getDatabase()) {
                     // [IY1051] Check JDBC Driver
                     log.info(OiyokanMessages.IY1051 + ": " + settingsDatabase.getJdbcDriver());
 
@@ -232,7 +243,7 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
                 }
 
                 // Oiyokan の動作で利用する内部データベースをセットアップ.
-                OiyokanKanDatabase.setupKanDatabase(OiyokanEdmProvider.getOiyoInfoInstance());
+                OiyokanKanDatabase.setupKanDatabase(oiyoInfo);
                 isKanDatabaseSetupDone = true;
             }
 
@@ -260,8 +271,8 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
         log.trace("OiyokanEdmProvider#getSchemas()");
 
         try {
-            // シングルトンな OiyoInfo を利用。
-            final OiyoInfo oiyoInfo = getOiyoInfoInstance();
+            // シングルトンな OiyoSettings を利用。
+            setupOiyoSettingsInstance(oiyoInfo);
 
             // CSDLスキーマを作成.
             final CsdlSchema newCsdlSchema = new CsdlSchema();
@@ -312,8 +323,8 @@ public class OiyokanEdmProvider extends CsdlAbstractEdmProvider {
         log.trace("OiyokanEdmProvider#getEntityContainerInfo()");
 
         try {
-            // シングルトンな OiyoInfo を利用。
-            final OiyoInfo oiyoInfo = getOiyoInfoInstance();
+            // シングルトンな OiyoSettings を利用。
+            setupOiyoSettingsInstance(oiyoInfo);
             final FullQualifiedName fqn = new FullQualifiedName(oiyoInfo.getSettings().getNamespace(),
                     oiyoInfo.getSettings().getContainerName());
 
