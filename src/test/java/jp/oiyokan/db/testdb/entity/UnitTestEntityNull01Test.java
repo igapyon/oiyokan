@@ -84,6 +84,13 @@ class UnitTestEntityNull01Test {
                             + ",\"Sbyte1\":null,\"Int16a\":null,\"Int32a\":2147483647,\"Int64a\":2147483647,\"Decimal1\":null,\"StringChar8\":\"CHAR_VAL\",\"StringVar255\":\"VARCHAR255\",\"StringLongVar1\":\"LONGVARCHAR\",\"Clob1\":null,\"Boolean1\":false,\"Single1\":null,\"Double1\":null}]}",
                     result);
             break;
+        case ORCL18:
+            assertEquals(
+                    "{\"@odata.context\":\"$metadata#ODataTest1\",\"value\":[{\"@odata.id\":\"http://localhost:8080/odata4.svc/ODataTest1("
+                            + idString + ")\",\"ID\":" + idString
+                            + ",\"Sbyte1\":null,\"Int16a\":null,\"Int32a\":2147483647,\"Int64a\":2147483647,\"Decimal1\":null,\"StringChar8\":\"CHAR_VAL\",\"StringVar255\":\"VARCHAR255\",\"StringLongVar1\":\"LONGVARCHAR\",\"Clob1\":null,\"Boolean1\":null,\"Single1\":null,\"Double1\":null}]}",
+                    result);
+            break;
         }
 
         // INFO: SQL single: SELECT
