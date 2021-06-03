@@ -80,6 +80,11 @@ public class OiyoSqlUpdateOneBuilder {
         sqlInfo.getSqlBuilder().append(" SET ");
         boolean isFirst = true;
         for (Property prop : requestEntity.getProperties()) {
+            if (entitySet.getEntityType().getKeyName().contains(prop.getName())) {
+                log.trace("更新対象にキー列が与えられたため指定を無視してスキップ: " + prop.getName());
+                continue;
+            }
+
             if (isFirst) {
                 isFirst = false;
             } else {
