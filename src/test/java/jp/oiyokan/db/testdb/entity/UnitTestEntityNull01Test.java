@@ -22,9 +22,12 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.olingo.server.api.ODataResponse;
 import org.junit.jupiter.api.Test;
 
+import jp.oiyokan.OiyokanConstants;
 import jp.oiyokan.OiyokanUnittestUtil;
 import jp.oiyokan.common.OiyoInfo;
+import jp.oiyokan.common.OiyoInfoUtil;
 import jp.oiyokan.common.OiyoUrlUtil;
+import jp.oiyokan.dto.OiyoSettingsDatabase;
 import jp.oiyokan.util.OiyokanTestUtil;
 
 /**
@@ -38,8 +41,9 @@ class UnitTestEntityNull01Test {
      */
     @Test
     void test01() throws Exception {
-        @SuppressWarnings("unused")
         final OiyoInfo oiyoInfo = OiyokanUnittestUtil.setupUnittestDatabase();
+        final OiyoSettingsDatabase database = OiyoInfoUtil.getOiyoDatabaseByEntitySetName(oiyoInfo, "ODataTest1");
+        final OiyokanConstants.DatabaseType databaseType = OiyokanConstants.DatabaseType.valueOf(database.getType());
 
         // INSERT + DELETE
         // 自動項目の ID もNULLで引き渡す。
@@ -65,11 +69,22 @@ class UnitTestEntityNull01Test {
                 "$select=Sbyte1,Int16a,Int32a,Int64a,Decimal1,StringChar8,StringVar255,StringLongVar1,Clob1,Boolean1,Single1,Double1 &$filter=ID eq "
                         + idString));
         result = OiyokanTestUtil.stream2String(resp.getContent());
-        assertEquals(
-                "{\"@odata.context\":\"$metadata#ODataTest1\",\"value\":[{\"@odata.id\":\"http://localhost:8080/odata4.svc/ODataTest1("
-                        + idString + ")\",\"ID\":" + idString
-                        + ",\"Sbyte1\":null,\"Int16a\":null,\"Int32a\":2147483647,\"Int64a\":2147483647,\"Decimal1\":null,\"StringChar8\":\"CHAR_VAL\",\"StringVar255\":\"VARCHAR255\",\"StringLongVar1\":\"LONGVARCHAR\",\"Clob1\":\"CLOB\",\"Boolean1\":false,\"Single1\":null,\"Double1\":null}]}",
-                result);
+        switch (databaseType) {
+        default:
+            assertEquals(
+                    "{\"@odata.context\":\"$metadata#ODataTest1\",\"value\":[{\"@odata.id\":\"http://localhost:8080/odata4.svc/ODataTest1("
+                            + idString + ")\",\"ID\":" + idString
+                            + ",\"Sbyte1\":null,\"Int16a\":null,\"Int32a\":2147483647,\"Int64a\":2147483647,\"Decimal1\":null,\"StringChar8\":\"CHAR_VAL\",\"StringVar255\":\"VARCHAR255\",\"StringLongVar1\":\"LONGVARCHAR\",\"Clob1\":\"CLOB\",\"Boolean1\":false,\"Single1\":null,\"Double1\":null}]}",
+                    result);
+            break;
+        case MySQL:
+            assertEquals(
+                    "{\"@odata.context\":\"$metadata#ODataTest1\",\"value\":[{\"@odata.id\":\"http://localhost:8080/odata4.svc/ODataTest1("
+                            + idString + ")\",\"ID\":" + idString
+                            + ",\"Sbyte1\":null,\"Int16a\":null,\"Int32a\":2147483647,\"Int64a\":2147483647,\"Decimal1\":null,\"StringChar8\":\"CHAR_VAL\",\"StringVar255\":\"VARCHAR255\",\"StringLongVar1\":\"LONGVARCHAR\",\"Clob1\":null,\"Boolean1\":false,\"Single1\":null,\"Double1\":null}]}",
+                    result);
+            break;
+        }
 
         // INFO: SQL single: SELECT
         // ID,Name,Description,,Binary1,VarBinary1,LongVarBinary1,Blob1
