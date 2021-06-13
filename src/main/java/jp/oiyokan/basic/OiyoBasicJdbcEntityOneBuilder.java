@@ -95,7 +95,7 @@ public class OiyoBasicJdbcEntityOneBuilder {
 
         // データベースに接続.
         try (Connection connTargetDb = OiyoCommonJdbcUtil.getConnection(database)) {
-            log.trace("[database transaction] WITHOUT database transaction.");
+            log.trace("[database transaction] WITHOUT database transaction.: READ");
             return readInternal(connTargetDb, uriInfo, entitySet, keyPredicates);
         } catch (SQLException ex) {
             // [IY3107] Database exception occured (readEntity)
@@ -127,8 +127,35 @@ public class OiyoBasicJdbcEntityOneBuilder {
 
         // データベースに接続.
         try (Connection connTargetDb = OiyoCommonJdbcUtil.getConnection(database)) {
-            log.trace("[database transaction] WITHOUT database transaction.");
-            return createInternal(connTargetDb, uriInfo, entitySet, null/* キーの与えられないパターン */, requestEntity);
+            log.trace("[database transaction] BEGIN database transaction.: CREATE");
+            if (database.getAutoCommit() == null || database.getAutoCommit()) {
+                // autoCommit 指定なし、または、true の場合、トランザクションを開始させるために autoCommitをfalseに設定.
+                log.trace("conn.setAutoCommit(false): CREATE");
+                connTargetDb.setAutoCommit(false);
+            }
+            boolean isTranSuccessed = false;
+
+            try {
+                Entity entity = createInternal(connTargetDb, uriInfo, entitySet, null/* キーの与えられないパターン */,
+                        requestEntity);
+                isTranSuccessed = true;
+                return entity;
+            } finally {
+                if (isTranSuccessed) {
+                    log.trace("[database transaction] COMMIT database transaction.: CREATE");
+                    connTargetDb.commit();
+                } else {
+                    log.trace("[database transaction] ROLLBACK database transaction.: CREATE");
+                    connTargetDb.rollback();
+                }
+
+                log.trace("[database transaction] END database transaction.: CREATE");
+                if (database.getAutoCommit() == null || database.getAutoCommit()) {
+                    // autoCommit 指定なし、または、true の場合、トランザクションを終了させる目的のために autoCommitをtrueに戻す。
+                    log.trace("conn.setAutoCommit(true): CREATE");
+                    connTargetDb.setAutoCommit(true);
+                }
+            }
         } catch (SQLException ex) {
             // [IY3155] UNEXPECTED database error occured.
             log.error(OiyokanMessages.IY3155 + ": " + ex.toString(), ex);
@@ -157,8 +184,33 @@ public class OiyoBasicJdbcEntityOneBuilder {
 
         // データベースに接続.
         try (Connection connTargetDb = OiyoCommonJdbcUtil.getConnection(database)) {
-            log.trace("[database transaction] WITHOUT database transaction.");
-            deleteInternal(connTargetDb, uriInfo, entitySet, keyPredicates);
+            log.trace("[database transaction] BEGIN database transaction.: DELETE");
+            if (database.getAutoCommit() == null || database.getAutoCommit()) {
+                // autoCommit 指定なし、または、true の場合、トランザクションを開始させるために autoCommitをfalseに設定.
+                log.trace("conn.setAutoCommit(false): DELETE");
+                connTargetDb.setAutoCommit(false);
+            }
+            boolean isTranSuccessed = false;
+
+            try {
+                deleteInternal(connTargetDb, uriInfo, entitySet, keyPredicates);
+                isTranSuccessed = true;
+            } finally {
+                if (isTranSuccessed) {
+                    log.trace("[database transaction] COMMIT database transaction.: DELETE");
+                    connTargetDb.commit();
+                } else {
+                    log.trace("[database transaction] ROLLBACK database transaction.: DELETE");
+                    connTargetDb.rollback();
+                }
+
+                log.trace("[database transaction] END database transaction.: DELETE");
+                if (database.getAutoCommit() == null || database.getAutoCommit()) {
+                    // autoCommit 指定なし、または、true の場合、トランザクションを終了させる目的のために autoCommitをtrueに戻す。
+                    log.trace("conn.setAutoCommit(true): DELETE");
+                    connTargetDb.setAutoCommit(true);
+                }
+            }
         } catch (SQLException ex) {
             // [M205] Fail to execute SQL.
             log.error(OiyokanMessages.IY3153 + ": " + ex.toString());
@@ -211,10 +263,10 @@ public class OiyoBasicJdbcEntityOneBuilder {
 
         // データベースに接続.
         try (Connection connTargetDb = OiyoCommonJdbcUtil.getConnection(database)) {
-            log.trace("[database transaction] BEGIN database transaction.");
+            log.trace("[database transaction] BEGIN database transaction.: UPDATE");
             if (database.getAutoCommit() == null || database.getAutoCommit()) {
                 // autoCommit 指定なし、または、true の場合、トランザクションを開始させるために autoCommitをfalseに設定.
-                log.trace("conn.setAutoCommit(false)");
+                log.trace("conn.setAutoCommit(false): UPDATE");
                 connTargetDb.setAutoCommit(false);
             }
             boolean isTranSuccessed = false;
@@ -286,17 +338,17 @@ public class OiyoBasicJdbcEntityOneBuilder {
                 }
             } finally {
                 if (isTranSuccessed) {
-                    log.trace("[database transaction] COMMIT database transaction.");
+                    log.trace("[database transaction] COMMIT database transaction.: UPDATE");
                     connTargetDb.commit();
                 } else {
-                    log.trace("[database transaction] ROLLBACK database transaction.");
+                    log.trace("[database transaction] ROLLBACK database transaction.: UPDATE");
                     connTargetDb.rollback();
                 }
 
-                log.trace("[database transaction] END database transaction.");
+                log.trace("[database transaction] END database transaction.: UPDATE");
                 if (database.getAutoCommit() == null || database.getAutoCommit()) {
                     // autoCommit 指定なし、または、true の場合、トランザクションを終了させる目的のために autoCommitをtrueに戻す。
-                    log.trace("conn.setAutoCommit(true)");
+                    log.trace("conn.setAutoCommit(true): UPDATE");
                     connTargetDb.setAutoCommit(true);
                 }
             }
