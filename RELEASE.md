@@ -1,3 +1,13 @@
+# Release 1.20 (2021-06-13)
+
+## EN
+
+- Fixed an issue that caused h2 and SQL Server to malfunction when Oiyokan was run with Database "autoCommit": false.
+
+## JA
+
+- Oiyokan を Database "autoCommit": false で動作させた際に h2 および SQL Server で動作不良を起こす問題を修正。
+
 # Release 1.19 (2021-06-03)
 
 ## EN
