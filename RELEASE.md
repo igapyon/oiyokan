@@ -1,3 +1,13 @@
+# Release 1.21 (2021-06-??)
+
+## EN
+
+- Added test case using Japanese strings.
+
+## JA
+
+- テストケースに日本語文字列を追加。
+
 # Release 1.20 (2021-06-13)
 
 ## EN
