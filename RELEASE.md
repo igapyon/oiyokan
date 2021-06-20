@@ -1,3 +1,13 @@
+# Release 1.21 (2021-06-??)
+
+## EN
+
+- Added test case using Japanese strings.
+
+## JA
+
+- テストケースに日本語文字列を追加。
+
 # Release 1.20 (2021-06-13)
 
 ## EN
@@ -74,6 +84,8 @@
 
 - SQLSV2008 と ORCL18 の場合には、expr eq true が与えられた時にこれはSQLに出力されないよう抑止
 - PreparedStatement へのバインドの処理について OiyoCommonJdbcBindParamUtil.java に処理内容を分離
+- いままで Demosite には デモサイトと UnitTest目的と2目的を満たしていたが、混乱するのでこれを分離。
+- これからは UnitTest は単体テストとしての用途に限定する。
 
 # Release 1.14 (2021-05-10)
 
